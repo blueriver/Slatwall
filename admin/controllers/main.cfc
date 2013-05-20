@@ -167,6 +167,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 		
 		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
+		rc.integrationLoginHTMLArray = getIntegrationService().getAdminLoginHTMLArray();
 		getFW().setView("admin:main.login");
 	}
 	

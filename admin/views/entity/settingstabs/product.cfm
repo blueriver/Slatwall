@@ -38,12 +38,15 @@ Notes:
 --->
 <cfoutput>
 	<cf_SlatwallSettingTable>
-		<cf_SlatwallSetting settingName="productDisplayTemplate" />
 		<cf_SlatwallSetting settingName="productShowDetailWhenNotPublishedFlag" />
 		<cf_SlatwallSetting settingName="productImageOptionCodeDelimiter" />
 		<cf_SlatwallSetting settingName="productTitleString" />
 		<cf_SlatwallSetting settingName="productHTMLTitleString" />
 		<cf_SlatwallSetting settingName="productMetaDescriptionString" />
 		<cf_SlatwallSetting settingName="productMetaKeywordsString" />
+		<cf_SlatwallSetting settingName="productAutoApproveReviewsFlag" />
+		<!---
+		<cf_SlatwallSetting settingName="productDisplayTemplate" />
+		--->
 	</cf_SlatwallSettingTable>
 </cfoutput>

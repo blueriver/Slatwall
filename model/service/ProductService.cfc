@@ -222,7 +222,7 @@ component extends="HibachiService" accessors="true" {
 	
 	public any function processProduct_addProductReview(required any product, required any processObject) {
 		// Check if the review should be automatically approved
-		if(arguments.product.setting('productAutoApproveReviews')) {
+		if(arguments.product.setting('productAutoApproveReviewsFlag')) {
 			arguments.processObject.getNewProductReview().setActiveFlag(1);
 		} else {
 			arguments.processObject.getNewProductReview().setActiveFlag(0);

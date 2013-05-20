@@ -183,7 +183,7 @@ globalEncryptionKeySize
 					productMetaDescriptionString = {fieldType="textarea"},
 					productMetaKeywordsString = {fieldType="textarea"},
 					productShowDetailWhenNotPublishedFlag = {fieldType="yesno", defaultValue=0},
-					
+					productAutoApproveReviewsFlag = {fieldType="yesno", defaultValue=0},
 					
 					// Product Type
 					productTypeDisplayTemplate = {fieldType="select"},

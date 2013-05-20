@@ -58,6 +58,9 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	property name="createdByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
+	// Non-Persistent Properties
+	property name="ratingOptions" type="array" persistent="false";
 
 	public any function init() {
 		setActiveFlag(0);
@@ -71,6 +74,8 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 
 		return super.init();
 	}
+	
+	
 
 	public string function getReviewerGravatarURL(numeric size=80) {
 		var server = "http://www.gravatar.com";
@@ -86,6 +91,10 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	}
 
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public array function getRatingOptions() {
+		return [1,2,3,4,5];
+	}
 
 	// ============  END:  Non-Persistent Property Methods =================
 

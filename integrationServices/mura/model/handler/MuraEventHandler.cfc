@@ -16,6 +16,22 @@
 			// Setup the correct site in the request object
 			$.slatwall.setSite( $.slatwall.getService("siteService").getSiteByCMSSiteID( $.event('siteID') ) );
 			
+			// Call any public slatAction methods that are found
+			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") == "public") {
+				
+				// This allows for multiple actions to be called
+				var actionsArray = listToArray( $.event('slatAction') );
+				
+				// This loops over the actions that were passed in
+				for(var a=1; a<=arrayLen(actionsArray); a++) {
+				
+					// Call the correct public controller
+					$.slatwall.doAction( actionsArray[a] );
+					
+				}
+				
+			}
+			
 			// If we aren't on the homepage we can do our own URL inspection
 			if( len($.event('path')) ) {
 				
@@ -80,24 +96,19 @@
 		public void function onRenderStart( required any $ ) {
 			
 			// Check for any slatActions that might have been passed in and render that page as the first
-			if(len($.event('slatAction'))) {
+			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") == "public") {
 				
-				if(left($.event('slatAction'), 9) eq "frontend:") {
-					$.content('body', $.content('body') & doAction($.event('slatAction')));	
-				} else {
-					
-					// ======= IMPORTANT This is now the primary place that actions get called from =============
-					doAction($.event('slatAction'));
-				}
+				$.content('body', $.content('body') & doAction($.event('slatAction')));	
+				
 
-			// If no slatAction was passed in, then check for keys in mura to determine what page to render
-			} else {
+			// If no slatAction was passed in, and we are in legacy mode... then check for keys in mura to determine what page to render
+			} else if ( $.slatwall.setting('integrationMuraLegacyInjectFlag') ) {
+				
 				// Check to see if the current content is a listing page, so that we add our frontend view to the content body
 				if(isBoolean($.slatwall.getContent().getProductListingPageFlag()) && $.slatwall.getContent().getProductListingPageFlag()) {
 					$.content('body', $.content('body') & doAction('frontend:product.listcontentproducts'));
 				}
 				
-				// ================== LEGACY USE ONLY ===================================
 				// Render any of the 'special'  pages that might need to be rendered
 				if(len($.slatwall.setting('integrationMuraLegacyShoppingCart')) && $.slatwall.setting('integrationMuraLegacyShoppingCart') == $.content('filename')) {
 					$.content('body', $.content('body') & doAction('frontend:cart.detail'));
@@ -120,7 +131,7 @@
 			}
 			
 			// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
-			$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentID($.content('contentID')) );
+			$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentID( $.content('contentID') ) );
 			
 			// check if user has access to this page
 			checkAccess( $=$ );
