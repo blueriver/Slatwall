@@ -63,7 +63,7 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	
 	public void function addActionResult( required string action, required failure=false ) {
 		if(arguments.failure) {
-			arrayAppend(getSucessfulActions(), arguments.action);
+			arrayAppend(getFailureActions(), arguments.action);
 		} else {
 			arrayAppend(getSucessfulActions(), arguments.action);
 		}
