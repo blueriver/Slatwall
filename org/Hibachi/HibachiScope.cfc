@@ -54,6 +54,7 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	}
 	
 	public boolean function hasSuccessfulAction( required string action ) {
+		writeDump(getSucessfulActions());
 		return arrayFindNoCase(getSucessfulActions(), arguments.action) > 0;
 	}
 	

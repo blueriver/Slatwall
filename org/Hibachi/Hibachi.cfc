@@ -140,16 +140,18 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupGlobalRequest() {
-		request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.model.transient.HibachiScope").init();
-		
-		// Verify that the application is setup
-		verifyApplicationSetup();
-		
-		// Verify that the session is setup
-		getHibachiScope().getService("hibachiSessionService").setPropperSession();
-		
-		// Call the onEveryRequest() Method for the parent Application.cfc
-		onEveryRequest();
+		if(!structKeyExists(request, "#variables.framework.applicationKey#Scope")) {
+			request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.model.transient.HibachiScope").init();
+			
+			// Verify that the application is setup
+			verifyApplicationSetup();
+			
+			// Verify that the session is setup
+			getHibachiScope().getService("hibachiSessionService").setPropperSession();
+			
+			// Call the onEveryRequest() Method for the parent Application.cfc
+			onEveryRequest();
+		}
 	}
 	
 	public void function setupRequest() {
