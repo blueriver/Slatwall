@@ -497,4 +497,4 @@ Notes:
 </cfoutput>
 
 <!--- This footer should be replaced with the footer of your site --->
-<cfinclude template="_slatwall-footer.cfm" />\
+<cfinclude template="_slatwall-footer.cfm" />
