@@ -62,7 +62,6 @@
 				if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProduct().isNew() && $.slatwall.getCurrentProduct().getActiveFlag() && ($.slatwall.getCurrentProduct().getPublishedFlag() || $.slatwall.getCurrentProduct().setting('productShowDetailWhenNotPublishedFlag'))) {
 					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProduct().setting('productDisplayTemplate')));
 					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					//$.content('body', $.content('body') & doAction('frontend:product.detail'));
 					$.content().setTitle( $.slatwall.getCurrentProduct().getTitle() );
 					$.content().setHTMLTitle( $.slatwall.getCurrentProduct().getTitle() );
 					
@@ -98,7 +97,7 @@
 			// Check for any slatActions that might have been passed in and render that page as the first
 			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") == "public") {
 				
-				$.content('body', $.content('body') & doAction($.event('slatAction')));	
+				$.content('body', $.content('body') & $.slatwall.doAction($.event('slatAction')));	
 				
 
 			// If no slatAction was passed in, and we are in legacy mode... then check for keys in mura to determine what page to render
@@ -106,27 +105,27 @@
 				
 				// Check to see if the current content is a listing page, so that we add our frontend view to the content body
 				if(isBoolean($.slatwall.getContent().getProductListingPageFlag()) && $.slatwall.getContent().getProductListingPageFlag()) {
-					$.content('body', $.content('body') & doAction('frontend:product.listcontentproducts'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:product.listcontentproducts'));
 				}
 				
 				// Render any of the 'special'  pages that might need to be rendered
 				if(len($.slatwall.setting('integrationMuraLegacyShoppingCart')) && $.slatwall.setting('integrationMuraLegacyShoppingCart') == $.content('filename')) {
-					$.content('body', $.content('body') & doAction('frontend:cart.detail'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:cart.detail'));
 				} else if(len($.slatwall.setting('integrationMuraLegacyOrderStatus')) && $.slatwall.setting('integrationMuraLegacyOrderStatus') == $.content('filename')) {
-					$.content('body', $.content('body') & doAction('frontend:order.detail'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:order.detail'));
 				} else if(len($.slatwall.setting('integrationMuraLegacyOrderConfirmation')) && $.slatwall.setting('integrationMuraLegacyOrderConfirmation') == $.content('filename')) {
-					$.content('body', $.content('body') & doAction('frontend:order.confirmation'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:order.confirmation'));
 				} else if(len($.slatwall.setting('integrationMuraLegacyMyAccount')) && $.slatwall.setting('integrationMuraLegacyMyAccount') == $.content('filename')) {
 					// Checks for My-Account page
 					if($.event('showitem') != ""){
-						$.content('body', $.content('body') & doAction('frontend:account.#$.event("showitem")#'));
+						$.content('body', $.content('body') & $.slatwall.doAction('frontend:account.#$.event("showitem")#'));
 					} else {
-						$.content('body', $.content('body') & doAction('frontend:account.detail'));
+						$.content('body', $.content('body') & $.slatwall.doAction('frontend:account.detail'));
 					}
 				} else if(len($.slatwall.setting('integrationMuraLegacyCreateAccount')) && $.slatwall.setting('integrationMuraLegacyCreateAccount') == $.content('filename')) {
-					$.content('body', $.content('body') & doAction('frontend:account.create'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:account.create'));
 				} else if(len($.slatwall.setting('integrationMuraLegacyCheckout')) && $.slatwall.setting('integrationMuraLegacyCheckout') == $.content('filename')) {
-					$.content('body', $.content('body') & doAction('frontend:checkout.detail'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:checkout.detail'));
 				}
 			}
 			
@@ -389,7 +388,7 @@
 				$.event("restrictedContentBody",$.content('body'));
 				
 				// Set the content of the current content to noAccess
-				$.content('body', doAction('frontend:account.noaccess'));
+				$.content('body', $.slatwall.doAction('frontend:account.noaccess'));
 				
 				// get the slatwall content
 				var slatwallContent = $.slatwall.getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));

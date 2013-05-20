@@ -3,14 +3,6 @@
 	<!--- ======================= Helper Methods ================================ --->
 		
 	<cfscript>
-		// Helper Method for doAction()
-		public string function doAction(required any action) {
-			if(!structKeyExists(url, "$")) {
-				url.$ = request.muraScope;
-			}
-			return getSlatwallApplication().doAction( arguments.action );
-		}
-		
 		// Helper method to get the Slatwall Application
 		public any function getSlatwallApplication() {
 			if(!structKeyExists(variables, "slatwallApplication")) {
