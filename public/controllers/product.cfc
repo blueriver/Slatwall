@@ -61,7 +61,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 			arguments.rc.$.slatwall.addActionResult( "public:product.addProductReview", product.hasErrors() );
 			
 			if(!product.hasErrors()) {
-				product.clearProcesObject("addProductReview");
+				product.clearProcessObject("addProductReview");
 			}
 		} else {
 			arguments.rc.$.slatwall.addActionResult( "public:product.addProductReview", true );
