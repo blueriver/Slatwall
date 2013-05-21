@@ -40,7 +40,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 
 	property name="fw" type="any";
 	property name="accountService" type="any";
-	property name="sessionService" type="any";
 	
 	public void function init( required any fw ) {
 		setFW( arguments.fw );
@@ -52,14 +51,14 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	// Login
 	public void function login( required struct rc ) {
-		var session = getSessionService().processSession( rc.$.slatwall.getSession(), arguments.rc, 'authorizeAccount' );
+		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'login' );
 		
-		arguments.rc.$.slatwall.addActionResult( "public:account.login", session.hasErrors() );
+		arguments.rc.$.slatwall.addActionResult( "public:account.login", account.hasErrors() );
 	}
 	
 	// Logout
 	public void function logout( required struct rc ) {
-		var session = getSessionService().processSession( rc.$.slatwall.getSession(), arguments.rc, 'logout' );
+		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'logout' );
 		
 		arguments.rc.$.slatwall.addActionResult( "public:account.logout", false );
 	}
@@ -71,5 +70,24 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.$.slatwall.addActionResult( "public:account.create", account.hasErrors() );
 	}
 	
+	// Forgot Password
+	public void function forgotPassword( required struct rc ) {
+		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'forgotPassword');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:account.forgotPassword", account.hasErrors() );
+	}
 	
+	// Change Password
+	public void function changePassword( required struct rc ) {
+		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'changePassword');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:account.changePassword", account.hasErrors() );
+	}
+	
+	// Update
+	public void function update( required struct rc ) {
+		var account = getAccountService().saveAccount( rc.$.slatwall.getAccount(), arguments.rc );
+		
+		arguments.rc.$.slatwall.addActionResult( "public:account.update", account.hasErrors() );
+	}
 }

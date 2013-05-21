@@ -177,7 +177,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	}
 	
 	public void function authorizeLogin(required struct rc) {
-		getHibachiSessionService().processSession(getHibachiScope().getSession(), rc, "authorizeAccount");	
+		getAccountService().processAccount(getHibachiScope().getAccount(), rc, "login");
 		
 		if(getHibachiScope().getLoggedInFlag()) {
 			getFW().redirect(action="admin:main.default", queryString="s=1");
@@ -189,7 +189,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	}
 	
 	public void function logout(required struct rc) {
-		getHibachiSessionService().logoutAccount();
+		getAccountService().processAccount(getHibachiScope().getAccount(), rc, "logout");
 		
 		getFW().redirect('admin:main.login');
 	}
