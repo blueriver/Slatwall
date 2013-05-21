@@ -81,7 +81,7 @@ Notes:
 																				
 --->
 
-<cfoutput>
+
 <!--- Because we are going to potentially be dynamically adding 'account' back into the orderRequirementsList, we need to make sure that it isn't already part of the list, and that the session account ID's doesn't match the cart account ID --->
 <cfif not listFindNoCase(orderRequirementsList, "account") and $.slatwall.cart().getAccount().getAccountID() neq $.slatwall.account().getAccountID()>
 
@@ -99,9 +99,9 @@ Notes:
 		<!--- <cfset orderRequirementsList = listDeleteAt(orderRequirementsList, listFindNoCase(orderRequirementsList, "account")) /> ---> 
 		
 	</cfif>
-	
 </cfif>
 
+<cfoutput>
 	<div class="container">
 		
 		<!--- START CEHECKOUT EXAMPLE 1 --->

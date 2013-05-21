@@ -44,6 +44,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="paymentService" type="any";
 	property name="permissionService" type="any";
 	property name="priceGroupService" type="any";
+	property name="sessionService" type="any";
 	property name="validationService" type="any";
 	
 	public string function getHashedAndSaltedPassword(required string password, required string salt) {
@@ -68,15 +69,25 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: Process Methods ===========================
 	
-	public any function processAccount_createPassword(required any account, required any processObject) {
-		var accountAuthentication = this.newAccountAuthentication();
-		accountAuthentication.setAccount( arguments.account );
-	
-		// Put the accountAuthentication into the hibernate scope so that it has an id which will allow the hash / salting below to work
-		getHibachiDAO().save(accountAuthentication);
-	
-		// Set the password
-		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );	
+	public any function processAccount_login(required any account, required any processObject) {
+		
+		// Take the email address and get all of the user accounts by primary e-mail address
+		var accountAuthentications = getInternalAccountAuthenticationsByEmailAddress(emailAddress=arguments.processObject.getEmailAddress());
+		
+		if(arrayLen(accountAuthentications)) {
+			for(var i=1; i<=arrayLen(accountAuthentications); i++) {
+				// If the password matches what it should be, then set the account in the session and 
+				if(!isNull(accountAuthentications[i].getPassword()) && len(accountAuthentications[i].getPassword()) && accountAuthentications[i].getPassword() == getHashedAndSaltedPassword(password=arguments.processObject.getPassword(), salt=accountAuthentications[i].getAccountAuthenticationID())) {
+					getSessionService().loginAccount( accountAuthentications[i].getAccount(), accountAuthentications[i] );
+					return arguments.session;
+				}
+			}
+			arguments.processObject.addError('password', rbKey('validate.session_authorizeAccount.password.incorrect'));
+		} else {
+			arguments.processObject.addError('emailAddress', rbKey('validate.session_authorizeAccount.emailAddress.notfound'));
+		}
+		
+		return arguments.account;
 	}
 	
 	public any function processAccount_changePassword(required any account, required any processObject) {
@@ -131,6 +142,17 @@ component extends="HibachiService" accessors="true" output="false" {
 		arguments.account = this.saveAccount(arguments.account);
 		
 		return arguments.account;
+	}
+
+	public any function processAccount_createPassword(required any account, required any processObject) {
+		var accountAuthentication = this.newAccountAuthentication();
+		accountAuthentication.setAccount( arguments.account );
+	
+		// Put the accountAuthentication into the hibernate scope so that it has an id which will allow the hash / salting below to work
+		getHibachiDAO().save(accountAuthentication);
+	
+		// Set the password
+		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );	
 	}
 	
 	public any function processAccount_setupInitialAdmin(required any account, required struct data={}, required any processObject) {
