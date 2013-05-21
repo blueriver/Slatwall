@@ -107,7 +107,7 @@ Notes:
 		<!--- START CEHECKOUT EXAMPLE 1 --->
 		<div class="row">
 			<div class="span12">
-				<h3>Checkout Example 1 ( 3 Step Process: Account - Fulfillment - Payment )</h3>
+				<h3>Checkout Example ( 3 Step Process: Account - Fulfillment - Payment )</h3>
 			</div>
 		</div>
 		
@@ -362,18 +362,40 @@ Notes:
 						<!--- We loop over the orderFulfillments and check if they are processable --->
 						<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="orderFulfillment">
 							
-							<!--- We need to check if this order fulfillment is one that needs --->
-							<div class="row">
-								
-								<div class="span4">
-									<h5>Login with Existing Account</h5>
+							<!--- We need to check if this order fulfillment is one that needs to be updated, by checking if it is already processable or by checking if it has errors --->
+							<cfif not orderFulfillment.isProcessable( context="placeOrder" ) or orderFulfillment.hasErrors()>
+								<div class="row">
+									
+									<!---[DEVELOPER NOTES]																		
+																																
+										Based on the fulfillmentMethodType we will display different form elements for the		
+										end user to fill out.  The 'auto' fulifllment method type and 'download' fulfillment	
+										method type, have no values that need to get input and that is why you don't see		
+										them in the conditionals below.															
+																																
+									--->
+									
+									<!--- EMAIL --->
+									<cfif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "email">
+											
+									<!--- PICKUP --->
+									<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup">
+									
+									<!--- SHIPPING --->
+									<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
+										<div class="span4">
+											<h5>Shipping Address</h5>
+											
+										</div>
+										
+										<div class="span4">
+											<h5>Shipping Methods</h5>
+											
+										</div>	
+									</cfif>
 									
 								</div>
-								<div class="span4">
-									<h5>Login with Existing Account</h5>
-									
-								</div>
-							</div>
+							</cfif>
 							
 						</cfloop>
 						<!--- END: FULFILLMENT --->
@@ -401,8 +423,34 @@ Notes:
 				
 				<!--- START: ORDER SUMMARY --->
 				<div class="span4">
-					<h5>Order Summary</h5>
 					
+					<h4>Order Summary</h4>
+					<hr />
+					
+					<!--- Account Details --->
+					<cfif not $.slatwall.cart().getAccount().isNew()>
+						<h5>Account Details</h5>
+						
+						<p>
+							<!--- Name --->
+							<strong>#$.slatwall.cart().getAccount().getFullName()#</strong><br />
+							
+							<!--- Email Address --->
+							<cfif len($.slatwall.cart().getAccount().getEmailAddress())>#$.slatwall.cart().getAccount().getEmailAddress()#<br /></cfif>
+							
+							<!--- Phone Number --->
+							<cfif len($.slatwall.cart().getAccount().getPhoneNumber())>#$.slatwall.cart().getAccount().getPhoneNumber()#<br /></cfif>
+							
+							<!--- Logout Link --->
+							<a href="?slatAction=public:account.logout">That isn't me ( logout )</a>
+								
+						</p>
+						
+						<hr />
+					</cfif>
+					
+					<!--- Order Totals --->
+					<h5>Order Totals</h5>
 					<table class="table table-condensed">
 						<!--- The Subtotal is all of the orderItems before any discounts are applied --->
 						<tr>
