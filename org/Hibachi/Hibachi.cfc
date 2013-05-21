@@ -434,6 +434,8 @@ component extends="FW1.framework" {
 		var originalContext = {};
 		var originalCFCBase = "";
 		var originalBase = "";
+		var originalURLAction = "";
+		var originalFromAction = "";
 		
 		// If there was already a request._fw1, then we need to save it to be used later
 		if(structKeyExists(request, "_fw1")) {
@@ -458,6 +460,19 @@ component extends="FW1.framework" {
 			originalBase = request.base;
 			structDelete(request, "base");
 		}
+		
+		// Look for an action in the URL
+		if( structKeyExists(url, getAction() ) ) {
+			originalURLAction = url[ getAction() ];
+		}
+		
+		// Look for an action in the Form
+		if( structKeyExists(form, getAction() ) ) {
+			originalFormAction = form[ getAction() ];
+		}
+		
+		// Set the passed in action to the form scope
+		form[ getAction() ] = arguments.action;
 		
 		// create a new request context to hold simple data, and an empty request services so that the view() function works
 		request.context = {};
@@ -500,6 +515,14 @@ component extends="FW1.framework" {
 		// If there was a different base before... place it back into the request
 		if(len(originalBase)) {
 			request.base = originalBase;
+		}
+		
+		if(len(originalURLAction)) {
+			url[ getAction() ] = originalURLAction;
+		}
+		
+		if(len(originalFormAction)) {
+			form[ getAction() ] = originalFormAction;
 		}
 		
 		return response;
