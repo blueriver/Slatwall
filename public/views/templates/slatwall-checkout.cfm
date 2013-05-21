@@ -34,52 +34,163 @@
     exception statement from your version.
 	
 Notes: 
+																						
+	The core of the checkout revolves around a value called the 'orderRequirementsList'	
+	There are 3 major elements that all need to be in place for an order to be placed:	
+																						
+	account																				
+	fulfillment																			
+	payment																				
+																						
+	With that in mind you will want to display different UI elements & forms based on 	
+	if one ore more of those items are in the orderRequirementsList.  In the eample		
+	below we go in that order listed above, but you could very easily do it in a		
+	different order if you like.														
+																						
 	
 --->
 <cfinclude template="_slatwall-header.cfm" />
-<div class="row">
-	<div class="span12">
-		<h2>Checkout</h2>
-	</div>
-</div>
-<div class="row">
-	<div class="span8">
+
+<!--- IMPORTANT: Get the orderRequirementsList to drive your UI Below --->
+<cfset orderRequirementsList = $.slatwall.cart().getOrderRequirementsList() />
+
+<cfoutput>
+	<div class="container">
+		
+		<!--- START CEHECKOUT EXAMPLE 1 --->
+		<div class="row">
+			<div class="span12">
+				<h3>Checkout Example 1</h3>
+			</div>
+		</div>
+		
+		<!--- Verify that there are items in the cart --->
+		<cfif arrayLen($.slatwall.cart().getOrderItems())>
+			<div class="row">
+				
+				<!--- START: CHECKOUT DETAIL --->
+				<div class="span8">
+					
+					
+					
+					<cfif listFindNoCase("account", orderRequirementsList)>
+						
+						<!--- START: ACCOUNT --->
+						<h4>Account Details #orderRequirementsList#</h4>
+						
+						<div class="row">
+							<div class="span4">
+								<h5>Login with Existing Account</h5>
+								
+							</div>
+							<div class="span4">
+								<h5>Login with Existing Account</h5>
+								
+							</div>
+						</div>
+						<!--- END: ACCOUNT --->
+							
+					<cfelseif listFindNoCase("fulfillment", orderRequirementsList) >
+						
+						<!--- START: FULFILLMENT --->
+						<h4>Fulfillment Details</h4>
+						
+						<!--- We loop over the orderFulfillments and check if they are processable --->
+						<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="orderFulfillment">
+							
+							<!--- We need to check if this order fulfillment is one that needs --->
+							<div class="row">
+								
+								<div class="span4">
+									<h5>Login with Existing Account</h5>
+									
+								</div>
+								<div class="span4">
+									<h5>Login with Existing Account</h5>
+									
+								</div>
+							</div>
+							
+						</cfloop>
+						<!--- END: FULFILLMENT --->
+							
+					<cfelseif listFindNoCase("payment", orderRequirementsList)>
+						
+						<!--- START: PAYMENT --->
+						<h4>Payment Details</h4>
+						
+						<div class="row">
+							<div class="span4">
+								<h5>Login with Existing Account</h5>
+							</div>
+							<div class="span4">
+								<h5>Login with Existing Account</h5>
+								
+							</div>
+						</div>
+						<!--- END: PAYMENT --->
+						
+					</cfif>
+					
+					
+					
+						
+					
+						
+				</div>
+				<!--- END: CHECKOUT DETAIL --->
+				
+				<!--- START: ORDER SUMMARY --->
+				<div class="span4">
+					<h5>Order Summary</h5>
+					
+					<table class="table table-condensed">
+						<!--- The Subtotal is all of the orderItems before any discounts are applied --->
+						<tr>
+							<td>Subtotal</td>
+							<td>#$.slatwall.cart().getFormattedValue('subtotal')#</td>
+						</tr>
+						<!--- This displays a delivery cost, some times it might make sense to do a conditional here and check if the amount is > 0, then display otherwise show something like TBD --->
+						<tr>
+							<td>Delivery</td>
+							<td>#$.slatwall.cart().getFormattedValue('fulfillmentTotal')#</td>
+						</tr>
+						<!--- Displays the total tax that was calculated for this order --->
+						<tr>
+							<td>Tax</td>
+							<td>#$.slatwall.cart().getFormattedValue('taxTotal')#</td>
+						</tr>
+						<!--- If there were discounts they would be displayed here --->
+						<cfif $.slatwall.cart().getDiscountTotal() gt 0>
+							<tr>
+								<td>Discounts</td>
+								<td>#$.slatwall.cart().getFormattedValue('discountTotal')#</td>
+							</tr>
+						</cfif>
+						<!--- The total is the finished amount that the customer can expect to pay --->
+						<tr>
+							<td><strong>Total</strong></td>
+							<td><strong>#$.slatwall.cart().getFormattedValue('total')#</strong></td>
+						</tr>
+					</table>
+				</div>
+				<!--- END: ORDER SUMMARY --->
+					
+			</div>
+			
+		<!--- No Items In Cart --->
+		<cfelse>
+			
+			<div class="row">
+				<div class="span12">
+					<p>There are no items in your cart.</p>
+				</div>
+			</div>
+			
+		</cfif>
+		
+		<!--- END CHECKOUT EXAMPLE 1 --->
 		
 	</div>
-	
-	<div class="span4">
-		<!--- Order Summary --->
-		<h5>Order Summary</h5>
-		
-		<table class="table table-condensed">
-			<!--- The Subtotal is all of the orderItems before any discounts are applied --->
-			<tr>
-				<td>Subtotal</td>
-				<td>#$.slatwall.cart().getFormattedValue('subtotal')#</td>
-			</tr>
-			<!--- This displays a delivery cost, some times it might make sense to do a conditional here and check if the amount is > 0, then display otherwise show something like TBD --->
-			<tr>
-				<td>Delivery</td>
-				<td>#$.slatwall.cart().getFormattedValue('fulfillmentTotal')#</td>
-			</tr>
-			<!--- Displays the total tax that was calculated for this order --->
-			<tr>
-				<td>Tax</td>
-				<td>#$.slatwall.cart().getFormattedValue('taxTotal')#</td>
-			</tr>
-			<!--- If there were discounts they would be displayed here --->
-			<cfif $.slatwall.cart().getDiscountTotal() gt 0>
-				<tr>
-					<td>Discounts</td>
-					<td>#$.slatwall.cart().getFormattedValue('discountTotal')#</td>
-				</tr>
-			</cfif>
-			<!--- The total is the finished amount that the customer can expect to pay --->
-			<tr>
-				<td><strong>Total</strong></td>
-				<td><strong>#$.slatwall.cart().getFormattedValue('total')#</strong></td>
-			</tr>
-		</table>
-	</div>
-</div>
+</cfoutput>
 <cfinclude template="_slatwall-footer.cfm" />
