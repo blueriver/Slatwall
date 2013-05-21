@@ -238,11 +238,6 @@ Notes:
 		
 		<hr />
 		
-		<!--- START SHOPPING CART EXAMPLE 2 --->
-		<div class="row">
-			
-		</div>
-		<!--- END SHOPPING CART EXAMPLE 2 --->
 	</div>
 </cfoutput>
 <cfinclude template="_slatwall-footer.cfm" />
