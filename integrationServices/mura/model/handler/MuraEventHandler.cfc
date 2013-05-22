@@ -496,6 +496,8 @@
 				// Sync all missing accounts
 				syncMuraAccounts( $=$, accountSyncType=getMuraPluginConfig().getSetting("accountSyncType"), superUserSyncFlag=getMuraPluginConfig().getSetting("superUserSyncFlag") );
 				
+				// Now that accounts are synced be sure to call the autoLoginLogout
+				autoLoginLogoutFromSlatwall( $=$ );
 			}
 		}
 		
