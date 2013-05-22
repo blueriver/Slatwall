@@ -2,7 +2,7 @@
 <cftry>
 	<cfdbinfo datasource="#this.datasource.name#" type="Version" name="dbVersion">
 	<cfcatch>
-		<cfinclude template="admin/views/main/nodatasource.cfm" />
+		<cfinclude template="#variables.framework.baseURL#/admin/views/main/nodatasource.cfm" />
 		<cfabort />
 	</cfcatch>
 </cftry>
