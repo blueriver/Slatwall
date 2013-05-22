@@ -213,7 +213,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					if(isNull(integration.getAuthenticationActiveFlag()) || (integration.getAuthenticationActiveFlag() && !integration.getAuthenticationReadyFlag())) {
 						integration.setAuthenticationActiveFlag(0);
 					}
-					if(isNull(integration.getAuthenticationActiveFlag()) || (integration.getCustomActiveFlag() && !integration.getCustomReadyFlag())) {
+					if(isNull(integration.getCustomActiveFlag()) || (integration.getCustomActiveFlag() && !integration.getCustomReadyFlag())) {
 						integration.setCustomActiveFlag(0);
 					}
 					if(isNull(integration.getAuthenticationActiveFlag()) || (integration.getFW1ActiveFlag() && !integration.getFW1ReadyFlag())) {

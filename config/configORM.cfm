@@ -6,8 +6,8 @@
 		<cfabort />
 	</cfcatch>
 </cftry>
-<cfif FindNoCase("MySQL", dbVersion.DATABASE_PRODUCTNAME)>
+<cfif findNoCase("MySQL", dbVersion.DATABASE_PRODUCTNAME)>
 	<cfset this.ormSettings.dialect = "MySQL" />
-<cfelseif FindNoCase("Microsoft", dbVersion.DATABASE_PRODUCTNAME)>
+<cfelseif findNoCase("Microsoft", dbVersion.DATABASE_PRODUCTNAME)>
 	<cfset this.ormSettings.dialect = "MicrosoftSQLServer" />	
 </cfif>
