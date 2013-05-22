@@ -48,7 +48,7 @@ Notes:
 		<cfset var rs = "" />
 		
 		<!--- check for any transaction for this payment in last 60 sec with same type and amount --->
-		<cfquery name="rs" datasource="#getApplicationValue("datasource")#">
+		<cfquery name="rs">
 			SELECT
 				#idColumnName#
 			FROM

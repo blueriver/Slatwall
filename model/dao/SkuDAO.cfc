@@ -118,7 +118,7 @@ Notes:
 		<cfset var sorted = "" />
 		
 		<!--- TODO: test to see if this query works with DB's other than MSSQL and MySQL --->
-		<cfquery name="sorted" datasource="#getApplicationValue("datasource")#">
+		<cfquery name="sorted">
 			SELECT
 				SlatwallSku.skuID
 			FROM

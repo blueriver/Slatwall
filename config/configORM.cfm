@@ -1,6 +1,6 @@
 <cfset arrayAppend(this.ormsettings.cfclocation, "/Slatwall/integrationServices") />
 <cftry>
-	<cfdbinfo datasource="#this.datasource.name#" type="Version" name="dbVersion" username="#this.datasource.username#" password="#this.datasource.password#">
+	<cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="Version" name="dbVersion">
 	<cfcatch>
 		<cfinclude template="#variables.framework.baseURL#/admin/views/main/nodatasource.cfm" />
 		<cfabort />
