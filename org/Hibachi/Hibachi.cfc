@@ -9,6 +9,8 @@ component extends="FW1.framework" {
 	this.sessionManagement = true;
 	this.datasource = {};
 	this.datasource.name = "hibachi";
+	this.datasource.username = "";
+	this.datasource.password = "";
 	
 	// Allow For Application Config
 	try{include "../../config/configApplication.cfm";}catch(any e){}
@@ -107,7 +109,7 @@ component extends="FW1.framework" {
 	this.ormSettings.logsql = false;
 	
 	// Allow For Application Config 
-	try{include "../../config/configORM.cfm";}catch(any e){}
+	try{include "../../config/configORM.cfm";}catch(any e){rethrow;}
 	// Allow For Instance Config
 	try{include "../../custom/config/configORM.cfm";}catch(any e){}
 	
