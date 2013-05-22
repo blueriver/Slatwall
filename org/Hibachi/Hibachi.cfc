@@ -109,7 +109,7 @@ component extends="FW1.framework" {
 	this.ormSettings.logsql = false;
 	
 	// Allow For Application Config 
-	try{include "../../config/configORM.cfm";}catch(any e){rethrow;}
+	try{include "../../config/configORM.cfm";}catch(any e){}
 	// Allow For Instance Config
 	try{include "../../custom/config/configORM.cfm";}catch(any e){}
 	
