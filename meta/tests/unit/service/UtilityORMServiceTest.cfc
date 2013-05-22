@@ -61,7 +61,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	
 	// getProperlyCasedFullClassNameByEntityName()
 	public void function getProperlyCasedFullClassNameByEntityName() {
-		assertEquals("Slatwall.com.entity.OrderItem", variables.service.getProperlyCasedFullClassNameByEntityName("SlaTWAllOrderItEM"));
+		assertEquals("Slatwall.model.entity.OrderItem", variables.service.getProperlyCasedFullClassNameByEntityName("SlaTWAllOrderItEM"));
 	}
 	
 	
