@@ -50,21 +50,10 @@ Notes:
 		<cfset attributes.settingDetails = request.slatwallScope.getService("settingService").getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
 	</cfif>
 	
-	<cfif left(attributes.settingName, 11) eq "integration">
-		<cfloop collection="#attributes.settingObject.getSettings()#" item="simpleSettingName">
-			<cfif attributes.settingName eq "integration#attributes.settingObject.getIntegrationPackage()##simpleSettingName#" and structKeyExists(attributes.settingObject.getSettings()[simpleSettingName], "displayName")>
-				<cfset attributes.settingDisplayName = attributes.settingObject.getSettings()[simpleSettingName].displayName />
-				<cfif structKeyExists(attributes.settingObject.getSettings()[simpleSettingName], "hint")>
-					<cfset attributes.settingHint = attributes.settingObject.getSettings()[simpleSettingName].hint />
-				</cfif>
-			</cfif>
-		</cfloop>
-	<cfelse>
-		<cfset attributes.settingDisplayName = request.slatwallScope.rbKey("setting.#attributes.settingName#") />
-		<cfset attributes.settingHint = request.slatwallScope.rbKey("setting.#attributes.settingName#_hint") />
-		<cfif right(attributes.settingHint, 8) eq "_missing">
-			<cfset attributes.settingHint = "" />
-		</cfif>
+	<cfset attributes.settingDisplayName = request.slatwallScope.rbKey("setting.#attributes.settingName#") />
+	<cfset attributes.settingHint = request.slatwallScope.rbKey("setting.#attributes.settingName#_hint") />
+	<cfif right(attributes.settingHint, 8) eq "_missing">
+		<cfset attributes.settingHint = "" />
 	</cfif>
 	
 	<cfassociate basetag="cf_SlatwallSettingTable" datacollection="settings">

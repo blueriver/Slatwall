@@ -93,15 +93,6 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	
 	public string function getPropertyTitle(required string propertyName) {
 		if(propertyName == "settingValue") {
-			
-			if(left(getSettingName(), 11) == "integration") {
-				for(var settingName in getService("integrationService").getAllSettings()) {
-					if(settingName == getSettingName()) {
-						return getService("integrationService").getAllSettings()[settingName].displayName;
-					}
-				}
-			}
-			
 			return rbKey('setting.#getSettingName()#');
 		}
 		return super.getPropertyTitle(propertyName=arguments.propertyName);
