@@ -45,8 +45,12 @@ Notes:
 		<cf_SlatwallSetting settingName="productMetaDescriptionString" />
 		<cf_SlatwallSetting settingName="productMetaKeywordsString" />
 		<cf_SlatwallSetting settingName="productAutoApproveReviewsFlag" />
-		<!---
+	</cf_SlatwallSettingTable>
+	
+	<hr />
+	
+	<cf_SlatwallSettingTable>
+		
 		<cf_SlatwallSetting settingName="productDisplayTemplate" />
-		--->
 	</cf_SlatwallSettingTable>
 </cfoutput>
