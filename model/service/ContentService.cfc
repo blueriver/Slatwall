@@ -117,6 +117,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if(sku.isNew()) {
 			sku.setPrice( arguments.processObject.getPrice() );
 			sku.setSkuCode( product.getProductCode() & "-#arrayLen(product.getSkus()) + 1#" );
+			sku.setImageFile( sku.generateImageFileName() );
 			sku.setProduct( product );
 			if(product.isNew()) {
 				product.setDefaultSku( sku );
