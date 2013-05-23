@@ -250,6 +250,27 @@
 				var muraContent = $.event('contentBean');
 				var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentID( muraContent.getContentID() );
 				
+				// Check to see if this content should have a parent
+				if(muraContent.getParentID() != "00000000000000000000000000000000END") {
+					var parentContent = $.slatwall.getService("contentService").getContentByCMSContentID( muraContent.getParentID() );
+					
+					// If the parent has changed, we need to update all nested
+					if(parentContent.getContentID() != slatwallContent.getParentContent().getContentID()) {
+						
+						// Pull out the old IDPath so that we can update all nested nodes
+						var oldContentIDPath = slatwallContent.getContentIDPath();
+						
+						// Setup the parentContent to the correct new one
+						slatwallContent.setParentContent( parentContent );
+						
+						// Regenerate this content's ID Path
+						slatwallContent.setContentIDPath( slatwallContent.buildIDPathList( 'parentContent' ) );
+						
+						// Update all nested content
+						updateOldSlatwallContentIDPath(oldContentIDPath=oldContentIDPath, newContentIDPath=slatwallContent.getContentIDPath());
+					}
+				}
+				
 				// Populate Basic Values
 				slatwallContent.setTitle( muraContent.getTitle() );
 				slatwallContent.setSite( slatwallSite );
@@ -268,7 +289,7 @@
 					slatwallContent.setContentTemplateType( javaCast("null","") );
 				}
 				
-				$.slatwall.getService("contentService").saveContent(slatwallContent);
+				$.slatwall.getService("contentService").saveContent( slatwallContent );
 				
 				// Populate Setting Values
 				param name="contentData.contentIncludeChildContentProductsFlag" default="";
@@ -282,6 +303,7 @@
 				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentRequirePurchaseFlag", settingValue=contentData.contentRequirePurchaseFlag);
 				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentRequireSubscriptionFlag", settingValue=contentData.contentRequireSubscriptionFlag);
 				
+				// Clear the settings cache (in the future this needs to be targeted)
 				$.slatwall.getService("settingService").clearAllSettingsCache();
 				
 				// If the "Add Sku" was selected, then we call that process method
@@ -530,7 +552,7 @@
 		
 		<cfreturn thisPage.getContentID() />
 	</cffunction>
-	
+
 	<cffunction name="syncMuraContent">
 		<cfargument name="$" />
 		<cfargument name="slatwallSite" type="any" required="true" />
@@ -654,6 +676,39 @@
 		<cfif !allParentsFound>
 			<cfset syncMuraContent(argumentcollection=arguments) />
 		</cfif>
+	</cffunction>
+	
+	<cffunction name="updateOldSlatwallContentIDPath">
+		<cfargument name="oldContentIDPath" type="string" default="" />
+		<cfargument name="newContentIDPath" type="string" default="" />
+		
+		<cfset var rs = "" />
+		<cfset var rs2 = "" />
+		
+		<!--- Select any content that is a desendent of the old contentIDPath, and update them to the new path --->
+		<cfquery name="rs">
+			SELECT
+				contentID,
+				contentIDPath
+			FROM
+				SlatwallContent
+			WHERE
+				contentIDPath <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#oldContentIDPath#" />
+			  AND
+				contentIDPath LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#oldContentIDPath#%" />
+		</cfquery>
+		
+		<cfloop query="rs">
+			<cfquery name="rs2">
+				UPDATE
+					SlatwallContent
+				SET
+					contentIDPath = <cfqueryparam cfsqltype="cf_sql_varchar" value="#replace(rs.contentIDPath, arguments.oldContentIDPath, arguments.newContentIDPath)#">
+				WHERE
+					contentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rs.contentID#">
+			</cfquery>
+		</cfloop>
+		
 	</cffunction>
 	
 	<cffunction name="syncMuraCategories">
