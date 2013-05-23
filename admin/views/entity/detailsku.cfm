@@ -66,7 +66,7 @@ Notes:
 			<cfif rc.product.getBaseProductType() EQ "subscription">
 				<cf_HibachiTab view="admin:entity/skutabs/subscription" />
 			<cfelseif rc.product.getBaseProductType() EQ "contentaccess">
-				<cf_HibachiTab view="admin:entity/skutabs/accesscontents" />
+				<cf_HibachiTab property="accessContents" />
 			<cfelse>
 				<cf_HibachiTab view="admin:entity/skutabs/inventory" />
 				<cf_HibachiTab view="admin:entity/skutabs/options" />
