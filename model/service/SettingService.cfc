@@ -245,7 +245,7 @@ globalEncryptionKeySize
 			throw("You have asked for a setting '#arguments.settingName#' which has no meta information. Make sure that you either add this setting to the settingService or your integration.");
 		}
 		
-		public array function getSettingOptions(required string settingName) {
+		public array function getSettingOptions(required string settingName, any settingObject) {
 			switch(arguments.settingName) {
 				case "accountPaymentTerm" :
 					var optionSL = getPaymentService().getPaymentTermSmartList();
@@ -254,12 +254,24 @@ globalEncryptionKeySize
 					optionSL.addSelect('paymentTermID', 'value');
 					return optionSL.getRecords();
 				case "brandDisplayTemplate":
+					if(structKeyExists(arguments, "settingObject")) {
+						return getContentService().getDisplayTemplateOptions( "brand", arguments.settingObject.getSite().getSiteID() );	
+					}
 					return getContentService().getDisplayTemplateOptions( "brand" );
 				case "productDisplayTemplate":
+					if(structKeyExists(arguments, "settingObject")) {
+						return getContentService().getDisplayTemplateOptions( "product", arguments.settingObject.getSite().getSiteID() );	
+					}
 					return getContentService().getDisplayTemplateOptions( "product" );
 				case "productTypeDisplayTemplate":
+					if(structKeyExists(arguments, "settingObject")) {
+						return getContentService().getDisplayTemplateOptions( "productType", arguments.settingObject.getSite().getSiteID() );	
+					}
 					return getContentService().getDisplayTemplateOptions( "productType" );
 				case "contentRestrictedContentDisplayTemplate":
+					if(structKeyExists(arguments, "settingObject")) {
+						return getContentService().getDisplayTemplateOptions( "barrierPage", arguments.settingObject.getSite().getSiteID() );	
+					}
 					return getContentService().getDisplayTemplateOptions( "barrierPage" );
 				case "productImageOptionCodeDelimiter":
 					return ['-','_'];

@@ -37,23 +37,21 @@ Notes:
 
 --->
 <cfif thisTag.executionMode is "end">
-	<cfparam name="thistag.settings" type="array" default="#arrayNew(1)#" />
-	<cfparam name="thistag.hasInheritedValues" type="boolean" default="false" />
+	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
+	<cfparam name="attributes.showFilterEntities" type="boolean" default="false" />
+	<cfparam name="attributes.showInheritance" type="boolean" default="true" />
 	
-	<cfsilent>
-		<cfloop array="#thistag.settings#" index="thisSetting">
-			<cfif thisSetting.settingDetails.settingInherited>
-				<cfset thistag.hasInheritedValues = true />
-				<cfbreak />
-			</cfif>
-		</cfloop>
-	</cfsilent>
+	<cfparam name="thistag.settings" type="array" default="#arrayNew(1)#" />
+	
 	<cfoutput>
 		<table class="table table-striped table-bordered table-condensed">
 			<tr>
 				<th class="primary">#request.slatwallScope.rbKey('entity.setting.settingName')#</th>
+				<cfif attributes.showFilterEntities>
+					<th>#attributes.hibachiScope.rbKey('define.filter')#</th>
+				</cfif>
 				<th>#request.slatwallScope.rbKey('entity.setting.settingValue')#</th>
-				<cfif thistag.hasInheritedValues>
+				<cfif attributes.showInheritance>
 					<th>#request.slatwallScope.rbKey('define.inheritance')#</th>
 				</cfif>
 				<th>&nbsp;</th>
@@ -63,10 +61,13 @@ Notes:
 					<td class="primary">
 						#thisSetting.settingDisplayName# <cfif len(thisSetting.settingHint)><a href="##" rel="tooltip" class="hint" title="#thisSetting.settingHint#"><i class="icon-question-sign"></i></a></cfif>
 					</td>
+					<cfif attributes.showFilterEntities>
+						<td>#thisSetting.settingFilterEntitiesName#</td>
+					</cfif>
 					<td>
 						#thisSetting.settingDetails.settingValueFormatted#
 					</td>
-					<cfif thistag.hasInheritedValues>
+					<cfif attributes.showInheritance>
 						<td>
 							<cfif thisSetting.settingDetails.settingInherited>
 								<cfif !structCount(thisSetting.settingDetails.settingRelationships)>
@@ -87,15 +88,15 @@ Notes:
 					<td class="admin admin1">
 						<cfif thisSetting.settingDetails.settingInherited || !len(thisSetting.settingDetails.settingID)>
 							<cfif isObject(thisSetting.settingObject)>
-								<cf_HibachiActionCaller action="admin:entity.createsetting" queryString="settingID=&redirectAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_HibachiActionCaller action="admin:entity.createsetting" queryString="settingID=&redirectAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#&#thisSetting.settingFilterEntitiesURL#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							<cfelse>
-								<cf_HibachiActionCaller action="admin:entity.createsetting" queryString="settingID=&redirectAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_HibachiActionCaller action="admin:entity.createsetting" queryString="settingID=&redirectAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingFilterEntitiesURL#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							</cfif>
 						<cfelse>
 							<cfif isObject(thisSetting.settingObject)>
-								<cf_HibachiActionCaller action="admin:entity.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&redirectAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_HibachiActionCaller action="admin:entity.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&redirectAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingObject.getPrimaryIDPropertyName()#=#thisSetting.settingObject.getPrimaryIDValue()#&#thisSetting.settingFilterEntitiesURL#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							<cfelse>
-								<cf_HibachiActionCaller action="admin:entity.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&redirectAction=#request.context.slatAction#&settingName=#thisSetting.settingName#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
+								<cf_HibachiActionCaller action="admin:entity.editsetting" queryString="settingID=#thisSetting.settingDetails.settingID#&redirectAction=#request.context.slatAction#&settingName=#thisSetting.settingName#&#thisSetting.settingFilterEntitiesURL#" class="btn btn-mini" icon="pencil" iconOnly="true" modal="true" />
 							</cfif>
 						</cfif>
 					</td>

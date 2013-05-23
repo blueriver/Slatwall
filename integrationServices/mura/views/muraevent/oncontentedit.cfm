@@ -25,7 +25,7 @@
 		<cfset local.contentRestrictedContentDisplayTemplateDetails.parentValue = $.slatwall.getContent().getParentContent().setting('contentRestrictedContentDisplayTemplate') />	
 	</cfif>
 	<cfset local.contentRestrictedContentDisplayTemplateDetails.parentValueFormatted = $.slatwall.formatValue(local.contentRestrictedContentDisplayTemplateDetails.parentValue, "yesno") />
-	<cfset local.contentRestrictedContentDisplayTemplateDetails.valueOptions = $.slatwall.getService("settingService").getSettingOptions("contentRestrictedContentDisplayTemplate") />
+	<cfset local.contentRestrictedContentDisplayTemplateDetails.valueOptions = $.slatwall.getService("contentService").getDisplayTemplateOptions( "barrierPage", $.slatwall.getContent().getSite().getSiteID() ) />
 	
 	<!--- contentRequirePurchaseFlagDetails --->
 	<cfset local.contentRequirePurchaseFlagDetails = $.slatwall.getContent().getSettingDetails('contentRequirePurchaseFlag') />

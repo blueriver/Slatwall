@@ -37,24 +37,33 @@ Notes:
 
 --->
 <cfif thisTag.executionMode is "start">
+	<cfparam name="attributes.hibachiScope" type="any" default="#request.context.fw.getHibachiScope()#" />
+	
 	<cfparam name="attributes.settingName" type="string" />
 	<cfparam name="attributes.settingObject" type="any" default="" />
 	<cfparam name="attributes.settingFilterEntities" type="array" default="#arrayNew(1)#" />
 	<cfparam name="attributes.settingDetails" type="any" default="" />
 	<cfparam name="attributes.settingDisplayName" type="string" default="" />
-	<cfparam name="attributes.settingHint" type="string" default="" > 
+	<cfparam name="attributes.settingHint" type="string" default="" >
+	<cfparam name="attributes.settingFilterEntitiesName" type="string" default="" >
+	<cfparam name="attributes.settingFilterEntitiesURL" type="string" default="" >
 	
 	<cfif isObject(attributes.settingObject)>
 		<cfset attributes.settingDetails = attributes.settingObject.getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
 	<cfelse>
-		<cfset attributes.settingDetails = request.slatwallScope.getService("settingService").getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
+		<cfset attributes.settingDetails = attributes.hibachiScope.getService("settingService").getSettingDetails(settingName=attributes.settingName, filterEntities=attributes.settingFilterEntities) />
 	</cfif>
 	
-	<cfset attributes.settingDisplayName = request.slatwallScope.rbKey("setting.#attributes.settingName#") />
-	<cfset attributes.settingHint = request.slatwallScope.rbKey("setting.#attributes.settingName#_hint") />
+	<cfset attributes.settingDisplayName = attributes.hibachiScope.rbKey("setting.#attributes.settingName#") />
+	<cfset attributes.settingHint = attributes.hibachiScope.rbKey("setting.#attributes.settingName#_hint") />
 	<cfif right(attributes.settingHint, 8) eq "_missing">
 		<cfset attributes.settingHint = "" />
 	</cfif>
+	
+	<cfloop array="#attributes.settingFilterEntities#" index="fe">
+		<cfset attributes.settingFilterEntitiesName = listAppend(attributes.settingFilterEntitiesName, "#attributes.hibachiScope.rbKey('entity.#fe.getClassName()#')#: #fe.getSimpleRepresentation()#") />
+		<cfset attributes.settingFilterEntitiesURL = listAppend(attributes.settingFilterEntitiesURL, "#fe.getPrimaryIDPropertyName()#=#fe.getPrimaryIDValue()#", "&") />
+	</cfloop>
 	
 	<cfassociate basetag="cf_SlatwallSettingTable" datacollection="settings">
 </cfif>

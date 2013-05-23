@@ -62,6 +62,11 @@ Notes:
 	
 	<cffunction name="getDisplayTemplates" access="public">
 		<cfargument name="templateType" type="string" />
+		<cfargument name="siteID" type="string" />
+		
+		<cfif structKeyExists(arguments, "siteID")>
+			<cfreturn ormExecuteQuery(" FROM SlatwallContent WHERE contentTemplateType.systemCode = ? AND site.siteID = ?", ["ctt#arguments.templateType#", arguments.siteID]) />
+		</cfif>
 		
 		<cfreturn ormExecuteQuery(" FROM SlatwallContent WHERE contentTemplateType.systemCode = ?", ["ctt#arguments.templateType#"]) />
 	</cffunction>

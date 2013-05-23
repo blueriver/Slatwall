@@ -36,8 +36,11 @@
 Notes:
 
 --->
+<cfset siteSmartList = $.slatwall.getService('siteService').getSiteSmartList() />
+<cfset siteSmartList.addFilter('activeFlag', 1) /> 
+
 <cfoutput>
-	<cf_SlatwallSettingTable>
+	<cf_SlatwallSettingTable showFilterEntities="#siteSmartList.getRecordsCount()#" showInheritance="false">
 		<cf_SlatwallSetting settingName="productShowDetailWhenNotPublishedFlag" />
 		<cf_SlatwallSetting settingName="productImageOptionCodeDelimiter" />
 		<cf_SlatwallSetting settingName="productTitleString" />
@@ -45,12 +48,11 @@ Notes:
 		<cf_SlatwallSetting settingName="productMetaDescriptionString" />
 		<cf_SlatwallSetting settingName="productMetaKeywordsString" />
 		<cf_SlatwallSetting settingName="productAutoApproveReviewsFlag" />
-	</cf_SlatwallSettingTable>
-	
-	<hr />
-	
-	<cf_SlatwallSettingTable>
 		
-		<cf_SlatwallSetting settingName="productDisplayTemplate" />
+		<!--- Site Specific Settings --->
+		<cfloop array="#siteSmartList.getRecords()#" index="site">
+			<cf_SlatwallSetting settingName="productDisplayTemplate" settingFilterEntities="#[site]#" />
+		</cfloop>
 	</cf_SlatwallSettingTable>
+	
 </cfoutput>

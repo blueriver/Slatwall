@@ -77,9 +77,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: DAO Passthrough ===========================
 	
-	public array function getDisplayTemplateOptions( required string templateType ) {
+	public array function getDisplayTemplateOptions( required string templateType, string siteID ) {
 		var returnArray = [];
-		var displayTemplates = getContentDAO().getDisplayTemplates( templateType=arguments.templateType );
+		var displayTemplates = getContentDAO().getDisplayTemplates( argumentCollection=arguments );
 		for(var template in displayTemplates) {
 			arrayAppend(returnArray, {name=template.getTitle(), value=template.getContentID()});
 		}

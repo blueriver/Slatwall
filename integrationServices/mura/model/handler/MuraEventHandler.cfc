@@ -205,6 +205,11 @@
 				$.slatwall.getContent().setParentContent( $.slatwall.getService("contentService").getContentByCMSContentID( $.event('parentID') ) );
 			}
 			
+			// if the site is null, then we can get it out of the request.muraScope
+			if(isNull($.slatwall.getContent().getSite())) {
+				$.slatwall.getContent().setSite( $.slatwall.getService("siteService").getSiteByCMSSiteID( request.muraScope.event('siteID') ));
+			}
+			
 			include "../../views/muraevent/oncontentedit.cfm";
 		}
 		
