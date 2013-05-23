@@ -54,15 +54,15 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 				{name="All Users",value="all"},
 				{name="None",value="none"}
 			]},
-			createDefaultPages = {fieldType="yesno"},
-			superUserSyncFlag = {fieldType="yesno"},
+			createDefaultPages = {fieldType="yesno", defaultValue=1},
+			superUserSyncFlag = {fieldType="yesno", defaultValue=1},
 			legacyInjectFlag = {fieldType="yesno", defaultValue=0},
-			legacyShoppingCart = {fieldType="text", displayName="Legacy Shopping Cart Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"},
-			legacyOrderStatus = {fieldType="text", displayName="Legacy Order Status Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"},
-			legacyOrderConfirmation = {fieldType="text", displayName="Legacy Order Confirmation Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"},
-			legacyMyAccount = {fieldType="text", displayName="Legacy My Account Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"},
-			legacyCreateAccount = {fieldType="text", displayName="Legacy Create Account Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"},
-			legacyCheckout = {fieldType="text", displayName="Legacy Checkout Filename (blank is recommended)", hint="If you have upgraded from a previous version of Slatwall that used the filename hooks, and the 'frontend' subsystem, then the filename of that page should be in this field"}
+			legacyShoppingCart = {fieldType="text", defaultValue="shopping-cart"},
+			legacyOrderStatus = {fieldType="text", defaultValue="order-status"},
+			legacyOrderConfirmation = {fieldType="text", defaultValue="order-confirmation"},
+			legacyMyAccount = {fieldType="text", defaultValue="my-account"},
+			legacyCreateAccount = {fieldType="text", defaultValue="create-account"},
+			legacyCheckout = {fieldType="text", defaultValue="checkout"}
 		};
 	}
 	
