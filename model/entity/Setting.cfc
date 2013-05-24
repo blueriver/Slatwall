@@ -126,6 +126,7 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 			}
 		}
 		
+		return getHibachiErrors();
 	}
 	
 	// @hint public method for returning the validation class of a property
