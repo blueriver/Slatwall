@@ -68,7 +68,30 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
+	// Non-Persistent Properties
+	property name="attributeValueOptions" persistent="false";
+	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public array function getAttributeValueOptions() {
+		if(!structKeyExists(variables, "attributeValueOptions")) {
+			
+			variables.attributeValueOptions = [];
+			
+			if(!isNull(getAttribute())) {
+				
+				var ao = getAttribute().getAttributeOptions();
+				
+				for(var a=1; a<=arrayLen(ao); a++) {
+					if(!isNull(ao[a].getAttributeOptionLabel()) && !isNull(ao[a].getAttributeOptionValue())) {
+						arrayAppend(variables.attributeValueOptions, {name=ao[a].getAttributeOptionLabel(), value=ao[a].getAttributeOptionValue()});	
+					}
+				}	
+			}
+			
+		}
+		return variables.attributeValueOptions; 
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	

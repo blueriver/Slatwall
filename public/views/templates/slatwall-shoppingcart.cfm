@@ -37,6 +37,24 @@ Notes:
 	
 --->
 <cfinclude template="_slatwall-header.cfm" />
+
+<!--- This import allows for the custom tags required by this page to work --->
+<cfimport prefix="sw" taglib="/Slatwall/public/tags" />
+
+<!---[DEVELOPER NOTES]															
+																				
+	If you would like to customize any of the public tags used by this			
+	template, the recommended method is to uncomment the below import,			
+	copy the tag you'd like to customize into the directory defined by			
+	this import, and then reference with swc:tagname instead of sw:tagname.		
+	Technically you can define the prefix as whatever you would like and use	
+	whatever directory you would like but we recommend using this for			
+	the sake of convention.														
+																				
+	<cfimport prefix="swc" taglib="/Slatwall/custom/public/tags" />				
+																				
+--->
+
 <cfoutput>
 	<div class="container">
 		
@@ -55,7 +73,7 @@ Notes:
 					<h5>Shopping Cart Details</h5>
 					
 					<!--- Update Cart Form --->
-					<form action="?s=1" method="post" class="form-horizontal">
+					<form action="?s=1" method="post">
 						<!--- This slatAction is what tells the form submit to process an update to the cart --->
 						<input type="hidden" name="slatAction" value="public:cart.update" />
 						
@@ -109,6 +127,46 @@ Notes:
 							</cfloop>
 							
 						</table>
+						
+						<!--- START: Custom "Order" Attribute Sets --->
+						<cfset orderAttributeSets = $.slatwall.cart().getAssignedAttributeSetSmartList().getRecords() />
+						
+						<!--- Only display if there are attribute sets assigned --->
+						<cfif arrayLen(orderAttributeSets)>
+							
+							<hr />
+							
+							<!--- Loop over all of the attribute sets --->
+							<cfloop array="#orderAttributeSets#" index="attributeSet">
+								
+								<!--- display the attribute set name --->
+								<h5>#attributeSet.getAttributeSetName()#</h5>
+								
+								<!--- Loop over all of the attributes --->
+								<cfloop array="#attributeSet.getAttributes()#" index="attribute">
+									
+									<!--- Pull this attribute value object out of the order entity ---> 
+									<cfset attributeValueObject = $.slatwall.cart().getAttributeValue(attribute.getAttributeCode(), true) />
+									
+									<!--- Display the attribute value --->
+									<div class="control-group">
+										
+				    					<label class="control-label" for="rating">#attribute.getAttributeName()#</label>
+				    					<div class="controls">
+				    						
+											<sw:formField type="#attribute.getFormFieldType()#" name="#attribute.getAttributeCode()#" valueObject="#attributeValueObject#" valueObjectProperty="attributeValue" valueOptions="#attributeValueObject.getAttributeValueOptions()#" />
+											<sw:errorDisplay object="#attributeValueObject#" errorName="password" />
+											
+				    					</div>
+				  					</div>
+									
+								</cfloop>
+								
+								<hr />
+								
+							</cfloop>
+						</cfif>	
+						<!--- END: Custom "Order" Attribute Sets --->
 						
 						<!--- Action Buttons --->
 						<div class="control-group pull-right">
@@ -172,54 +230,54 @@ Notes:
 				<!--- START: PROMO CODES --->
 				<div class="span4">
 					<div class="well">
-					<h5>Promo Codes</h5>
-					
-					<!--- Start: Existing promo codes --->
-					
-					<cfif arrayLen($.slatwall.cart().getPromotionCodes())><!--- Check to see if there are any existing promotion codes, before we display anything --->
+						<h5>Promo Codes</h5>
 						
-						<table class="table">
-							
-							<!--- Loop over the existing promotion codes. --->
-							<cfloop array="#$.slatwall.cart().getPromotionCodes()#" index="promotionCode">
-								<!---[ DEVELOPER NOTES ]														
-									 																			
-									The 'promotionCode' index of this loop is the full entity with ID, ect...	
-									Not to be confused with the string value of the promotion code iteself,		
-									for that call promotionCode.getPromotionCode() as seen below				
-																												
-								--->
-								<tr>
-									<td>#promotionCode.getPromotionCode()#</td>
-									<td><a href="?slatAction=public:cart.removePromotionCode&promotionCodeID=#promotionCode.getPromotionCodeID()#" class="btn" title="Remove Promotion Code"><i class="icon-remove" /></a></td>
-								</tr>
-							</cfloop>
-							
-						</table>
+						<!--- Start: Existing promo codes --->
 						
-					</cfif>
-					<!--- End: Existing promo codes --->
+						<cfif arrayLen($.slatwall.cart().getPromotionCodes())><!--- Check to see if there are any existing promotion codes, before we display anything --->
 							
-					<!--- Start: Add Promo Code Form --->
-					<form action="?s=1" method="post">
-						<!--- This hidden field tells Slatwall to add the promotionCode entered to the cart --->
-						<input type="hidden" name="slatAction" value="public:cart.addPromotionCode" />
-						
-						<!--- Promotion Code Input Field --->
-						<div class="control-group">
-							<div class="controls">
-								<input type="text" placeholder="Enter Promo Code Here.">
+							<table class="table">
+								
+								<!--- Loop over the existing promotion codes. --->
+								<cfloop array="#$.slatwall.cart().getPromotionCodes()#" index="promotionCode">
+									<!---[ DEVELOPER NOTES ]														
+										 																			
+										The 'promotionCode' index of this loop is the full entity with ID, ect...	
+										Not to be confused with the string value of the promotion code iteself,		
+										for that call promotionCode.getPromotionCode() as seen below				
+																													
+									--->
+									<tr>
+										<td>#promotionCode.getPromotionCode()#</td>
+										<td><a href="?slatAction=public:cart.removePromotionCode&promotionCodeID=#promotionCode.getPromotionCodeID()#" class="btn" title="Remove Promotion Code"><i class="icon-remove" /></a></td>
+									</tr>
+								</cfloop>
+								
+							</table>
+							
+						</cfif>
+						<!--- End: Existing promo codes --->
+								
+						<!--- Start: Add Promo Code Form --->
+						<form action="?s=1" method="post">
+							<!--- This hidden field tells Slatwall to add the promotionCode entered to the cart --->
+							<input type="hidden" name="slatAction" value="public:cart.addPromotionCode" />
+							
+							<!--- Promotion Code Input Field --->
+							<div class="control-group">
+								<div class="controls">
+									<input type="text" placeholder="Enter Promo Code Here.">
+								</div>
 							</div>
-						</div>
-						
-						<!--- Add Promo Code Button --->
-						<div class="control-group">
-							<div class="controls">
-								<button type="submit" class="btn">Add Promo Code</button>
+							
+							<!--- Add Promo Code Button --->
+							<div class="control-group">
+								<div class="controls">
+									<button type="submit" class="btn">Add Promo Code</button>
+								</div>
 							</div>
-						</div>
-					</form>
-					<!--- End: Add Promo Code Form --->
+						</form>
+						<!--- End: Add Promo Code Form --->
 					</div>
 				</div>
 				<!--- END: PROMO CODES --->

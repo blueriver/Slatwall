@@ -60,11 +60,24 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 			var attributes = assignedAttributeSets[ats].getAttributes();
 			
 			for(var at=1; at<=arrayLen(attributes); at++) {
+				
 				if(structKeyExists(arguments.data, attributes[at].getAttributeCode())) {
+					
+					// Get the attribute value object, and update it
 					var av = getAttributeValue( attributes[at].getAttributeCode, true);
 					av.setAttributeValue( data[ attributes[at].getAttributeCode() ]);
 					av.setAttribute( attributes[at] );
 					av.invokeMethod("set#attributeType#", {1=this});
+					
+					// If this attribute value is new, then we can add it to the array
+					if(av.isNew()) {
+						this.addAttributeValue(av);
+					}
+					
+					// Update the cache for this attribute value
+					getAttributeValuesByAttributeCodeStruct()[ attributes[at].getAttributeCode() ] = av;
+					getAttributeValuesByAttributeIDStruct()[ attributes[at].getAttributeID() ] = av;
+					
 				}
 			}
 		}
@@ -105,17 +118,16 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 	}
 	
 	public any function getAttributeValue(required string attribute, returnEntity=false){
-		
 		var attributeValueEntity = "";
 		
 		// If an ID was passed, and that value exists in the ID struct then use it
 		if(len(arguments.attribute) eq 32 && structKeyExists(getAttributeValuesByAttributeIDStruct(), arguments.attribute) ) {
 			attributeValueEntity = getAttributeValuesByAttributeIDStruct()[arguments.attribute];
-
+		
 		// If some other string was passed check the attributeCode struct for it's existance
 		} else if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
 			attributeValueEntity = getAttributeValuesByAttributeCodeStruct()[arguments.attribute];
-			
+		
 		}
 		
 		// Value Entity Found, and we are returning the entire thing
@@ -134,6 +146,14 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 		} else if(arguments.returnEntity) {
 			var newAttributeValue = getService("attributeService").newAttributeValue();
 			newAttributeValue.setAttributeValueType( lcase( replace(getEntityName(),'Slatwall','') ) );
+			var thisAttribute = getService("attributeService").getAttributeByAttributeCode( arguments.attribute );
+			if(isNull(thisAttribute) && len(arguments.attribute) eq 32) {
+				thisAttribute = getService("attributeService").getAttributeByAttributeCode( arguments.attribute );
+			}
+			if(!isNull(thisAttribute)) {
+				newAttributeValue.setAttribute( thisAttribute );
+			}
+			
 			return newAttributeValue;
 		
 		}

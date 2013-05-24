@@ -139,12 +139,14 @@
 		}
 		
 		public void function onRenderEnd( required any $ ) {
-			if(len($.slatwall.getAccount().getAllPermissions())) {
+			if($.slatwall.getLoggedInAsAdminFlag()) {
 				// Set up frontend tools
 				var fetools = "";
+				/*
 				savecontent variable="fetools" {
 					include "/Slatwall/assets/fetools/fetools.cfm";
 				};
+				*/
 				
 				$.event('__muraresponse__', replace($.event('__muraresponse__'), '</body>', '#fetools#</body>'));
 			}
