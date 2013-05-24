@@ -59,11 +59,11 @@
 				}
 				
 				// Setup the proper content node and populate it with our FW/1 view on any keys that might have been found, use whichever key was farthest right
-				if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProduct().isNew() && $.slatwall.getCurrentProduct().getActiveFlag() && ($.slatwall.getCurrentProduct().getPublishedFlag() || $.slatwall.getCurrentProduct().setting('productShowDetailWhenNotPublishedFlag'))) {
+				if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getProduct().isNew() && $.slatwall.getProduct().getActiveFlag() && ($.slatwall.getProduct().getPublishedFlag() || $.slatwall.getProduct().setting('productShowDetailWhenNotPublishedFlag'))) {
 					$.slatwall.setContent($.slatwall.getService("contentService").getContent( $.slatwall.getProduct().setting('productDisplayTemplate', [$.slatwall.getSite()]) ));
-					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					$.content().setTitle( $.slatwall.getCurrentProduct().getTitle() );
-					$.content().setHTMLTitle( $.slatwall.getCurrentProduct().getTitle() );
+					$.event('contentBean', $.getBean("content").loadBy( contentID=$.slatwall.getContent().getCMSContentID(), siteID=$.slatwall.getContent().getSite().getCMSSiteID() ) );
+					$.content().setTitle( $.slatwall.getProduct().getTitle() );
+					$.content().setHTMLTitle( $.slatwall.getProduct().getTitle() );
 					
 					
 					// Setup CrumbList
@@ -74,20 +74,20 @@
 					} else {
 						var crumbDataArray = $.getBean("contentManager").getCrumbList(contentID="00000000000000000000000000000000001", siteID=$.event('siteID'), setInheritance=false, path="00000000000000000000000000000000001", sort="asc");
 					}
-					arrayPrepend(crumbDataArray, $.slatwall.getCurrentProduct().getCrumbData(path=$.event('path'), siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
+					arrayPrepend(crumbDataArray, $.slatwall.getProduct().getCrumbData(path=$.event('path'), siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
 					$.event('crumbdata', crumbDataArray);
 					
-				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProductType().isNew() && $.slatwall.getCurrentProductType().getActiveFlag() ) {
-					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProductType().setting('productTypeDisplayTemplate', [$.slatwall.getSite()])));
-					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					$.content().setTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
-					$.content().setHTMLTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
+				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getProductType().isNew() && $.slatwall.getProductType().getActiveFlag() ) {
+					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getProductType().setting('productTypeDisplayTemplate', [$.slatwall.getSite()])));
+					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getContent().getCMSContentID()) );
+					$.content().setTitle( $.slatwall.getProductType().getProductTypeName() );
+					$.content().setHTMLTitle( $.slatwall.getProductType().getProductTypeName() );
 					
-				} else if ( brandKeyLocation && !$.slatwall.getCurrentBrand().isNew() && $.slatwall.getCurrentBrand().getActiveFlag()  ) {
-					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentBrand().setting('brandDisplayTemplate', [$.slatwall.getSite()])));
-					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					$.content().setTitle( $.slatwall.getCurrentBrand().getBrandName() );
-					$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getBrandName() );
+				} else if ( brandKeyLocation && !$.slatwall.getBrand().isNew() && $.slatwall.getBrand().getActiveFlag()  ) {
+					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getBrand().setting('brandDisplayTemplate', [$.slatwall.getSite()])));
+					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getContent().getCMSContentID()) );
+					$.content().setTitle( $.slatwall.getBrand().getBrandName() );
+					$.content().setHTMLTitle( $.slatwall.getBrand().getBrandName() );
 				}
 			}
 		}
@@ -137,7 +137,7 @@
 		}
 		
 		public void function onRenderEnd( required any $ ) {
-			if(len($.slatwall.getCurrentAccount().getAllPermissions())) {
+			if(len($.slatwall.getAccount().getAllPermissions())) {
 				// Set up frontend tools
 				var fetools = "";
 				savecontent variable="fetools" {
@@ -566,41 +566,28 @@
 		<cfset var parentMappingCache = {} />
 		<cfset var missingContentQuery = "" />
 		
-		<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
-			<cfquery name="missingContentQuery">
-				SELECT
-					tcontent.contentID,
-					tcontent.parentID,
-					tcontent.menuTitle
-				FROM
-					tcontent
-				WHERE
-					tcontent.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />
-				  AND
-	    			tcontent.path LIKE '00000000000000000000000000000000001%'
-				  AND
-					NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID)
-				ORDER BY
+		<cfquery name="missingContentQuery">
+			SELECT
+				tcontent.contentID,
+				tcontent.parentID,
+				tcontent.menuTitle
+			FROM
+				tcontent
+			WHERE
+				tcontent.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />
+			  AND
+			  	tcontent.siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.muraSiteID#" />
+			  AND
+    			tcontent.path LIKE '00000000000000000000000000000000001%'
+			  AND
+				NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID AND SlatwallContent.siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" /> )
+			ORDER BY
+				<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
 					LENGTH( tcontent.path )
-			</cfquery>
-		<cfelse>
-			<cfquery name="missingContentQuery">
-				SELECT
-					tcontent.contentID,
-					tcontent.parentID,
-					tcontent.menuTitle
-				FROM
-					tcontent
-				WHERE
-					tcontent.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />
-				  AND
-	    			tcontent.path LIKE '00000000000000000000000000000000001%'
-				  AND
-					NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID)
-				ORDER BY
+				<cfelse>
 					LEN( tcontent.path )
-			</cfquery>
-		</cfif>
+				</cfif>
+		</cfquery>
 		
 		<cfset var allParentsFound = true />
 		<cfloop query="missingContentQuery">
@@ -637,7 +624,7 @@
 				<cfif not structKeyExists(parentMappingCache, missingContentQuery.parentID)>
 					<cfset var parentContentQuery = "" />
 					<cfquery name="parentContentQuery">
-						SELECT contentID, contentIDPath FROM SlatwallContent WHERE cmsContentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.parentID#" /> 
+						SELECT contentID, contentIDPath FROM SlatwallContent WHERE SlatwallContent.cmsContentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.parentID#" /> AND SlatwallContent.siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" />  
 					</cfquery>
 					<cfif parentContentQuery.recordCount>
 						<cfset parentMappingCache[ missingContentQuery.parentID ] = {} />
