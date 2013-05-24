@@ -159,7 +159,7 @@
 								<div class="btn-group">
 									
 									<!--- Setup delete Details --->
-									<cfset local.deleteErrors = attributes.object.validate(context="delete") />
+									<cfset local.deleteErrors = attributes.hibachiScope.getService("hibachiValidationService").validate(object=attributes.object, context="delete", setErrors=false) />
 									<cfset local.deleteDisabled = local.deleteErrors.hasErrors() />
 									<cfset local.deleteDisabledText = local.deleteErrors.getAllErrorsHTML() />
 									
