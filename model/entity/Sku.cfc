@@ -59,7 +59,7 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	property name="alternateSkuCodes" singularname="alternateSkuCode" fieldtype="one-to-many" fkcolumn="skuID" cfc="AlternateSkuCode" inverse="true" cascade="all-delete-orphan";
 	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="skuID" cascade="all-delete-orphan" inverse="true";
 	property name="skuCurrencies" singularname="skuCurrency" cfc="SkuCurrency" type="array" fieldtype="one-to-many" fkcolumn="skuID" cascade="all-delete-orphan" inverse="true";
-	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="skuID" cfc="Stock" inverse="true" cascade="all";
+	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="skuID" cfc="Stock" inverse="true" cascade="all-delete-orphan";
 	
 	// Related Object Properties (many-to-many - owner)
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID"; 
@@ -102,6 +102,7 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	property name="salePriceDiscountType" type="string" persistent="false";
 	property name="salePriceDiscountAmount" type="string" persistent="false";
 	property name="salePriceExpirationDateTime" type="date" hb_formatType="datetime" persistent="false";
+	property name="stocksDeletableFlag" persistent="false" type="boolean";
 	
 	
     public boolean function getDefaultFlag() {
@@ -511,6 +512,13 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 			return getSalePriceDetails()[ "salePriceExpirationDateTime"];
 		}
 		return "";
+	}
+	
+	public boolean function getStocksDeletableFlag() {
+		if(!structKeyExists(variables, "stocksDeletableFlag")) {
+			variables.stocksDeletableFlag = getService("skuService").getSkuStocksDeletableFlag( skuID=this.getSkuID() );
+		}
+		return variables.stocksDeletableFlag;
 	}
 	
 	public array function getEligibleFulfillmentMethods() {

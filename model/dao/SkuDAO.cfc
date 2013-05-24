@@ -40,8 +40,48 @@ Notes:
 	
 	<cfproperty name="nextOptionGroupSortOrder" type="numeric" />
 	
+	
+	<cffunction name="getSkuStocksDeletableFlag" returnType="boolean" access="public">
+		<cfargument name="skuID" type="string" required="true" />
+		
+		<cfset var rs = "" />
+		
+		<cfset var results = ormExecuteQuery("SELECT skuID
+			FROM
+				SlatwallSku ss
+			WHERE
+				ss.skuID = :skuID
+			  AND (
+			  	EXISTS( SELECT a.inventoryID as id FROM SlatwallInventory a WHERE stock.sku.skuID = :skuID )
+			  	  OR
+			  	EXISTS( SELECT a.orderDeliveryItemID as id FROM SlatwallOrderDeliveryItem a WHERE stock.sku.skuID = :skuID )
+				  OR
+			  	EXISTS( SELECT a.orderItemID as id FROM SlatwallOrderItem a WHERE stock.sku.skuID = :skuID )
+				  OR
+			  	EXISTS( SELECT a.physicalCountItemID as id FROM SlatwallPhysicalCountItem a WHERE stock.sku.skuID = :skuID )
+			  	  OR
+			  	EXISTS( SELECT a.stockAdjustmentDeliveryItemID as id FROM SlatwallStockAdjustmentDeliveryItem a WHERE stock.sku.skuID = :skuID )
+			  	  OR
+			  	EXISTS( SELECT a.stockAdjustmentItemID as id FROM SlatwallStockAdjustmentItem a WHERE fromStock.sku.skuID = :skuID )
+			  	  OR
+			  	EXISTS( SELECT a.stockAdjustmentItemID as id FROM SlatwallStockAdjustmentItem a WHERE toStock.sku.skuID = :skuID )
+			  	  OR
+			  	EXISTS( SELECT a.stockHoldID as id FROM SlatwallStockHold a WHERE stock.sku.skuID = :skuID )
+			  	  OR
+			  	EXISTS( SELECT a.stockReceiverItemID as id FROM SlatwallStockReceiverItem a WHERE stock.sku.skuID = :skuID )
+			  	  OR
+			  	EXISTS( SELECT a.vendorOrderItemID as id FROM SlatwallVendorOrderItem a WHERE stock.sku.skuID = :skuID )
+			  )", { skuID = arguments.skuID }) />
+		
+		<cfif arrayLen(results)>
+			<cfreturn false />
+		</cfif>
+		
+		<cfreturn true />
+	</cffunction>
+	
 	<cfscript>
-			
+
 	public any function getSkuBySkuCode( required string skuCode){
 		return ormExecuteQuery( "SELECT ss FROM SlatwallSku ss LEFT JOIN ss.alternateSkuCodes ascs WHERE ss.skuCode = :skuCode OR ascs.alternateSkuCode = :skuCode", {skuCode=arguments.skuCode}, true ); 
 	}
