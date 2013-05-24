@@ -40,8 +40,7 @@ Notes:
 
 <!--- Dynamic Settings --->
 <cfoutput>
-	
-	<cf_SlatwallSettingTable>
+	<cf_SlatwallSettingTable showInheritance="false">
 		<cfloop list="#listSort(structKeyList(rc.integration.getSettings()), "textnocase")#" index="local.settingName">
 			<cf_SlatwallSetting settingName="integration#rc.integration.getIntegrationPackage()##local.settingName#" settingObject="#rc.integration#" />
 		</cfloop>

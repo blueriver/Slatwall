@@ -386,7 +386,7 @@ globalEncryptionKeySize
 			return getSettingDetails(argumentCollection=arguments).settingValue;
 		}
 		
-		public any function getSettingDetails(required string settingName, any object, array filterEntities, boolean disableFormatting=false) {
+		public any function getSettingDetails(required string settingName, any object, array filterEntities=[], boolean disableFormatting=false) {
 			
 			// Create some placeholder Var's
 			var foundValue = false;
@@ -409,6 +409,9 @@ globalEncryptionKeySize
 			// If this is a global setting there isn't much we need to do because we already know there aren't any relationships
 			if(left(arguments.settingName, 6) == "global" || left(arguments.settingName, 11) == "integration") {
 				settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName);
+				for(var fe=1; fe<=arrayLen(arguments.filterEntities); fe++) {
+					settingDetails.settingRelationships[ arguments.filterEntities[fe].getPrimaryIDPropertyName() ] = arguments.filterEntities[fe].getPrimaryIDValue();
+				}
 				if(settingRecord.recordCount) {
 					foundValue = true;
 					settingDetails.settingValue = settingRecord.settingValue;
@@ -435,6 +438,9 @@ globalEncryptionKeySize
 				if(structKeyExists(arguments, "object") && arguments.object.isPersistent()) {
 					// First Check to see if there is a setting the is explicitly defined to this object
 					settingDetails.settingRelationships[ arguments.object.getPrimaryIDPropertyName() ] = arguments.object.getPrimaryIDValue();
+					for(var fe=1; fe<=arrayLen(arguments.filterEntities); fe++) {
+						settingDetails.settingRelationships[ arguments.filterEntities[fe].getPrimaryIDPropertyName() ] = arguments.filterEntities[fe].getPrimaryIDValue();
+					}
 					settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
 					if(settingRecord.recordCount) {
 						foundValue = true;
@@ -480,7 +486,9 @@ globalEncryptionKeySize
 								}
 								settingDetails.settingRelationships[ relationshipKey ] = relationshipValue;
 							}
-							
+							for(var fe=1; fe<=arrayLen(arguments.filterEntities); fe++) {
+								settingDetails.settingRelationships[ arguments.filterEntities[fe].getPrimaryIDPropertyName() ] = arguments.filterEntities[fe].getPrimaryIDValue();
+							}
 							settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
 							if(settingRecord.recordCount) {
 								foundValue = true;
@@ -507,7 +515,11 @@ globalEncryptionKeySize
 				
 				// If we still haven't found a value yet, lets look for this with no relationships
 				if(!foundValue) {
-					settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName);
+					settingDetails.settingRelationships = {};
+					for(var fe=1; fe<=arrayLen(arguments.filterEntities); fe++) {
+						settingDetails.settingRelationships[ arguments.filterEntities[fe].getPrimaryIDPropertyName() ] = arguments.filterEntities[fe].getPrimaryIDValue();
+					}
+					settingRecord = getSettingRecordBySettingRelationships(settingName=arguments.settingName, settingRelationships=settingDetails.settingRelationships);
 					if(settingRecord.recordCount) {
 						foundValue = true;
 						settingDetails.settingValue = settingRecord.settingValue;
@@ -679,83 +691,75 @@ globalEncryptionKeySize
 				allSettings
 				WHERE
 					LOWER(allSettings.settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingName)#">
-				  AND
 				  	<cfif structKeyExists(settingRelationships, "accountID") and structKeyExists(allSettings, "accountID")>
-						LOWER(allSettings.accountID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.accountID)#" > 
-					<cfelse>
-						allSettings.accountID IS NULL
+						AND LOWER(allSettings.accountID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.accountID)#" > 
+					<cfelseif structKeyExists(allSettings, "accountID")>
+						AND allSettings.accountID IS NULL
 					</cfif>
-				  AND
 				  	<cfif structKeyExists(settingRelationships, "contentID") and structKeyExists(allSettings, "contentID")>
-						LOWER(allSettings.contentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.contentID)#" > 
-					<cfelse>
-						allSettings.contentID IS NULL
+						AND LOWER(allSettings.contentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.contentID)#" > 
+					<cfelseif structKeyExists(allSettings, "contentID")>
+						AND allSettings.contentID IS NULL
 					</cfif>
-				  AND
 					<cfif structKeyExists(settingRelationships, "cmsContentID") and structKeyExists(allSettings, "cmsContentID")>
-						LOWER(allSettings.cmsContentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.cmsContentID)#" > 
-					<cfelse>
-						allSettings.cmsContentID IS NULL
+						AND LOWER(allSettings.cmsContentID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.cmsContentID)#" > 
+					<cfelseif structKeyExists(allSettings, "cmsContentID")>
+						AND allSettings.cmsContentID IS NULL
 					</cfif>
-				  AND
 				  	<cfif structKeyExists(settingRelationships, "paymentMethodID") and structKeyExists(allSettings, "paymentMethodID")>
-						LOWER(allSettings.paymentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.paymentMethodID)#" > 
-					<cfelse>
-						allSettings.paymentMethodID IS NULL
+						AND LOWER(allSettings.paymentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.paymentMethodID)#" > 
+					<cfelseif structKeyExists(allSettings, "paymentMethodID")>
+						AND allSettings.paymentMethodID IS NULL
 					</cfif>
-				  AND
 				  	<cfif structKeyExists(settingRelationships, "productTypeID") and structKeyExists(allSettings, "productTypeID")>
-						LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
-					<cfelse>
-						allSettings.productTypeID IS NULL
+						AND LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
+					<cfelseif structKeyExists(allSettings, "productTypeID")>
+						AND allSettings.productTypeID IS NULL
 					</cfif>
-				  AND
 					<cfif structKeyExists(settingRelationships, "productID") and structKeyExists(allSettings, "productID")>
-						LOWER(allSettings.productID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productID)#" > 
-					<cfelse>
-						allSettings.productID IS NULL
+						AND LOWER(allSettings.productID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productID)#" > 
+					<cfelseif structKeyExists(allSettings, "productID")>
+						AND allSettings.productID IS NULL
 					</cfif>
-				  AND
+					<cfif structKeyExists(settingRelationships, "siteID") and structKeyExists(allSettings, "siteID")>
+						AND LOWER(allSettings.siteID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.siteID)#" > 
+					<cfelseif structKeyExists(allSettings, "siteID")>
+						AND allSettings.siteID IS NULL
+					</cfif>
 					<cfif structKeyExists(settingRelationships, "skuID") and structKeyExists(allSettings, "skuID")>
-						LOWER(allSettings.skuID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.skuID)#" > 
-					<cfelse>
-						allSettings.skuID IS NULL
+						AND LOWER(allSettings.skuID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.skuID)#" > 
+					<cfelseif structKeyExists(allSettings, "skuID")>
+						AND allSettings.skuID IS NULL
 					</cfif>
-				  AND
 					<cfif structKeyExists(settingRelationships, "brandID") and structKeyExists(allSettings, "brandID")>
-						LOWER(allSettings.brandID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.brandID)#" > 
-					<cfelse>
-						allSettings.brandID IS NULL
+						AND LOWER(allSettings.brandID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.brandID)#" > 
+					<cfelseif structKeyExists(allSettings, "brandID")>
+						AND allSettings.brandID IS NULL
 					</cfif>
-				  AND
 					<cfif structKeyExists(settingRelationships, "emailID") and structKeyExists(allSettings, "emailID")>
-						LOWER(allSettings.emailID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.emailID)#" > 
-					<cfelse>
-						allSettings.emailID IS NULL
+						AND LOWER(allSettings.emailID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.emailID)#" > 
+					<cfelseif structKeyExists(allSettings, "emailID")>
+						AND allSettings.emailID IS NULL
 					</cfif>
-				  AND
 					<cfif structKeyExists(settingRelationships, "emailTemplateID") and structKeyExists(allSettings, "emailTemplateID")>
-						LOWER(allSettings.emailTemplateID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.emailTemplateID)#" > 
-					<cfelse>
-						allSettings.emailTemplateID IS NULL
+						AND LOWER(allSettings.emailTemplateID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.emailTemplateID)#" > 
+					<cfelseif structKeyExists(allSettings, "emailTemplateID")>
+						AND allSettings.emailTemplateID IS NULL
 					</cfif>
-				  AND
-					<cfif structKeyExists(settingRelationships, "shippingMethodID") and structKeyExists(allSettings, "shippingMethodID")>
-						LOWER(allSettings.shippingMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.shippingMethodID)#" > 
-					<cfelse>
-						allSettings.shippingMethodID IS NULL
+				  	<cfif structKeyExists(settingRelationships, "shippingMethodID") and structKeyExists(allSettings, "shippingMethodID")>
+						AND LOWER(allSettings.shippingMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.shippingMethodID)#" > 
+					<cfelseif structKeyExists(allSettings, "shippingMethodID")>
+						AND allSettings.shippingMethodID IS NULL
 					</cfif>
-				  AND
-					<cfif structKeyExists(settingRelationships, "shippingMethodRateID") and structKeyExists(allSettings, "shippingMethodRateID")>
-						LOWER(allSettings.shippingMethodRateID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.shippingMethodRateID)#" > 
-					<cfelse>
-						allSettings.shippingMethodRateID IS NULL
+				  	<cfif structKeyExists(settingRelationships, "shippingMethodRateID") and structKeyExists(allSettings, "shippingMethodRateID")>
+						AND LOWER(allSettings.shippingMethodRateID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.shippingMethodRateID)#" > 
+					<cfelseif structKeyExists(allSettings, "shippingMethodRateID")>
+						AND allSettings.shippingMethodRateID IS NULL
 					</cfif>
-				  AND
-					<cfif structKeyExists(settingRelationships, "fulfillmentMethodID") and structKeyExists(allSettings, "fulfillmentMethodID")>
-						LOWER(allSettings.fulfillmentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.fulfillmentMethodID)#" > 
-					<cfelse>
-						allSettings.fulfillmentMethodID IS NULL
+				  	<cfif structKeyExists(settingRelationships, "fulfillmentMethodID") and structKeyExists(allSettings, "fulfillmentMethodID")>
+						AND LOWER(allSettings.fulfillmentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.fulfillmentMethodID)#" > 
+					<cfelseif structKeyExists(allSettings, "fulfillmentMethodID")>
+						AND allSettings.fulfillmentMethodID IS NULL
 					</cfif>
 		</cfquery>
 		

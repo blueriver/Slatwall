@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallSettingTable>
+	<cf_SlatwallSettingTable showInheritance="false">
 		<cf_SlatwallSetting settingName="shippingMethodRateAdjustmentType" />
 		<cf_SlatwallSetting settingName="shippingMethodRateAdjustmentAmount" />
 		<cf_SlatwallSetting settingName="shippingMethodRateMinimumAmount" />

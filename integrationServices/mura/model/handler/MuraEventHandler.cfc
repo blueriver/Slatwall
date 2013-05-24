@@ -60,7 +60,7 @@
 				
 				// Setup the proper content node and populate it with our FW/1 view on any keys that might have been found, use whichever key was farthest right
 				if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProduct().isNew() && $.slatwall.getCurrentProduct().getActiveFlag() && ($.slatwall.getCurrentProduct().getPublishedFlag() || $.slatwall.getCurrentProduct().setting('productShowDetailWhenNotPublishedFlag'))) {
-					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getProduct().setting('productDisplayTemplate')));
+					$.slatwall.setContent($.slatwall.getService("contentService").getContent( $.slatwall.getProduct().setting('productDisplayTemplate', [$.slatwall.getSite()]) ));
 					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
 					$.content().setTitle( $.slatwall.getCurrentProduct().getTitle() );
 					$.content().setHTMLTitle( $.slatwall.getCurrentProduct().getTitle() );
@@ -78,13 +78,13 @@
 					$.event('crumbdata', crumbDataArray);
 					
 				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProductType().isNew() && $.slatwall.getCurrentProductType().getActiveFlag() ) {
-					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProductType().setting('productTypeDisplayTemplate')));
+					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProductType().setting('productTypeDisplayTemplate', [$.slatwall.getSite()])));
 					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
 					$.content().setTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
 					$.content().setHTMLTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
 					
 				} else if ( brandKeyLocation && !$.slatwall.getCurrentBrand().isNew() && $.slatwall.getCurrentBrand().getActiveFlag()  ) {
-					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentBrand().setting('brandDisplayTemplate')));
+					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentBrand().setting('brandDisplayTemplate', [$.slatwall.getSite()])));
 					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
 					$.content().setTitle( $.slatwall.getCurrentBrand().getBrandName() );
 					$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getBrandName() );

@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallSettingTable>
+	<cf_SlatwallSettingTable showInheritance="false">
 		<cf_SlatwallSetting settingName="fulfillmentMethodAutoLocation" />
 	</cf_SlatwallSettingTable>
 </cfoutput>

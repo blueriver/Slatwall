@@ -37,9 +37,10 @@ Notes:
 
 --->
 <cfparam name="rc.productType" type="any" />
+<cfparam name="rc.sitesArray" />
 
 <cfoutput>
-	<cf_SlatwallSettingTable>
+	<cf_SlatwallSettingTable showFilterEntities="#arrayLen(rc.sitesArray)#">
 		<cf_SlatwallSetting settingName="productShowDetailWhenNotPublishedFlag" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productImageOptionCodeDelimiter" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productTitleString" settingObject="#rc.productType#" />
@@ -47,8 +48,10 @@ Notes:
 		<cf_SlatwallSetting settingName="productMetaDescriptionString" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productMetaKeywordsString" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productAutoApproveReviewsFlag" settingObject="#rc.productType#" />
-		<!---
-		<cf_SlatwallSetting settingName="productDisplayTemplate" settingObject="#rc.productType#" />
-		--->
+		
+		<!--- Site Specific Settings --->
+		<cfloop array="#rc.sitesArray#" index="site">
+			<cf_SlatwallSetting settingName="productDisplayTemplate" settingObject="#rc.productType#" settingFilterEntities="#[site]#" />
+		</cfloop>
 	</cf_SlatwallSettingTable>
 </cfoutput>

@@ -36,12 +36,18 @@
 Notes:
 
 --->
+<cfparam name="rc.productType" type="any" />
+<cfparam name="rc.sitesArray" />
 
 <cfoutput>
-	<cf_SlatwallSettingTable>
-		<cf_SlatwallSetting settingName="productTypeDisplayTemplate" settingObject="#rc.productType#" />
+	<cf_SlatwallSettingTable showFilterEntities="#arrayLen(rc.sitesArray)#">
 		<cf_SlatwallSetting settingName="productTypeHTMLTitleString" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productTypeMetaDescriptionString" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productTypeMetaKeywordsString" settingObject="#rc.productType#" />
+		
+		<!--- Site Specific Settings --->
+		<cfloop array="#rc.sitesArray#" index="site">
+			<cf_SlatwallSetting settingName="productTypeDisplayTemplate" settingObject="#rc.productType#" settingFilterEntities="#[site]#" />
+		</cfloop>
 	</cf_SlatwallSettingTable>
 </cfoutput>

@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallSettingTable>
+	<cf_SlatwallSettingTable showInheritance="false">
 		<cf_SlatwallSetting settingName="globalEncryptionAlgorithm" />
 		<cf_SlatwallSetting settingName="globalEncryptionEncoding" />
 		<cf_SlatwallSetting settingName="globalEncryptionKeySize" />

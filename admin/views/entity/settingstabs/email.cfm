@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-	<cf_SlatwallSettingTable>
+	<cf_SlatwallSettingTable showInheritance="false">
 		<cf_SlatwallSetting settingName="emailFromAddress" />
 		<cf_SlatwallSetting settingName="emailToAddress" />
 		<cf_SlatwallSetting settingName="emailCCAddress" />
