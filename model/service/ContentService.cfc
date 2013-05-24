@@ -48,8 +48,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getSettingService().getSettingRecordCount(settingName="contentRestrictAccessFlag", settingValue=1);
 	}
 	
-	public any function getRestrictedContentBycmsContentID(required any cmsContentID) {
-		var content = this.getContentByCmsContentID(arguments.cmsContentID,true);
+	public any function getRestrictedContentByCMSContentIDAndCMSSiteID(required any cmsContentID, required any cmsSiteID) {
+		var content = getContentByCMSContentIDAndCMSSiteID(arguments.cmsContentID, arguments.cmsSiteID);
 		if(content.isNew()) {
 			content.setCmsContentID(arguments.cmsContentID);
 		}
@@ -85,6 +85,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		return returnArray;
 	}
+	
+	public any function getContentByCMSContentIDAndCMSSiteID( required string cmsContentID, required string cmsSiteID ) {
+		return getContentDAO().getContentByCMSContentIDAndCMSSiteID( argumentCollection=arguments );
+	}
+	
 	
 	// ===================== START: DAO Passthrough ===========================
 	

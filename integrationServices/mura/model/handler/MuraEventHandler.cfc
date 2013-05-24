@@ -129,8 +129,10 @@
 				}
 			}
 			
-			// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
-			$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentID( $.content('contentID') ) );
+			// Now that there is a mura contentBean in the muraScope for sure, we can setup our content Variable
+			if($.slatwall.getContent().getNewFlag()) {
+				$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
+			}
 			
 			// check if user has access to this page
 			checkAccess( $=$ );
@@ -406,7 +408,7 @@
 		
 		// Helper method to do our access check
 		private void function checkAccess( required any $ ) {
-			if(!$.slatwall.getService("accessService").hasAccess($.content('contentID'))){
+			if(!$.slatwall.getService("accessService").hasAccess($.content('contentID'), $.content('siteID'))){
 				
 				// save the current content to be used on the barrier page
 				$.event("restrictedContent",$.content());
