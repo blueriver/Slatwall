@@ -66,9 +66,24 @@ component displayname="Country" entityname="SlatwallCountry" table="SlatwallCoun
 	property name="postalCodeLabel" ormtype="string";
 	property name="postalCodeShowFlag" ormtype="boolean";
 	property name="postalCodeRequiredFlag" ormtype="boolean";
+	
+	// Non-Persistent Properties
+	property name="stateCodeOptions" persistent="false" type="array";
 
 
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public array function getStateCodeOptions() {
+		if(!structKeyExists(variables, "stateCodeOptions")) {
+			var smartList = getService("addressService").getStateSmartList();
+			smartList.addSelect(propertyIdentifier="stateName", alias="name");
+			smartList.addSelect(propertyIdentifier="stateCode", alias="value");
+			smartList.addFilter("countryCode", getCountryCode()); 
+			smartList.addOrder("stateName|ASC");
+			variables.stateCodeOptions = smartList.getRecords();
+		}
+		return variables.stateCodeOptions;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	

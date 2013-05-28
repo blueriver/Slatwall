@@ -65,19 +65,19 @@ Notes:
 			<!--- LABEL Display --->
 			<cfcase value="label">
 				<cfloop array="#attributes.errors#" index="error">
-					<cfoutput><label for="#attributes.for#" generated="true" class="error">#error#</label></cfoutput>
+					<cfoutput><label for="#attributes.for#" generated="true" class="text-error error">#error#</label></cfoutput>
 				</cfloop>
 			</cfcase>
 			<!--- DIV Display --->
 			<cfcase value="div">
 				<cfloop array="#attributes.errors#" index="error">
-					<cfoutput><div class="error">#error#</div></cfoutput>
+					<cfoutput><div class="text-error error">#error#</div></cfoutput>
 				</cfloop>
 			</cfcase>
 			<!--- P Display --->
 			<cfcase value="p">
 				<cfloop array="#attributes.errors#" index="error">
-					<cfoutput><p class="error">#error#</p></cfoutput>
+					<cfoutput><p class="text-error error">#error#</p></cfoutput>
 				</cfloop>
 			</cfcase>
 			<!--- BR Display --->
@@ -89,13 +89,13 @@ Notes:
 			<!--- SPAN Display --->
 			<cfcase value="span">
 				<cfloop array="#attributes.errors#" index="error">
-					<cfoutput><span class="error">#error#</span></cfoutput>
+					<cfoutput><span class="text-error error">#error#</span></cfoutput>
 				</cfloop>
 			</cfcase>
 			<!--- LI Display --->
 			<cfcase value="li">
 				<cfloop array="#attributes.errors#" index="error">
-					<cfoutput><li class="error">#error#</li></cfoutput>
+					<cfoutput><li class="text-error error">#error#</li></cfoutput>
 				</cfloop>
 			</cfcase>
 			<!--- None Display --->
