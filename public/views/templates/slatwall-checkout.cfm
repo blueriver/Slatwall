@@ -395,7 +395,7 @@ Notes:
 										<form action="?s=1" method="post">
 											
 											<!--- Hidden slatAction to trigger a cart update with the new fulfillment information --->
-											<input type="hidden" name="slatAction" value="pubic:cart.update" />
+											<input type="hidden" name="slatAction" value="public:cart.update" />
 											
 											<div class="span4">
 												<h5>Shipping Address</h5>
@@ -417,7 +417,8 @@ Notes:
 													<hr />
 												</cfif>
 												
-												<sw:addressForm id="newShippingAddress" address="#orderFulfillment.getAddress()#" fieldClass="span4" />
+												<!--- New Shipping Address --->
+												<sw:addressForm id="newShippingAddress" address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#orderFulfillmentIndex#].shippingAddress." fieldClass="span4" />
 												
 											</div>
 											

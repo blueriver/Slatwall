@@ -70,8 +70,8 @@
 				</cfif>
 				
 				<!--- Street Address (important the data-sw-address allows for this to be modified by jQuery below)--->
-				<cfif attributes.address.getCountry().getStreetAddressShowFlag() and thisField eq "streetAddress">
-					<div class="control-group" data-sw-property="streetAddress">
+				<cfif thisField eq "streetAddress">
+					<div class="control-group#iif(attributes.address.getCountry().getStreetAddressShowFlag(), de(''), de(' hide'))#" data-sw-property="streetAddress">
 						<label class="control-label" for="rating" data-sw-label="true">#request.slatwallScope.rbKey('entity.address.streetAddress')#</label>
 						<div class="controls" data-sw-field="true">
 							
@@ -83,8 +83,8 @@
 				</cfif>
 				
 				<!--- Street 2 Address (important the data-sw-address allows for this to be modified by jQuery below)--->
-				<cfif attributes.address.getCountry().getStreet2AddressShowFlag() and thisField eq "street2Address">
-					<div class="control-group" data-sw-property="street2Address">
+				<cfif thisField eq "street2Address">
+					<div class="control-group#iif(attributes.address.getCountry().getStreet2AddressShowFlag(), de(''), de(' hide'))#" data-sw-property="street2Address">
 						<label class="control-label" for="rating" data-sw-label="true">#request.slatwallScope.rbKey('entity.address.street2Address')#</label>
 						<div class="controls" data-sw-field="true">
 							
@@ -96,8 +96,8 @@
 				</cfif>
 				
 				<!--- Locality --->
-				<cfif attributes.address.getCountry().getLocalityShowFlag() and thisField eq "locality">
-					<div class="control-group" data-sw-property="postalCode">
+				<cfif thisField eq "locality">
+					<div class="control-group#iif(attributes.address.getCountry().getLocalityShowFlag(), de(''), de(' hide'))#" data-sw-property="locality">
 						<label class="control-label" for="rating" data-sw-label="true">#request.slatwallScope.rbKey('entity.address.locality')#</label>
 						<div class="controls" data-sw-field="true">
 							
@@ -109,8 +109,8 @@
 				</cfif>
 				
 				<!--- City --->
-				<cfif attributes.address.getCountry().getCityShowFlag() and thisField eq "city">
-					<div class="control-group" data-sw-property="city">
+				<cfif thisField eq "city">
+					<div class="control-group#iif(attributes.address.getCountry().getCityShowFlag(), de(''), de(' hide'))#" data-sw-property="city">
 						<label class="control-label" for="rating" data-sw-label="true">#request.slatwallScope.rbKey('entity.address.city')#</label>
 						<div class="controls" data-sw-field="true">
 							
@@ -122,13 +122,13 @@
 				</cfif>
 				
 				<!--- State Code --->
-				<cfif attributes.address.getCountry().getStateCodeShowFlag() and thisField eq "stateCode">
-					<div class="control-group" data-sw-property="stateCode">
+				<cfif thisField eq "stateCode">
+					<div class="control-group#iif(attributes.address.getCountry().getStateCodeShowFlag(), de(''), de(' hide'))#" data-sw-property="stateCode">
 						<label class="control-label" for="rating" data-sw-label="true">#request.slatwallScope.rbKey('entity.address.stateCode')#</label>
 						<div class="controls" data-sw-field="true">
 							
-							<cfif arrayLen(attributes.address.getStateCodeOptions()) gt 1>
-								<sw:formField type="select" name="#attributes.fieldNamePrefix#stateCode" valueObject="#attributes.address#" valueObjectProperty="stateCode" valueOptions="#attributes.address.getStateCodeOptions()#" class="#attributes.fieldClass#" />
+							<cfif arrayLen(attributes.address.getCountry().getStateCodeOptions())>
+								<sw:formField type="select" name="#attributes.fieldNamePrefix#stateCode" valueObject="#attributes.address#" valueObjectProperty="stateCode" valueOptions="#attributes.address.getCountry().getStateCodeOptions()#" class="#attributes.fieldClass#" />
 							<cfelse>
 								<sw:formField type="text" name="#attributes.fieldNamePrefix#stateCode" valueObject="#attributes.address#" valueObjectProperty="stateCode" class="#attributes.fieldClass#" />
 							</cfif>
@@ -139,8 +139,8 @@
 				</cfif>
 				
 				<!--- Postal Code --->
-				<cfif attributes.address.getCountry().getPostalCodeShowFlag() and thisField eq "postalCode">
-					<div class="control-group" data-sw-property="postalCode">
+				<cfif thisField eq "postalCode">
+					<div class="control-group#iif(attributes.address.getCountry().getPostalCodeShowFlag(), de(''), de(' hide'))#" data-sw-property="postalCode">
 						<label class="control-label" for="rating" data-sw-label="true">#request.slatwallScope.rbKey('entity.address.postalCode')#</label>
 						<div class="controls" data-sw-field="true">
 							
@@ -150,15 +150,17 @@
 						</div>
 					</div>
 				</cfif>
-			</cfloop>
-			<script type="text/javascript">
 				
+			</cfloop>
+			
+			<script type="text/javascript">
 				(function($){
 					
 					$(document).ready(function(e){
 						
 						$('body').on('change', 'select[name="#attributes.fieldNamePrefix#countryCode"]', function(){
 							
+							var that = this;
 							var fieldList = '#attributes.fieldList#';
 							
 							var data = {
@@ -172,12 +174,50 @@
 								data: data,
 								dataType: "json",
 								context: document.body,
-								beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
+								headers: { 'X-Hibachi-AJAX': true },
 								error: function( err ) {
 									alert('There was an error processing request: ' + err);
 								},
 								success: function(r) {
-									console.log(r);
+									
+									// Show & Hide necessary elements
+									$.each(['streetAddress','street2Address','locality','city','stateCode','postalCode'], function(i, v){
+										if(r.country[ v + 'ShowFlag' ] && $(that).closest('.sw-address').find('[data-sw-property="' + v + '"]').hasClass('hide')) {
+											$(that).closest('.sw-address').find('[data-sw-property="' + v + '"]').removeClass('hide');
+										} else if (!r.country[ v + 'ShowFlag' ] && !$(that).closest('.sw-address').find('[data-sw-property="' + v + '"]').hasClass('hide')) {
+											$(that).closest('.sw-address').find('[data-sw-property="' + v + '"]').addClass('hide');
+										}
+									});
+									
+									// State Options Exists, and the select already exists
+									if(r.country.stateCodeOptions.length) {
+										
+										// Possible turn from text input to select
+										if($(that).closest('.sw-address').find('[data-sw-property="stateCode"] input').length && !$(that).closest('.sw-address').find('[data-sw-property="stateCode"] select').length) {
+											var dname = $(that).closest('.sw-address').find('[data-sw-property="stateCode"] input').attr('name');
+											var dclass = $(that).closest('.sw-address').find('[data-sw-property="stateCode"] input').attr('class');
+											var newSelect = '<select name="' + dname + '" class="' + dclass + '"></select>';
+											$(that).closest('.sw-address').find('[data-sw-property="stateCode"] input').replaceWith( newSelect );
+										}
+										
+										// Clear out the options
+										$(that).closest('.sw-address').find('[data-sw-property="stateCode"] select').html('');
+										
+										// Loop over the options and add then to the select
+										$.each(r.country.stateCodeOptions, function(i, v){
+											$(that).closest('.sw-address').find('[data-sw-property="stateCode"] select').append('<option value="' + v['value'] + '">' + v['name'] + '</option>');	
+										});
+										
+									// If we need to convert the select box into a text input
+									} else if(!$(that).closest('.sw-address').find('[data-sw-property="stateCode"] input').length && $(that).closest('.sw-address').find('[data-sw-property="stateCode"] select').length) {
+										 
+										var dname = $(that).closest('.sw-address').find('[data-sw-property="stateCode"] select').attr('name');
+										var dclass = $(that).closest('.sw-address').find('[data-sw-property="stateCode"] select').attr('class');
+										var newInput = '<input type="text" name="' + dname + '" class="' + dclass + '" />';
+										$(that).closest('.sw-address').find('[data-sw-property="stateCode"] select').replaceWith(newInput);
+										
+									}
+									
 								}
 							});
 							
@@ -186,7 +226,6 @@
 					});
 					
 				})( jQuery );
-				
 			</script>
 		</div>
 	</cfoutput>

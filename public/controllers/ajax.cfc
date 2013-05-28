@@ -18,7 +18,7 @@ component output="false" accessors="true" {
 		var country = getAddressService().getCountry(rc.countryCode);
 		
 		if(!isNull(country)) {
-			rc.ajaxResponse["country"] = serializeJSON(country);	
+			rc.ajaxResponse["country"] = country;	
 		}
 	}
 	
