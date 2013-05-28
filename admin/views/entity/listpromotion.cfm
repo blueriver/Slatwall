@@ -51,7 +51,7 @@ Notes:
 	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
 	<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" />
 	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
-	<cf_HibachiListingColumn propertyIdentifier="currentFlag" />
+	<cf_HibachiListingColumn propertyIdentifier="currentFlag" sort=false search=false />
 </cf_HibachiListingDisplay>
 
 </cfoutput>
