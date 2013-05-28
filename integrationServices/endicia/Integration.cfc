@@ -44,16 +44,16 @@ component accessors="true" output="false" displayname="Endicia" extends="Slatwal
 	
 	public struct function getSettings() {
 		return {
-			accountID = {fieldType="text", displayName="Account ID"},
-			fromPostalCode = {fieldType="text", displayName="From Postal Code"},
-			passPhrase = {fieldType="password", displayName="Pass Phrase", encryptValue=true},
-			syncFTPSite = {fieldType="text", displayName="FTP Sync Server Address"},
-			syncFTPSiteUsername = {fieldType="text", displayName="FTP Sync Username"},
-			syncFTPSitePassword = {fieldType="password", displayName="FTP Sync Password", encryptValue=true},
-			syncFTPSitePort = {fieldType="text", displayName="FTP Sync Port", defaultValue=21},
-			syncFTPSiteDropoffDirectory = {fieldType="text", displayName="FTP Sync Dropoff Directory"},
-			syncFTPSiteDropoffFilename = {fieldType="text", displayName="FTP Sync Dropoff Fielname"},
-			syncFTPSiteSecure = {fieldType="yesno", displayName="FTP Sync Secure?", defaultValue=0}
+			accountID = {fieldType="text"},
+			fromPostalCode = {fieldType="text"},
+			passPhrase = {fieldType="password", encryptValue=true},
+			syncFTPSite = {fieldType="text"},
+			syncFTPSiteUsername = {fieldType="text"},
+			syncFTPSitePassword = {fieldType="password", encryptValue=true},
+			syncFTPSitePort = {fieldType="text", defaultValue=21},
+			syncFTPSiteDropoffDirectory = {fieldType="text"},
+			syncFTPSiteDropoffFilename = {fieldType="text"},
+			syncFTPSiteSecure = {fieldType="yesno", defaultValue=0}
 		};
 	}
 	

@@ -52,9 +52,9 @@ component accessors="true" output="false" displayname="USA epay" extends="Slatwa
 
 	public struct function getSettings() {
 		var settings = {
-			key = {fieldType="text", displayName="Source Key"},
-			pin = {fieldType="password", displayName="Pin Number", encryptValue=true},
-			testingFlag = {fieldType="yesno", displayName="Test Mode", defaultValue="1"}
+			key = {fieldType="text"},
+			pin = {fieldType="password", encryptValue=true},
+			testingFlag = {fieldType="yesno", defaultValue="1"}
 		};
 		
 		return settings;
