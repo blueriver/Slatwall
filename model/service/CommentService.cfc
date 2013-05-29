@@ -95,6 +95,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 		
 	public boolean function removeAllEntityRelatedComments(required any entity) {
+		var properties = arguments.entity.getProperties();
+		
+		for(var p=1; p<=arrayLen(properties); p++) {
+			if(structKeyExists(properties[p], "fieldType") && properties[p].fieldType eq "one-to-many" && structKeyExists(properties[p], "cascade") && properties[p].cascade eq "all-delete-orphan" && structKeyExists(properties[p], "cfc") && getHasPropertyByEntityNameAndPropertyIdentifier('CommentRelationship', properties[p].cfc)) {
+				var subItems = arguments.entity.invokeMethod("get#properties[p].name#");
+				for(var s=1; s<=arrayLen(subItems); s++) {
+					removeAllEntityRelatedComments(subItems[s]);
+				}
+			}
+		}
+		
+		
 		if(getHasPropertyByEntityNameAndPropertyIdentifier('CommentRelationship', arguments.entity.getClassName())) {
 			return getCommentDAO().deleteAllRelatedComments(primaryIDPropertyName=arguments.entity.getPrimaryIDPropertyName(), primaryIDValue=arguments.entity.getPrimaryIDValue());	
 		}
