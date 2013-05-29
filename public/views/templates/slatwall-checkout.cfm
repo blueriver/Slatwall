@@ -339,7 +339,7 @@ Notes:
 									</div>
 									
 									<!--- Create Button --->
-									<div class="control-group">
+									<div class="control-group pull-right">
 				    					<div class="controls">
 				      						<button type="submit" class="btn btn-primary">Create Account & Continue</button>
 				    					</div>
@@ -499,7 +499,7 @@ Notes:
 												<div class="control-group pull-right">
 													<div class="controls">
 														<!--- Continue, just submits the form --->
-														<button type="submit" class="btn btn-primary">Continue</button>
+														<button type="submit" class="btn btn-primary">Save & Continue</button>
 													</div>
 												</div>
 											</div>
@@ -524,8 +524,10 @@ Notes:
 						<!--- START: PAYMENT --->
 						<h4>Step 3 - Payment Details</h4>
 						
+						<br />
 						<!--- Display existing order payments --->
 						<cfif arrayLen($.slatwall.cart().getOrderPayments())>
+							<h5>Payments Applied</h5>
 							<table class="table">
 								<tr>
 									<th>Payment Details</th>
@@ -544,24 +546,85 @@ Notes:
 						
 						<!--- Payment Method Nav Tabs --->
 						<ul class="nav nav-tabs" id="myTab">
+							
+							<!--- This first variables here is only used to define the 'active' tab for bootstrap css to take over --->
 							<cfset first = true />
+							
+							<!--- If the user has "AccountPaymentMethods" then we can first display a tab that allows them to select from existing payment methods ---> 
+							<cfif arrayLen($.slatwall.account().getAccountPaymentMethods())>
+								<li class="active"><a href="##account-payment-methods" data-toggle="tab">Use Saved Payment Info</a></li>
+								<cfset first = false />
+							</cfif>
 							
 							<!--- Loop over all of the eligible payment methods --->
 							<cfloop array="#eligiblePaymentMethods#" index="paymentDetails">
-								<li class="#iif(first, de('active'), de(''))#"><a href="###paymentDetails.paymentMethod.getPaymentMethodID()#">Pay With #paymentDetails.paymentMethod.getPaymentMethodName()#</a></li>
+								<li class="#iif(first, de('active'), de(''))#"><a href="##tab#paymentDetails.paymentMethod.getPaymentMethodID()#" data-toggle="tab">Pay with #paymentDetails.paymentMethod.getPaymentMethodName()#</a></li>
 								<cfset first = false />
 							</cfloop>
 						</ul>
 						
+						<!--- Setup the addOrderPayment entity so that it can be used for each of these --->
+						<cfset addOrderPaymentObj = $.slatwall.cart().getProcessObject("addOrderPayment") />
+						
 						<!--- Payment Tab Content --->
 						<div class="tab-content">
 							
+							<!--- This first variables here is only used to define the 'active' tab for bootstrap css to take over --->
 							<cfset first = true />
+							
+							<!--- If the user has "AccountPaymentMethods" then we can first display a tab that allows them to select from existing payment methods ---> 
+							<cfif arrayLen($.slatwall.account().getAccountPaymentMethods())>
+								<div class="tab-pane active" id="account-payment-methods">
+									<form action="?s=1" method="post">
+												
+										<!--- Hidden slatAction to trigger a cart update with the new fulfillment information --->
+										<input type="hidden" name="slatAction" value="public:cart.addOrderPayment" />
+										
+										<cfset apmFirst = true />
+										
+										<!--- Loop over all of the account payment methods and display them as a radio button to select --->
+										<cfloop array="#$.slatwall.account().getAccountPaymentMethods()#" index="accountPaymentMethod">
+											
+											<input type="radio" name="accountPaymentMethodID" value="#accountPaymentMethod.getAccountPaymentMethodID()#" <cfif apmFirst>checked="checked" <cfset ampFirst = false /></cfif>/>
+											
+											<!--- CASH --->
+											<cfif accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "cash">
+												#accountPaymentMethod.getSimpleRepresentation()#
+												<hr />
+											<!--- CHECK --->
+											<cfelseif accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "check">
+												#accountPaymentMethod.getSimpleRepresentation()#
+												<hr />
+											<!--- CREDIT CARD --->
+											<cfelseif accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "creditCard">
+												#accountPaymentMethod.getSimpleRepresentation()#
+												<hr />
+											<!--- GIFT CARD --->
+											<cfelseif accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "giftCard">
+												#accountPaymentMethod.getSimpleRepresentation()#
+												<hr />
+											<!--- TERM PAYMENT --->
+											<cfelseif accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "termPayment">
+												#accountPaymentMethod.getSimpleRepresentation()#
+												<hr />
+											</cfif>
+										</cfloop>
+										
+										<!--- This button will just add the order payment, but not actually process the order --->
+										<button type="submit" class="btn">Apply Payment Method</button>
+										
+										<!--- Clicking this button will not only add the payment, but it will also attempt to place the order. --->
+										<button type="submit" class="btn btn-primary" name="slatAction" value="public:cart.placeOrder">Apply Payment Method & Place Order</button>
+									</form>
+								</div>
+								<cfset first = false />
+							</cfif>
 							
 							<!--- Loop over all of the eligible payment methods --->
 							<cfloop array="#eligiblePaymentMethods#" index="paymentDetails">
 								
-								<div class="tab-pane#iif(first, de(' active'), de(''))#" id="#paymentDetails.paymentMethod.getPaymentMethodID()#">
+								<div class="tab-pane#iif(first, de(' active'), de(''))#" id="tab#paymentDetails.paymentMethod.getPaymentMethodID()#">
+									
 									<form action="?s=1" method="post">
 												
 										<!--- Hidden slatAction to trigger a cart update with the new fulfillment information --->
@@ -582,11 +645,73 @@ Notes:
 												<div class="span4">
 													<h5>Billing Address</h5>
 													
-													<!---<sw:addressForm id="newShippingAddress" address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#orderFulfillmentIndex#].shippingAddress." fieldClass="span4" />--->
+													<sw:addressForm id="newBillingAddress" address="#addOrderPaymentObj.getNewOrderPayment().getBillingAddress()#" fieldNamePrefix="newOrderPayment.billingAddress." fieldClass="span4" />
 												</div>
 												<div class="span4">
 													<h5>Credit Card Info</h5>
 													
+													<!--- Credit Card Number --->
+													<div class="control-group">
+								    					<label class="control-label" for="rating">Credit Card Number</label>
+								    					<div class="controls">
+								    						
+															<sw:formField type="text" name="newOrderPayment.creditCardNumber" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="creditCardNumber" class="span4" />
+															<sw:errorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="newOrderPayment" />
+															
+								    					</div>
+								  					</div>
+													
+													<!--- Name on Credit Card --->
+													<div class="control-group">
+								    					<label class="control-label" for="rating">Name on Card</label>
+								    					<div class="controls">
+								    						
+															<sw:formField type="text" name="newOrderPayment.nameOnCreditCard" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="nameOnCreditCard" class="span4" />
+															<sw:errorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="nameOnCreditCard" />
+															
+								    					</div>
+								  					</div>
+													
+													<!--- Security & Expiration Row --->
+													<div class="row">
+														
+														<div class="span2">
+															
+															<!--- Security Code --->
+															<div class="control-group">
+										    					<label class="control-label" for="rating">Security Code</label>
+										    					<div class="controls">
+										    						
+																	<sw:formField type="text" name="newOrderPayment.securityCode" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="securityCode" class="span2" />
+																	<sw:errorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="securityCode" />
+																	
+										    					</div>
+										  					</div>
+															
+														</div>
+														
+														
+														<div class="span2">
+															
+															<!--- Expiration --->	
+															<div class="control-group">
+										    					<label class="control-label pull-right" for="rating">Expiration ( MM / YYYY )</label>
+										    					<div class="controls pull-right">
+										    						
+																	<sw:formField type="select" name="newOrderPayment.expirationMonth" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="expirationMonth" valueOptions="#addOrderPaymentObj.getNewOrderPayment().getExpirationMonthOptions()#" class="span1" />
+																	<sw:formField type="select" name="newOrderPayment.expirationYear" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="expirationYear" valueOptions="#addOrderPaymentObj.getNewOrderPayment().getExpirationYearOptions()#" class="span1" />
+																	<sw:errorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="expirationMonth" />
+																	<sw:errorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="expirationYear" />
+																	
+										    					</div>
+										  					</div>
+															
+														</div>
+													</div>
+													<br />
+													<p>Amount:<br />
+													#$.slatwall.formatValue(paymentDetails.maximumAmount, 'currency')# <a href="##">Split Payment</a>
+													</p>
 												</div>
 											</div>
 										<!--- GIFT CARD --->
@@ -594,52 +719,25 @@ Notes:
 											
 										<!--- TERM PAYMENT --->
 										<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "termPayment">
-												
+											
 										</cfif>
 										
-										<!--- This button will just add the order payment, but not actually process the order --->
-										<button type="submit" class="btn">Add Payment</button>
-										
-										<!--- Clicking this button will not only add the payment, but it will also attempt to place the order. --->
-										<button type="submit" class="btn btn-primary" name="slatAction" value="public:cart.placeOrder">Add Payment & Place Order</button>
+										<div class="control-group pull-right">
+											<div class="controls">
+												<!--- This button will just add the order payment, but not actually process the order --->
+												<button type="submit" class="btn">Add Payment & Review</button>
+												
+												<!--- Clicking this button will not only add the payment, but it will also attempt to place the order. --->
+												<button type="submit" class="btn btn-primary" name="slatAction" value="public:cart.placeOrder">Add Payment & Place Order</button>
+											</div>
+										</div>
 									</form>
 								</div>
 								
 								<cfset first = false />
 							</cfloop>
 						</div>
-						<!---	
-							<ul class="nav nav-tabs" id="myTab">
-								<li class="active"><a href="#home">Home</a></li>
-								<li><a href="#profile">Profile</a></li>
-								<li><a href="#messages">Messages</a></li>
-								<li><a href="#settings">Settings</a></li>
-							</ul>
- 
-<div class="tab-content">
-<div class="tab-pane active" id="home">...</div>
-<div class="tab-pane" id="profile">...</div>
-<div class="tab-pane" id="messages">...</div>
-<div class="tab-pane" id="settings">...</div>
-</div>
-							
-							<div class="row">
-								<div class="span4">
-									<h5>Billing Address</h5>
-									
-									<!---<sw:addressForm id="newShippingAddress" address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#orderFulfillmentIndex#].shippingAddress." fieldClass="span4" />--->
-								</div>
-								<div class="span4">
-									<h5>Credit Card Info</h5>
-									
-								</div>
-							</div>
-			--->
-			
-			
-			
-							
-						</form>
+						
 						<!--- END: PAYMENT --->
 							
 <!--- ============= CONFIRMATION ============================================== --->
@@ -691,9 +789,11 @@ Notes:
 								
 								<!--- EMAIL --->
 								<cfif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "email">
-									#orderFulfillment.getEmailAddress()#<br />
+									Email Address: #orderFulfillment.getEmailAddress()#<br />
+									
 								<!--- PICKUP --->
 								<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup">
+									Pickup Location: #orderFulfillment.getPickupLocation().getLocationName()#
 									
 								<!--- SHIPPING --->
 								<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
