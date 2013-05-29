@@ -1258,6 +1258,19 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.orderFulfillment;
 	}
 	
+	public any function processOrderFulfillment_manualFulfillmentCharge(required any orderFulfillment, struct data={}) {
+		
+		arguments.orderFulfillment.setManualFulfillmentChargeFlag( true );
+		arguments.orderFulfillment = this.saveOrderFulfillment(arguments.orderFulfillment, arguments.data);
+		
+		if(arguments.orderFulfillment.hasErrors()) {
+			arguments.orderFulfillment.setManualFulfillmentChargeFlag( false );
+		}
+		
+		return arguments.orderFulfillment;
+	}
+	
+	
 	// Process: Order Return
 	// (needs refactor)
 	public any function processOrderReturn_receiveReturn(required any orderReturn, struct data={}, string processContext="process") {
