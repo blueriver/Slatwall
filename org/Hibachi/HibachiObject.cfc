@@ -183,7 +183,7 @@ component accessors="true" output="false" persistent="false" {
 		return getApplicationValue("application").buildURL(argumentcollection=arguments);
 	}
 	
-	public any function formatValue() {
+	public any function formatValue( required string value, required string formatType, struct formatDetails={} ) {
 		return getService("hibachiUtilityService").formatValue(argumentcollection=arguments);
 	}
 	

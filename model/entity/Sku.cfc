@@ -117,7 +117,7 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 		return !getDefaultFlag();
     }
     
-    public numeric function getPriceByCurrencyCode( required string currencyCode ) {
+    public any function getPriceByCurrencyCode( required string currencyCode ) {
     	if(structKeyExists(getCurrencyDetails(), arguments.currencyCode)) {
     		return getCurrencyDetails()[ arguments.currencyCode ].price;
     	}

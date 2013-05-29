@@ -220,6 +220,10 @@
 		<cf_HibachiMessageDisplay />
 		
 	<cfelse>
+		
+		<!--- Message Display --->
+		<cf_HibachiMessageDisplay />
+		
 		<!--- Clear the generated content so that it isn't rendered --->
 		<cfset thistag.generatedcontent = "" />
 	</cfif>
