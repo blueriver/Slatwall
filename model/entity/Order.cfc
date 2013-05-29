@@ -86,7 +86,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="addOrderItemStockOptionsSmartList" persistent="false";
 	property name="addPaymentRequirementDetails" persistent="false";
 	property name="discountTotal" persistent="false" hb_formatType="currency";
-	property name="eligiblePaymentMethodDetails" persisten="false";
+	property name="eligiblePaymentMethodDetails" persistent="false";
 	property name="itemDiscountAmountTotal" persistent="false" hb_formatType="currency";
 	property name="fulfillmentDiscountAmountTotal" persistent="false" hb_formatType="currency";
 	property name="fulfillmentTotal" persistent="false" hb_formatType="currency";
