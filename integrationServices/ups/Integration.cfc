@@ -52,17 +52,17 @@ component accessors="true" output="false" displayname="UPS" extends="Slatwall.in
 
 	public struct function getSettings() {
 		var settings = {
-			apiKey = {fieldType="text", displayName="API Key"},
-			username = {fieldType="text", displayName="UPS Username"},
-			password = {fieldType="password", displayName="UPS Password", encryptValue=true},
-			testingFlag = {fieldType="yesno", displayName="Test Mode", defaultValue="1"},
-			shipperNumber = {fieldType="text", displayName="Shipper Number"},
-			shipFromCity = {fieldType="text", displayName="Shipping From City"},
-			shipFromStateCode = {fieldType="text", displayName="Shipping From State Code"},
-			shipFromPostalCode = {fieldType="text", displayName="Shipping From Postal Code"},
-			shipFromCountryCode = {fieldType="text", displayName="Shipping From Country Code"},
-			pickupTypeCode = {fieldType="text", displayName="Pickup Type Code (advanced optional)", defaultValue="03"},
-			customerClassificationCode = {fieldType="text", displayName="Customer Classification Code (advanced optional)", defaultValue="04"}
+			apiKey = {fieldType="text"},
+			username = {fieldType="text"},
+			password = {fieldType="password", encryptValue=true},
+			testingFlag = {fieldType="yesno", defaultValue="1"},
+			shipperNumber = {fieldType="text"},
+			shipFromCity = {fieldType="text"},
+			shipFromStateCode = {fieldType="text"},
+			shipFromPostalCode = {fieldType="text"},
+			shipFromCountryCode = {fieldType="text"},
+			pickupTypeCode = {fieldType="text", defaultValue="03"},
+			customerClassificationCode = {fieldType="text", defaultValue="04"}
 		};
 		
 		return settings;

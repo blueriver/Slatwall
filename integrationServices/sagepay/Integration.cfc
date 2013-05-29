@@ -52,10 +52,10 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 
 	public struct function getSettings() {
 		var settings = {
-			vendorID = {fieldType="text", displayName="Vendor ID"},
-			currency = {fieldType="text", displayName="Currency"},
-			simulatorMode = {fieldType="yesno", displayName="Simulator Mode", defaultValue="1"},
-			testMode = {fieldType="yesno", displayName="Test Mode", defaultValue="1"}
+			vendorID = {fieldType="text"},
+			currency = {fieldType="text"},
+			simulatorMode = {fieldType="yesno", defaultValue="1"},
+			testMode = {fieldType="yesno", defaultValue="1"}
 		};
 		
 		return settings;
