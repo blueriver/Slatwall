@@ -86,6 +86,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="addOrderItemStockOptionsSmartList" persistent="false";
 	property name="addPaymentRequirementDetails" persistent="false";
 	property name="discountTotal" persistent="false" hb_formatType="currency";
+	property name="eligiblePaymentMethodDetails" persisten="false";
 	property name="itemDiscountAmountTotal" persistent="false" hb_formatType="currency";
 	property name="fulfillmentDiscountAmountTotal" persistent="false" hb_formatType="currency";
 	property name="fulfillmentTotal" persistent="false" hb_formatType="currency";
@@ -257,6 +258,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getDiscountTotal() {
 		return precisionEvaluate(getItemDiscountAmountTotal() + getFulfillmentDiscountAmountTotal() + getOrderDiscountAmountTotal());
 		
+	}
+	
+	public array function getEligiblePaymentMethodDetails() {
+		if(!structKeyExists(variables, "eligiblePaymentMethodDetails")) {
+			variables.eligiblePaymentMethodDetails = getService("paymentService").getEligiblePaymentMethodDetailsForOrder( order=this );
+		}
+		return variables.eligiblePaymentMethodDetails;
 	}
 	
 	public numeric function getItemDiscountAmountTotal() {

@@ -50,6 +50,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="accountEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="accountEmailAddressID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="pickupLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
@@ -211,9 +212,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     		for(var i=1; i<=arrayLen(fsmo); i++) {
     			arrayAppend(oArr, {name=fsmo[i].getSimpleRepresentation(), value=fsmo[i].getShippingMethodRate().getShippingMethod().getShippingMethodID()});	
     		}
-    		if(arrayLen(oArr)) {
-    			arrayPrepend(oArr, {name=rbKey('define.select'), value=''});
-    		} else {
+    		if(!arrayLen(oArr)) {
     			arrayPrepend(oArr, {name=rbKey('define.none'), value=''});
     		}
     		variables.shippingMethodOptions = oArr;
