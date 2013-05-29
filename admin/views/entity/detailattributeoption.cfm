@@ -41,15 +41,13 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.attributeOption#" sRenderItem="detailAttribute" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.attributeOption#" sRenderItem="detailAttribute" edit="#rc.edit#"
+								saveActionQueryString="attributeID=#rc.attribute.getAttributeID()#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.attributeOption#" edit="#rc.edit#" 
 									backAction="admin:entity.detailAttribute" 
 								    backQueryString="attributeID=#rc.attribute.getAttributeID()#" 
 								    cancelAction="admin:entity.detailAttribute"
 									cancelQueryString="attributeID=#rc.attribute.getAttributeID()#" />
-		
-		<!--- Hidden field to allow rc.attribute to be set on invalid submit --->
-		<input type="hidden" name="attributeID" value="#rc.attribute.getAttributeID()#" />
 		
 		<!--- Hidden field to attach this to the attribute --->
 		<input type="hidden" name="attribute.attributeID" value="#rc.attribute.getAttributeID()#" />
