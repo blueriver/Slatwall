@@ -58,6 +58,7 @@ Notes:
 	<!--- If in edit and order is of correct status then we can add sale order items --->
 		
 	<cfif rc.edit and listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
+		<!---
 		<ul>
 			<li class="active"><a href="##tabsaddsku" data-toggle="tab">#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.sku')#</a></li>
 			<li><a href="##tabsaddstock" data-toggle="tab">#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.stock')#</a></li> 
@@ -65,6 +66,7 @@ Notes:
 		<div class="tab-content">
 			<div class="tab-pane active" id="tabsaddsku">
 				<div class="row-fluid">
+					--->
 					<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemSkuOptionsSmartList()#"
 											  recordProcessAction="admin:entity.processOrder"
 											  recordProcessQueryString="orderItemTypeSystemCode=oitSale"
@@ -82,6 +84,7 @@ Notes:
 						<cf_HibachiListingColumn processObjectProperty="price" fieldClass="span1" />
 						<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 					</cf_HibachiListingDisplay>
+					<!---
 				</div>
 			</div>
 			<div class="tab-pane" id="tabsaddstock">
@@ -107,6 +110,7 @@ Notes:
 				</div>
 			</div>
 		</div>
+		--->
 	</cfif>
 	
 </cfoutput>

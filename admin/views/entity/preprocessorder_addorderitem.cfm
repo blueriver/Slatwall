@@ -134,8 +134,6 @@ Notes:
 					</cfif>
 				</cf_HibachiPropertyList>
 				
-				
-				
 			</cf_HibachiPropertyRow>
 		<cfelse>
 			<p class="text-error">#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.wrongCurrency_info')#</p>
