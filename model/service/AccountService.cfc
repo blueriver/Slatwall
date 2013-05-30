@@ -69,6 +69,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: Process Methods ===========================
 	
+	// Account
 	public any function processAccount_changePassword(required any account, required any processObject) {
 		var authArray = arguments.account.getAccountAuthentications();
 		for(var i=1; i<=arrayLen(authArray); i++) {
@@ -155,7 +156,6 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.account;
 	}
 	
-	
 	public any function processAccount_logout( required any account ) {
 		getHibachiSessionService().logoutAccount();
 		
@@ -199,9 +199,54 @@ component extends="HibachiService" accessors="true" output="false" {
 	}
 	
 	public any function processAccount_addAccountPayment(required any account, required any processObject) {
+		
+		// Get the populated newOrderPayment out of the processObject
+		var newAccountPayment = processObject.getNewAccountPayment();
+		
+		// Make sure that this new orderPayment gets attached to the order
+		if(isNull(newAccountPayment.getAccount())) {
+			newAccountPayment.setAccount( arguments.account );
+		}
+		
+		// If this is an existing account payment method, then we can pull the data from there
+		if( len(arguments.processObject.getAccountPaymentMethodID()) ) {
+			
+			// Setup the newOrderPayment from the existing payment method
+			var accountPaymentMethod = this.getAccountPaymentMethod( arguments.processObject.getAccountPaymentMethodID() );
+			newAccountPayment.copyFromAccountPaymentMethod( accountPaymentMethod );
+			
+		// This is a new payment, so we need to setup the billing address and see if there is a need to save it against the account
+		} else {
+			
+			// Setup the billing address as an accountAddress if it existed, otherwise the billing address will have most likely just been populated already
+			if(!isNull(arguments.processObject.getAccountAddressID()) && len(arguments.processObject.getAccountAddressID())) {
+				var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getAccountAddressID() );
+				
+				if(!isNull(accountAddress)) {
+					newAccountPayment.setBillingAddress( accountAddress.getAddress().copyAddress( true ) );
+				}
+			}
+			
+			// If saveAccountPaymentMethodFlag is set to true, then we need to save this object
+			if(arguments.processObject.getSaveAccountPaymentMethodFlag()) {
+				var newAccountPaymentMethod = getAccountService().newAccountPaymentMethod();
+				newAccountPaymentMethod.copyFromAccountPayment( newAccountPayment );
+				newAccountPaymentMethod.setAccount( arguments.account );
+			}
+
+		}
+		
+		// Save the newOrderPayment
+		newAccountPayment = this.saveAccountPayment( newAccountPayment );
+		
+		if(newAccountPayment.hasErrors()) {
+			arguments.account.addError('accountPayment', rbKey('admin.entity.order.addAccountPayment_error'));
+		}
+		
 		return arguments.account;
 	}
 	
+	// Account Payment
 	public any function processAccountPayment_createTransaction(required any accountPayment, required any processObject) {
 		
 		// Create a new payment transaction
@@ -226,6 +271,24 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ====================== START: Save Overrides ===========================
 	
+	public any function saveAccountPayment(required any accountPayment, struct data={}, string context="save") {
+		
+		// Call the generic save method to populate and validate
+		arguments.accountPayment = save(arguments.accountPayment, arguments.data, arguments.context);
+		
+		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
+		if(!arguments.orderPayment.hasErrors() && !isNull(arguments.accountPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.accountPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.accountPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
+			var transactionData = {
+				amount = arguments.accountPayment.getAmount(),
+				transactionType = arguments.accountPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()
+			};
+			arguments.accountPayment = this.processAccountPayment(arguments.accountPayment, transactionData, 'createTransaction');
+		}
+		
+		return arguments.orderPayment;
+		
+	}
+		
 	public any function savePermissionGroup(required any permissionGroup, struct data={}, string context="save") {
 	
 		arguments.permissionGroup.setPermissionGroupName( arguments.data.permissionGroupName );

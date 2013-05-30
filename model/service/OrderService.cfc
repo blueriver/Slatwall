@@ -656,7 +656,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var newOrderPayment = processObject.getNewOrderPayment();
 		
 		// Make sure that this new orderPayment gets attached to the order
-		if(isNull(newOrderPayment.gettOrder())) {
+		if(isNull(newOrderPayment.getOrder())) {
 			newOrderPayment.setOrder( arguments.order );
 		}
 		

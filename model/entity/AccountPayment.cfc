@@ -42,15 +42,18 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	property name="accountPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormtype="big_decimal" notnull="true";
 	property name="currencyCode" ormtype="string" length="3";
-	
-	// Persistent Properties - creditCard Specific
-	property name="nameOnCreditCard" ormType="string";
+	property name="bankRoutingNumberEncrypted" ormType="string";
+	property name="bankAccountNumberEncrypted" ormType="string";
+	property name="checkNumberEncrypted" ormType="string";
 	property name="creditCardNumberEncrypted" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";
 	property name="expirationMonth" ormType="string" hb_formfieldType="select";
 	property name="expirationYear" ormType="string" hb_formfieldType="select";
+	property name="giftCardNumberEncrypted" ormType="string";
+	property name="nameOnCreditCard" ormType="string";
 	property name="providerToken" ormType="string";
+	
 
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" hb_optionsNullRBKey="define.select";
@@ -85,12 +88,18 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	property name="amountUncredited" persistent="false" hb_formatType="currency";
 	property name="amountUncaptured" persistent="false" hb_formatType="currency";
 	property name="amountUnreceived" persistent="false" hb_formatType="currency";
+	property name="bankRoutingNumber" persistent="false";
+	property name="bankAccountNumber" persistent="false";
+	property name="checkNumber" persistent="false";
 	property name="creditCardNumber" persistent="false";
 	property name="expirationDate" persistent="false";
 	property name="experationMonthOptions" persistent="false";
 	property name="expirationYearOptions" persistent="false";
+	property name="giftCardNumber" persistent="false";
 	property name="paymentMethodType" persistent="false";
 	property name="securityCode" persistent="false";
+	property name="creditCardOrProviderTokenExistsFlag" persistent="false";
+	
 	
 	public any function init() {
 		if(isNull(variables.amount)) {
@@ -225,6 +234,13 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 		return getAmountReceived();
 	}
 	
+	public boolean function getCreditCardOrProviderTokenExistsFlag() {
+		if(isNull(getCreditCardNumber()) && isNull(getProviderToken())) {
+			return false;
+		}
+		return true;
+	}
+	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
@@ -272,7 +288,18 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	// =============== START: Custom Formatting Methods ====================
 	
 	// ===============  END: Custom Formatting Methods =====================
-
+	
+	// ============== START: Overridden Implicet Getters ===================
+	
+	public any function getBillingAddress() {
+		if( !structKeyExists(variables, "billingAddress") ) {
+			return getService("addressService").newAddress();
+		}
+		return variables.billingAddress;
+	}
+	
+	// ==============  END: Overridden Implicet Getters ====================
+	
 	// ================== START: Overridden Methods ========================
 	
 	public any function getSimpleRepresentation() {

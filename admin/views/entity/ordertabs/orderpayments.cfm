@@ -71,18 +71,7 @@ Notes:
 	</cf_HibachiListingDisplay>
 	
 	<cfif rc.order.getPaymentAmountTotal() neq rc.order.getTotal()>
-		<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="addOrderPayment" class="btn" icon="plus" modal="true" />
-		<!---
-		<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.add')#" icon="plus" buttonClass="btn-inverse">
-			<cfloop array="#rc.order.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
-				<cfif rc.order.getPaymentAmountTotal() lt rc.order.getTotal()> 
-					<cf_HibachiActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:entity.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCharge" modal=true />
-				<cfelse>
-					<cf_HibachiActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.refund')#" action="admin:entity.createorderpayment" querystring="orderID=#rc.orderID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&orderPaymentTypeSystemCode=optCredit" modal=true />
-				</cfif>
-			</cfloop>
-		</cf_HibachiActionCallerDropdown>
-		--->
+		<cf_HibachiProcessCaller action="admin:entity.preprocessorder" entity="#rc.order#" processContext="addOrderPayment" class="btn" icon="plus" modal="true" />
 	</cfif>
 	
 </cfoutput>
