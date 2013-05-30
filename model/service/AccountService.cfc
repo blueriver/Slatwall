@@ -232,6 +232,8 @@ component extends="HibachiService" accessors="true" output="false" {
 				var newAccountPaymentMethod = this.newAccountPaymentMethod();
 				newAccountPaymentMethod.copyFromAccountPayment( newAccountPayment );
 				newAccountPaymentMethod.setAccount( arguments.account );
+				
+				newAccountPaymentMethod = this.saveAccountPaymentMethod();
 			}
 
 		}
@@ -239,8 +241,29 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Save the newAccountPayment
 		newAccountPayment = this.saveAccountPayment( newAccountPayment );
 		
+		// If there are errors in the newAccountPayment after save, then add them to the account
 		if(newAccountPayment.hasErrors()) {
 			arguments.account.addError('accountPayment', rbKey('admin.entity.order.addAccountPayment_error'));
+			
+		// If no errors, then we can process a transaction
+		} else {
+			
+			var transactionData = {
+				amount = newAccountPayment.getAmount()
+			};
+			
+			if(newAccountPayment.getAccountPaymentType().getSystemCode() eq "aptCharge") {
+				if(newAccountPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
+					transactionData.transactionType = 'authorizeAndCharge';
+				} else {
+					transactionData.transactionType = 'receive';	
+				}
+			} else {
+				transactionData.transactionType = 'credit';
+			}
+			
+			newAccountPayment = this.processAccountPayment(newAccountPayment, transactionData, 'createTransaction');
+				
 		}
 		
 		return arguments.account;
@@ -271,21 +294,21 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ====================== START: Save Overrides ===========================
 	
-	public any function saveAccountPayment(required any accountPayment, struct data={}, string context="save") {
+	public any function saveAccountPaymentMethod(required any accountPaymentMethod, struct data={}, string context="save") {
 		
 		// Call the generic save method to populate and validate
-		arguments.accountPayment = save(arguments.accountPayment, arguments.data, arguments.context);
+		arguments.accountPaymentMethod = save(arguments.accountPaymentMethod, arguments.data, arguments.context);
 		
 		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
-		if(!arguments.accountPayment.hasErrors() && !isNull(arguments.accountPayment.getPaymentMethod().getSaveAccountPaymentTransactionType()) && len(arguments.accountPayment.getPaymentMethod().getSaveAccountPaymentTransactionType()) && arguments.accountPayment.getPaymentMethod().getSaveAccountPaymentTransactionType() neq "none") {
+		if(!arguments.accountPaymentMethod.hasErrors() && !isNull(arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()) && len(arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()) && arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType() neq "none") {
 			var transactionData = {
-				amount = arguments.accountPayment.getAmount(),
-				transactionType = arguments.accountPayment.getPaymentMethod().getSaveAccountPaymentTransactionType()
+				amount = arguments.accountPaymentMethod.getAmount(),
+				transactionType = arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()
 			};
-			arguments.accountPayment = this.processAccountPayment(arguments.accountPayment, transactionData, 'createTransaction');
+			arguments.accountPaymentMethod = this.processAccountPayment(arguments.accountPayment, transactionData, 'createTransaction');
 		}
 		
-		return arguments.accountPayment;
+		return arguments.accountPaymentMethod;
 		
 	}
 		

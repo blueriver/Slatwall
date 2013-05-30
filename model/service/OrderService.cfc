@@ -684,6 +684,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				var newAccountPaymentMethod = getAccountService().newAccountPaymentMethod();
 				newAccountPaymentMethod.copyFromOrderPayment( newOrderPayment );
 				newAccountPaymentMethod.setAccount( arguments.order.getAccount() );
+				
+				newAccountPaymentMethod = getAccountService().saveAccountPaymentMethod( newAccountPaymentMethod );
 			}
 
 		}
