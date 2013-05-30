@@ -58,7 +58,7 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" hb_optionsNullRBKey="define.select";
 	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID" hb_optionsNullRBKey="define.select";
-	property name="accountPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPaymentTypeID" hb_optionsNullRBKey="define.select" hb_optionsSmartListData="f:parentType.systemCode=accountPaymentType";
+	property name="accountPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPaymentTypeID" hb_optionsSmartListData="f:parentType.systemCode=accountPaymentType";
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all" hb_optionsNullRBKey="define.select";
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" hb_optionsNullRBKey="define.select";
 	
@@ -139,6 +139,21 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 			arrayAppend(yearOptions,{name=thisYear, value=right(thisYear,2)});
 		}
 		return yearOptions;
+	}
+	
+	public any function getPaymentMethodOptions() {
+		if(!structKeyExists(variables, "paymentMethodOptions")) {
+			var sl = getService("paymentService").getPaymentMethodSmartList();
+			
+			sl.addFilter('activeFlag', 1);
+			sl.addSelect('paymentMethodID', 'value');
+			sl.addSelect('paymentMethodName', 'name');
+			sl.addSelect('paymentMethodType', 'paymentmethodtype');
+			sl.addSelect('allowSaveFlag', 'allowsave');
+			
+			variables.paymentMethodOptions = sl.getRecords();
+		}
+		return variables.paymentMethodOptions;
 	}
 	
 	

@@ -220,7 +220,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			
 			// Setup the billing address as an accountAddress if it existed, otherwise the billing address will have most likely just been populated already
 			if(!isNull(arguments.processObject.getAccountAddressID()) && len(arguments.processObject.getAccountAddressID())) {
-				var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getAccountAddressID() );
+				var accountAddress = this.getAccountAddress( arguments.processObject.getAccountAddressID() );
 				
 				if(!isNull(accountAddress)) {
 					newAccountPayment.setBillingAddress( accountAddress.getAddress().copyAddress( true ) );
@@ -229,7 +229,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			
 			// If saveAccountPaymentMethodFlag is set to true, then we need to save this object
 			if(arguments.processObject.getSaveAccountPaymentMethodFlag()) {
-				var newAccountPaymentMethod = getAccountService().newAccountPaymentMethod();
+				var newAccountPaymentMethod = this.newAccountPaymentMethod();
 				newAccountPaymentMethod.copyFromAccountPayment( newAccountPayment );
 				newAccountPaymentMethod.setAccount( arguments.account );
 			}
