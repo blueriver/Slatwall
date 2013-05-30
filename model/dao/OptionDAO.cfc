@@ -48,14 +48,14 @@ Notes:
 		<cfquery name="rs">
 			SELECT
 				SlatwallOption.optionID,
-				slatwallOption.optionName,
-				slatwallOptionGroup.optionGroupName
+				SlatwallOption.optionName,
+				SlatwallOptionGroup.optionGroupName
 			FROM
-				slatwallOption
+				SlatwallOption
 			  INNER JOIN
-			  	slatwallOptionGroup on slatwallOptionGroup.optionGroupID = slatwallOption.optionGroupID
+			  	SlatwallOptionGroup on SlatwallOptionGroup.optionGroupID = SlatwallOption.optionGroupID
 			WHERE
-				slatwallOption.optionGroupID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.existingOptionGroupIDList#" list="true">)
+				SlatwallOption.optionGroupID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.existingOptionGroupIDList#" list="true">)
 			  AND
 			  	NOT EXISTS(
 			  		SELECT DISTINCT
@@ -90,7 +90,7 @@ Notes:
 		<cfquery name="rs">
 			SELECT
 				SlatwallOptionGroup.optionGroupID,
-				slatwallOptionGroup.optionGroupName
+				SlatwallOptionGroup.optionGroupName
 			FROM
 				SlatwallOptionGroup
 			WHERE
