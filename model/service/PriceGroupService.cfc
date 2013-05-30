@@ -418,12 +418,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				if(arguments.order.getOrderItems()[i].getOrderItemType().getSystemCode() == "oitSale") {
 					var priceGroupDetails = getBestPriceGroupDetailsBasedOnSkuAndAccount(arguments.order.getOrderItems()[i].getSku(), arguments.order.getAccount());
 					
-					if(priceGroupDetails.price < arguments.order.getOrderItems()[i].getSkuPrice() && isObject(priceGroupDetails.priceGroup)) {
+					if(priceGroupDetails.price < arguments.order.getOrderItems()[i].getPrice() && isObject(priceGroupDetails.priceGroup)) {
 						arguments.order.getOrderItems()[i].setPrice( priceGroupDetails.price );
 						arguments.order.getOrderItems()[i].setAppliedPriceGroup( priceGroupDetails.priceGroup );
-					} else {
-						arguments.order.getOrderItems()[i].setPrice( arguments.order.getOrderItems()[i].getSkuPrice() );
-						arguments.order.getOrderItems()[i].setAppliedPriceGroup( javaCast("null", "") );
 					}
 				}	
 			}	
