@@ -15,7 +15,7 @@
 		<cfloop array="#thistag.tabs#" index="tab">
 			<!--- Make sure there is a view --->
 			<cfif not len(tab.view) and len(tab.property)>
-				<cfset tab.view = "#attributes.subsystem#:#attributes.section#/#lcase(attributes.object.getClassName())#tabs/#tab.property#" />
+				<cfset tab.view = "#attributes.subsystem#:#attributes.section#/#lcase(attributes.object.getClassName())#tabs/#lcase(tab.property)#" />
 				
 				<cfset propertyMetaData = attributes.object.getPropertyMetaData( tab.property ) />
 				
