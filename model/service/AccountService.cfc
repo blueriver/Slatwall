@@ -200,10 +200,10 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public any function processAccount_addAccountPayment(required any account, required any processObject) {
 		
-		// Get the populated newOrderPayment out of the processObject
+		// Get the populated newAccountPayment out of the processObject
 		var newAccountPayment = processObject.getNewAccountPayment();
 		
-		// Make sure that this new orderPayment gets attached to the order
+		// Make sure that this new accountPayment gets attached to the order
 		if(isNull(newAccountPayment.getAccount())) {
 			newAccountPayment.setAccount( arguments.account );
 		}
@@ -211,7 +211,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		// If this is an existing account payment method, then we can pull the data from there
 		if( len(arguments.processObject.getAccountPaymentMethodID()) ) {
 			
-			// Setup the newOrderPayment from the existing payment method
+			// Setup the newAccountPayment from the existing payment method
 			var accountPaymentMethod = this.getAccountPaymentMethod( arguments.processObject.getAccountPaymentMethodID() );
 			newAccountPayment.copyFromAccountPaymentMethod( accountPaymentMethod );
 			
@@ -236,7 +236,7 @@ component extends="HibachiService" accessors="true" output="false" {
 
 		}
 		
-		// Save the newOrderPayment
+		// Save the newAccountPayment
 		newAccountPayment = this.saveAccountPayment( newAccountPayment );
 		
 		if(newAccountPayment.hasErrors()) {
@@ -252,7 +252,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Create a new payment transaction
 		var paymentTransaction = getPaymentService().newPaymentTransaction();
 		
-		// Setup the orderPayment in the transaction to be used by the 'runTransaction'
+		// Setup the accountPayment in the transaction to be used by the 'runTransaction'
 		paymentTransaction.setAccountPayment( arguments.accountPayment );
 		
 		// Setup the transaction data
@@ -277,15 +277,15 @@ component extends="HibachiService" accessors="true" output="false" {
 		arguments.accountPayment = save(arguments.accountPayment, arguments.data, arguments.context);
 		
 		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
-		if(!arguments.orderPayment.hasErrors() && !isNull(arguments.accountPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.accountPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.accountPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
+		if(!arguments.accountPayment.hasErrors() && !isNull(arguments.accountPayment.getPaymentMethod().getSaveAccountPaymentTransactionType()) && len(arguments.accountPayment.getPaymentMethod().getSaveAccountPaymentTransactionType()) && arguments.accountPayment.getPaymentMethod().getSaveAccountPaymentTransactionType() neq "none") {
 			var transactionData = {
 				amount = arguments.accountPayment.getAmount(),
-				transactionType = arguments.accountPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()
+				transactionType = arguments.accountPayment.getPaymentMethod().getSaveAccountPaymentTransactionType()
 			};
 			arguments.accountPayment = this.processAccountPayment(arguments.accountPayment, transactionData, 'createTransaction');
 		}
 		
-		return arguments.orderPayment;
+		return arguments.accountPayment;
 		
 	}
 		
