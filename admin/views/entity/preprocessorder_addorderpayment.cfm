@@ -58,7 +58,7 @@ Notes:
 				<cfif arrayLen(rc.order.getOrderPayments())>
 					<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="amount" fieldName="newOrderPayment.amount" edit="#rc.edit#">
 				</cfif>
-				<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="orderPaymentTypeID" fieldName="newOrderPayment.orderPaymentType.typeID" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="orderPaymentType" fieldName="newOrderPayment.orderPaymentType.typeID" edit="#rc.edit#">
 				
 				<cfinclude template="preprocessorder_include/addorderpayment.cfm" />
 				
