@@ -42,6 +42,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	property name="accountService";
 	property name="addressService";
+	property name="commentService";
 	property name="emailService";
 	property name="locationService";
 	property name="fulfillmentService";
@@ -848,6 +849,138 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
+	public any function processOrder_placeOnHold(required any order, struct data={}) {
+		
+		// Set up the comment if someone typed in the box
+		if(structKeyExists(arguments.data, "comment") && len(trim(arguments.data.comment))) {
+			var comment = getCommentService().newComment();
+			comment = getCommentService().saveComment(comment, arguments.data);
+		}
+		
+		// Change the status
+		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostOnHold") );
+		
+		return arguments.order;
+	}
+	
+	public any function processOrder_takeOffHold(required any order, struct data={}) {
+		
+		// Set up the comment if someone typed in the box
+		if(structKeyExists(arguments.data, "comment") && len(trim(arguments.data.comment))) {
+			var comment = getCommentService().newComment();
+			comment = getCommentService().saveComment(comment, arguments.data);
+		}
+		
+		// Change the status
+		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostProcessing") );
+		
+		// Call the update order status incase this needs to be changed to closed.
+		updateOrderStatus( arguments.order );
+
+		return arguments.order;
+	}
+	
+	public any function processOrder_closeOrder(required any order, struct data={}) {
+		
+		// Call the update order status incase this needs to be changed to closed.
+		updateOrderStatus( arguments.order );
+		
+		return arguments.order;
+	}
+	
+	public any function processOrder_cancelOrder(required any order, struct data={}) {
+		
+		// Set up the comment if someone typed in the box
+		if(structKeyExists(arguments.data, "comment") && len(trim(arguments.data.comment))) {
+			var comment = getCommentService().newComment();
+			comment = getCommentService().saveComment(comment, arguments.data);
+		}
+		
+		// Loop over all the orderItems and set them to 0
+		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+			arguments.order.getOrderItems()[i].setQuantity(0);
+			
+			// Remove any promotionsApplied
+			for(var p=arrayLen(arguments.order.getOrderItems()[i].getAppliedPromotions()); p>=1; p--) {
+				arguments.order.getOrderItems()[i].getAppliedPromotions()[p].removeOrderItem();
+			}
+			
+			// Remove any taxApplied
+			for(var t=arrayLen(arguments.order.getOrderItems()[i].getAppliedTaxes()); t>=1; t--) {
+				arguments.order.getOrderItems()[i].getAppliedTaxes()[t].removeOrderItem();
+			}
+		}
+		
+		// Loop over all the fulfillments and remove any fulfillmentCharges, and promotions applied
+		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments()); i++) {
+			arguments.order.getOrderFulfillments()[i].setFulfillmentCharge(0);
+			// Remove over any promotionsApplied
+			for(var p=arrayLen(arguments.order.getOrderFulfillments()[i].getAppliedPromotions()); p>=1; p--) {
+				arguments.order.getOrderFulfillments()[i].getAppliedPromotions()[p].removeOrderFulfillment();
+			}
+		}
+		
+		// Loop over all of the order discounts and remove them
+		for(var p=arrayLen(arguments.order.getAppliedPromotions()); p>=1; p--) {
+			arguments.order.getAppliedPromotions()[p].removeOrder();
+		}
+		
+		// Loop over all the payments and credit for any charges, and set paymentAmount to 0
+		for(var p=1; p<=arrayLen(arguments.order.getOrderPayments()); p++) {
+			var totalReceived = precisionEvaluate(arguments.order.getOrderPayments()[p].getAmountReceived() - arguments.order.getOrderPayments()[p].getAmountCredited());
+			if(totalReceived gt 0) {
+				var transactionData = {
+					amount = totalReceived,
+					transactionType = 'credit'
+				};
+				this.processOrderPayment(arguments.order.getOrderPayments()[p], transactionData, 'createTransaction');
+			}
+			// Set payment amount to 0
+			arguments.order.getOrderPayments()[p].setAmount(0);
+		}
+		
+		// Change the status
+		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostCanceled") );
+		
+		return arguments.order;
+	}
+	
+	public any function processOrder_addPromotionCode(required any order, required any processObject) {
+			
+		var pc = getPromotionService().getPromotionCodeByPromotionCode(arguments.processObject.getPromotionCode());
+		
+		if(isNull(pc) || !pc.getPromotion().getActiveFlag()) {
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
+		} else if ( (!isNull(pc.getStartDateTime()) && pc.getStartDateTime() > now()) || (!isNull(pc.getEndDateTime()) && pc.getEndDateTime() < now()) || !pc.getPromotion().getCurrentFlag()) {
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
+		} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(getSlatwallScope().getCurrentAccount())) {
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
+		} else {
+			if(!arguments.order.hasPromotionCode( pc )) {
+				arguments.order.addPromotionCode( pc );
+				recalculateOrderAmounts(order=arguments.order);
+			}
+		}		
+		
+		return arguments.order;
+	}
+
+	public any function processOrder_removePromotionCode(required any order, required struct data) {
+		
+		if(structKeyExists(arguments.data, "promotionCodeID")) {
+			var promotionCode = getPromotionService().getPromotionCode( arguments.data.promotionCodeID );
+		}
+		
+		if(!isNull(promotionCode)) {
+			arguments.order.removePromotionCode( promotionCode );
+		}
+		
+		// Call saveOrder to recalculate all the orderTotal stuff
+		arguments.order = this.saveOrder(arguments.order);
+		
+		return arguments.order;
+	}
+	
 	// (needs refactor)
 	public any function processOrder_createReturn(required any order, struct data={}, string processContext="process") {
 			
@@ -965,106 +1098,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		return arguments.order;
 	}
-	
-	public any function processOrder_placeOnHold(required any order, struct data={}, string processContext="process") {
-		
-		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostOnHold") );
-		
-		return arguments.order;
-	}
-	
-	public any function processOrder_takeOffHold(required any order, struct data={}, string processContext="process") {
-		
-		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostProcessing") );
-		updateOrderStatus(arguments.order);
-					
-		return arguments.order;
-	}
-	
-	public any function processOrder_cancelOrder(required any order, struct data={}, string processContext="process") {
-			
-		// Loop over all the orderItems and set them to 0
-		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
-			arguments.order.getOrderItems()[i].setQuantity(0);
-			
-			// Remove any promotionsApplied
-			for(var p=arrayLen(arguments.order.getOrderItems()[i].getAppliedPromotions()); p>=1; p--) {
-				arguments.order.getOrderItems()[i].getAppliedPromotions()[p].removeOrderItem();
-			}
-			
-			// Remove any taxApplied
-			for(var t=arrayLen(arguments.order.getOrderItems()[i].getAppliedTaxes()); t>=1; t--) {
-				arguments.order.getOrderItems()[i].getAppliedTaxes()[t].removeOrderItem();
-			}
-		}
-		
-		// Loop over all the fulfillments and remove any fulfillmentCharges, and promotions applied
-		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments()); i++) {
-			arguments.order.getOrderFulfillments()[i].setFulfillmentCharge(0);
-			// Remove over any promotionsApplied
-			for(var p=arrayLen(arguments.order.getOrderFulfillments()[i].getAppliedPromotions()); p>=1; p--) {
-				arguments.order.getOrderFulfillments()[i].getAppliedPromotions()[p].removeOrderFulfillment();
-			}
-		}
-		
-		// Loop over all of the order discounts and remove them
-		for(var p=arrayLen(arguments.order.getAppliedPromotions()); p>=1; p--) {
-			arguments.order.getAppliedPromotions()[p].removeOrder();
-		}
-		
-		// Loop over all the payments and credit for any charges, and set paymentAmount to 0
-		for(var p=1; p<=arrayLen(arguments.order.getOrderPayments()); p++) {
-			var totalReceived = precisionEvaluate(arguments.order.getOrderPayments()[p].getAmountReceived() - arguments.order.getOrderPayments()[p].getAmountCredited());
-			if(totalReceived gt 0) {
-				var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[p], "credit", totalReceived, arguments.order.getOrderPayments()[p].getMostRecentChargeProviderTransactionID());
-			}
-			// Set payment amount to 0
-			arguments.order.getOrderPayments()[p].setAmount(0);
-		}
-		
-		// Set the status code to canceld
-		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostCanceled") );
-	
-		
-		return arguments.order;
-	}
-	
-	public any function processOrder_addPromotionCode(required any order, required any processObject) {
-			
-		var pc = getPromotionService().getPromotionCodeByPromotionCode(arguments.processObject.getPromotionCode());
-		
-		if(isNull(pc) || !pc.getPromotion().getActiveFlag()) {
-			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
-		} else if ( (!isNull(pc.getStartDateTime()) && pc.getStartDateTime() > now()) || (!isNull(pc.getEndDateTime()) && pc.getEndDateTime() < now()) || !pc.getPromotion().getCurrentFlag()) {
-			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
-		} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(getSlatwallScope().getCurrentAccount())) {
-			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
-		} else {
-			if(!arguments.order.hasPromotionCode( pc )) {
-				arguments.order.addPromotionCode( pc );
-				recalculateOrderAmounts(order=arguments.order);
-			}
-		}		
-		
-		return arguments.order;
-	}
-
-	public any function processOrder_removePromotionCode(required any order, required struct data) {
-		
-		if(structKeyExists(arguments.data, "promotionCodeID")) {
-			var promotionCode = getPromotionService().getPromotionCode( arguments.data.promotionCodeID );
-		}
-		
-		if(!isNull(promotionCode)) {
-			arguments.order.removePromotionCode( promotionCode );
-		}
-		
-		// Call saveOrder to recalculate all the orderTotal stuff
-		arguments.order = this.saveOrder(arguments.order);
-		
-		return arguments.order;
-	}
-	
 	
 	// Process: Order Fulfillment
 	// (needs refactor)
