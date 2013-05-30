@@ -204,9 +204,9 @@
 			var $ = request.muraScope;
 			
 			// Place Slatwall content entity in the slatwall scope
-			$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentID( $.content('contentID'), true ) );
+			$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
 			if($.slatwall.getContent().isNew()) {
-				$.slatwall.getContent().setParentContent( $.slatwall.getService("contentService").getContentByCMSContentID( $.event('parentID') ) );
+				$.slatwall.getContent().setParentContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.event('parentID'), $.event('siteID') ) );
 			}
 			
 			// if the site is null, then we can get it out of the request.muraScope
@@ -257,11 +257,11 @@
 				var contentData = data.slatwallData.content;
 				
 				var muraContent = $.event('contentBean');
-				var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentID( muraContent.getContentID() );
+				var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( muraContent.getContentID(), muraContent.getSiteID() );
 				
 				// Check to see if this content should have a parent
 				if(muraContent.getParentID() != "00000000000000000000000000000000END") {
-					var parentContent = $.slatwall.getService("contentService").getContentByCMSContentID( muraContent.getParentID() );
+					var parentContent = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( muraContent.getParentID(), muraContent.getSiteID() );
 					
 					// If the parent has changed, we need to update all nested
 					if(parentContent.getContentID() != slatwallContent.getParentContent().getContentID()) {
@@ -329,7 +329,7 @@
 		public void function onAfterContentDelete( required any $ ) {
 			verifySlatwallRequest( $=$ );
 			
-			var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentID( $.event('contentID') );
+			var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.event('contentID'), $.event('siteID') );
 			if(!isNull(slatwallContent)) {
 				if(slatwallContent.isDeletable()) {
 					$.slatwall.getService("contentService").deleteContent( slatwallContent );
