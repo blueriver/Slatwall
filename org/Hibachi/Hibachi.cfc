@@ -234,6 +234,7 @@ component extends="FW1.framework" {
 					applicationInitData["applicationUpdateKey"] = 		variables.framework.hibachi.fullUpdateKey;
 					applicationInitData["applicationUpdatePassword"] =	variables.framework.hibachi.fullUpdatePassword;
 					applicationInitData["baseURL"] = 					variables.framework.baseURL;
+					applicationInitData["action"] = 					variables.framework.action;
 					applicationInitData["hibachiConfig"] =				variables.framework.hibachi;
 					
 					// Log the setup start with values

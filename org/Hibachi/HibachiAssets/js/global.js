@@ -618,7 +618,7 @@ function setupEventHandlers() {
 
 function initModal( modalWin ){
 	
-	jQuery('#adminModal').html('<img src="' + hibachi.rootURL + '/org/Hibachi/HibachiAssets/images/loading.gif" style="padding:20px;" />');
+	jQuery('#adminModal').html('<img src="' + hibachi.baseURL + '/org/Hibachi/HibachiAssets/images/loading.gif" style="padding:20px;" />');
 	var modalLink = jQuery( modalWin ).attr( 'href' );
 	
 	if( modalLink.indexOf("?") !== -1) {
@@ -690,11 +690,11 @@ function updateTextAutocompleteSuggestions( autocompleteField, data ) {
 		
 		// Setup the correct data
 		var thisData = {
-			slatAction: 'admin:ajax.updatelistingdisplay',
 			entityName: jQuery( autocompleteField ).data('entityname'),
 			propertyIdentifiers: jQuery( autocompleteField ).data('acpropertyidentifiers'),
 			keywords: jQuery(autocompleteField).val()
 		};
+		thisData[ hibachi.action ] = 'admin:ajax.updatelistingdisplay';
 		thisData["f:activeFlag"] = 1;
 		thisData["p:current"] = 1;
 		var piarr = jQuery(autocompleteField).data('acpropertyidentifiers').split(',');
@@ -717,7 +717,7 @@ function updateTextAutocompleteSuggestions( autocompleteField, data ) {
 		// Verify that an update isn't already running
 		if(!textAutocompleteHold(autocompleteField, thisData)) {
 			jQuery.ajax({
-				url: hibachi.rootURL + '/',
+				url: hibachi.baseURL + '/',
 				method: 'post',
 				data: thisData,
 				dataType: 'json',
@@ -819,7 +819,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 		
 		addLoadingDiv( tableID );
 		
-		data[ 'slatAction' ] = 'admin:ajax.updateListingDisplay';
+		data[ hibachi.action ] = 'admin:ajax.updateListingDisplay';
 		data[ 'propertyIdentifiers' ] = jQuery('#' + tableID).data('propertyidentifiers');
 		data[ 'processObjectProperties' ] = jQuery('#' + tableID).data('processobjectproperties');
 		if(data[ 'processObjectProperties' ].length) {
@@ -840,7 +840,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 		}
 		
 		jQuery.ajax({
-			url: hibachi.rootURL + '/',
+			url: hibachi.baseURL + '/',
 			method: 'post',
 			data: data,
 			dataType: 'json',
@@ -973,7 +973,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 }
 
 function addLoadingDiv( elementID ) {
-	var loadingDiv = '<div id="loading' + elementID + '" style="position:absolute;float:left;text-align:center;background-color:#FFFFFF;opacity:.9;z-index:900;"><img src="' + hibachi.rootURL + '/org/Hibachi/HibachiAssets/images/loading.gif" title="loading" /></div>';
+	var loadingDiv = '<div id="loading' + elementID + '" style="position:absolute;float:left;text-align:center;background-color:#FFFFFF;opacity:.9;z-index:900;"><img src="' + hibachi.baseURL + '/org/Hibachi/HibachiAssets/images/loading.gif" title="loading" /></div>';
 	jQuery('#' + elementID).before(loadingDiv);
 	jQuery('#loading' + elementID).width(jQuery('#' + elementID).width() + 2);
 	jQuery('#loading' + elementID).height(jQuery('#' + elementID).height() + 2);
@@ -1063,7 +1063,6 @@ function buildPagingNav(currentPage, totalPages, pageRecordStart, pageRecordEnd,
 function tableApplySort(event, ui) {
 	
 	var data = {
-		slatAction : 'admin:ajax.updateSortOrder',
 		recordID : jQuery(ui.item).attr('ID'),
 		recordIDColumn : jQuery(ui.item).closest('table').data('idproperty'), 
 		tableName : jQuery(ui.item).closest('table').data('entityname'),
@@ -1071,6 +1070,7 @@ function tableApplySort(event, ui) {
 		contextIDValue : jQuery(ui.item).closest('table').data('sortcontextidvalue'),
 		newSortOrder : 0
 	};
+	data[ hibachi.action ] = 'admin:ajax.updateSortOrder';
 	 
 	var allOriginalSortOrders = jQuery(ui.item).parent().find('.table-action-sort').map( function(){ return jQuery(this).data("sortpropertyvalue");}).get();
 	var minSortOrder = Math.min.apply( Math, allOriginalSortOrders );
@@ -1084,7 +1084,7 @@ function tableApplySort(event, ui) {
 	});
 	
 	jQuery.ajax({
-		url: hibachi.rootURL + '/',
+		url: hibachi.baseURL + '/',
 		async: false,
 		data: data,
 		dataType: 'json',
@@ -1185,12 +1185,12 @@ function updateGlobalSearchResults() {
 		addLoadingDiv( 'search-results' );
 		
 		var data = {
-			slatAction: 'admin:ajax.updateGlobalSearchResults',
 			keywords: jQuery('#global-search').val()
 		};
+		data[ hibachi.action ] = 'admin:ajax.updateSortOrder';
 		
 		jQuery.ajax({
-			url: hibachi.rootURL + '/',
+			url: hibachi.baseURL + '/',
 			method: 'post',
 			data: data,
 			dataType: 'json',
@@ -1216,10 +1216,10 @@ function updateGlobalSearchResults() {
 					jQuery('#golbalsr-' + key).html('');
 					var records = result[key]['records'];
 				    for(var r=0; r < records.length; r++) {
-				    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachi.rootURL + '/?slatAction=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
+				    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachi.baseURL + '/?' + hibachi.action + '=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
 				    }
 				    if(result[key]['recordCount'] > 10) {
-				    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachi.rootURL + '/?slatAction=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
+				    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachi.baseURL + '/?' + hibachi.action + '=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
 				    } else if (result[key]['recordCount'] == 0) {
 				    	jQuery('#golbalsr-' + key).append('<li><em>none</em></li>');
 				    }
