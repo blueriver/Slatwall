@@ -57,7 +57,7 @@ Notes:
 				<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.processObject.getShippingMethod().getShippingMethodID()#" />
 				<input type="hidden" name="shippingAddress.addressID" value="#rc.processObject.getShippingAddress().getAddressID()#" />
 				
-				<cf_HibachiPropertyDisplay object="#rc.orderDelivery#" property="trackingNumber" edit="true" fieldName="orderDelivery.trackingNumber" />
+				<!---<cf_HibachiPropertyDisplay object="#rc.orderDelivery#" property="trackingNumber" edit="true" fieldName="trackingNumber" />--->
 				
 				<hr />
 				
@@ -66,6 +66,7 @@ Notes:
 						<th>Sku Code</th>
 						<th class="primary">Product Title</th>
 						<th>Options</th>
+						<th>Notes</th>
 						<th>Quantity</th>
 					</tr>
 					<cfset orderItemIndex = 0 />
@@ -74,14 +75,21 @@ Notes:
 							
 							<cfset orderItemIndex++ />
 							
-							<input type="hidden" name="orderDelivery.orderDeliveryItems[#orderItemIndex#].orderDeliveryItemID" value="" />
-							<input type="hidden" name="orderDelivery.orderDeliveryItems[#orderItemIndex#].orderItem.orderItemID" value="#orderDeliveryItem.getOrderItem().getOrderItemID()#" />
-							<input type="hidden" name="orderDelivery.orderDeliveryItems[#orderItemIndex#].quantity" value="#orderDeliveryItem.getQuantity()#" />
-							
 							<td>#orderDeliveryItem.getOrderItem().getSku().getSkuCode()#</td>
 							<td>#orderDeliveryItem.getOrderItem().getSku().getProduct().getTitle()#</td>
 							<td>#orderDeliveryItem.getOrderItem().getSku().displayOptions()#</td>
-							<td>#orderDeliveryItem.getQuantity()#</td>
+							<cfset thisQuantity = orderDeliveryItem.getQuantity() />
+							<cfif thisQuantity gt orderDeliveryItem.getOrderItem().getQuantityUndelivered()>
+								<cfset thisQuantity = orderDeliveryItem.getOrderItem().getQuantityUndelivered() />
+								<td style="color:##cc0000;">Updated from #orderDeliveryItem.getQuantity()# to Max: #thisQuantity#</td>	
+							<cfelse>
+								<td></td>
+							</cfif>
+							<td>#thisQuantity#</td>
+							
+							<input type="hidden" name="orderDeliveryItems[#orderItemIndex#].orderDeliveryItemID" value="" />
+							<input type="hidden" name="orderDeliveryItems[#orderItemIndex#].orderItem.orderItemID" value="#orderDeliveryItem.getOrderItem().getOrderItemID()#" />
+							<input type="hidden" name="orderDeliveryItems[#orderItemIndex#].quantity" value="#thisQuantity#" />
 						</tr>
 					</cfloop>
 				</table>
