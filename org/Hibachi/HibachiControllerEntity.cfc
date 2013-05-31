@@ -384,6 +384,7 @@ component output="false" accessors="true" extends="HibachiController" {
 		
 		// If the entityName object is now not in the rc because there was no ID, then we need to place a new one in the rc
 		if(!structKeyExists(rc, arguments.entityName) || !isObject(rc[ arguments.entityName ]) || lcase(rc[ arguments.entityName ].getClassName()) != lcase(arguments.entityName)) {
+			
 			var entityService = getHibachiService().getServiceByEntityName( entityName=arguments.entityName );
 			rc[ arguments.entityName ] = entityService.invokeMethod("new#arguments.entityName#");
 		}
@@ -396,7 +397,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			rc.processObject = arguments.rc[ arguments.entityName ].getProcessObject( arguments.rc.processContext );
 		
 			// Populate the processObject with any data that might have come into the RC
-			rc.processObject.populate( rc );	
+			rc.processObject.populate( rc );
 		}
 		
 		

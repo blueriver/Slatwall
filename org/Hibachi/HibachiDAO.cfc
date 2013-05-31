@@ -46,7 +46,7 @@
 	
 	
 		public any function save( required target ) {
-			
+			logHibachi(target.getClassName());
 			// Save this entity
 			entitySave( target );
 			
