@@ -41,27 +41,14 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	public void function setUp() {
 		super.setup();
 		
-		variables.factory = new Slatwall.org.di1.ioc("/Slatwall/com/");
+		variables.factory = new Slatwall.org.Hibachi.DI1.ioc("/Slatwall/model", {
+			transients=["entity", "process", "transient"],
+			transientPattern="Bean$"
+		});
 	}
 
-	public void function inst_factory_partial_DAO() {
-		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/dao/");
-		assertTrue(isObject(ioc));
-	}
-	
-	public void function inst_factory_partial_Service() {
-		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/service/");
-		assertTrue(isObject(ioc));
-	}
-	
-	public void function inst_factory_partial_Utility() {
-		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/utility/");
-		assertTrue(isObject(ioc));
-	}
-	
 	public void function inst_factory() {
-		var ioc = new Slatwall.org.di1.ioc("/Slatwall/com/");
-		assertTrue(isObject(ioc));
+		assertTrue(isObject(variables.factory));
 	}
 	
 }
