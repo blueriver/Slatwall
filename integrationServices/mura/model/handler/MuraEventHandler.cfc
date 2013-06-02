@@ -39,18 +39,24 @@
 				var brandKeyLocation = 0;
 				var productKeyLocation = 0;
 				var productTypeKeyLocation = 0;
+				
+				// First look for the Brand URL Key
 				if (listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyBrand'), "/")) {
 					brandKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyBrand'), "/");
 					if(brandKeyLocation < listLen($.event('path'),"/")) {
 						$.slatwall.setBrand( $.slatwall.getService("brandService").getBrandByURLTitle(listGetAt($.event('path'), brandKeyLocation + 1, "/"), true) );
 					}
 				}
+				
+				// Look for the Product URL Key
 				if(listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProduct'), "/")) {
 					productKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProduct'), "/");
 					if(productKeyLocation < listLen($.event('path'),"/")) {
 						$.slatwall.setProduct( $.slatwall.getService("productService").getProductByURLTitle(listGetAt($.event('path'), productKeyLocation + 1, "/"), true) );	
 					}
 				}
+				
+				// Look for the Product Type URL Key
 				if (listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProductType'), "/")) {
 					productTypeKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProductType'), "/");
 					if(productTypeKeyLocation < listLen($.event('path'),"/")) {
@@ -60,34 +66,73 @@
 				
 				// Setup the proper content node and populate it with our FW/1 view on any keys that might have been found, use whichever key was farthest right
 				if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getProduct().isNew() && $.slatwall.getProduct().getActiveFlag() && ($.slatwall.getProduct().getPublishedFlag() || $.slatwall.getProduct().setting('productShowDetailWhenNotPublishedFlag'))) {
-					$.slatwall.setContent($.slatwall.getService("contentService").getContent( $.slatwall.getProduct().setting('productDisplayTemplate', [$.slatwall.getSite()]) ));
-					$.event('contentBean', $.getBean("content").loadBy( contentID=$.slatwall.getContent().getCMSContentID(), siteID=$.slatwall.getContent().getSite().getCMSSiteID() ) );
-					$.content().setTitle( $.slatwall.getProduct().getTitle() );
-					$.content().setHTMLTitle( $.slatwall.getProduct().getTitle() );
 					
+					// Attempt to load up the content template node, based on this products setting
+					var productTemplateContent = $.slatwall.getService("contentService").getContent( $.slatwall.getProduct().setting('productDisplayTemplate', [$.slatwall.getSite()]) );
 					
-					// Setup CrumbList
-					if(productKeyLocation > 2) {
-						var listingPageFilename = left($.event('path'), find("/#$.slatwall.setting('globalURLKeyProduct')#/", $.event('path'))-1);
-						listingPageFilename = replace(listingPageFilename, "/#$.event('siteID')#/", "", "all");
-						var crumbDataArray = $.getBean("contentManager").getActiveContentByFilename(listingPageFilename, $.event('siteid'), true).getCrumbArray();
-					} else {
-						var crumbDataArray = $.getBean("contentManager").getCrumbList(contentID="00000000000000000000000000000000001", siteID=$.event('siteID'), setInheritance=false, path="00000000000000000000000000000000001", sort="asc");
+					// As long as the content is not null, and has all the necessary values we can continue
+					if(!isNull(productTemplateContent) && !isNull(productTemplateContent.getCMSContentID()) && !isNull(productTemplateContent.getSite()) && !isNull(productTemplateContent.getSite().getCMSSiteID())) {
+						
+						// Setup the content node in the slatwallScope
+						$.slatwall.setContent( productTemplateContent );
+						
+						// Override the contentBean for the request
+						$.event('contentBean', $.getBean("content").loadBy( contentID=$.slatwall.getContent().getCMSContentID(), siteID=$.slatwall.getContent().getSite().getCMSSiteID() ) );
+						
+						// Change Title & HTMLTitle of page
+						$.content().setTitle( $.slatwall.getProduct().getTitle() );
+						$.content().setHTMLTitle( $.slatwall.getProduct().getTitle() );
+						
+						// Setup CrumbList
+						if(productKeyLocation > 2) {
+							var listingPageFilename = left($.event('path'), find("/#$.slatwall.setting('globalURLKeyProduct')#/", $.event('path'))-1);
+							listingPageFilename = replace(listingPageFilename, "/#$.event('siteID')#/", "", "all");
+							var crumbDataArray = $.getBean("contentManager").getActiveContentByFilename(listingPageFilename, $.event('siteid'), true).getCrumbArray();
+						} else {
+							var crumbDataArray = $.getBean("contentManager").getCrumbList(contentID="00000000000000000000000000000000001", siteID=$.event('siteID'), setInheritance=false, path="00000000000000000000000000000000001", sort="asc");
+						}
+						arrayPrepend(crumbDataArray, $.slatwall.getProduct().getCrumbData(path=$.event('path'), siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
+						$.event('crumbdata', crumbDataArray);
 					}
-					arrayPrepend(crumbDataArray, $.slatwall.getProduct().getCrumbData(path=$.event('path'), siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
-					$.event('crumbdata', crumbDataArray);
 					
 				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getProductType().isNew() && $.slatwall.getProductType().getActiveFlag() ) {
-					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getProductType().setting('productTypeDisplayTemplate', [$.slatwall.getSite()])));
-					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getContent().getCMSContentID()) );
-					$.content().setTitle( $.slatwall.getProductType().getProductTypeName() );
-					$.content().setHTMLTitle( $.slatwall.getProductType().getProductTypeName() );
+					
+					// Attempt to find the productType template
+					var productTypeTemplateContent = $.slatwall.getService("contentService").getContent( $.slatwall.getProductType().setting('productTypeDisplayTemplate', [$.slatwall.getSite()]) );
+					
+					// As long as the content is not null, and has all the necessary values we can continue
+					if(!isNull(productTypeTemplateContent) && !isNull(productTypeTemplateContent.getCMSContentID()) && !isNull(productTypeTemplateContent.getSite()) && !isNull(productTypeTemplateContent.getSite().getCMSSiteID())) {
+						
+						// Setup the content node in the slatwallScope
+						$.slatwall.setContent( productTypeTemplateContent );
+						
+						// Override the contentBean for the request
+						$.event('contentBean', $.getBean("content").loadBy( contentID=$.slatwall.getContent().getCMSContentID(), siteID=$.slatwall.getContent().getSite().getCMSSiteID() ) );
+						
+						// Change Title & HTMLTitle of page
+						$.content().setTitle( $.slatwall.getProductType().getProductTypeName() );
+						$.content().setHTMLTitle( $.slatwall.getProductType().getProductTypeName() );
+					}
 					
 				} else if ( brandKeyLocation && !$.slatwall.getBrand().isNew() && $.slatwall.getBrand().getActiveFlag()  ) {
-					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getBrand().setting('brandDisplayTemplate', [$.slatwall.getSite()])));
-					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getContent().getCMSContentID()) );
-					$.content().setTitle( $.slatwall.getBrand().getBrandName() );
-					$.content().setHTMLTitle( $.slatwall.getBrand().getBrandName() );
+					
+					// Attempt to find the productType template
+					var brandTemplateContent = $.slatwall.getService("contentService").getContent( $.slatwall.getBrand().setting('brandDisplayTemplate', [$.slatwall.getSite()]) );
+					
+					// As long as the content is not null, and has all the necessary values we can continue
+					if(!isNull(brandTemplateContent) && !isNull(brandTemplateContent.getCMSContentID()) && !isNull(brandTemplateContent.getSite()) && !isNull(brandTemplateContent.getSite().getCMSSiteID())) {
+						
+						// Setup the content node in the slatwallScope
+						$.slatwall.setContent( brandTemplateContent );
+						
+						// Override the contentBean for the request
+						$.event('contentBean', $.getBean("content").loadBy( contentID=$.slatwall.getContent().getCMSContentID(), siteID=$.slatwall.getContent().getSite().getCMSSiteID() ) );
+						
+						// Change Title & HTMLTitle of page
+						$.content().setTitle( $.slatwall.getBrand().getBrandName() );
+						$.content().setHTMLTitle( $.slatwall.getBrand().getBrandName() );
+					}
+
 				}
 			}
 		}
