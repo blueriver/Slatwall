@@ -397,9 +397,11 @@ component output="false" accessors="true" extends="HibachiController" {
 			rc.processObject = arguments.rc[ arguments.entityName ].getProcessObject( arguments.rc.processContext );
 		
 			// Populate the processObject with any data that might have come into the RC
-			rc.processObject.populate( rc );
+			if(!rc.processObject.getPopulatedFlag()) {
+				rc.processObject.populate( rc );
+				rc.processObject.setPopulatedFlag( true );	
+			}
 		}
-		
 		
 		// Set rc.edit to true because all property displays should be taking inputs
 		rc.edit = true;
@@ -486,12 +488,12 @@ component output="false" accessors="true" extends="HibachiController" {
 				getHibachiScope().showMessage( getHibachiScope().rbKey( "#arguments.rc.entityActionDetails.subsystemName#.#arguments.rc.entityActionDetails.sectionName#.#arguments.rc.entityActionDetails.itemName#.#arguments.rc.processContext#_success" ), "success");
 					
 				// Show all of the specific messages & error messages for the entity
-				entity.showErrorsAndMessages();
+				arguments.rc[ arguments.entityName ].showErrorsAndMessages();
 				
 				// If there was a processObject then show all of it's errors & messages as well
 				if(processObjectExists) {
 					// Show all of the specific messages & error messages for the process Object
-					entity.getProcessObject(rc.processContext).showErrorsAndMessages();
+					arguments.rc[ arguments.entityName ].getProcessObject(rc.processContext).showErrorsAndMessages();
 				}
 				
 				// If this is an ajax request then setup the response
@@ -514,12 +516,12 @@ component output="false" accessors="true" extends="HibachiController" {
 			} else {
 				
 				// Show all of the specific messages & error messages for the entity
-				entity.showErrorsAndMessages();
+				arguments.rc[ arguments.entityName ].showErrorsAndMessages();
 				
 				// If there was a processObject then show all of it's errors & messages as well
 				if(processObjectExists) {
 					// Show all of the specific messages & error messages for the process Object
-					entity.getProcessObject(rc.processContext).showErrorsAndMessages();
+					arguments.rc[ arguments.entityName ].getProcessObject(rc.processContext).showErrorsAndMessages();
 				}
 				
 				// If this is an ajax request then setup the response
@@ -567,7 +569,7 @@ component output="false" accessors="true" extends="HibachiController" {
 			for(var key in arguments.rc) {
 				if(!find('.',key) && right(key, 2) == "ID" && len(arguments.rc[key]) == "32") {
 					var entityName = left(key, len(key)-2);
-					if(getHibachiService().getEntityNameIsValidFlag(entityName)) {
+					if( getHibachiService().getEntityNameIsValidFlag(entityName) && ( !structKeyExists(arguments.rc, entityName) || !isObject(arguments.rc[entityName]) ) ) {
 						var entityService = getHibachiService().getServiceByEntityName( entityName=entityName );
 						var entity = entityService.invokeMethod("get#entityName#", {1=arguments.rc[key]});
 						if(!isNull(entity)) {
