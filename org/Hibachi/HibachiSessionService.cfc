@@ -10,11 +10,11 @@ component output="false" accessors="true" extends="HibachiService"  {
 	public void function setPropperSession() {
 		// Check to see if a session value doesn't exist, then we can check for a cookie... or just set it to blank
 		if(!hasSessionValue("sessionID")) {
-			if(structKeyExists(cookie, "#getApplicationValue('applicationKey')#SessionID")) {
-				setSessionValue('sessionID', cookie["#getApplicationValue('applicationKey')#SessionID"]);
-			} else {
+			//if(structKeyExists(cookie, "#getApplicationValue('applicationKey')#SessionID")) {
+			//		setSessionValue('sessionID', cookie["#getApplicationValue('applicationKey')#SessionID"]);
+			//} else {
 				setSessionValue('sessionID', '');
-			}
+			//}
 		}
 		
 		// Load Session
