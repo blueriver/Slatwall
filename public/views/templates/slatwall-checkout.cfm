@@ -179,7 +179,7 @@ Notes:
 								<!--- Sets up the account login processObject --->
 								<cfset forgotPasswordObj = $.slatwall.getAccount().getProcessObject('forgotPassword') />
 								
-								<!--- Start: Login Form --->
+								<!--- Start: Forgot Password Form --->
 								<form action="?s=1" method="post">
 									
 									<!--- This hidden input is what tells slatwall to try and login the account --->
@@ -204,7 +204,7 @@ Notes:
 				  					</div>
 									
 								</form>
-								<!--- End: Login Form --->
+								<!--- End: Forgot Password Form --->
 								
 							</div>
 							
