@@ -8,13 +8,16 @@ component output="false" accessors="true" extends="HibachiService"  {
 	// ===================== START: Logical Methods ===========================
 	
 	public void function setPropperSession() {
+		var sessionFoundWithCookie = false;
+		
 		// Check to see if a session value doesn't exist, then we can check for a cookie... or just set it to blank
 		if(!hasSessionValue("sessionID")) {
-			//if(structKeyExists(cookie, "#getApplicationValue('applicationKey')#SessionID")) {
-			//		setSessionValue('sessionID', cookie["#getApplicationValue('applicationKey')#SessionID"]);
-			//} else {
+			if(structKeyExists(cookie, "#getApplicationValue('applicationKey')#SessionID")) {
+				setSessionValue('sessionID', cookie["#getApplicationValue('applicationKey')#SessionID"]);
+				sessionFoundWithCookie = true;
+			} else {
 				setSessionValue('sessionID', '');
-			//}
+			}
 		}
 		
 		// Load Session
@@ -35,7 +38,7 @@ component output="false" accessors="true" extends="HibachiService"  {
 		// If the session has an account but no authentication, then remove the account
 		// Check to see if this session has an accountAuthentication, if it does then we need to verify that the authentication shouldn't be auto logged out
 		// If there was an integration, then check the verify method for any custom auto-logout logic
-		if(	(!isNull(getHibachiScope().getSession().getAccountAuthentication()) && getHibachiScope().getSession().getAccountAuthentication().getForceLogoutFlag()) || (isNull(getHibachiScope().getSession().getAccountAuthentication()) && getHibachiScope().getLoggedInFlag())) {
+		if(sessionFoundWithCookie || (!isNull(getHibachiScope().getSession().getAccountAuthentication()) && getHibachiScope().getSession().getAccountAuthentication().getForceLogoutFlag()) || (isNull(getHibachiScope().getSession().getAccountAuthentication()) && getHibachiScope().getLoggedInFlag())) {
 			logoutAccount();
 		}
 	}
