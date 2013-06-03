@@ -577,9 +577,6 @@ Notes:
 								<div class="tab-pane active" id="account-payment-methods">
 									<form action="?s=1" method="post">
 												
-										<!--- Hidden slatAction to trigger a cart update with the new fulfillment information --->
-										<input type="hidden" name="slatAction" value="public:cart.addOrderPayment" />
-										
 										<cfset apmFirst = true />
 										
 										<!--- Loop over all of the account payment methods and display them as a radio button to select --->
@@ -611,7 +608,7 @@ Notes:
 										</cfloop>
 										
 										<!--- This button will just add the order payment, but not actually process the order --->
-										<button type="submit" class="btn">Apply Payment Method</button>
+										<button type="submit" class="btn" name="slatAction" value="public:cart.addOrderPayment">Apply Payment Method & Review</button>
 										
 										<!--- Clicking this button will not only add the payment, but it will also attempt to place the order. --->
 										<button type="submit" class="btn btn-primary" name="slatAction" value="public:cart.placeOrder">Apply Payment Method & Place Order</button>
@@ -626,12 +623,9 @@ Notes:
 								<div class="tab-pane#iif(first, de(' active'), de(''))#" id="tab#paymentDetails.paymentMethod.getPaymentMethodID()#">
 									
 									<form action="?s=1" method="post">
-												
-										<!--- Hidden slatAction to trigger a cart update with the new fulfillment information --->
-										<input type="hidden" name="slatAction" value="public:cart.addOrderPayment" />
 										
 										<!--- Hidden value to identify the type of payment method this is --->
-										<input type="hidden" name="paymentMethod.paymentMethodID" value="#paymentDetails.paymentMethod.getPaymentMethodID()#" />
+										<input type="hidden" name="newOrderPayment.paymentMethod.paymentMethodID" value="#paymentDetails.paymentMethod.getPaymentMethodID()#" />
 										
 										<!--- CASH --->
 										<cfif paymentDetails.paymentMethod.getPaymentMethodType() eq "cash">
@@ -708,10 +702,32 @@ Notes:
 															
 														</div>
 													</div>
-													<br />
-													<p>Amount:<br />
-													#$.slatwall.formatValue(paymentDetails.maximumAmount, 'currency')# <a href="##">Split Payment</a>
-													</p>
+													
+													<!--- SPLIT PAYMENTS (OPTIONAL) - Just delete this section if you don't want to allow for split payments --->
+													<cfset splitPaymentID = "sp" & lcase(createUUID()) />
+													<div class="control-group">
+								    					<label class="control-label" for="rating">Amount</label>
+								    					<div class="controls">
+								    						
+								    						#$.slatwall.formatValue(paymentDetails.maximumAmount, 'currency')#
+								    						<a href="##" id='#splitPaymentID#'>Split Payment</a>
+								    						
+								    					</div>
+								  					</div>
+													<script type="text/javascript">
+														(function($){
+															$(document).ready(function(e){
+																
+																// Bind to split button
+																$('body').on('click', '###splitPaymentID#', function(e){
+																	e.preventDefault();
+																	$(this).closest('div').html('<input type="text" name="newOrderPayment.amount" value="#paymentDetails.maximumAmount#" class="span4" />');
+																});
+																
+															});
+														})( jQuery );
+													</script>
+													<!--- END: SPLIT PAYMENT --->
 												</div>
 											</div>
 										<!--- GIFT CARD --->
@@ -725,7 +741,7 @@ Notes:
 										<div class="control-group pull-right">
 											<div class="controls">
 												<!--- This button will just add the order payment, but not actually process the order --->
-												<button type="submit" class="btn">Add Payment & Review</button>
+												<button type="submit" class="btn" name="slatAction" value="public:cart.addOrderPayment">Add Payment & Review</button>
 												
 												<!--- Clicking this button will not only add the payment, but it will also attempt to place the order. --->
 												<button type="submit" class="btn btn-primary" name="slatAction" value="public:cart.placeOrder">Add Payment & Place Order</button>

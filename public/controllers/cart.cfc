@@ -99,9 +99,23 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	}
 	
 	// Remove Promotion Code
-	public void function removePromotionCode() {
+	public void function removePromotionCode(required any rc) {
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removePromotionCode');
 		
 		arguments.rc.$.slatwall.addActionResult( "public:cart.removePromotionCode", cart.hasErrors() );
+	}
+	
+	// Add Order Payment
+	public void function addOrderPayment(required any rc) {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addOrderPayment');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.addOrderPayment", cart.hasErrors() );
+	}
+	
+	// Place Order
+	public void function placeOrder(required any rc) {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'placeOrder');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.placeOrder", cart.hasErrors() );
 	}
 }
