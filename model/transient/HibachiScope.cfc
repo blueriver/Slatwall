@@ -62,6 +62,21 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiS
 	
 	property name="currentProductSmartList";
 	
+	// ================= Overrides =================================
+	
+	public string function renderJSObject() {
+		var config = {};
+		config[ 'baseURL' ] = getApplicationValue('baseURL');
+		config[ 'action' ] = getApplicationValue('action');
+		config[ 'dateFormat' ] = setting('globalDateFormat');
+		config[ 'timeFormat' ] = setting('globalTimeFormat');
+		
+		var returnHTML = '';
+		returnHTML &= '<script type="text/javascript" src="#getApplicationValue('baseURL')#/org/Hibachi/HibachiAssets/js/hibachi-scope.js"></script>';
+		returnHTML &= '<script type="text/javascript">(function( $ ){$.#lcase(getApplicationValue('applicationKey'))# = new Hibachi(#serializeJSON(config)#);})( jQuery );</script>';
+		return returnHTML;
+	}
+	
 	// ================= Entity Helper Methods =====================
 	
 	// Brand

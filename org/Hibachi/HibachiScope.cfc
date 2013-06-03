@@ -25,6 +25,8 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		var config = {};
 		config[ 'baseURL' ] = getApplicationValue('baseURL');
 		config[ 'action' ] = getApplicationValue('action');
+		config[ 'dateFormat' ] = 'mmm dd, yyyy';
+		config[ 'timeFormat' ] = 'hh:mm tt';
 		
 		var returnHTML = '';
 		returnHTML &= '<script type="text/javascript" src="#getApplicationValue('baseURL')#/org/Hibachi/HibachiAssets/js/hibachi-scope.js"></script>';
