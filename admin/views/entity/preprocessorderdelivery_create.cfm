@@ -40,6 +40,7 @@ Notes:
 <cfparam name="rc.orderFulfillment" type="any" />
 <cfparam name="rc.processObject" type="any" />
 
+<cfset rc.processObject.setOrderFulfillment( rc.orderFulfillment ) />
 <cfset $.slatwall.setORMHasErrors( true ) />
 
 <cfoutput>
@@ -52,11 +53,15 @@ Notes:
 			<cf_HibachiPropertyList>
 				
 				<input type="hidden" name="order.orderID" value="#rc.processObject.getOrder().getOrderID()#" />
+				<input type="hidden" name="orderFulfillment.orderFulfillmentID" value="#rc.processObject.getOrderFulfillment().getOrderFulfillmentID()#" />
 				<input type="hidden" name="location.locationID" value="#rc.processObject.getLocation().getLocationID()#" />
 				<input type="hidden" name="fulfillmentMethod.fulfillmentMethodID" value="#rc.processObject.getFulfillmentMethod().getFulfillmentMethodID()#" />
 				<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.processObject.getShippingMethod().getShippingMethodID()#" />
 				<input type="hidden" name="shippingAddress.addressID" value="#rc.processObject.getShippingAddress().getAddressID()#" />
 				
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="trackingNumber" edit="true" />
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="captureAuthorizedPaymentsFlag" edit="true" />
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="capturableAmount" edit="false" />
 				<!---<cf_HibachiPropertyDisplay object="#rc.orderDelivery#" property="trackingNumber" edit="true" fieldName="trackingNumber" />--->
 				
 				<hr />

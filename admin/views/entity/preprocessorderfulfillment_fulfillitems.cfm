@@ -49,6 +49,7 @@ Notes:
 				
 				<!--- Pass the info across --->
 				<input type="hidden" name="order.orderID" value="#rc.orderFulfillment.getOrder().getOrderID()#" />
+				<input type="hidden" name="orderFulfillment.orderFulfillmentID" value="#rc.orderFulfillment.getOrderFulfillmentID()#" />
 				<input type="hidden" name="fulfillmentMethod.fulfillmentMethodID" value="#rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID()#" />
 				<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.orderFulfillment.getShippingMethod().getShippingMethodID()#" />
 				<input type="hidden" name="shippingAddress.addressID" value="#rc.orderFulfillment.getAddress().getAddressID()#" />

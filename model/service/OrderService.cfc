@@ -1102,23 +1102,67 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// Process: Order Delivery
 	public any function processOrderDelivery_create(required any orderDelivery, required any processObject, struct data={}) {
 		
-		arguments.orderDelivery.setOrder( arguments.processObject.getOrder() );
-		arguments.orderDelivery.setLocation( arguments.processObject.getLocation() );
-		arguments.orderDelivery.setFulfillmentMethod( arguments.processObject.getFulfillmentMethod() );
-		arguments.orderDelivery.setShippingMethod( arguments.processObject.getShippingMethod() );
-		arguments.orderDelivery.setShippingAddress( arguments.processObject.getShippingAddress().copyAddress( saveNewAddress=true ) );
+		var amountToBeCaptured = 0;
 		
-		// Loop over delivery items from processObject and add them with stock to the orderDelivery
-		for(var i=1; i<=arrayLen(arguments.processObject.getOrderDeliveryItems()); i++) {
-			arguments.processObject.getOrderDeliveryItems()[i].setStock( getStockService().getStockBySkuAndLocation(sku=arguments.processObject.getOrderDeliveryItems()[i].getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
-			arguments.processObject.getOrderDeliveryItems()[i].setOrderDelivery( arguments.orderDelivery );
+		// If we need to capture payments first, then we do that to make sure the rest of the delivery can take place
+		if(arguments.processObject.getCaptureAuthorizedPaymentsFlag()) {
+			var amountToBeCaptured = arguments.processObject.getCapturableAmount();
+			
+			var opArr = arguments.processObject.getOrder().getOrderPayments();
+			
+			for(var p=1; p<=arrayLen(opArr); p++) {
+				
+				var orderPayment = opArr[p];
+				
+				if(orderPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard" && orderPayment.getAmountUnreceived() gt 0 && amountToBeCaptured gt 0) {
+					var transactionData = {
+						transactionType = 'capturePreAuthorization',
+						amount = amountToBeCaptured
+					};
+					
+					if(transactionData.amount gt orderPayment.getAmountUnreceived()) {
+						transactionData.amount = orderPayment.getAmountUnreceived();
+					}
+					
+					orderPayment = processOrderPayment(orderPayment, transactionData, 'createTransaction');
+					
+					if(!orderPayment.hasErrors()) {
+						amountToBeCaptured = precisionEvaluate(amountToBeCaptured - transactionData.amount);
+					}
+				}
+			}
 		}
 		
-		// Save the orderDelivery
-		arguments.orderDelivery = this.saveOrderDelivery(arguments.orderDelivery);
-		
-		// Update the orderStatus
-		updateOrderStatus( arguments.orderDelivery.getOrder(), true );
+		// As long as the amount to be captured is eq 0 then we can continue making the order delivery
+		if(amountToBeCaptured eq 0) {
+			
+			// Setup the header information
+			arguments.orderDelivery.setOrder( arguments.processObject.getOrder() );
+			arguments.orderDelivery.setLocation( arguments.processObject.getLocation() );
+			arguments.orderDelivery.setFulfillmentMethod( arguments.processObject.getFulfillmentMethod() );
+			arguments.orderDelivery.setShippingMethod( arguments.processObject.getShippingMethod() );
+			arguments.orderDelivery.setShippingAddress( arguments.processObject.getShippingAddress().copyAddress( saveNewAddress=true ) );
+			
+			// Setup the tracking number
+			if(!isNull(arguments.processObject.getTrackingNumber()) && len(arguments.processObject.getTrackingNumber())) {
+				argumnets.orderDelivery.setTrackingNumber(arguments.processObject.getTrackingNumber());
+			}
+			
+			// Loop over delivery items from processObject and add them with stock to the orderDelivery
+			for(var i=1; i<=arrayLen(arguments.processObject.getOrderDeliveryItems()); i++) {
+				arguments.processObject.getOrderDeliveryItems()[i].setStock( getStockService().getStockBySkuAndLocation(sku=arguments.processObject.getOrderDeliveryItems()[i].getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
+				arguments.processObject.getOrderDeliveryItems()[i].setOrderDelivery( arguments.orderDelivery );
+			}
+			
+			// Save the orderDelivery
+			arguments.orderDelivery = this.saveOrderDelivery(arguments.orderDelivery);
+			
+			// Update the orderStatus
+			updateOrderStatus( arguments.orderDelivery.getOrder(), true );
+			
+		} else {
+			arguments.processObject.addError('capturableAmount', rbKey('validate.processOrderDelivery_create.captureAmount'));
+		}
 		
 		return arguments.orderDelivery;
 	}
@@ -1135,8 +1179,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		return arguments.orderFulfillment;
 	}
-	
-	
+		
 	// Process: Order Return
 	// (needs refactor)
 	public any function processOrderReturn_receiveReturn(required any orderReturn, struct data={}, string processContext="process") {
