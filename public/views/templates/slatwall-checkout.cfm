@@ -106,7 +106,7 @@ Notes:
 		<!--- START CEHECKOUT EXAMPLE 1 --->
 		<div class="row">
 			<div class="span12">
-				<h3>Checkout Example ( 3/4 Step Process: Account-Fulfillment-Payment-Confirm )</h3>
+				<h3>Checkout Example ( 3 or 4 Step Process: Account-Fulfillment-Payment-Confirm )</h3>
 			</div>
 		</div>
 		
@@ -891,8 +891,10 @@ Notes:
 			</div>
 			
 		<!--- No Items In Cart --->
-		<cfelse>
+		<cfelseif $.slatwall.hasSessionValue('confirmationOrderID')>
 			
+			<cfset confirmationOrder = $.slatwall.getService('orderService').getOrder( $.slatwall.getSessionValue('confirmationOrderID') ) />
+			 
 			<div class="row">
 				<div class="span12">
 					<p>There are no items in your cart.</p>

@@ -130,8 +130,12 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 			rc.newOrderPayment.orderPaymentType.typeID = '444df2f0fed139ff94191de8fcd1f61b';
 		}
 		
-		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'placeOrder');
+		var order = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'placeOrder');
 		
-		arguments.rc.$.slatwall.addActionResult( "public:cart.placeOrder", cart.hasErrors() );
+		arguments.rc.$.slatwall.addActionResult( "public:cart.placeOrder", order.hasErrors() );
+		
+		if(!order.hasErrors) {
+			rc.$.slatwall.setSessionValue('confirmationOrderID', order.getOrderID());
+		}
 	}
 }

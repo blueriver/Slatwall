@@ -47,7 +47,7 @@ Notes:
 <cfif thisTag.executionMode is "start">
 	<cfsilent>
 		<cfif not arrayLen(attributes.errors) && isObject(attributes.object)>
-			<cfif attributes.errorName eq "">
+			<cfif not len(attributes.errorName)>
 				<cfloop collection="#attributes.object.getErrors()#" item="errorName">
 					<cfloop array="#attributes.object.getErrors()[errorName]#" index="thisError">
 						<cfset arrayAppend(attributes.errors, thisError) />

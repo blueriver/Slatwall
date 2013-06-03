@@ -145,6 +145,18 @@ Notes:
 				<!--- START: ADD TO CART EXAMPLE 1 --->
 				<h4>Add To Cart Form Example 1</h4>
 				
+				<!--- If this item was just added show the success message --->
+				<cfif $.slatwall.hasSuccessfulAction( "public:cart.addOrderItem" )>
+					<div class="alert alert-success">
+						The item was successfully added to your cart.  You might want to change the action="" of the add to cart form so that it points directly to shopping cart page that way the user ends up there.
+					</div>
+				<!--- If this item was just tried to be added, but failed then show the failure message ---> 
+				<cfelseif $.slatwall.hasFailureAction( "public:cart.addOrderItem" )>
+					<div class="alert alert-error">
+						<sw:errorDisplay object="#$.slatwall.cart().getProcessObject('addOrderItem')#" />
+					</div>
+				</cfif>
+				
 				<!--- Start of form, note that the action can be set to whatever URL you would like the user to end up on. ---> 
 				<form action="?s=1" method="post">
 					<input type="hidden" name="slatAction" value="public:cart.addOrderItem" />
