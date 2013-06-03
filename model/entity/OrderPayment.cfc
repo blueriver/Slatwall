@@ -513,7 +513,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 			variables.creditCardNumber = arguments.creditCardNumber;
 			setCreditCardLastFour( right(arguments.creditCardNumber, 4) );
 			setCreditCardType( getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber) );
-			if(getCreditCardType() != "Invalid" && !isNull(getPaymentMethod()) && getPaymentMethod().getSaveOrderPaymentEncryptFlag()) {
+			if(getCreditCardType() != "Invalid" && !isNull(getPaymentMethod()) && !isNull(getPaymentMethod().getSaveOrderPaymentEncryptFlag()) && getPaymentMethod().getSaveOrderPaymentEncryptFlag()) {
 				setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
 			}
 		} else {

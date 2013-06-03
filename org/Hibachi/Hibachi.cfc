@@ -416,9 +416,7 @@ component extends="FW1.framework" {
 	
 	// This handels all of the ORM persistece.
 	public void function endHibachiLifecycle() {
-		if(getHibachiScope().getORMHasErrors()) {
-			getHibachiScope().getService("hibachiDAO").clearORMSession();
-		} else {
+		if(!getHibachiScope().getORMHasErrors()) {
 			getHibachiScope().getService("hibachiDAO").flushORMSession();
 		}
 	}

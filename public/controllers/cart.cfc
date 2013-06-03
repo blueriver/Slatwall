@@ -107,6 +107,14 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	// Add Order Payment
 	public void function addOrderPayment(required any rc) {
+		
+		// Setup newOrderPayment requirements
+		if(structKeyExists(rc, "newOrderPayment")) {
+			rc.newOrderPayment.orderPaymentID = '';
+			rc.newOrderPayment.order.orderID = rc.$.slatwall.cart().getOrderID();
+			rc.newOrderPayment.orderPaymentType.typeID = '444df2f0fed139ff94191de8fcd1f61b';
+		}
+		
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addOrderPayment');
 		
 		arguments.rc.$.slatwall.addActionResult( "public:cart.addOrderPayment", cart.hasErrors() );
@@ -114,6 +122,14 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	// Place Order
 	public void function placeOrder(required any rc) {
+	
+		// Setup newOrderPayment requirements
+		if(structKeyExists(rc, "newOrderPayment")) {
+			rc.newOrderPayment.orderPaymentID = '';
+			rc.newOrderPayment.order.orderID = rc.$.slatwall.cart().getOrderID();
+			rc.newOrderPayment.orderPaymentType.typeID = '444df2f0fed139ff94191de8fcd1f61b';
+		}
+		
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'placeOrder');
 		
 		arguments.rc.$.slatwall.addActionResult( "public:cart.placeOrder", cart.hasErrors() );

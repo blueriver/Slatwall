@@ -535,6 +535,7 @@ Notes:
 									<th>&nbsp;</th>
 								</tr>
 								<cfloop array="#$.slatwall.cart().getOrderPayments()#" index="orderPayment">
+									<cfdump var="#orderPayment.getErrors()#" />
 									<tr>
 										<td>#orderPayment.getSimpleRepresentation()#</td>
 										<td>#orderPayment.getAmount()#</td>
@@ -625,6 +626,8 @@ Notes:
 									<form action="?s=1" method="post">
 										
 										<!--- Hidden value to identify the type of payment method this is --->
+										<input type="hidden" name="newOrderPayment.orderPaymentID" value="" />
+										<input type="hidden" name="newOrderPayment.order.orderID" value="#$.slatwall.cart().getOrderID()#" />
 										<input type="hidden" name="newOrderPayment.paymentMethod.paymentMethodID" value="#paymentDetails.paymentMethod.getPaymentMethodID()#" />
 										
 										<!--- CASH --->
