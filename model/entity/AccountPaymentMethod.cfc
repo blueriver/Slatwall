@@ -77,7 +77,8 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	property name="giftCardNumber" persistent="false";
 	property name="bankRoutingNumber" persistent="false";
 	property name="bankAccountNumber" persistent="false";
-
+	property name="paymentMethodOptions" persistent="false";
+	property name="paymentMethodOptionsSmartList" persistent="false";
 	
 	public string function getPaymentMethodType() {
 		return getPaymentMethod().getPaymentMethodType();
@@ -142,13 +143,19 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
+	public array function getPaymentMethodOptionsSmartList() {
+		if(!structKeyExists(variables, "paymentMethodOptionsSmartList")) {
+			variables.paymentMethodOptionsSmartList = getService("paymentService").getPaymentMethodSmartList();
+			variables.paymentMethodOptionsSmartList.addFilter('activeFlag', 1);
+			variables.paymentMethodOptionsSmartList.addFilter('allowSaveFlag', 1);
+			variables.paymentMethodOptionsSmartList.addInFilter('paymentMethodType', 'creditCard,giftCard,external,termPayment');
+		}
+		return variables.paymentMethodOptionsSmartList;
+	}
+	
 	public array function getPaymentMethodOptions() {
 		if(!structKeyExists(variables, "paymentMethodOptions")) {
-			var sl = getService("paymentService").getPaymentMethodSmartList();
-			sl.addFilter('activeFlag', 1);
-			sl.addFilter('allowSaveFlag', 1);
-			sl.addInFilter('paymentMethodType', 'creditCard,giftCard,termPayment');
-			
+			var sl = getPaymentMethodOptionsSmartList();
 			sl.addSelect('paymentMethodName', 'name');
 			sl.addSelect('paymentMethodID', 'value');
 			sl.addSelect('paymentMethodType', 'paymentmethodtype');

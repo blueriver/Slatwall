@@ -39,7 +39,7 @@ Notes:
 	of what is possible through the frontend subsystem in the way of pulling	
 	information as well as updating account info.								
 																				
-	IMPORTANT: any of the individual components or different aspects of this	
+	IMPORTANT: any of the individual components or different aspects	of this	
 	page can be copied into a seperate template and referenced as a seperate	
 	URL either in your CMS or custom application.  We have done this all in one	
 	place only for example purposes.  You may find that because this page is so	
@@ -106,7 +106,6 @@ Notes:
 										
 										<!--- This hidden input is what tells slatwall to 'create' an account, it is then chained by the 'login' method so that happens directly after --->
 										<input type="hidden" name="slatAction" value="public:account.update" />
-										
 											
 										<!--- First Name --->
 										<div class="control-group">
@@ -118,7 +117,6 @@ Notes:
 												
 					    					</div>
 					  					</div>
-									
 										
 										<!--- Last Name --->
 										<div class="control-group">
@@ -242,7 +240,8 @@ Notes:
 												<cfloop array="#$.slatwall.getAccount().getAccountPhoneNumbersSmartList().getRecords()#" index="accountPhoneNumber">
 													<tr>
 														<td>
-															#accountPhoneNumber.getPhoneNumber()#
+															<span>#accountPhoneNumber.getPhoneNumber()#</span>
+															
 															<cfif accountPhoneNumber.getAccountPhoneNumberID() eq $.slatwall.getAccount().getPrimaryPhoneNumber().getAccountPhoneNumberID()>
 																- <i class="icon-asterisk" title="#accountPhoneNumber.getPhoneNumber()# is the primary phone number for this account"></i>
 															<cfelse>
@@ -355,14 +354,13 @@ Notes:
 													
 													<!--- Administration options --->
 													<div class="pull-right">
-													
 														<span class="pull-right">
 															<!--- If this is the primary address, then just show the astricks --->
 															<cfif accountAddress.getAccountAddressID() eq $.slatwall.getAccount().getPrimaryAddress().getAccountAddressID()>
 																<i class="icon-asterisk" title="This is the primary address for your account"></i>
 															<!--- Otherwise add buttons to be able to delete the address, or make it the primary --->
 															<cfelse>
-																<a href="?slatAction=public:account.update&primaryAddress.accountAddressID=#accountAddress.getAccountAddressID()#" title="Set this as your primary phone address"><i class="icon-asterisk"></i></a>&nbsp;
+																<a href="?slatAction=public:account.update&primaryAddress.accountAddressID=#accountAddress.getAccountAddressID()#" title="Set this as your primary phone address"><i class="icon-asterisk"></i></a>
 																<a href="?slatAction=public:account.deleteAccountAddress&accountAddressID=#accountAddress.getAccountAddressID()#" title="Delete Address"><i class="icon-trash"></i></a>
 															</cfif>
 														</span>
@@ -391,7 +389,7 @@ Notes:
 												
 													<!--- This is the top accordian header row --->
 													<div class="accordion-heading">
-														<a class="accordion-toggle" data-toggle="collapse" data-parent="##add-account-address" href="##new-account-address-form">Add Account Address</a>
+														<a class="accordion-toggle" data-toggle="collapse" data-parent="##add-account-address" href="##new-account-address-form"><i class="icon-plus"></i>Add Account Address</a>
 													</div>
 												
 													<!--- This is the accordian details when expanded --->
@@ -465,86 +463,205 @@ Notes:
 													<div class="pull-right">
 													
 														<span class="pull-right">
-															<!--- If this is the primary address, then just show the astricks 
-															<cfif accountAddress.getAccountAddressID() eq $.slatwall.getAccount().getPrimaryAddress().getAccountAddressID()>
-																<i class="icon-asterisk" title="This is the primary address for your account"></i>
+															
+															<!--- If this is the primary payment method, then just show the astricks --->
+															<cfif accountPaymentMethod.getAccountPaymentMethodID() eq $.slatwall.getAccount().getPrimaryPaymentMethod().getAccountPaymentMethodID()>
+																<i class="icon-asterisk" title="This is the primary payment method for your account"></i>
 															<!--- Otherwise add buttons to be able to delete the address, or make it the primary --->
 															<cfelse>
-																<a href="?slatAction=public:account.update&primaryAddress.accountAddressID=#accountAddress.getAccountAddressID()#" title="Set this as your primary phone address"><i class="icon-asterisk"></i></a>&nbsp;
-																<a href="?slatAction=public:account.deleteAccountAddress&accountAddressID=#accountAddress.getAccountAddressID()#" title="Delete Address"><i class="icon-trash"></i></a>
+																<a href="?slatAction=public:account.update&primaryPaymentMethod.accountPaymentMethodID=#accountPaymentMethod.getAccountPaymentMethodID()#" title="Set this as your primary phone address"><i class="icon-asterisk"></i></a>
+																<a href="?slatAction=public:account.deleteAccountPaymentMethod&accountPaymentMethodID=#accountPaymentMethod.getAccountPaymentMethodID()#" title="Delete Address"><i class="icon-trash"></i></a>
 															</cfif>
-															--->
+															
 														</span>
 													</div>
 													
-													<!--- Address Nickname if it exists --->
-													<strong>#accountPaymentMethod.getSimpleRepresentation()#</strong>
+													<strong>#accountPaymentMethod.getPaymentMethod().getPaymentMethodName()# <cfif not isNull(accountPaymentMethod.getAccountPaymentMethodName()) and len(accountPaymentMethod.getAccountPaymentMethodName())>- #accountPaymentMethod.getAccountPaymentMethodName()#</cfif></strong><br />
 													
+													<!--- Credit Card Display --->
+													<cfif accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "creditCard">
+														#accountPaymentMethod.getCreditCardType()# - #accountPaymentMethod.getCreditCardLastFour()#<br />
+														#accountPaymentMethod.getNameOnCreditCard()#<br />
+														#accountPaymentMethod.getExpirationMonth()# / #accountPaymentMethod.getExpirationYear()#<br />
+														#accountPaymentMethod.getBillingAddress().getSimpleRepresentation()#
+													
+													<!--- External Display --->
+													<cfelseif accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "external">
+														
+													<!--- Gift Card Display --->
+													<cfelseif accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "giftCard">
+													
+													<!--- Term Payment Display --->
+													<cfelseif accountPaymentMethod.getPaymentMethod().getPaymentMethodType() eq "termPayment">
+														
+													</cfif>
 													
 												</div>
+												
 											</li>
 											
 										</cfloop>
 										
-										<!--- Start: New Address
-										<li class="span4">
+										<!--- Start: New Payment Method --->
 											
-											<div class="accordion" id="add-account-address">
-											
-												<div class="accordion-group">
+										<!--- get the newPropertyEntity for accountPaymentMethod --->
+										<cfset newAccountPaymentMethod = $.slatwall.getAccount().getNewPropertyEntity( 'accountPaymentMethods' ) />
+										
+										<!--- verify that there are payment methods that can be saved --->
+										<cfif arrayLen(newAccountPaymentMethod.getPaymentMethodOptionsSmartList().getRecords())>
+											<li class="span4">
 												
-													<!--- This is the top accordian header row --->
-													<div class="accordion-heading">
-														<a class="accordion-toggle" data-toggle="collapse" data-parent="##add-account-address" href="##new-account-address-form">Add Account Address</a>
-													</div>
-												
-													<!--- This is the accordian details when expanded --->
-													<div id="new-account-address-form" class="accordion-body collapse">
+												<div class="accordion" id="add-account-payment-method">
 													
-														<div class="accordion-inner">
+													<!--- Loop over all of the potential payment methods that can be saved --->
+													<cfloop array="#newAccountPaymentMethod.getPaymentMethodOptionsSmartList().getRecords()#" index="paymentMethod">
+														
+														<cfset pmID = "pm#lcase(createUUID())#" /> 
+														
+														<div class="accordion-group">
+														
+															<!--- This is the top accordian header row --->
+															<div class="accordion-heading">
+																<a class="accordion-toggle" data-toggle="collapse" data-parent="##add-account-payment-method" href="###pmID#"><i class="icon-plus"></i>Add #paymentMethod.getPaymentMethodName()#</a>
+															</div>
+														
+															<!--- This is the accordian details when expanded --->
+															<div id="#pmID#" class="accordion-body collapse">
 															
-															<!--- get the newPropertyEntity for accountAddress --->
-															<cfset newAccountAddress = $.slatwall.getAccount().getNewPropertyEntity( 'accountAddresses' ) />
-															
-															<!--- Start: New Address Form --->
-															<form action="?s=1" method="post">
-																
-																<!--- This hidden input is what tells slatwall to 'create' an account, it is then chained by the 'login' method so that happens directly after --->
-																<input type="hidden" name="slatAction" value="public:account.update" />
-																
-																<!--- Set the accountAddressID to blank so tha it creates a new one --->
-																<input type="hidden" name="accountAddresses[1].accountAddressID" value="" />
-																
-																<!--- Nickname --->
-																<div class="control-group">
-											    					<label class="control-label" for="firstName">Nickname</label>
-											    					<div class="controls">
-											    						
-																		<sw:formField type="text" name="accountAddresses[1].accountAddressName" valueObject="#newAccountAddress#" valueObjectProperty="accountAddressName" class="span3" />
-																		<sw:errorDisplay object="#newAccountAddress#" errorName="accountAddressName" />
+																<div class="accordion-inner">
+																	
+																	<!--- Start: New Payment Method Form --->
+																	<form action="?s=1" method="post">
 																		
-											    					</div>
-											  					</div>
-																
-																<!--- New Address --->
-																<sw:addressForm id="newAccountAddress" address="#newAccountAddress.getAddress()#" fieldNamePrefix="accountAddresses[1].address." fieldClass="span3" />
-																
-																<!--- Update Button --->
-																<div class="control-group">
-											    					<div class="controls">
-											      						<button type="submit" class="btn btn-primary"><i class="icon-plus"></i> Add Address</button>
-											    					</div>
-											  					</div>
-																
-															</form>
-															<!--- End: New Address Form --->
-															
+																		<!--- This hidden input is what tells slatwall to 'create' an account, it is then chained by the 'login' method so that happens directly after --->
+																		<input type="hidden" name="slatAction" value="public:account.update" />
+																		
+																		<!--- Set the accountAddressID to blank so tha it creates a new one --->
+																		<input type="hidden" name="accountPaymentMethods[1].accountPaymentMethodID" value="" />
+																		
+																		<input type="hidden" name="accountPaymentMethods[1].paymentMethod.paymentMethodID" value="#paymentMethod.getPaymentMethodID()#" />
+																		
+																		<!--- Nickname --->
+																		<div class="control-group">
+													    					<label class="control-label" for="firstName">Nickname</label>
+													    					<div class="controls">
+													    						
+																				<sw:formField type="text" name="accountPaymentMethods[1].accountPaymentMethodName" valueObject="#newAccountPaymentMethod#" valueObjectProperty="accountAddressName" class="span3" />
+																				<sw:errorDisplay object="#newAccountPaymentMethod#" errorName="accountPaymentMethodName" />
+																				
+													    					</div>
+													  					</div>
+																		
+																		<!--- Credit Card --->
+																		<cfif paymentMethod.getPaymentMethodType() eq "creditCard">
+																			
+																			<!--- Credit Card Number --->
+																			<div class="control-group">
+														    					<label class="control-label" for="firstName">Credit Card Number</label>
+														    					<div class="controls">
+														    						
+																					<sw:formField type="text" name="accountPaymentMethods[1].creditCardNumber" valueObject="#newAccountPaymentMethod#" valueObjectProperty="creditCardNumber" class="span3" />
+																					<sw:errorDisplay object="#newAccountPaymentMethod#" errorName="creditCardNumber" />
+																					
+														    					</div>
+														  					</div>
+																			
+																			<!--- Name on Credit Card --->
+																			<div class="control-group">
+														    					<label class="control-label" for="firstName">Name on Credit Card</label>
+														    					<div class="controls">
+														    						
+																					<sw:formField type="text" name="accountPaymentMethods[1].nameOnCreditCard" valueObject="#newAccountPaymentMethod#" valueObjectProperty="nameOnCreditCard" class="span3" />
+																					<sw:errorDisplay object="#newAccountPaymentMethod#" errorName="nameOnCreditCard" />
+																					
+														    					</div>
+														  					</div>
+																			
+																			
+																			<!--- Security & Expiration Row --->
+																			<div class="row">
+																				
+																				<div class="span1">
+																					
+																					<!--- Security Code --->
+																					<div class="control-group">
+																    					<label class="control-label" for="rating">CVV</label>
+																    					<div class="controls">
+																    						
+																							<sw:formField type="text" name="accountPaymentMethods[1].securityCode" valueObject="#newAccountPaymentMethod#" valueObjectProperty="securityCode" class="span1" />
+																							<sw:errorDisplay object="#newAccountPaymentMethod#" errorName="securityCode" />
+																							
+																    					</div>
+																  					</div>
+																					
+																				</div>
+																				
+																				
+																				<div class="span2">
+																					
+																					<!--- Expiration --->	
+																					<div class="control-group">
+																    					<label class="control-label pull-right" for="rating">Exp. (MM/YYYY)</label>
+																    					<div class="controls pull-right">
+																    						
+																							<sw:formField type="select" name="accountPaymentMethods[1].expirationMonth" valueObject="#newAccountPaymentMethod#" valueObjectProperty="expirationMonth" valueOptions="#newAccountPaymentMethod.getExpirationMonthOptions()#" class="span1" />
+																							<sw:formField type="select" name="accountPaymentMethods[1].expirationYear" valueObject="#newAccountPaymentMethod#" valueObjectProperty="expirationYear" valueOptions="#newAccountPaymentMethod.getExpirationYearOptions()#" class="span1" />
+																							<sw:errorDisplay object="#newAccountPaymentMethod#" errorName="expirationMonth" />
+																							<sw:errorDisplay object="#newAccountPaymentMethod#" errorName="expirationYear" />
+																							
+																    					</div>
+																  					</div>
+																					
+																				</div>
+																			</div>
+																			
+																			<hr />
+																			<h5>Address on Card</h5>
+																			
+																			<!--- Billing Address --->
+																			<sw:addressForm id="newBillingAddress" address="#newAccountPaymentMethod.getBillingAddress()#" fieldNamePrefix="accountPaymentMethods[1].billingAddress." fieldClass="span3" />
+																		<cfelseif paymentMethod.getPaymentMethodType() eq "external">
+																			
+																		<cfelseif paymentMethod.getPaymentMethodType() eq "giftCard">
+																			
+																			<!--- Gift Card Number --->
+																			<div class="control-group">
+														    					<label class="control-label" for="firstName">Gift Card Number</label>
+														    					<div class="controls">
+														    						
+																					<sw:formField type="text" name="accountPaymentMethods[1].giftCardNumber" valueObject="#newAccountPaymentMethod#" valueObjectProperty="giftCardNumber" class="span3" />
+																					<sw:errorDisplay object="#newAccountPaymentMethod#" errorName="giftCardNumber" />
+																					
+														    					</div>
+														  					</div>
+																			
+																		<cfelseif paymentMethod.getPaymentMethodType() eq "termPayment">
+																			<hr />
+																			<h5>Billing Address</h5>
+																			
+																			<!--- Billing Address --->
+																			<sw:addressForm id="newBillingAddress" address="#newAccountPaymentMethod.getBillingAddress()#" fieldNamePrefix="accountPaymentMethods[1].billingAddress." fieldClass="span3" />
+																		</cfif>
+																		
+																		
+																		<!--- Update Button --->
+																		<div class="control-group">
+													    					<div class="controls">
+													      						<button type="submit" class="btn btn-primary"><i class="icon-plus"></i> Add Payment Method</button>
+													    					</div>
+													  					</div>
+																		
+																	</form>
+																	<!--- End: New Payment Method Form --->
+																	
+																</div>
+															</div>
 														</div>
-													</div>
+													</cfloop>
 												</div>
-											</div>
-										</li>
-										End: New Address --->
+											</li>
+										</cfif>
+										<!--- End: New Payment Method --->
 											
 									</ul>
 									<!--- END: PAYMENT METHODS --->
