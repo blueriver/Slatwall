@@ -143,7 +143,7 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public array function getPaymentMethodOptionsSmartList() {
+	public any function getPaymentMethodOptionsSmartList() {
 		if(!structKeyExists(variables, "paymentMethodOptionsSmartList")) {
 			variables.paymentMethodOptionsSmartList = getService("paymentService").getPaymentMethodSmartList();
 			variables.paymentMethodOptionsSmartList.addFilter('activeFlag', 1);
