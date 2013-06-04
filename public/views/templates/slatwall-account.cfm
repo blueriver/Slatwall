@@ -82,7 +82,125 @@ Notes:
 						
 						<!--- ================== PROFILE TAB ======================== --->
 						<div class="tab-pane active" id="profile">
-							<h4>Profile Details</h4>
+							<div class="row">
+								<div class="span4">
+									<h4>Profile Details</h4>
+									Name & Custom Attributes Here
+								</div>
+								
+								<!--- Right Side Contact & Payment Methods --->
+								<div class="span8">
+									
+									<div class="row">
+										
+										<!--- Phone Numbers --->
+										<div class="span4">
+											<h4>Phone Numbers</h4>
+											
+											<!--- Start: Existing Phone Numbers --->
+											<table class="table table-condensed">
+												<cfloop array="#$.slatwall.getAccount().getAccountPhoneNumbersSmartList().getRecords()#" index="accountPhoneNumber">
+													<tr>
+														<td>
+															#accountPhoneNumber.getPhoneNumber()#
+															<cfif accountPhoneNumber.getAccountPhoneNumberID() eq $.slatwall.getAccount().getPrimaryPhoneNumber().getAccountPhoneNumberID()>
+																- <i class="icon-asterisk" title="#accountPhoneNumber.getPhoneNumber()# is the primary phone number for this account"></i>
+															<cfelse>
+																<span class="pull-right">
+																	<a href="?slatAction=public:account.update&primaryPhoneNumber.accountPhoneNumberID=#accountPhoneNumber.getAccountPhoneNumberID()#" title="Set #accountPhoneNumber.getPhoneNumber()# as your primary phone number"><i class="icon-asterisk"></i></a>&nbsp;
+																	<a href="?slatAction=public:account.deleteAccountPhoneNumber&accountPhoneNumberID=#accountPhoneNumber.getAccountPhoneNumberID()#" title="Delete Phone Number - #accountPhoneNumber.getPhoneNumber()#"><i class="icon-trash"></i></a>
+																</span>
+															</cfif>
+														</td>
+													</tr>
+												</cfloop>
+											</table>
+											<!--- End: Existing Phone Numbers --->
+											
+											<!--- Start: Add Phone Number Form --->
+											<form action="?s=1" method="post">
+												<input type="hidden" name="slatAction" value="public:account.update" />
+												<input type="hidden" name="accountPhoneNumbers[1].accountPhoneNumberID" value="" />
+												<div class="control-group">
+							    					<div class="controls">
+						    							<div class="input-append">
+							    							<sw:formField type="text" name="accountPhoneNumbers[1].phoneNumber" fieldAttributes='placeholder="Add Phone Number"' class="span3" />
+															<button type="submit" class="btn btn-primary"><i class="icon-plus"></i></button>
+														</div>
+							    					</div>
+							  					</div>
+											</form>
+											<!--- End: Add Phone Number Form --->
+												
+										</div>
+										
+										<div class="span4">
+											<h4>Email Addresses</h4>
+											
+											<!--- Existing Email Addresses --->
+											<table class="table table-condensed">
+												<cfloop array="#$.slatwall.getAccount().getAccountEmailAddressesSmartList().getRecords()#" index="accountEmailAddress">
+													<tr>
+														<td>
+															#accountEmailAddress.getEmailAddress()#
+															<cfif accountEmailAddress.getAccountEmailAddressID() eq $.slatwall.getAccount().getPrimaryEmailAddress().getAccountEmailAddressID()>
+																- <i class="icon-asterisk" title="#accountEmailAddress.getEmailAddress()# is the primary email address for this account"></i>
+															<cfelse>
+																<span class="pull-right">
+																	<a href="?slatAction=public:account.update&primaryEmailAddress.accountEmailAddressID=#accountEmailAddress.getAccountEmailAddressID()#" title="Set #accountEmailAddress.getEmailAddress()# as your primary email address"><i class="icon-asterisk"></i></a>&nbsp;
+																	<a href="?slatAction=public:account.deleteAccountEmailAddress&accountEmailAddressID=#accountEmailAddress.getAccountEmailAddressID()#" title="Delete Email Address - #accountEmailAddress.getEmailAddress()#"><i class="icon-trash"></i></a>
+																</span>
+															</cfif>
+														</td>
+													</tr>
+												</cfloop>
+											</table>
+											
+											<!--- Start: Add Email Address Form --->
+											<form action="?s=1" method="post">
+												<input type="hidden" name="slatAction" value="public:account.update" />
+												<input type="hidden" name="accountEmailAddresses[1].accountEmailAddressID" value="" />
+												<div class="control-group">
+							    					<div class="controls">
+						    							<div class="input-append">
+							    							<sw:formField type="text" name="accountEmailAddresses[1].emailAddress" fieldAttributes='placeholder="Add Email Address"' class="span3" />
+															<button type="submit" class="btn btn-primary"><i class="icon-plus"></i></button>
+														</div>
+							    					</div>
+							  					</div>
+											</form>
+											<!--- End: Add Email Address Form --->
+										</div>
+									</div>
+									<h4>Address Book</h4>
+									<hr />
+									<!--- Start: Existing Addresses --->
+									<ul class="thumbnails">
+										<cfloop array="#$.slatwall.getAccount().getAccountAddressesSmartList().getRecords()#" index="accountAddress">
+											<li class="span4">
+												<div class="thumbnail">
+													<div class="pull-right">
+														<cfif accountAddress.getAccountAddressID() eq $.slatwall.getAccount().getPrimaryAddress().getAccountAddressID()>
+															<i class="icon-asterisk" title="This is the primary address for your account"></i>
+														<cfelse>
+															<span class="pull-right">
+																<a href="?slatAction=public:account.update&primaryAddress.accountAddressID=#accountAddress.getAccountAddressID()#" title="Set this as your primary phone address"><i class="icon-asterisk"></i></a>&nbsp;
+																<a href="?slatAction=public:account.deleteAccountAddress&accountPhoneNumberID=#accountAddress.getAccountAddressID()#" title="Delete Address"><i class="icon-trash"></i></a>
+															</span>
+														</cfif>
+													</div>
+													<sw:addressDisplay address="#accountAddress.getAddress()#" />
+												</div>
+											</li>
+										</cfloop>
+									</ul>
+									<br />
+									<h4>Payment Methods</h4>
+									<hr />
+									
+									
+								</div>
+							</div>
 						</div>
 						
 						<!--- ================== ORDER HISTORY TAB ================== --->
@@ -520,11 +638,15 @@ Notes:
 		<!--- CREATE / LOGIN FORMS --->
 		<cfelse>
 			<div class="row">
-								
+				<div class="span12">
+					<h2>My Account</h2>
+				</div>
+			</div>
+			<div class="row">
 				<!--- LOGIN --->
-				<div class="span4">
+				<div class="span6">
 					
-					<h5>Login with Existing Account</h5>
+					<h4>Login with Existing Account</h4>
 					
 					<!--- Sets up the account login processObject --->
 					<cfset accountLoginObj = $.slatwall.getAccount().getProcessObject('login') />
@@ -540,7 +662,7 @@ Notes:
 	    					<label class="control-label" for="rating">Email Address</label>
 	    					<div class="controls">
 	    						
-								<sw:formField type="text" valueObject="#accountLoginObj#" valueObjectProperty="emailAddress" class="span4" />
+								<sw:formField type="text" valueObject="#accountLoginObj#" valueObjectProperty="emailAddress" class="span6" />
 								<sw:errorDisplay object="#accountLoginObj#" errorName="emailAddress" />
 								
 	    					</div>
@@ -551,7 +673,7 @@ Notes:
 	    					<label class="control-label" for="rating">Password</label>
 	    					<div class="controls">
 	    						
-								<sw:formField type="password" valueObject="#accountLoginObj#" valueObjectProperty="password" class="span4" />
+								<sw:formField type="password" valueObject="#accountLoginObj#" valueObjectProperty="password" class="span6" />
 								<sw:errorDisplay object="#accountLoginObj#" errorName="password" />
 								
 	    					</div>
@@ -585,7 +707,7 @@ Notes:
 	    					<label class="control-label" for="rating">Email Address</label>
 	    					<div class="controls">
 	    						
-								<sw:formField type="text" valueObject="#accountLoginObj#" valueObjectProperty="emailAddress" class="span4" />
+								<sw:formField type="text" valueObject="#accountLoginObj#" valueObjectProperty="emailAddress" class="span6" />
 								<sw:errorDisplay object="#forgotPasswordObj#" errorName="emailAddress" />
 								
 	    					</div>
@@ -604,8 +726,8 @@ Notes:
 				</div>
 				
 				<!--- CREATE ACCOUNT --->
-				<div class="span4">
-					<h5>Create New Account</h5>
+				<div class="span6">
+					<h4>Create New Account</h4>
 					
 					<!--- Sets up the create account processObject --->
 					<cfset createAccountObj = $.slatwall.account().getProcessObject('create') />
@@ -622,12 +744,12 @@ Notes:
 						<div class="row">
 							
 							<!--- First Name --->
-							<div class="span2">
+							<div class="span3">
 								<div class="control-group">
 			    					<label class="control-label" for="rating">First Name</label>
 			    					<div class="controls">
 			    						
-										<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="firstName" class="span2" />
+										<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="firstName" class="span3" />
 										<sw:errorDisplay object="#createAccountObj#" errorName="firstName" />
 										
 			    					</div>
@@ -635,12 +757,12 @@ Notes:
 							</div>
 							
 							<!--- Last Name --->
-							<div class="span2">
+							<div class="span3">
 								<div class="control-group">
 			    					<label class="control-label" for="rating">Last Name</label>
 			    					<div class="controls">
 			    						
-										<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="lastName" class="span2" />
+										<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="lastName" class="span3" />
 										<sw:errorDisplay object="#createAccountObj#" errorName="lastName" />
 										
 			    					</div>
@@ -654,7 +776,7 @@ Notes:
 	    					<label class="control-label" for="rating">Phone Number</label>
 	    					<div class="controls">
 	    						
-								<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="phoneNumber" class="span4" />
+								<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="phoneNumber" class="span6" />
 								<sw:errorDisplay object="#createAccountObj#" errorName="phoneNumber" />
 								
 	    					</div>
@@ -665,7 +787,7 @@ Notes:
 	    					<label class="control-label" for="rating">Email Address</label>
 	    					<div class="controls">
 	    						
-								<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="emailAddress" class="span4" />
+								<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="emailAddress" class="span6" />
 								<sw:errorDisplay object="#createAccountObj#" errorName="emailAddress" />
 								
 	    					</div>
@@ -676,7 +798,7 @@ Notes:
 	    					<label class="control-label" for="rating">Confirm Email Address</label>
 	    					<div class="controls">
 	    						
-								<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="emailAddressConfirm" class="span4" />
+								<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="emailAddressConfirm" class="span6" />
 								<sw:errorDisplay object="#createAccountObj#" errorName="emailAddressConfirm" />
 								
 	    					</div>
@@ -715,7 +837,7 @@ Notes:
 		    					<label class="control-label" for="rating">Password</label>
 		    					<div class="controls">
 		    						
-									<sw:formField type="password" valueObject="#createAccountObj#" valueObjectProperty="password" class="span4" />
+									<sw:formField type="password" valueObject="#createAccountObj#" valueObjectProperty="password" class="span6" />
 									<sw:errorDisplay object="#createAccountObj#" errorName="password" />
 									
 		    					</div>
@@ -726,7 +848,7 @@ Notes:
 		    					<label class="control-label" for="rating">Confirm Password</label>
 		    					<div class="controls">
 		    						
-									<sw:formField type="password" valueObject="#createAccountObj#" valueObjectProperty="passwordConfirm" class="span4" />
+									<sw:formField type="password" valueObject="#createAccountObj#" valueObjectProperty="passwordConfirm" class="span6" />
 									<sw:errorDisplay object="#createAccountObj#" errorName="password" />
 									
 		    					</div>

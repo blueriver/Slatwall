@@ -63,13 +63,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.$.slatwall.addActionResult( "public:account.logout", false );
 	}
 	
-	// Create
-	public void function create( required struct rc ) {
-		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'create');
-		
-		arguments.rc.$.slatwall.addActionResult( "public:account.create", account.hasErrors() );
-	}
-	
 	// Forgot Password
 	public void function forgotPassword( required struct rc ) {
 		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'forgotPassword');
@@ -84,10 +77,74 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.$.slatwall.addActionResult( "public:account.changePassword", account.hasErrors() );
 	}
 	
-	// Update
+	// Create - Account
+	public void function create( required struct rc ) {
+		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'create');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:account.create", account.hasErrors() );
+	}
+	
+	// Update - Account
 	public void function update( required struct rc ) {
 		var account = getAccountService().saveAccount( rc.$.slatwall.getAccount(), arguments.rc );
 		
 		arguments.rc.$.slatwall.addActionResult( "public:account.update", account.hasErrors() );
 	}
+	
+	// Delete - Account Email Address
+	public void function deleteAccountEmailAddress() {
+		param name="rc.accountEmailAddressID" default="";
+		
+		var accountEmailAddress = getAccountService().getAccountEmailAddress( rc.accountEmailAddressID );
+		
+		if(!isNull(accountEmailAddress) && accountEmailAddress.getAccount().getAccountID() == arguments.rc.$.slatwall.getAccount().getAccountID() ) {
+			var deleteOk = getAccountService().deleteAccountEmailAddress( accountEmailAddress );
+			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountEmailAddress", !deleteOK );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountEmailAddress", true );	
+		}
+	}
+	
+	// Delete - Account Phone Number
+	public void function deleteAccountPhoneNumber() {
+		param name="rc.accountPhoneNumberID" default="";
+		
+		var accountPhoneNumber = getAccountService().getAccountPhoneNumber( rc.accountPhoneNumberID );
+		
+		if(!isNull(accountPhoneNumber) && accountPhoneNumber.getAccount().getAccountID() == arguments.rc.$.slatwall.getAccount().getAccountID() ) {
+			var deleteOk = getAccountService().deleteAccountPhoneNumber( accountPhoneNumber );
+			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountPhoneNumber", !deleteOK );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountPhoneNumber", true );	
+		}
+	}
+	
+	// Delete - Account Address
+	public void function deleteAccountAddress() {
+		param name="rc.accountAddressID" default="";
+		
+		var accountAddress = getAccountService().getAccountPhoneNumber( rc.accountAddressID );
+		
+		if(!isNull(accountAddress) && accountAddress.getAccount().getAccountID() == arguments.rc.$.slatwall.getAccount().getAccountID() ) {
+			var deleteOk = getAccountService().deleteAccountAddress( accountAddress );
+			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountAddress", !deleteOK );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountAddress", true );	
+		}
+	}
+	
+	// Delete - Account Payment Method
+	public void function deleteAccountPaymentMethod() {
+		param name="rc.accountAddressID" default="";
+		
+		var accountPaymentMethod = getAccountService().getAccountPhoneNumber( rc.accountAddressID );
+		
+		if(!isNull(accountPaymentMethod) && accountPaymentMethod.getAccount().getAccountID() == arguments.rc.$.slatwall.getAccount().getAccountID() ) {
+			var deleteOk = getAccountService().deleteAccountPaymentMethod( accountPaymentMethod );
+			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountPaymentMethod", !deleteOK );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountPaymentMethod", true );	
+		}
+	}
+	
 }
