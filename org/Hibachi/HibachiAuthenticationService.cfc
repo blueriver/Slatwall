@@ -233,7 +233,7 @@ component output="false" accessors="true" extends="HibachiService" {
 					for(var d=1; d<=arrayLen(ssDirectoryList); d++) {
 						
 						var section = listFirst(listLast(ssDirectoryList[d],"/\"),".");
-						var obj = createObject('component', '#replace(ssDirectory, '/','.','all')#controllers.#section#');
+						var obj = createObject('component', '#getApplicationValue('applicationKey')#.#replace(ssDirectory, '/','.','all')#controllers.#section#');
 						
 						// Setup section structure
 						allPermissions[ aspArr[s] ].sections[ section ] = {
