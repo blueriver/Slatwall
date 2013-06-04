@@ -174,7 +174,7 @@
 				}
 			}
 			
-			// Now that there is a mura contentBean in the muraScope for sure, we can setup our content Variable
+			// Now that there is a mura contentBean in the muraScope for sure, we can setup our content Variable, but only if the current content node is new
 			if($.slatwall.getContent().getNewFlag()) {
 				$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
 			}
@@ -501,7 +501,9 @@
 				integration.setAuthenticationActiveFlag(1);
 			}
 			
-			ormFlush();
+			// Flush the ORM Session
+			$.slatwall.getDAO("hibachiDAO").flushORMSession();
+			
 			$.slatwall.getService("integrationService").clearActiveFW1Subsystems();
 			
 			// Sync all of the settings defined in the plugin with the integration
@@ -532,8 +534,10 @@
 				// First lets verify that this site exists on the Slatwall site
 				var slatwallSite = $.slatwall.getService("siteService").getSiteByCMSSiteID( cmsSiteID, true );
 				
+				var slatwallSiteWasNew = slatwallSite.getNewFlag();
+				
 				// If this is a new site, then we can set the site name
-				if(slatwallSite.isNew()) {
+				if(slatwallSiteWasNew) {
 					slatwallSite.setSiteName( cmsSiteName );
 					$.slatwall.getService("siteService").saveSite( slatwallSite );
 					slatwallSite.setCMSSiteID( cmsSiteID );
@@ -549,15 +553,54 @@
 					$.slatwall.getService("hibachiUtilityService").duplicateDirectory(source=slatwallTemplatePath, destination=muraTemplatePath, overwrite=false, recurse=true, copyContentExclusionList=".svn,.git");
 					
 					// Create the necessary pages
-					var productListingCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Product Listing", filename="product-listing", template="slatwall-productlisting.cfm", isNav="0" );
-					var shoppingCartCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Shopping Cart", filename="shopping-cart", template="slatwall-shoppingcart.cfm", isNav="1" );
-					var orderStatusCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Order Status", filename="order-status", template="slatwall-orderstatus.cfm", isNav="1" );
-					var orderConfirmationCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Order Confirmation", filename="order-confirmation", template="slatwall-orderconfirmation.cfm", isNav="0" );
-					var checkoutCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Checkout", filename="checkout", template="slatwall-checkout.cfm", isNav="1" );
-					var accountCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="My Account", filename="my-account", template="slatwall-account.cfm", isNav="1" );
-					var productTemplateCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Product Template", filename="product-template", template="slatwall-product.cfm", isNav="0" );
-					var productTypeTemplateCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Product Type Template", filename="product-type-template", template="slatwall-producttype.cfm", isNav="0" );
-					var brandTemplateCMSID = createMuraPage( $=$, muraSiteID=cmsSiteID, pageName="Brand Template", filename="brand-template", template="slatwall-brand.cfm", isNav="0" );
+					var templatePortalCMSID = createMuraPage( 		$=$, muraSiteID=cmsSiteID, pageName="Slatwall Templates", 		filename="slatwall-templates", 							template="", 							isNav="0", type="Folder", 	parentID="00000000000000000000000000000000001" );
+					var brandTemplateCMSID = createMuraPage( 		$=$, muraSiteID=cmsSiteID, pageName="Brand Template", 			filename="slatwall-templates/brand-template", 			template="slatwall-brand.cfm", 			isNav="0", type="Page", 	parentID=templatePortalCMSID );
+					var productTypeTemplateCMSID = createMuraPage( 	$=$, muraSiteID=cmsSiteID, pageName="Product Type Template", 	filename="slatwall-templates/product-type-template", 	template="slatwall-producttype.cfm", 	isNav="0", type="Page", 	parentID=templatePortalCMSID );
+					var productTemplateCMSID = createMuraPage( 		$=$, muraSiteID=cmsSiteID, pageName="Product Template", 		filename="slatwall-templates/product-template", 		template="slatwall-product.cfm", 		isNav="0", type="Page", 	parentID=templatePortalCMSID );
+					var accountCMSID = createMuraPage( 				$=$, muraSiteID=cmsSiteID, pageName="My Account", 				filename="my-account", 									template="slatwall-account.cfm", 		isNav="1", type="Page", 	parentID="00000000000000000000000000000000001" );
+					var checkoutCMSID = createMuraPage( 			$=$, muraSiteID=cmsSiteID, pageName="Checkout", 				filename="checkout", 									template="slatwall-checkout.cfm", 		isNav="1", type="Page", 	parentID="00000000000000000000000000000000001" );
+					var shoppingCartCMSID = createMuraPage( 		$=$, muraSiteID=cmsSiteID, pageName="Shopping Cart", 			filename="shopping-cart", 								template="slatwall-shoppingcart.cfm", 	isNav="1", type="Page", 	parentID="00000000000000000000000000000000001" );
+					var productListingCMSID = createMuraPage(		$=$, muraSiteID=cmsSiteID, pageName="Product Listing", 			filename="product-listing", 							template="slatwall-productlisting.cfm", isNav="1", type="Page", 	parentID="00000000000000000000000000000000001" );
+					
+					// Sync all missing content for the siteID
+					syncMuraContent( $=$, slatwallSite=slatwallSite, muraSiteID=cmsSiteID );
+					
+					// Update the correct settings on the slatwall side for some of the new content nodes
+					var productListing = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( productListingCMSID, cmsSiteID );
+					productListing.setProductListingPageFlag( true );
+					
+					var productTemplate = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( productTemplateCMSID, cmsSiteID );
+					productTemplate.setContentTemplateType( $.slatwall.getService("settingService").getTypeBySystemCode("cttProduct") );
+					
+					var productTypeTemplate = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( productTypeTemplateCMSID, cmsSiteID );
+					productTypeTemplate.setContentTemplateType( $.slatwall.getService("settingService").getTypeBySystemCode("cttProductType") );
+					
+					var brandTemplate = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( brandTemplateCMSID, cmsSiteID );
+					brandTemplate.setContentTemplateType( $.slatwall.getService("settingService").getTypeBySystemCode("cttBrand") );
+					
+					// If the site was new, then we can added default template settings for the site
+					if(slatwallSiteWasNew) {
+						var productTemplateSetting = $.slatwall.getService("settingService").newSetting();
+						productTemplateSetting.setSettingName( 'productDisplayTemplate' );
+						productTemplateSetting.setSettingValue( productTemplate.getContentID() );
+						productTemplateSetting.setSite( slatwallSite );
+						$.slatwall.getService("settingService").saveSetting( productTemplateSetting );
+						
+						var productTypeTemplateSetting = $.slatwall.getService("settingService").newSetting();
+						productTypeTemplateSetting.setSettingName( 'productTypeDisplayTemplate' );
+						productTypeTemplateSetting.setSettingValue( productTypeTemplate.getContentID() );
+						productTypeTemplateSetting.setSite( slatwallSite );
+						$.slatwall.getService("settingService").saveSetting( productTypeTemplateSetting );
+						
+						var brandTemplateSetting = $.slatwall.getService("settingService").newSetting();
+						brandTemplateSetting.setSettingName( 'brandDisplayTemplate' );
+						brandTemplateSetting.setSettingValue( brandTemplate.getContentID() );
+						brandTemplateSetting.setSite( slatwallSite );
+						$.slatwall.getService("settingService").saveSetting( brandTemplateSetting );
+					}
+					
+					// Flush these changes to the content
+					$.slatwall.getDAO("hibachiDAO").flushORMSession();
 					
 					// Now that it has been populated we can add the siteID to the populated site id's list
 					getMuraPluginConfig().setCustomSetting("populatedSiteIDs", listAppend(populatedSiteIDs, cmsSiteID));
@@ -587,6 +630,8 @@
 		<cfargument name="filename" type="string" required="true" />
 		<cfargument name="template" type="string" required="true" />
 		<cfargument name="isNav" type="numeric" required="true" />
+		<cfargument name="type" type="string" required="true" />
+		<cfargument name="parentID" type="string" required="true" />
 		
 		<cfset var thisPage = $.getBean("contentManager").getActiveContentByFilename(filename=arguments.filename, siteid=arguments.muraSiteID) />
 		<cfif thisPage.getIsNew()>
@@ -597,9 +642,12 @@
 			<cfset thisPage.setActive(1) />
 			<cfset thisPage.setApproved(1) />
 			<cfset thisPage.setIsLocked(0) />
-			<cfset thisPage.setParentID("00000000000000000000000000000000001") />
+			<cfset thisPage.setParentID(arguments.parentID) />
 			<cfset thisPage.setFilename(arguments.filename) />
-			<cfset thisPage.setTemplate(arguments.template) />
+			<cfset thisPage.setType(arguments.type) />
+			<cfif len(arguments.template)>
+				<cfset thisPage.setTemplate(arguments.template) />
+			</cfif>
 			<cfset thisPage.setSiteID(arguments.muraSiteID) />
 			<cfset thisPage.save() />
 		</cfif>
