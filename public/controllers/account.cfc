@@ -123,7 +123,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	public void function deleteAccountAddress() {
 		param name="rc.accountAddressID" default="";
 		
-		var accountAddress = getAccountService().getAccountPhoneNumber( rc.accountAddressID );
+		var accountAddress = getAccountService().getAccountAddress( rc.accountAddressID );
 		
 		if(!isNull(accountAddress) && accountAddress.getAccount().getAccountID() == arguments.rc.$.slatwall.getAccount().getAccountID() ) {
 			var deleteOk = getAccountService().deleteAccountAddress( accountAddress );

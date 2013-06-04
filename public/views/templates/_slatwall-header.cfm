@@ -48,7 +48,7 @@ Notes:
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		
 		<!--- This creates a client side object for Slatwall so that $.slatwall API works from the client side --->
-		<cfoutput>#$.slatwall.renderJSObject( subsystem="public" )#</cfoutput>	 
+		<cfoutput>#$.slatwall.renderJSObject( subsystem="public" )#</cfoutput>
 		
 		<!--- Bootstrap is just included for demo / example purposes.  Removing it will not stop Slatwall from working --->
 		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">

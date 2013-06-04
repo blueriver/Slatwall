@@ -33,8 +33,18 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 	
-Notes: 
-	
+Notes: 																			
+																				
+	This "My Account" example template is designed to give you an idea			
+	of what is possible through the frontend subsystem in the way of pulling	
+	information as well as updating account info.								
+																				
+	IMPORTANT: any of the individual components or different aspects	of this	
+	page can be copied into a seperate template and referenced as a seperate	
+	URL either in your CMS or custom application.  We have done this all in one	
+	place only for example purposes.  You may find that because this page is so	
+	data intesive that you may need to break it up into smaller pages.			
+																				
 --->
 
 <!--- This header include should be changed to the header of your site.  Make sure that you review the header to include necessary JS elements for slatwall templates to work --->
@@ -82,18 +92,148 @@ Notes:
 						
 						<!--- ================== PROFILE TAB ======================== --->
 						<div class="tab-pane active" id="profile">
+							
 							<div class="row">
+								
+								<!--- Left Side General Details --->
 								<div class="span4">
+									
 									<h4>Profile Details</h4>
-									Name & Custom Attributes Here
+									<hr style="margin-top:10px;border-top-color:##ddd;" />
+									
+									<!--- Start: Update Account Form --->
+									<form action="?s=1" method="post">
+										
+										<!--- This hidden input is what tells slatwall to 'create' an account, it is then chained by the 'login' method so that happens directly after --->
+										<input type="hidden" name="slatAction" value="public:account.update" />
+										
+											
+										<!--- First Name --->
+										<div class="control-group">
+					    					<label class="control-label" for="firstName">First Name</label>
+					    					<div class="controls">
+					    						
+												<sw:formField type="text" valueObject="#$.slatwall.getAccount()#" valueObjectProperty="firstName" class="span4" />
+												<sw:errorDisplay object="#$.slatwall.getAccount()#" errorName="firstName" />
+												
+					    					</div>
+					  					</div>
+									
+										
+										<!--- Last Name --->
+										<div class="control-group">
+					    					<label class="control-label" for="lastName">Last Name</label>
+					    					<div class="controls">
+					    						
+												<sw:formField type="text" valueObject="#$.slatwall.getAccount()#" valueObjectProperty="lastName" class="span4" />
+												<sw:errorDisplay object="#$.slatwall.getAccount()#" errorName="lastName" />
+												
+					    					</div>
+					  					</div>
+										
+										<!--- Start: Custom "Account" Attribute Sets --->
+										<cfset accountAttributeSets = $.slatwall.getAccount().getAssignedAttributeSetSmartList().getRecords() />
+										
+										<!--- Only display if there are attribute sets assigned --->
+										<cfif arrayLen(accountAttributeSets)>
+											
+											<!--- Loop over all of the attribute sets --->
+											<cfloop array="#accountAttributeSets#" index="attributeSet">
+												
+												<!--- display the attribute set name --->
+												<h5>#attributeSet.getAttributeSetName()#</h5>
+												
+												<!--- Loop over all of the attributes --->
+												<cfloop array="#attributeSet.getAttributes()#" index="attribute">
+													
+													<!--- Pull this attribute value object out of the order entity ---> 
+													<cfset attributeValueObject = $.slatwall.getAccount().getAttributeValue(attribute.getAttributeCode(), true) />
+													
+													<!--- Display the attribute value --->
+													<div class="control-group">
+														
+								    					<label class="control-label" for="rating">#attribute.getAttributeName()#</label>
+								    					<div class="controls">
+								    						
+															<sw:formField type="#attribute.getFormFieldType()#" name="#attribute.getAttributeCode()#" valueObject="#attributeValueObject#" valueObjectProperty="attributeValue" valueOptions="#attributeValueObject.getAttributeValueOptions()#" class="span4" />
+															<sw:errorDisplay object="#attributeValueObject#" errorName="password" />
+															
+								    					</div>
+								  					</div>
+													
+												</cfloop>
+												
+											</cfloop>
+										</cfif>
+										<!--- End: Custom Attribute Sets --->
+										
+										<!--- Update Button --->
+										<div class="control-group">
+					    					<div class="controls">
+					      						<button type="submit" class="btn btn-primary">Update Account</button>
+					    					</div>
+					  					</div>
+										
+									</form>
+									<!--- End: Update Account Form --->
+									
+									<br />
+									
+									<h4>Change Password</h4>
+									<hr style="margin-top:10px;border-top-color:##ddd;" />
+									
+									<!--- Start: Change Password Form --->
+									<form action="?s=1" method="post">
+										
+										<!--- Get the change password process object --->
+										<cfset changePasswordObj = $.slatwall.getAccount().getProcessObject('changePassword') />
+										
+										<!--- This hidden input is what tells slatwall to 'create' an account, it is then chained by the 'login' method so that happens directly after --->
+										<input type="hidden" name="slatAction" value="public:account.changePassword" />
+											
+										<!--- New Password --->
+										<div class="control-group">
+					    					<label class="control-label" for="lastName">New Password</label>
+					    					<div class="controls">
+					    						
+												<sw:formField type="password" valueObject="#changePasswordObj#" valueObjectProperty="password" class="span4" />
+												<sw:errorDisplay object="#changePasswordObj#" errorName="password" />
+												
+					    					</div>
+					  					</div>
+										
+										<!--- Confirm New Password --->
+										<div class="control-group">
+					    					<label class="control-label" for="lastName">Confirm New Password</label>
+					    					<div class="controls">
+					    						
+												<sw:formField type="password" valueObject="#changePasswordObj#" valueObjectProperty="passwordConfirm" class="span4" />
+												<sw:errorDisplay object="#changePasswordObj#" errorName="passwordConfirm" />
+												
+					    					</div>
+					  					</div>
+										
+										<!--- Change Button --->
+										<div class="control-group">
+					    					<div class="controls">
+					      						<button type="submit" class="btn btn-primary">Change Password</button>
+					    					</div>
+					  					</div>
+										
+									</form>
+									<!--- End: Change Password Form --->
+									
+									<br />
+									
 								</div>
 								
-								<!--- Right Side Contact & Payment Methods --->
+								<!--- Start: Right Side Contact & Payment Methods --->
 								<div class="span8">
 									
+									<!--- Start: Email & Phone --->
 									<div class="row">
 										
-										<!--- Phone Numbers --->
+										<!--- START: PHONE NUMBERS --->
 										<div class="span4">
 											<h4>Phone Numbers</h4>
 											
@@ -131,18 +271,28 @@ Notes:
 							  					</div>
 											</form>
 											<!--- End: Add Phone Number Form --->
-												
+											
+											<br />		
 										</div>
+										<!--- END: PHONE NUMBERS --->
 										
+										<!--- START: EMAIL ADDRESSES --->
 										<div class="span4">
 											<h4>Email Addresses</h4>
 											
 											<!--- Existing Email Addresses --->
 											<table class="table table-condensed">
+												
+												<!--- Loop over all of the existing email addresses --->
 												<cfloop array="#$.slatwall.getAccount().getAccountEmailAddressesSmartList().getRecords()#" index="accountEmailAddress">
+													
 													<tr>
 														<td>
-															#accountEmailAddress.getEmailAddress()#
+															
+															<!--- Email Address --->
+															<span>#accountEmailAddress.getEmailAddress()#</span>
+															
+															<!--- Admin buttons --->
 															<cfif accountEmailAddress.getAccountEmailAddressID() eq $.slatwall.getAccount().getPrimaryEmailAddress().getAccountEmailAddressID()>
 																- <i class="icon-asterisk" title="#accountEmailAddress.getEmailAddress()# is the primary email address for this account"></i>
 															<cfelse>
@@ -151,15 +301,23 @@ Notes:
 																	<a href="?slatAction=public:account.deleteAccountEmailAddress&accountEmailAddressID=#accountEmailAddress.getAccountEmailAddressID()#" title="Delete Email Address - #accountEmailAddress.getEmailAddress()#"><i class="icon-trash"></i></a>
 																</span>
 															</cfif>
+															
 														</td>
 													</tr>
+													
 												</cfloop>
 											</table>
 											
 											<!--- Start: Add Email Address Form --->
 											<form action="?s=1" method="post">
+												
+												<!--- Hidden slatAction to update the account --->
 												<input type="hidden" name="slatAction" value="public:account.update" />
+												
+												<!--- Because we want to have a new accountEmailAddress, we set the ID as blank for the account update ---> 
 												<input type="hidden" name="accountEmailAddresses[1].accountEmailAddressID" value="" />
+												
+												<!--- Email Address --->
 												<div class="control-group">
 							    					<div class="controls">
 						    							<div class="input-append">
@@ -168,39 +326,137 @@ Notes:
 														</div>
 							    					</div>
 							  					</div>
+												
 											</form>
 											<!--- End: Add Email Address Form --->
+											
+											<br />
+																							
 										</div>
+										<!--- END: EMAIL ADDRESSES --->
+										
 									</div>
+									<!--- End: Email & Phone --->
+									
+									
+									<!--- START: ADDRESS BOOK --->
 									<h4>Address Book</h4>
-									<hr />
-									<!--- Start: Existing Addresses --->
+									<hr style="margin-top:10px;border-top-color:##ddd;" />
+										
 									<ul class="thumbnails">
+										
+										<!--- Loop over each of the addresses that are saved against the account --->
 										<cfloop array="#$.slatwall.getAccount().getAccountAddressesSmartList().getRecords()#" index="accountAddress">
+											
 											<li class="span4">
+												
+												<!--- Display an address block --->	
 												<div class="thumbnail">
+													
+													<!--- Administration options --->
 													<div class="pull-right">
-														<cfif accountAddress.getAccountAddressID() eq $.slatwall.getAccount().getPrimaryAddress().getAccountAddressID()>
-															<i class="icon-asterisk" title="This is the primary address for your account"></i>
-														<cfelse>
-															<span class="pull-right">
+													
+														<span class="pull-right">
+															<!--- If this is the primary address, then just show the astricks --->
+															<cfif accountAddress.getAccountAddressID() eq $.slatwall.getAccount().getPrimaryAddress().getAccountAddressID()>
+																<i class="icon-asterisk" title="This is the primary address for your account"></i>
+															<!--- Otherwise add buttons to be able to delete the address, or make it the primary --->
+															<cfelse>
 																<a href="?slatAction=public:account.update&primaryAddress.accountAddressID=#accountAddress.getAccountAddressID()#" title="Set this as your primary phone address"><i class="icon-asterisk"></i></a>&nbsp;
-																<a href="?slatAction=public:account.deleteAccountAddress&accountPhoneNumberID=#accountAddress.getAccountAddressID()#" title="Delete Address"><i class="icon-trash"></i></a>
-															</span>
-														</cfif>
+																<a href="?slatAction=public:account.deleteAccountAddress&accountAddressID=#accountAddress.getAccountAddressID()#" title="Delete Address"><i class="icon-trash"></i></a>
+															</cfif>
+														</span>
 													</div>
+													
+													<!--- Address Nickname if it exists --->
+													<cfif not isNull(accountAddress.getAccountAddressName())>
+														<strong>#accountAddress.getAccountAddressName()#</strong>
+													</cfif>
+													
+													<!--- Actual Address Details --->
 													<sw:addressDisplay address="#accountAddress.getAddress()#" />
+													
+													
 												</div>
 											</li>
+											
 										</cfloop>
+										
+										<!--- Start: New Address --->
+										<li class="span4">
+											
+											<div class="accordion" id="add-account-address">
+											
+												<div class="accordion-group">
+												
+													<!--- This is the top accordian header row --->
+													<div class="accordion-heading">
+														<a class="accordion-toggle" data-toggle="collapse" data-parent="##add-account-address" href="##new-account-address-form">Add Account Address</a>
+													</div>
+												
+													<!--- This is the accordian details when expanded --->
+													<div id="new-account-address-form" class="accordion-body collapse">
+													
+														<div class="accordion-inner">
+															
+															<!--- get the newPropertyEntity for accountAddress --->
+															<cfset newAccountAddress = $.slatwall.getAccount().getNewPropertyEntity( 'accountAddresses' ) />
+															
+															<!--- Start: New Address Form --->
+															<form action="?s=1" method="post">
+																
+																<!--- This hidden input is what tells slatwall to 'create' an account, it is then chained by the 'login' method so that happens directly after --->
+																<input type="hidden" name="slatAction" value="public:account.update" />
+																
+																<!--- Set the accountAddressID to blank so tha it creates a new one --->
+																<input type="hidden" name="accountAddresses[1].accountAddressID" value="" />
+																
+																<!--- Nickname --->
+																<div class="control-group">
+											    					<label class="control-label" for="firstName">Nickname</label>
+											    					<div class="controls">
+											    						
+																		<sw:formField type="text" name="accountAddresses[1].accountAddressName" valueObject="#newAccountAddress#" valueObjectProperty="accountAddressName" class="span3" />
+																		<sw:errorDisplay object="#newAccountAddress#" errorName="accountAddressName" />
+																		
+											    					</div>
+											  					</div>
+																
+																<!--- New Address --->
+																<sw:addressForm id="newAccountAddress" address="#newAccountAddress.getAddress()#" fieldNamePrefix="accountAddresses[1].address." fieldClass="span3" />
+																
+																<!--- Update Button --->
+																<div class="control-group">
+											    					<div class="controls">
+											      						<button type="submit" class="btn btn-primary"><i class="icon-plus"></i> Add Address</button>
+											    					</div>
+											  					</div>
+																
+															</form>
+															<!--- End: New Address Form --->
+															
+														</div>
+													</div>
+												</div>
+											</div>
+										</li>
+										<!--- End: New Address --->
+											
 									</ul>
+									<!--- END: ADDRESS BOOK --->
+										
 									<br />
+									
+									<!--- Payment Methods --->
 									<h4>Payment Methods</h4>
-									<hr />
+									<hr style="margin-top:10px;border-top-color:##ddd;" />
 									
 									
 								</div>
+								<!--- End: Right Side Contact & Payment Methods --->
+								
 							</div>
+							
 						</div>
 						
 						<!--- ================== ORDER HISTORY TAB ================== --->

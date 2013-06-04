@@ -87,6 +87,25 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		throw("There is no Simple Representation Property Name for #getClassName()#.  You can either override getSimpleRepresentation() or override getSimpleRepresentationPropertyName() in the entity, but be sure to do it at the bottom iside of commented sectin for overrides.");
 	}
 	
+	// @hint checks a one-to-many property for the first entity with errors, if one isn't found then it returns a new one
+	public any function getNewPropertyEntity( required string propertyName ) {
+		if(!structKeyExists(variables, "requestNewPropertyEntity#arguments.propertyName#")) {
+			var entities = this.invokeMethod("get#arguments.propertyName#");
+			for(var e=1; e<=arrayLen(entities); e++) {
+				if(entities[e].hasErrors()) {
+					variables[ "requestNewPropertyEntity#arguments.propertyName#" ] = entities[e];
+					break;
+				}
+			}
+			if(!structKeyExists(variables, "requestNewPropertyEntity#arguments.propertyName#")) {
+				var entityName =  getPropertyMetaData(arguments.propertyName).cfc;
+				variables[ "requestNewPropertyEntity#arguments.propertyName#" ] = getService("hibachiService").getServiceByEntityName( entityName ).invokeMethod("new#entityName#");
+			}
+		}
+		
+		return variables[ "requestNewPropertyEntity#arguments.propertyName#" ];
+	} 
+	
 	public any function duplicate() {
 		var newEntity = getService("hibachiService").getServiceByEntityName(getEntityName()).invokeMethod("new#replace(getEntityName(),getApplicationValue('applicationKey'),'')#");
 		var properties = getProperties();
