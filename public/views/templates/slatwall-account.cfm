@@ -39,7 +39,7 @@ Notes:
 	of what is possible through the frontend subsystem in the way of pulling	
 	information as well as updating account info.								
 																				
-	IMPORTANT: any of the individual components or different aspects	of this	
+	IMPORTANT: any of the individual components or different aspects of this	
 	page can be copied into a seperate template and referenced as a seperate	
 	URL either in your CMS or custom application.  We have done this all in one	
 	place only for example purposes.  You may find that because this page is so	
@@ -265,7 +265,7 @@ Notes:
 							    					<div class="controls">
 						    							<div class="input-append">
 							    							<sw:formField type="text" name="accountPhoneNumbers[1].phoneNumber" fieldAttributes='placeholder="Add Phone Number"' class="span3" />
-															<button type="submit" class="btn btn-primary"><i class="icon-plus"></i></button>
+															<button type="submit" class="btn btn-primary"><i class="icon-plus icon-white"></i></button>
 														</div>
 							    					</div>
 							  					</div>
@@ -322,7 +322,7 @@ Notes:
 							    					<div class="controls">
 						    							<div class="input-append">
 							    							<sw:formField type="text" name="accountEmailAddresses[1].emailAddress" fieldAttributes='placeholder="Add Email Address"' class="span3" />
-															<button type="submit" class="btn btn-primary"><i class="icon-plus"></i></button>
+															<button type="submit" class="btn btn-primary"><i class="icon-plus icon-white"></i></button>
 														</div>
 							    					</div>
 							  					</div>
@@ -428,7 +428,7 @@ Notes:
 																<!--- Update Button --->
 																<div class="control-group">
 											    					<div class="controls">
-											      						<button type="submit" class="btn btn-primary"><i class="icon-plus"></i> Add Address</button>
+											      						<button type="submit" class="btn btn-primary"><i class="icon-plus icon-white"></i> Add Address</button>
 											    					</div>
 											  					</div>
 																
@@ -447,10 +447,107 @@ Notes:
 										
 									<br />
 									
-									<!--- Payment Methods --->
+									<!--- START: PAYMENT METHODS --->
 									<h4>Payment Methods</h4>
 									<hr style="margin-top:10px;border-top-color:##ddd;" />
 									
+									<ul class="thumbnails">
+										
+										<!--- Loop over each of the addresses that are saved against the account --->
+										<cfloop array="#$.slatwall.getAccount().getAccountPaymentMethodsSmartList().getRecords()#" index="accountPaymentMethod">
+											
+											<li class="span4">
+												
+												<!--- Display an address block --->	
+												<div class="thumbnail">
+													
+													<!--- Administration options --->
+													<div class="pull-right">
+													
+														<span class="pull-right">
+															<!--- If this is the primary address, then just show the astricks 
+															<cfif accountAddress.getAccountAddressID() eq $.slatwall.getAccount().getPrimaryAddress().getAccountAddressID()>
+																<i class="icon-asterisk" title="This is the primary address for your account"></i>
+															<!--- Otherwise add buttons to be able to delete the address, or make it the primary --->
+															<cfelse>
+																<a href="?slatAction=public:account.update&primaryAddress.accountAddressID=#accountAddress.getAccountAddressID()#" title="Set this as your primary phone address"><i class="icon-asterisk"></i></a>&nbsp;
+																<a href="?slatAction=public:account.deleteAccountAddress&accountAddressID=#accountAddress.getAccountAddressID()#" title="Delete Address"><i class="icon-trash"></i></a>
+															</cfif>
+															--->
+														</span>
+													</div>
+													
+													<!--- Address Nickname if it exists --->
+													<strong>#accountPaymentMethod.getSimpleRepresentation()#</strong>
+													
+													
+												</div>
+											</li>
+											
+										</cfloop>
+										
+										<!--- Start: New Address
+										<li class="span4">
+											
+											<div class="accordion" id="add-account-address">
+											
+												<div class="accordion-group">
+												
+													<!--- This is the top accordian header row --->
+													<div class="accordion-heading">
+														<a class="accordion-toggle" data-toggle="collapse" data-parent="##add-account-address" href="##new-account-address-form">Add Account Address</a>
+													</div>
+												
+													<!--- This is the accordian details when expanded --->
+													<div id="new-account-address-form" class="accordion-body collapse">
+													
+														<div class="accordion-inner">
+															
+															<!--- get the newPropertyEntity for accountAddress --->
+															<cfset newAccountAddress = $.slatwall.getAccount().getNewPropertyEntity( 'accountAddresses' ) />
+															
+															<!--- Start: New Address Form --->
+															<form action="?s=1" method="post">
+																
+																<!--- This hidden input is what tells slatwall to 'create' an account, it is then chained by the 'login' method so that happens directly after --->
+																<input type="hidden" name="slatAction" value="public:account.update" />
+																
+																<!--- Set the accountAddressID to blank so tha it creates a new one --->
+																<input type="hidden" name="accountAddresses[1].accountAddressID" value="" />
+																
+																<!--- Nickname --->
+																<div class="control-group">
+											    					<label class="control-label" for="firstName">Nickname</label>
+											    					<div class="controls">
+											    						
+																		<sw:formField type="text" name="accountAddresses[1].accountAddressName" valueObject="#newAccountAddress#" valueObjectProperty="accountAddressName" class="span3" />
+																		<sw:errorDisplay object="#newAccountAddress#" errorName="accountAddressName" />
+																		
+											    					</div>
+											  					</div>
+																
+																<!--- New Address --->
+																<sw:addressForm id="newAccountAddress" address="#newAccountAddress.getAddress()#" fieldNamePrefix="accountAddresses[1].address." fieldClass="span3" />
+																
+																<!--- Update Button --->
+																<div class="control-group">
+											    					<div class="controls">
+											      						<button type="submit" class="btn btn-primary"><i class="icon-plus"></i> Add Address</button>
+											    					</div>
+											  					</div>
+																
+															</form>
+															<!--- End: New Address Form --->
+															
+														</div>
+													</div>
+												</div>
+											</div>
+										</li>
+										End: New Address --->
+											
+									</ul>
+									<!--- END: PAYMENT METHODS --->
 									
 								</div>
 								<!--- End: Right Side Contact & Payment Methods --->
@@ -562,14 +659,16 @@ Notes:
 																	<strong>Email Address:</strong> #orderFulfillment.getEmailAddress()#<br />
 																	
 																<!--- Fulfillment Details: Pickup --->
-																<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup">
+																<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup" and not isNull(orderFulfillment.getPickupLocation())>
 																	<strong>Pickup Location:</strong> #orderFulfillment.getPickupLocation().getLocationName()#<br />
 																	<sw:addressDisplay address="#orderFulfillment.getPickupLocation().getPrimaryAddress().getAddress()#" />
 																	
 																<!--- Fulfillment Details: Shipping --->
 																<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
 																	<sw:addressDisplay address="#orderFulfillment.getAddress()#" />
-																	<strong>Shipping Method:</strong> #orderFulfillment.getShippingMethod().getShippingMethodName()#<br />
+																	<cfif not isNull(orderFulfillment.getShippingMethod())>
+																		<strong>Shipping Method:</strong> #orderFulfillment.getShippingMethod().getShippingMethodName()#<br />
+																	</cfif>
 																	
 																</cfif>
 																
