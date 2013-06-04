@@ -38,19 +38,23 @@ Notes:
 --->
 <cfparam name="rc.product" type="any" />
 
-<cf_SlatwallSettingTable>
-	<cf_SlatwallSetting settingName="productDisplayTemplate" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productShowDetailWhenNotPublishedFlag" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productTitleString" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageSmallWidth" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageSmallHeight" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageMediumWidth" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageMediumHeight" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageLargeWidth" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageLargeHeight" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productImageOptionCodeDelimiter" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productMissingImagePath" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productHTMLTitleString" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productMetaDescriptionString" settingObject="#rc.product#" />
-	<cf_SlatwallSetting settingName="productMetaKeywordsString" settingObject="#rc.product#" />
-</cf_SlatwallSettingTable>
+<cfset sites = $.slatwall.getService('siteService').getSiteSmartList() />
+<cfset sites.addFilter('activeFlag', 1) /> 
+<cfset rc.sitesArray = sites.getRecords() />
+
+<cfoutput>
+	<cf_SlatwallSettingTable showFilterEntities="#arrayLen(rc.sitesArray)#">
+		<cf_SlatwallSetting settingName="productShowDetailWhenNotPublishedFlag" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productImageOptionCodeDelimiter" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productTitleString" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productHTMLTitleString" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productMetaDescriptionString" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productMetaKeywordsString" settingObject="#rc.product#" />
+		<cf_SlatwallSetting settingName="productAutoApproveReviewsFlag" settingObject="#rc.product#" />
+		
+		<!--- Site Specific Settings --->
+		<cfloop array="#rc.sitesArray#" index="site">
+			<cf_SlatwallSetting settingName="productDisplayTemplate" settingObject="#rc.product#" settingFilterEntities="#[site]#" />
+		</cfloop>
+	</cf_SlatwallSettingTable>
+</cfoutput>

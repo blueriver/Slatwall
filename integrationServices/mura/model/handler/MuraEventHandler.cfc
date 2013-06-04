@@ -16,6 +16,22 @@
 			// Setup the correct site in the request object
 			$.slatwall.setSite( $.slatwall.getService("siteService").getSiteByCMSSiteID( $.event('siteID') ) );
 			
+			// Call any public slatAction methods that are found
+			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") != "frontend") {
+				
+				// This allows for multiple actions to be called
+				var actionsArray = listToArray( $.event('slatAction') );
+				
+				// This loops over the actions that were passed in
+				for(var a=1; a<=arrayLen(actionsArray); a++) {
+				
+					// Call the correct public controller
+					$.slatwall.doAction( actionsArray[a] );
+					
+				}
+				
+			}
+			
 			// If we aren't on the homepage we can do our own URL inspection
 			if( len($.event('path')) ) {
 				
@@ -23,18 +39,24 @@
 				var brandKeyLocation = 0;
 				var productKeyLocation = 0;
 				var productTypeKeyLocation = 0;
+				
+				// First look for the Brand URL Key
 				if (listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyBrand'), "/")) {
 					brandKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyBrand'), "/");
 					if(brandKeyLocation < listLen($.event('path'),"/")) {
 						$.slatwall.setBrand( $.slatwall.getService("brandService").getBrandByURLTitle(listGetAt($.event('path'), brandKeyLocation + 1, "/"), true) );
 					}
 				}
+				
+				// Look for the Product URL Key
 				if(listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProduct'), "/")) {
 					productKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProduct'), "/");
 					if(productKeyLocation < listLen($.event('path'),"/")) {
 						$.slatwall.setProduct( $.slatwall.getService("productService").getProductByURLTitle(listGetAt($.event('path'), productKeyLocation + 1, "/"), true) );	
 					}
 				}
+				
+				// Look for the Product Type URL Key
 				if (listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProductType'), "/")) {
 					productTypeKeyLocation = listFindNoCase($.event('path'), $.slatwall.setting('globalURLKeyProductType'), "/");
 					if(productTypeKeyLocation < listLen($.event('path'),"/")) {
@@ -43,36 +65,74 @@
 				}
 				
 				// Setup the proper content node and populate it with our FW/1 view on any keys that might have been found, use whichever key was farthest right
-				if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProduct().isNew() && $.slatwall.getCurrentProduct().getActiveFlag() && ($.slatwall.getCurrentProduct().getPublishedFlag() || $.slatwall.getCurrentProduct().setting('productShowDetailWhenNotPublishedFlag'))) {
-					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProduct().setting('productDisplayTemplate')));
-					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					//$.content('body', $.content('body') & doAction('frontend:product.detail'));
-					$.content().setTitle( $.slatwall.getCurrentProduct().getTitle() );
-					$.content().setHTMLTitle( $.slatwall.getCurrentProduct().getTitle() );
+				if( productKeyLocation && productKeyLocation > productTypeKeyLocation && productKeyLocation > brandKeyLocation && !$.slatwall.getProduct().isNew() && $.slatwall.getProduct().getActiveFlag() && ($.slatwall.getProduct().getPublishedFlag() || $.slatwall.getProduct().setting('productShowDetailWhenNotPublishedFlag'))) {
 					
+					// Attempt to load up the content template node, based on this products setting
+					var productTemplateContent = $.slatwall.getService("contentService").getContent( $.slatwall.getProduct().setting('productDisplayTemplate', [$.slatwall.getSite()]) );
 					
-					// Setup CrumbList
-					if(productKeyLocation > 2) {
-						var listingPageFilename = left($.event('path'), find("/#$.slatwall.setting('globalURLKeyProduct')#/", $.event('path'))-1);
-						listingPageFilename = replace(listingPageFilename, "/#$.event('siteID')#/", "", "all");
-						var crumbDataArray = $.getBean("contentManager").getActiveContentByFilename(listingPageFilename, $.event('siteid'), true).getCrumbArray();
-					} else {
-						var crumbDataArray = $.getBean("contentManager").getCrumbList(contentID="00000000000000000000000000000000001", siteID=$.event('siteID'), setInheritance=false, path="00000000000000000000000000000000001", sort="asc");
+					// As long as the content is not null, and has all the necessary values we can continue
+					if(!isNull(productTemplateContent) && !isNull(productTemplateContent.getCMSContentID()) && !isNull(productTemplateContent.getSite()) && !isNull(productTemplateContent.getSite().getCMSSiteID())) {
+						
+						// Setup the content node in the slatwallScope
+						$.slatwall.setContent( productTemplateContent );
+						
+						// Override the contentBean for the request
+						$.event('contentBean', $.getBean("content").loadBy( contentID=$.slatwall.getContent().getCMSContentID(), siteID=$.slatwall.getContent().getSite().getCMSSiteID() ) );
+						
+						// Change Title & HTMLTitle of page
+						$.content().setTitle( $.slatwall.getProduct().getTitle() );
+						$.content().setHTMLTitle( $.slatwall.getProduct().getTitle() );
+						
+						// Setup CrumbList
+						if(productKeyLocation > 2) {
+							var listingPageFilename = left($.event('path'), find("/#$.slatwall.setting('globalURLKeyProduct')#/", $.event('path'))-1);
+							listingPageFilename = replace(listingPageFilename, "/#$.event('siteID')#/", "", "all");
+							var crumbDataArray = $.getBean("contentManager").getActiveContentByFilename(listingPageFilename, $.event('siteid'), true).getCrumbArray();
+						} else {
+							var crumbDataArray = $.getBean("contentManager").getCrumbList(contentID="00000000000000000000000000000000001", siteID=$.event('siteID'), setInheritance=false, path="00000000000000000000000000000000001", sort="asc");
+						}
+						arrayPrepend(crumbDataArray, $.slatwall.getProduct().getCrumbData(path=$.event('path'), siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
+						$.event('crumbdata', crumbDataArray);
 					}
-					arrayPrepend(crumbDataArray, $.slatwall.getCurrentProduct().getCrumbData(path=$.event('path'), siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
-					$.event('crumbdata', crumbDataArray);
 					
-				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getCurrentProductType().isNew() && $.slatwall.getCurrentProductType().getActiveFlag() ) {
-					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentProductType().setting('productTypeDisplayTemplate')));
-					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					$.content().setTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
-					$.content().setHTMLTitle( $.slatwall.getCurrentProductType().getProductTypeName() );
+				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getProductType().isNew() && $.slatwall.getProductType().getActiveFlag() ) {
 					
-				} else if ( brandKeyLocation && !$.slatwall.getCurrentBrand().isNew() && $.slatwall.getCurrentBrand().getActiveFlag()  ) {
-					$.slatwall.setContent($.slatwall.getService("contentService").getContent($.slatwall.getCurrentBrand().setting('brandDisplayTemplate')));
-					$.event('contentBean', $.getBean("content").loadBy(contentID=$.slatwall.getCurrentContent().getCMSContentID()) );
-					$.content().setTitle( $.slatwall.getCurrentBrand().getBrandName() );
-					$.content().setHTMLTitle( $.slatwall.getCurrentBrand().getBrandName() );
+					// Attempt to find the productType template
+					var productTypeTemplateContent = $.slatwall.getService("contentService").getContent( $.slatwall.getProductType().setting('productTypeDisplayTemplate', [$.slatwall.getSite()]) );
+					
+					// As long as the content is not null, and has all the necessary values we can continue
+					if(!isNull(productTypeTemplateContent) && !isNull(productTypeTemplateContent.getCMSContentID()) && !isNull(productTypeTemplateContent.getSite()) && !isNull(productTypeTemplateContent.getSite().getCMSSiteID())) {
+						
+						// Setup the content node in the slatwallScope
+						$.slatwall.setContent( productTypeTemplateContent );
+						
+						// Override the contentBean for the request
+						$.event('contentBean', $.getBean("content").loadBy( contentID=$.slatwall.getContent().getCMSContentID(), siteID=$.slatwall.getContent().getSite().getCMSSiteID() ) );
+						
+						// Change Title & HTMLTitle of page
+						$.content().setTitle( $.slatwall.getProductType().getProductTypeName() );
+						$.content().setHTMLTitle( $.slatwall.getProductType().getProductTypeName() );
+					}
+					
+				} else if ( brandKeyLocation && !$.slatwall.getBrand().isNew() && $.slatwall.getBrand().getActiveFlag()  ) {
+					
+					// Attempt to find the productType template
+					var brandTemplateContent = $.slatwall.getService("contentService").getContent( $.slatwall.getBrand().setting('brandDisplayTemplate', [$.slatwall.getSite()]) );
+					
+					// As long as the content is not null, and has all the necessary values we can continue
+					if(!isNull(brandTemplateContent) && !isNull(brandTemplateContent.getCMSContentID()) && !isNull(brandTemplateContent.getSite()) && !isNull(brandTemplateContent.getSite().getCMSSiteID())) {
+						
+						// Setup the content node in the slatwallScope
+						$.slatwall.setContent( brandTemplateContent );
+						
+						// Override the contentBean for the request
+						$.event('contentBean', $.getBean("content").loadBy( contentID=$.slatwall.getContent().getCMSContentID(), siteID=$.slatwall.getContent().getSite().getCMSSiteID() ) );
+						
+						// Change Title & HTMLTitle of page
+						$.content().setTitle( $.slatwall.getBrand().getBrandName() );
+						$.content().setHTMLTitle( $.slatwall.getBrand().getBrandName() );
+					}
+
 				}
 			}
 		}
@@ -80,59 +140,58 @@
 		public void function onRenderStart( required any $ ) {
 			
 			// Check for any slatActions that might have been passed in and render that page as the first
-			if(len($.event('slatAction'))) {
+			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") == "frontend") {
 				
-				if(left($.event('slatAction'), 9) eq "frontend:") {
-					$.content('body', $.content('body') & doAction($.event('slatAction')));	
-				} else {
-					
-					// ======= IMPORTANT This is now the primary place that actions get called from =============
-					doAction($.event('slatAction'));
-				}
+				$.content('body', $.content('body') & $.slatwall.doAction($.event('slatAction')));	
+				
 
-			// If no slatAction was passed in, then check for keys in mura to determine what page to render
-			} else {
+			// If no slatAction was passed in, and we are in legacy mode... then check for keys in mura to determine what page to render
+			} else if ( $.slatwall.setting('integrationMuraLegacyInjectFlag') ) {
+				
 				// Check to see if the current content is a listing page, so that we add our frontend view to the content body
 				if(isBoolean($.slatwall.getContent().getProductListingPageFlag()) && $.slatwall.getContent().getProductListingPageFlag()) {
-					$.content('body', $.content('body') & doAction('frontend:product.listcontentproducts'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:product.listcontentproducts'));
 				}
 				
-				// ================== LEGACY USE ONLY ===================================
 				// Render any of the 'special'  pages that might need to be rendered
 				if(len($.slatwall.setting('integrationMuraLegacyShoppingCart')) && $.slatwall.setting('integrationMuraLegacyShoppingCart') == $.content('filename')) {
-					$.content('body', $.content('body') & doAction('frontend:cart.detail'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:cart.detail'));
 				} else if(len($.slatwall.setting('integrationMuraLegacyOrderStatus')) && $.slatwall.setting('integrationMuraLegacyOrderStatus') == $.content('filename')) {
-					$.content('body', $.content('body') & doAction('frontend:order.detail'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:order.detail'));
 				} else if(len($.slatwall.setting('integrationMuraLegacyOrderConfirmation')) && $.slatwall.setting('integrationMuraLegacyOrderConfirmation') == $.content('filename')) {
-					$.content('body', $.content('body') & doAction('frontend:order.confirmation'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:order.confirmation'));
 				} else if(len($.slatwall.setting('integrationMuraLegacyMyAccount')) && $.slatwall.setting('integrationMuraLegacyMyAccount') == $.content('filename')) {
 					// Checks for My-Account page
 					if($.event('showitem') != ""){
-						$.content('body', $.content('body') & doAction('frontend:account.#$.event("showitem")#'));
+						$.content('body', $.content('body') & $.slatwall.doAction('frontend:account.#$.event("showitem")#'));
 					} else {
-						$.content('body', $.content('body') & doAction('frontend:account.detail'));
+						$.content('body', $.content('body') & $.slatwall.doAction('frontend:account.detail'));
 					}
 				} else if(len($.slatwall.setting('integrationMuraLegacyCreateAccount')) && $.slatwall.setting('integrationMuraLegacyCreateAccount') == $.content('filename')) {
-					$.content('body', $.content('body') & doAction('frontend:account.create'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:account.create'));
 				} else if(len($.slatwall.setting('integrationMuraLegacyCheckout')) && $.slatwall.setting('integrationMuraLegacyCheckout') == $.content('filename')) {
-					$.content('body', $.content('body') & doAction('frontend:checkout.detail'));
+					$.content('body', $.content('body') & $.slatwall.doAction('frontend:checkout.detail'));
 				}
 			}
 			
-			// Now that there is a mura contentBean in the muraScope for sure, we can setup our currentContent Variable
-			$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentID($.content('contentID')) );
+			// Now that there is a mura contentBean in the muraScope for sure, we can setup our content Variable
+			if($.slatwall.getContent().getNewFlag()) {
+				$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
+			}
 			
 			// check if user has access to this page
 			checkAccess( $=$ );
 		}
 		
 		public void function onRenderEnd( required any $ ) {
-			if(len($.slatwall.getCurrentAccount().getAllPermissions())) {
+			if($.slatwall.getLoggedInAsAdminFlag()) {
 				// Set up frontend tools
 				var fetools = "";
+				/*
 				savecontent variable="fetools" {
 					include "/Slatwall/assets/fetools/fetools.cfm";
 				};
+				*/
 				
 				$.event('__muraresponse__', replace($.event('__muraresponse__'), '</body>', '#fetools#</body>'));
 			}
@@ -190,9 +249,14 @@
 			var $ = request.muraScope;
 			
 			// Place Slatwall content entity in the slatwall scope
-			$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentID( $.content('contentID'), true ) );
+			$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
 			if($.slatwall.getContent().isNew()) {
-				$.slatwall.getContent().setParentContent( $.slatwall.getService("contentService").getContentByCMSContentID( $.event('parentID') ) );
+				$.slatwall.getContent().setParentContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.event('parentID'), $.event('siteID') ) );
+			}
+			
+			// if the site is null, then we can get it out of the request.muraScope
+			if(isNull($.slatwall.getContent().getSite())) {
+				$.slatwall.getContent().setSite( $.slatwall.getService("siteService").getSiteByCMSSiteID( request.muraScope.event('siteID') ));
 			}
 			
 			include "../../views/muraevent/oncontentedit.cfm";
@@ -238,7 +302,28 @@
 				var contentData = data.slatwallData.content;
 				
 				var muraContent = $.event('contentBean');
-				var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentID( muraContent.getContentID() );
+				var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( muraContent.getContentID(), muraContent.getSiteID() );
+				
+				// Check to see if this content should have a parent
+				if(muraContent.getParentID() != "00000000000000000000000000000000END") {
+					var parentContent = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( muraContent.getParentID(), muraContent.getSiteID() );
+					
+					// If the parent has changed, we need to update all nested
+					if(parentContent.getContentID() != slatwallContent.getParentContent().getContentID()) {
+						
+						// Pull out the old IDPath so that we can update all nested nodes
+						var oldContentIDPath = slatwallContent.getContentIDPath();
+						
+						// Setup the parentContent to the correct new one
+						slatwallContent.setParentContent( parentContent );
+						
+						// Regenerate this content's ID Path
+						slatwallContent.setContentIDPath( slatwallContent.buildIDPathList( 'parentContent' ) );
+						
+						// Update all nested content
+						updateOldSlatwallContentIDPath(oldContentIDPath=oldContentIDPath, newContentIDPath=slatwallContent.getContentIDPath());
+					}
+				}
 				
 				// Populate Basic Values
 				slatwallContent.setTitle( muraContent.getTitle() );
@@ -258,7 +343,7 @@
 					slatwallContent.setContentTemplateType( javaCast("null","") );
 				}
 				
-				$.slatwall.getService("contentService").saveContent(slatwallContent);
+				$.slatwall.getService("contentService").saveContent( slatwallContent );
 				
 				// Populate Setting Values
 				param name="contentData.contentIncludeChildContentProductsFlag" default="";
@@ -272,6 +357,7 @@
 				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentRequirePurchaseFlag", settingValue=contentData.contentRequirePurchaseFlag);
 				updateSlatwallContentSetting($=$, contentID=slatwallContent.getContentID(), settingName="contentRequireSubscriptionFlag", settingValue=contentData.contentRequireSubscriptionFlag);
 				
+				// Clear the settings cache (in the future this needs to be targeted)
 				$.slatwall.getService("settingService").clearAllSettingsCache();
 				
 				// If the "Add Sku" was selected, then we call that process method
@@ -288,7 +374,7 @@
 		public void function onAfterContentDelete( required any $ ) {
 			verifySlatwallRequest( $=$ );
 			
-			var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentID( $.event('contentID') );
+			var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.event('contentID'), $.event('siteID') );
 			if(!isNull(slatwallContent)) {
 				if(slatwallContent.isDeletable()) {
 					$.slatwall.getService("contentService").deleteContent( slatwallContent );
@@ -369,7 +455,7 @@
 		
 		// Helper method to do our access check
 		private void function checkAccess( required any $ ) {
-			if(!$.slatwall.getService("accessService").hasAccess($.content('contentID'))){
+			if(!$.slatwall.getService("accessService").hasAccess($.content('contentID'), $.content('siteID'))){
 				
 				// save the current content to be used on the barrier page
 				$.event("restrictedContent",$.content());
@@ -378,7 +464,7 @@
 				$.event("restrictedContentBody",$.content('body'));
 				
 				// Set the content of the current content to noAccess
-				$.content('body', doAction('frontend:account.noaccess'));
+				$.content('body', $.slatwall.doAction('frontend:account.noaccess'));
 				
 				// get the slatwall content
 				var slatwallContent = $.slatwall.getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));
@@ -486,6 +572,8 @@
 				// Sync all missing accounts
 				syncMuraAccounts( $=$, accountSyncType=getMuraPluginConfig().getSetting("accountSyncType"), superUserSyncFlag=getMuraPluginConfig().getSetting("superUserSyncFlag") );
 				
+				// Now that accounts are synced be sure to call the autoLoginLogout
+				autoLoginLogoutFromSlatwall( $=$ );
 			}
 		}
 		
@@ -518,7 +606,7 @@
 		
 		<cfreturn thisPage.getContentID() />
 	</cffunction>
-	
+
 	<cffunction name="syncMuraContent">
 		<cfargument name="$" />
 		<cfargument name="slatwallSite" type="any" required="true" />
@@ -527,41 +615,28 @@
 		<cfset var parentMappingCache = {} />
 		<cfset var missingContentQuery = "" />
 		
-		<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
-			<cfquery name="missingContentQuery">
-				SELECT
-					tcontent.contentID,
-					tcontent.parentID,
-					tcontent.menuTitle
-				FROM
-					tcontent
-				WHERE
-					tcontent.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />
-				  AND
-	    			tcontent.path LIKE '00000000000000000000000000000000001%'
-				  AND
-					NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID)
-				ORDER BY
+		<cfquery name="missingContentQuery">
+			SELECT
+				tcontent.contentID,
+				tcontent.parentID,
+				tcontent.menuTitle
+			FROM
+				tcontent
+			WHERE
+				tcontent.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />
+			  AND
+			  	tcontent.siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.muraSiteID#" />
+			  AND
+    			tcontent.path LIKE '00000000000000000000000000000000001%'
+			  AND
+				NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID AND SlatwallContent.siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" /> )
+			ORDER BY
+				<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
 					LENGTH( tcontent.path )
-			</cfquery>
-		<cfelse>
-			<cfquery name="missingContentQuery">
-				SELECT
-					tcontent.contentID,
-					tcontent.parentID,
-					tcontent.menuTitle
-				FROM
-					tcontent
-				WHERE
-					tcontent.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />
-				  AND
-	    			tcontent.path LIKE '00000000000000000000000000000000001%'
-				  AND
-					NOT EXISTS( SELECT contentID FROM SlatwallContent WHERE SlatwallContent.cmsContentID = tcontent.contentID)
-				ORDER BY
+				<cfelse>
 					LEN( tcontent.path )
-			</cfquery>
-		</cfif>
+				</cfif>
+		</cfquery>
 		
 		<cfset var allParentsFound = true />
 		<cfloop query="missingContentQuery">
@@ -598,7 +673,7 @@
 				<cfif not structKeyExists(parentMappingCache, missingContentQuery.parentID)>
 					<cfset var parentContentQuery = "" />
 					<cfquery name="parentContentQuery">
-						SELECT contentID, contentIDPath FROM SlatwallContent WHERE cmsContentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.parentID#" /> 
+						SELECT contentID, contentIDPath FROM SlatwallContent WHERE SlatwallContent.cmsContentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingContentQuery.parentID#" /> AND SlatwallContent.siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" />  
 					</cfquery>
 					<cfif parentContentQuery.recordCount>
 						<cfset parentMappingCache[ missingContentQuery.parentID ] = {} />
@@ -642,6 +717,39 @@
 		<cfif !allParentsFound>
 			<cfset syncMuraContent(argumentcollection=arguments) />
 		</cfif>
+	</cffunction>
+	
+	<cffunction name="updateOldSlatwallContentIDPath">
+		<cfargument name="oldContentIDPath" type="string" default="" />
+		<cfargument name="newContentIDPath" type="string" default="" />
+		
+		<cfset var rs = "" />
+		<cfset var rs2 = "" />
+		
+		<!--- Select any content that is a desendent of the old contentIDPath, and update them to the new path --->
+		<cfquery name="rs">
+			SELECT
+				contentID,
+				contentIDPath
+			FROM
+				SlatwallContent
+			WHERE
+				contentIDPath <> <cfqueryparam cfsqltype="cf_sql_varchar" value="#oldContentIDPath#" />
+			  AND
+				contentIDPath LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#oldContentIDPath#%" />
+		</cfquery>
+		
+		<cfloop query="rs">
+			<cfquery name="rs2">
+				UPDATE
+					SlatwallContent
+				SET
+					contentIDPath = <cfqueryparam cfsqltype="cf_sql_varchar" value="#replace(rs.contentIDPath, arguments.oldContentIDPath, arguments.newContentIDPath)#">
+				WHERE
+					contentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rs.contentID#">
+			</cfquery>
+		</cfloop>
+		
 	</cffunction>
 	
 	<cffunction name="syncMuraCategories">

@@ -65,18 +65,20 @@ Notes:
 		yesno				|	This is used by booleans and flags to create a radio group of Yes and No
 	--->
 	
+	
 	<cfsilent>
-		
 		<!--- If the value isn't explicitly defined, try to pull it out of the value object if one exists --->
 		<cfif not len(attributes.value) and isObject(attributes.valueObject) and len(attributes.valueObjectProperty) and attributes.valueObject.hasProperty(attributes.valueObjectProperty) and not isNull(attributes.valueObject.invokeMethod("get#attributes.valueObjectProperty#"))>
-			<cfset attributes.value = attributes.valueObject.invokeMethod("get#attributes.valueObjectProperty#") /> 
+			<cfset thistag.thisValue = attributes.valueObject.invokeMethod("get#attributes.valueObjectProperty#") />
+			<cfif isSimpleValue(thistag.thisValue)>
+				<cfset attributes.value = thistag.thisValue />
+			</cfif>
 		</cfif>
 		
 		<!--- If the field name isn't explicitly defined, but the valueObjectProperty is... then we can use that --->
 		<cfif not len(attributes.name) and len(attributes.valueObjectProperty)>
 			<cfset attributes.name = attributes.valueObjectProperty />
 		</cfif>
-		
 	</cfsilent>
 	
 	<cfswitch expression="#attributes.type#">
@@ -135,7 +137,7 @@ Notes:
 				<cfloop array="#attributes.valueOptions#" index="option">
 						<cfset thisOptionValue = isSimpleValue(option) ? option : structKeyExists(option, 'value') ? structFind(option, 'value') : '' />
 						<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
-					<input type="radio" name="#attributes.name#" value="#thisOptionValue#" class="#attributes.class#" <cfif attributes.value EQ thisOptionValue> checked="checked"</cfif> #attributes.fieldAttributes# /><span class="#attributes.class#">#thisOptionName#</span>
+					<label class="radio"><input type="radio" name="#attributes.name#" value="#thisOptionValue#" class="#attributes.class#" <cfif attributes.value EQ thisOptionValue> checked="checked"</cfif> #attributes.fieldAttributes# /> #thisOptionName#</label>
 				</cfloop>
 			</cfoutput>
 		</cfcase>

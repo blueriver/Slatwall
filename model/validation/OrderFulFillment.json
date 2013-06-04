@@ -6,6 +6,7 @@
 	},
 	"properties":{
 		"orderFulfillmentID":		[{"contexts":"delete","maxValue":0}],
+		"fulfillmentCharge":		[{"contexts":"save","dataType":"numeric","minValue":0}],
 		"orderFulfillmentItems":	[{"contexts":"placeOrder,fulfillItems","minCollection":1}],
 		"quantityUndelivered":		[{"contexts":"fulfillItems","minValue":0}],
 		"address":					[{"contexts":"placeOrder","required":true}],
@@ -13,8 +14,8 @@
 			{"contexts":"placeOrder","conditions":"fulfillmentTypeShipping","required":true,"method":"hasValidShippingMethodRate"}
 		],
 		"orderStatusCode":			[
-			{"contexts":"fulfillItems","inList":"ostNew,ostProcessing"},
-			{"contexts":"edit","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"}
+			{"contexts":"edit,manualFulfillmentCharge","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"},
+			{"contexts":"fulfillItems","inList":"ostNew,ostProcessing"}
 		]
 	}
 }

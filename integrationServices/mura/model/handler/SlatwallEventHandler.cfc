@@ -71,6 +71,8 @@ component extends="handler" output="false" accessors="true" {
 	
 	// Logout of Mura when Slatwall user is logged out
 	public void function onSessionAccountLogout( required any slatwallScope ) {
+		param name="session" default="#structNew()#";
+		
 		if(structKeyExists(application,"appinitialized") && application.appinitialized) {
 			// Auto Logout of Mura if needed
 			if(structKeyExists(session, "mura") && structKeyExists(session.mura, "isLoggedIn") && session.mura.isLoggedIn) {

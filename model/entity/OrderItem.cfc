@@ -199,7 +199,9 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 		var quantityDelivered = 0;
 		
 		for( var i=1; i<=arrayLen(getOrderDeliveryItems()); i++){
-			quantityDelivered += getOrderDeliveryItems()[i].getQuantity();
+			if(!getOrderDeliveryItems()[i].getNewFlag()) {
+				quantityDelivered += getOrderDeliveryItems()[i].getQuantity();	
+			}
 		}
 		
 		return quantityDelivered;
@@ -209,7 +211,9 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 		var quantityReceived = 0;
 		
 		for( var i=1; i<=arrayLen(getStockReceiverItems()); i++){
-			quantityReceived += getStockReceiverItems()[i].getQuantity();
+			if(!getStockReceiverItems()[i].getNewFlag()) {
+				quantityReceived += getStockReceiverItems()[i].getQuantity();
+			}
 		}
 		
 		return quantityReceived;

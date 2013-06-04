@@ -50,6 +50,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="accountEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="accountEmailAddressID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="pickupLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
@@ -211,9 +212,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     		for(var i=1; i<=arrayLen(fsmo); i++) {
     			arrayAppend(oArr, {name=fsmo[i].getSimpleRepresentation(), value=fsmo[i].getShippingMethodRate().getShippingMethod().getShippingMethodID()});	
     		}
-    		if(arrayLen(oArr)) {
-    			arrayPrepend(oArr, {name=rbKey('define.select'), value=''});
-    		} else {
+    		if(!arrayLen(oArr)) {
     			arrayPrepend(oArr, {name=rbKey('define.none'), value=''});
     		}
     		variables.shippingMethodOptions = oArr;
@@ -364,25 +363,28 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	}
 	
 	// sets it up so that the charge for the shipping method is pulled out of the shippingMethodOptions
-	public void function setShippingMethod(required any shippingMethod) {
-		
-		// If there aren't any shippingMethodOptions available, then try to populate this fulfillment
-		if( !arrayLen(getFulfillmentShippingMethodOptions()) ) {
-			getService("shippingService").updateOrderFulfillmentShippingMethodOptions( this );
-		}
-		
-		// make sure that the shippingMethod exists in the fulfillmentShippingMethodOptions
-		for(var i=1; i<=arrayLen(getFulfillmentShippingMethodOptions()); i++) {
-			if(arguments.shippingMethod.getShippingMethodID() == getFulfillmentShippingMethodOptions()[i].getShippingMethodRate().getShippingMethod().getShippingMethodID()) {
-				
-				// Set the method
-				variables.shippingMethod = arguments.shippingMethod;
-				
-				// Set the charge
-				if(!getManualfulfillmentChargeFlag()) {
-					setFulfillmentCharge( getFulfillmentShippingMethodOptions()[i].getTotalCharge() );	
+	public void function setShippingMethod( any shippingMethod ) {
+		if(structKeyExists(arguments, "shippingMethod")) {
+			// If there aren't any shippingMethodOptions available, then try to populate this fulfillment
+			if( !arrayLen(getFulfillmentShippingMethodOptions()) ) {
+				getService("shippingService").updateOrderFulfillmentShippingMethodOptions( this );
+			}
+			
+			// make sure that the shippingMethod exists in the fulfillmentShippingMethodOptions
+			for(var i=1; i<=arrayLen(getFulfillmentShippingMethodOptions()); i++) {
+				if(arguments.shippingMethod.getShippingMethodID() == getFulfillmentShippingMethodOptions()[i].getShippingMethodRate().getShippingMethod().getShippingMethodID()) {
+					
+					// Set the method
+					variables.shippingMethod = arguments.shippingMethod;
+					
+					// Set the charge
+					if(!getManualfulfillmentChargeFlag()) {
+						setFulfillmentCharge( getFulfillmentShippingMethodOptions()[i].getTotalCharge() );	
+					}
 				}
 			}
+		} else {
+			structDelete(variables, "shippingMethod");
 		}
 	}
 	

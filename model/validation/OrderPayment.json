@@ -12,6 +12,7 @@
 	},
 	"properties":{
 	    "amount":				[{"contexts":"save","dataType":"numeric","minValue":0},{"contexts":"save","conditions":"peerNullValueAlreadyExists","required":true}],
+	    "paymentMethod":		[{"contexts":"save","required":true}],
 		"paymentTransactions":	[{"contexts":"delete","maxCollection":0}],
 		"expirationMonth":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
 		"expirationYear":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],

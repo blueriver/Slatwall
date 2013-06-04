@@ -52,13 +52,13 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 
 	public struct function getSettings() {
 		var settings = {
-			merchantID = {fieldType="text", displayName="VirtualMerchant ID (6 Digit)"},
-			userID = {fieldType="text", displayName="Virtual Merchant User ID"},
-			pin = {fieldType="password", displayName="Virtual Merchant PIN", encryptValue=true},
-			testMerchantID = {fieldType="text", displayName="Test VirtualMerchant ID (6 Digit)"},
-			testUserID = {fieldType="text", displayName="Test Virtual Merchant User ID"},
-			testPin = {fieldType="text", displayName="Test Virtual Merchant PIN"},
-			testAccountFlag = {fieldType="yesno", displayName="Test Mode", defaultValue="1"}
+			merchantID = {fieldType="text"},
+			userID = {fieldType="text"},
+			pin = {fieldType="password", encryptValue=true},
+			testMerchantID = {fieldType="text"},
+			testUserID = {fieldType="text"},
+			testPin = {fieldType="text"},
+			testAccountFlag = {fieldType="yesno", defaultValue="1"}
 		};
 		
 		return settings;

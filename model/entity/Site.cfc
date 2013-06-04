@@ -46,6 +46,7 @@ component entityname="SlatwallSite" table="SlatwallSite" persistent="true" acces
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
+	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="one-to-many" fkcolumn="siteID" cascade="all" inverse="true" lazy="true";
 	
 	// Related Object Properties (many-to-many - owner)
 
@@ -70,6 +71,14 @@ component entityname="SlatwallSite" table="SlatwallSite" persistent="true" acces
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Contents (one-to-many)    
+	public void function addContent(required any content) {    
+		arguments.content.setSite( this );    
+	}    
+	public void function removeContent(required any content) {    
+		arguments.content.removeSite( this );    
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

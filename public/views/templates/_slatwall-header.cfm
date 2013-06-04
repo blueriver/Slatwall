@@ -36,6 +36,7 @@
 Notes: 
 	
 --->
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -43,12 +44,11 @@ Notes:
 	    <title>Slatwall</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		
-		<!--- jQuery & Slatwall are the only two Javascript includes required for Slatwall to function properly.  You can either reference the slatwall --->
+		<!--- jQuery is only required if you would like to use the Slatwall client side object --->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<script src="#$.slatwall.getBaseURL()#/assets/js/jquery-slatwall.min.js"></script>
 		
-		<!--- AngularJS is required for some of the ajax type of functions on this page.  You can remove AngularJS but you will need to do you own AJAX using the Slatwall jQuery plugin --->
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
+		<!--- This creates a client side object for Slatwall so that $.slatwall API works from the client side --->
+		<cfoutput>#$.slatwall.renderJSObject( subsystem="public" )#</cfoutput>
 		
 		<!--- Bootstrap is just included for demo / example purposes.  Removing it will not stop Slatwall from working --->
 		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">

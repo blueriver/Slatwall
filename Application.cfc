@@ -65,6 +65,12 @@ component extends="org.Hibachi.Hibachi" output="false" {
 		// Set Datasource
 		request.slatwallScope.setApplicationValue("datasource", this.datasource.name);
 		
+		// Set Datasource Username
+		request.slatwallScope.setApplicationValue("datasourceUsername", this.datasource.username);
+		
+		// Set Datasource Password
+		request.slatwallScope.setApplicationValue("datasourcePassword", this.datasource.password);
+		
 		// SET Database Type
 		request.slatwallScope.setApplicationValue("databaseType", this.ormSettings.dialect);
 		

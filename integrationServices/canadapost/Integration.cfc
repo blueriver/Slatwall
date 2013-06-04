@@ -14,7 +14,7 @@
 	
 	public struct function getSettings() {
 		var settings = {
-			CPCID = {fieldType="text", displayName="CPC Shipping Integration ID"}
+			CPCID = {fieldType="text"}
 		};
 		
 		return settings;

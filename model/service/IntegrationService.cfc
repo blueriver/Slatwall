@@ -210,19 +210,19 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						}
 					}
 					
-					if(integration.getAuthenticationActiveFlag() && !integration.getAuthenticationReadyFlag()) {
+					if(isNull(integration.getAuthenticationActiveFlag()) || (integration.getAuthenticationActiveFlag() && !integration.getAuthenticationReadyFlag())) {
 						integration.setAuthenticationActiveFlag(0);
 					}
-					if(integration.getCustomActiveFlag() && !integration.getCustomReadyFlag()) {
+					if(isNull(integration.getCustomActiveFlag()) || (integration.getCustomActiveFlag() && !integration.getCustomReadyFlag())) {
 						integration.setCustomActiveFlag(0);
 					}
-					if(integration.getFW1ActiveFlag() && !integration.getFW1ReadyFlag()) {
+					if(isNull(integration.getFW1ActiveFlag()) || (integration.getFW1ActiveFlag() && !integration.getFW1ReadyFlag())) {
 						integration.setFW1ActiveFlag(0);
 					}
-					if(integration.getPaymentActiveFlag() && !integration.getPaymentReadyFlag()) {
+					if(isNull(integration.getPaymentActiveFlag()) || (integration.getPaymentActiveFlag() && !integration.getPaymentReadyFlag())) {
 						integration.setPaymentActiveFlag(0);
 					}
-					if(integration.getShippingActiveFlag() && !integration.getShippingReadyFlag()) {
+					if(isNull(integration.getShippingActiveFlag()) || (integration.getShippingActiveFlag() && !integration.getShippingReadyFlag())) {
 						integration.setShippingActiveFlag(0);
 					}
 					

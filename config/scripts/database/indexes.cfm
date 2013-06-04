@@ -46,8 +46,8 @@ Notes:
 	<cfset var infoIndexes = "" />
 
 	
-	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="#arguments.tableName#" name="infoColumns" />
-	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Index" table="#arguments.tableName#" name="infoIndexes" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" username="#getApplicationValue("datasourceUsername")#" password="#getApplicationValue("datasourcePassword")#" type="Columns" table="#arguments.tableName#" name="infoColumns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" username="#getApplicationValue("datasourceUsername")#" password="#getApplicationValue("datasourcePassword")#" type="Index" table="#arguments.tableName#" name="infoIndexes" />
 	
 	<cfloop query="infoColumns">
 		<cfif infoColumns.column_size eq 32>

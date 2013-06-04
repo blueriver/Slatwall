@@ -104,7 +104,12 @@
 			// If we pass preProcess validation then we can try to setup the processObject if the entity has one, and validate that
 			if(!arguments.entity.hasErrors() && arguments.entity.hasProcessObject(arguments.processContext)) {
 				invokeArguments[ "processObject" ] = arguments.entity.getProcessObject(arguments.processContext);
-				invokeArguments[ "processObject" ].populate( arguments.data );
+				
+				if(!invokeArguments[ "processObject" ].getPopulatedFlag()) {
+					invokeArguments[ "processObject" ].populate( arguments.data );
+					invokeArguments[ "processObject" ].setPopulatedFlag( true );
+				}
+				
 				invokeArguments[ "processObject" ].validate( context=arguments.processContext );
 			}
 			

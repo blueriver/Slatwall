@@ -48,8 +48,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getSettingService().getSettingRecordCount(settingName="contentRestrictAccessFlag", settingValue=1);
 	}
 	
-	public any function getRestrictedContentBycmsContentID(required any cmsContentID) {
-		var content = this.getContentByCmsContentID(arguments.cmsContentID,true);
+	public any function getRestrictedContentByCMSContentIDAndCMSSiteID(required any cmsContentID, required any cmsSiteID) {
+		var content = getContentByCMSContentIDAndCMSSiteID(arguments.cmsContentID, arguments.cmsSiteID);
 		if(content.isNew()) {
 			content.setCmsContentID(arguments.cmsContentID);
 		}
@@ -77,14 +77,19 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: DAO Passthrough ===========================
 	
-	public array function getDisplayTemplateOptions( required string templateType ) {
+	public array function getDisplayTemplateOptions( required string templateType, string siteID ) {
 		var returnArray = [];
-		var displayTemplates = getContentDAO().getDisplayTemplates( templateType=arguments.templateType );
+		var displayTemplates = getContentDAO().getDisplayTemplates( argumentCollection=arguments );
 		for(var template in displayTemplates) {
 			arrayAppend(returnArray, {name=template.getTitle(), value=template.getContentID()});
 		}
 		return returnArray;
 	}
+	
+	public any function getContentByCMSContentIDAndCMSSiteID( required string cmsContentID, required string cmsSiteID ) {
+		return getContentDAO().getContentByCMSContentIDAndCMSSiteID( argumentCollection=arguments );
+	}
+	
 	
 	// ===================== START: DAO Passthrough ===========================
 	
@@ -92,32 +97,46 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public any function processContent_CreateSku(required any content, required any processObject) {
 		
+		// Get the product Type
 		var productType = getProductService().getProductType( arguments.processObject.getProductTypeID() );
+		
+		// If incorrect product type, then just set it to the based 'contentAccess' product type
 		if(isNull(productType) || productType.getBaseProductType() != "contentAccess") {
 			var productType = getProductService().getProductType( "444df313ec53a08c32d8ae434af5819a" );
 		}
 		
+		// Find the product
 		var product = getProductService().getProduct( nullReplace(arguments.processObject.getProductID(), ""), true );
+		
+		// If the product was need, then set the necessary values
 		if(product.isNew()) {
 			product.setProductType( productType );
 			product.setProductName( arguments.content.getTitle() );
 			product.setProductCode( arguments.processObject.getProductCode() );
 		}
 		
+		// Find the sku
 		var sku = getSkuService().getSku( nullReplace(arguments.processObject.getSkuID(), ""), true);
+		
+		// If the sku was new, then set the necessary values
 		if(sku.isNew()) {
 			sku.setPrice( arguments.processObject.getPrice() );
 			sku.setSkuCode( product.getProductCode() & "-#arrayLen(product.getSkus()) + 1#" );
 			sku.setProduct( product );
-			sku.addAccessContent( arguments.content );
 			if(product.isNew()) {
 				product.setDefaultSku( sku );
 			}
+			sku.setImageFile( sku.generateImageFileName() );
 		}
 		
-		var sku = getSkuService().saveSku( sku );
-		getSkuService().saveProduct( product );
+		// Add this content node to the sku
+		sku.addAccessContent( arguments.content );
 		
+		// Make sure product and sku are in the hibernate scope
+		getHibachiDAO().save( product );
+		getHibachiDAO().save( sku );
+		
+		return arguments.content;
 	}
 	
 	// =====================  END: Process Methods ============================

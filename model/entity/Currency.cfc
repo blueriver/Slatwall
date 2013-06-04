@@ -63,7 +63,7 @@ component displayname="Currency" entityname="SlatwallCurrency" table="SlatwallCu
 	
 	// Non-Persistent Properties
 	property name="currencyLocalOptions" persistent="false";
-	property name="formattedExample" persistent="false"; 
+	property name="formattedExample" persistent="false" hb_formatType="currency"; 
 
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -72,7 +72,7 @@ component displayname="Currency" entityname="SlatwallCurrency" table="SlatwallCu
 	}
 	
 	public string function getFormattedExample() {
-		return formatValue(12345.67, "currency");
+		return 12345.67;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

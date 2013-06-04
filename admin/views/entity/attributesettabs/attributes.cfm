@@ -45,8 +45,6 @@ Notes:
 							   recordEditQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
 							   recordDetailAction="admin:entity.detailattribute"
 							   recordDetailQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
-							   recordDeleteAction="admin:entity.deleteattribute"
-							   recordDeleteQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#&redirectAction=admin:entity.detailattributeset"
 							   sortProperty="sortOrder"
 							   sortContextIDColumn="attributeSetID"
 							   sortContextIDValue="#rc.attributeSet.getAttributeSetID()#">

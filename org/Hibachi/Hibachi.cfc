@@ -9,6 +9,8 @@ component extends="FW1.framework" {
 	this.sessionManagement = true;
 	this.datasource = {};
 	this.datasource.name = "hibachi";
+	this.datasource.username = "";
+	this.datasource.password = "";
 	
 	// Allow For Application Config
 	try{include "../../config/configApplication.cfm";}catch(any e){}
@@ -129,6 +131,8 @@ component extends="FW1.framework" {
 	}
 	
 	public any function reloadApplication() {
+		setupApplicationWrapper();
+		
 		lock name="application_#getHibachiInstanceApplicationScopeKey()#_initialized" timeout="10" {
 			if( !structKeyExists(application, getHibachiInstanceApplicationScopeKey()) ) {
 				application[ getHibachiInstanceApplicationScopeKey() ] = {};
@@ -138,16 +142,18 @@ component extends="FW1.framework" {
 	}
 	
 	public void function setupGlobalRequest() {
-		request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.model.transient.HibachiScope").init();
-		
-		// Verify that the application is setup
-		verifyApplicationSetup();
-		
-		// Verify that the session is setup
-		getHibachiScope().getService("hibachiSessionService").setPropperSession();
-		
-		// Call the onEveryRequest() Method for the parent Application.cfc
-		onEveryRequest();
+		if(!structKeyExists(request, "#variables.framework.applicationKey#Scope")) {
+			request["#variables.framework.applicationKey#Scope"] = createObject("component", "#variables.framework.applicationKey#.model.transient.HibachiScope").init();
+			
+			// Verify that the application is setup
+			verifyApplicationSetup();
+			
+			// Verify that the session is setup
+			getHibachiScope().getService("hibachiSessionService").setPropperSession();
+			
+			// Call the onEveryRequest() Method for the parent Application.cfc
+			onEveryRequest();
+		}
 	}
 	
 	public void function setupRequest() {
@@ -228,6 +234,7 @@ component extends="FW1.framework" {
 					applicationInitData["applicationUpdateKey"] = 		variables.framework.hibachi.fullUpdateKey;
 					applicationInitData["applicationUpdatePassword"] =	variables.framework.hibachi.fullUpdatePassword;
 					applicationInitData["baseURL"] = 					variables.framework.baseURL;
+					applicationInitData["action"] = 					variables.framework.action;
 					applicationInitData["hibachiConfig"] =				variables.framework.hibachi;
 					
 					// Log the setup start with values
@@ -409,9 +416,7 @@ component extends="FW1.framework" {
 	
 	// This handels all of the ORM persistece.
 	public void function endHibachiLifecycle() {
-		if(getHibachiScope().getORMHasErrors()) {
-			getHibachiScope().getService("hibachiDAO").clearORMSession();
-		} else {
+		if(!getHibachiScope().getORMHasErrors()) {
 			getHibachiScope().getService("hibachiDAO").flushORMSession();
 		}
 	}
@@ -430,6 +435,8 @@ component extends="FW1.framework" {
 		var originalContext = {};
 		var originalCFCBase = "";
 		var originalBase = "";
+		var originalURLAction = "";
+		var originalFormAction = "";
 		
 		// If there was already a request._fw1, then we need to save it to be used later
 		if(structKeyExists(request, "_fw1")) {
@@ -454,6 +461,19 @@ component extends="FW1.framework" {
 			originalBase = request.base;
 			structDelete(request, "base");
 		}
+		
+		// Look for an action in the URL
+		if( structKeyExists(url, getAction() ) ) {
+			originalURLAction = url[ getAction() ];
+		}
+		
+		// Look for an action in the Form
+		if( structKeyExists(form, getAction() ) ) {
+			originalFormAction = form[ getAction() ];
+		}
+		
+		// Set the passed in action to the form scope
+		form[ getAction() ] = arguments.action;
 		
 		// create a new request context to hold simple data, and an empty request services so that the view() function works
 		request.context = {};
@@ -496,6 +516,14 @@ component extends="FW1.framework" {
 		// If there was a different base before... place it back into the request
 		if(len(originalBase)) {
 			request.base = originalBase;
+		}
+		
+		if(len(originalURLAction)) {
+			url[ getAction() ] = originalURLAction;
+		}
+		
+		if(len(originalFormAction)) {
+			form[ getAction() ] = originalFormAction;
 		}
 		
 		return response;

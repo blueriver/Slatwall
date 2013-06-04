@@ -36,22 +36,22 @@
 Notes:
 
 --->
+<cfparam name="rc.productType" type="any" />
+<cfparam name="rc.sitesArray" />
 
 <cfoutput>
-	<cf_SlatwallSettingTable>
-		<cf_SlatwallSetting settingName="productDisplayTemplate" settingObject="#rc.productType#" />
+	<cf_SlatwallSettingTable showFilterEntities="#arrayLen(rc.sitesArray)#">
 		<cf_SlatwallSetting settingName="productShowDetailWhenNotPublishedFlag" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="productTitleString" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="productImageSmallWidth" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="productImageSmallHeight" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="productImageMediumWidth" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="productImageMediumHeight" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="productImageLargeWidth" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="productImageLargeHeight" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productImageOptionCodeDelimiter" settingObject="#rc.productType#" />
-		<cf_SlatwallSetting settingName="productMissingImagePath" settingObject="#rc.productType#" />
+		<cf_SlatwallSetting settingName="productTitleString" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productHTMLTitleString" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productMetaDescriptionString" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productMetaKeywordsString" settingObject="#rc.productType#" />
+		<cf_SlatwallSetting settingName="productAutoApproveReviewsFlag" settingObject="#rc.productType#" />
+		
+		<!--- Site Specific Settings --->
+		<cfloop array="#rc.sitesArray#" index="site">
+			<cf_SlatwallSetting settingName="productDisplayTemplate" settingObject="#rc.productType#" settingFilterEntities="#[site]#" />
+		</cfloop>
 	</cf_SlatwallSettingTable>
 </cfoutput>

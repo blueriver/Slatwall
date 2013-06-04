@@ -85,10 +85,10 @@ component accessors="true" output="false" persistent="false" {
 		arguments.path = replace(arguments.path, '\','/','all');
 		
 		// Get the correct URL Root Path
-		var urlRootPath = replace(expandPath('./'), '\','/','all');
+		var urlRootPath = replace(expandPath('/'), '\','/','all');
 		
 		// Remove the URLRootPath from the rest of the path
-		return getBaseURL() & replace(arguments.path, urlRootPath, '/');
+		return replace(arguments.path, urlRootPath, '/');
 	}
 	
 	// ==========================  END: FRAMEWORK ACCESS ============================================
@@ -183,7 +183,7 @@ component accessors="true" output="false" persistent="false" {
 		return getApplicationValue("application").buildURL(argumentcollection=arguments);
 	}
 	
-	public any function formatValue() {
+	public any function formatValue( required string value, required string formatType, struct formatDetails={} ) {
 		return getService("hibachiUtilityService").formatValue(argumentcollection=arguments);
 	}
 	

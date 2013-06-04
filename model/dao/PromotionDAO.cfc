@@ -234,6 +234,7 @@ Notes:
 		<cfargument name="productID" type="string">
 		
 		<cfset var allDiscounts = "" />
+		<cfset var noQualifierDiscounts = "" />
 		<cfset var noQualifierPromotionPeriods = "" />
 		<cfset var skuPrice = "" />
 		<cfset var skuResults = "" />
@@ -276,6 +277,7 @@ Notes:
 				END as 'salePrice',
 				prSku.roundingRuleID as 'roundingRuleID',
 				ppSku.endDateTime as 'salePriceExpirationDateTime',
+				ppSku.promotionPeriodID as 'promotionPeriodID',
 				ppSku.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
@@ -286,7 +288,9 @@ Notes:
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppSku on ppSku.promotionPeriodID = prSku.promotionPeriodID
 			WHERE
-				ppSku.promotionPeriodID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#salePromotionPeriodIDs#" list="true">)
+				ppSku.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+			  	ppSku.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
 				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
@@ -304,6 +308,7 @@ Notes:
 				END as 'salePrice',
 				prProduct.roundingRuleID as 'roundingRuleID',
 				ppProduct.endDateTime as 'salePriceExpirationDateTime',
+				ppProduct.promotionPeriodID as 'promotionPeriodID',
 				ppProduct.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
@@ -314,7 +319,9 @@ Notes:
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppProduct on ppProduct.promotionPeriodID = prProduct.promotionPeriodID
 			WHERE
-				ppProduct.promotionPeriodID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#salePromotionPeriodIDs#" list="true">)
+				ppProduct.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+			  	ppProduct.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
 				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
@@ -332,6 +339,7 @@ Notes:
 				END as 'salePrice',
 				prBrand.roundingRuleID as 'roundingRuleID',
 				ppBrand.endDateTime as 'salePriceExpirationDateTime',
+				ppBrand.promotionPeriodID as 'promotionPeriodID',
 				ppBrand.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
@@ -344,10 +352,12 @@ Notes:
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppBrand on ppBrand.promotionPeriodID = prBrand.promotionPeriodID
 			WHERE
-				ppBrand.promotionPeriodID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#salePromotionPeriodIDs#" list="true">)
+				ppBrand.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+			  	ppBrand.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
-				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
+			  	SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
 			</cfif>
 		  UNION
 		  	SELECT
@@ -362,6 +372,7 @@ Notes:
 				END as 'salePrice',
 				prOption.roundingRuleID as 'roundingRuleID',
 				ppOption.endDateTime as 'salePriceExpirationDateTime',
+				ppOption.promotionPeriodID as 'promotionPeriodID',
 				ppOption.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
@@ -374,10 +385,12 @@ Notes:
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppOption on ppOption.promotionPeriodID = prOption.promotionPeriodID
 			WHERE
-				ppOption.promotionPeriodID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#salePromotionPeriodIDs#" list="true">)
+				ppOption.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+			  	ppOption.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
-				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
+			  	SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
 			</cfif>
 		  UNION
 		  	SELECT
@@ -392,6 +405,7 @@ Notes:
 				END as 'salePrice',
 				prProductType.roundingRuleID as 'roundingRuleID',
 				ppProductType.endDateTime as 'salePriceExpirationDateTime',
+				ppProductType.promotionPeriodID as 'promotionPeriodID',
 				ppProductType.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
@@ -410,10 +424,12 @@ Notes:
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppProductType on ppProductType.promotionPeriodID = prProductType.promotionPeriodID
 			WHERE
-				ppProductType.promotionPeriodID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#salePromotionPeriodIDs#" list="true">)
+				ppProductType.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+			  	ppProductType.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
-				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
+			  	SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
 			</cfif>
 		  UNION
 			SELECT
@@ -428,6 +444,7 @@ Notes:
 				END as 'salePrice',
 				prGlobal.roundingRuleID as 'roundingRuleID',
 				ppGlobal.endDateTime as 'salePriceExpirationDateTime',
+				ppGlobal.promotionPeriodID as 'promotionPeriodID',
 				ppGlobal.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
@@ -438,8 +455,6 @@ Notes:
 			  INNER JOIN
 			  	SlatwallPromotionPeriod ppGlobal on prGlobal.promotionPeriodID = ppGlobal.promotionPeriodID
 			WHERE
-				ppGlobal.promotionPeriodID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#salePromotionPeriodIDs#" list="true">)
-			  AND
 			  	prGlobal.rewardType IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="merchandise,subscription,contentAccess" list="true">)
 			  AND
 			  	NOT EXISTS(SELECT promotionRewardID FROM SlatwallPromotionRewardProduct WHERE SlatwallPromotionRewardProduct.promotionRewardID = prGlobal.promotionRewardID)
@@ -449,10 +464,31 @@ Notes:
 			  	NOT EXISTS(SELECT promotionRewardID FROM SlatwallPromotionRewardOption WHERE SlatwallPromotionRewardOption.promotionRewardID = prGlobal.promotionRewardID)
 			  AND
 			  	NOT EXISTS(SELECT promotionRewardID FROM SlatwallPromotionRewardProductType WHERE SlatwallPromotionRewardProductType.promotionRewardID = prGlobal.promotionRewardID)
+			  AND
+				ppGlobal.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+			  	ppGlobal.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
 				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
 			</cfif>
+		</cfquery>
+		
+		<cfquery name="noQualifierDiscounts" dbtype="query">
+			SELECT DISTINCT
+				allDiscounts.skuID,
+				allDiscounts.originalPrice,
+				allDiscounts.discountLevel,
+				allDiscounts.salePriceDiscountType,
+				allDiscounts.salePrice,
+				allDiscounts.roundingRuleID,
+				allDiscounts.salePriceExpirationDateTime,
+				allDiscounts.promotionPeriodID,
+				allDiscounts.promotionID
+			FROM
+				allDiscounts, noQualifierCurrentActivePromotionPeriods
+			WHERE
+				allDiscounts.promotionPeriodID = noQualifierCurrentActivePromotionPeriods.promotionPeriodID
 		</cfquery>
 		
 		<cfquery name="skuPrice" dbtype="query">
@@ -460,28 +496,28 @@ Notes:
 				skuID,
 				MIN(salePrice) as salePrice
 			FROM
-				allDiscounts
+				noQualifierDiscounts
 			GROUP BY
 				skuID
 		</cfquery>
 		
 		<cfquery name="skuResults" dbtype="query">
 			SELECT
-				AllDiscounts.skuID,
-				AllDiscounts.originalPrice,
-				AllDiscounts.discountLevel,
-				AllDiscounts.salePriceDiscountType,
-				AllDiscounts.salePrice,
-				AllDiscounts.roundingRuleID,
-				AllDiscounts.salePriceExpirationDateTime,
-				AllDiscounts.promotionID
+				noQualifierDiscounts.skuID,
+				noQualifierDiscounts.originalPrice,
+				noQualifierDiscounts.discountLevel,
+				noQualifierDiscounts.salePriceDiscountType,
+				noQualifierDiscounts.salePrice,
+				noQualifierDiscounts.roundingRuleID,
+				noQualifierDiscounts.salePriceExpirationDateTime,
+				noQualifierDiscounts.promotionID
 			FROM
-				allDiscounts,
+				noQualifierDiscounts,
 				skuPrice
 			WHERE
-				allDiscounts.skuID = skuPrice.skuID
+				noQualifierDiscounts.skuID = skuPrice.skuID
 			  and
-			    allDiscounts.salePrice = skuPrice.salePrice
+			    noQualifierDiscounts.salePrice = skuPrice.salePrice
 		</cfquery>
 		
 		<cfreturn skuResults /> 

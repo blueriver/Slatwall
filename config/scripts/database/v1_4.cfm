@@ -40,8 +40,8 @@ Notes:
 <cfset local.scriptHasErrors = false />
 <!--- Move filename to urltitle for products. --->
 <cftry>
-	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="index" table="SlatwallProduct" name="local.indexes" />
-	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallProduct" name="local.columns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" username="#getApplicationValue("datasourceUsername")#" password="#getApplicationValue("datasourcePassword")#" type="index" table="SlatwallProduct" name="local.indexes" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" username="#getApplicationValue("datasourceUsername")#" password="#getApplicationValue("datasourcePassword")#" type="Columns" table="SlatwallProduct" name="local.columns" />
 	<cfquery name="getColumnInfo" dbtype="query">
 		SELECT * 
 		FROM columns
@@ -76,7 +76,7 @@ Notes:
 
 <!--- Move displayTemplate to productDisplayTemplate for products. --->
 <cftry>
-	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallProduct" name="local.columns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" username="#getApplicationValue("datasourceUsername")#" password="#getApplicationValue("datasourcePassword")#" type="Columns" table="SlatwallProduct" name="local.columns" />
 	<cfquery name="getColumnInfo" dbtype="query">
 		SELECT * 
 		FROM columns
@@ -100,7 +100,7 @@ Notes:
 
 <!--- Move displayTemplate to productDisplayTemplate for productTypes. --->
 <cftry>
-	<cfdbinfo datasource="#getApplicationValue("datasource")#" type="Columns" table="SlatwallProductType" name="local.columns" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" username="#getApplicationValue("datasourceUsername")#" password="#getApplicationValue("datasourcePassword")#" type="Columns" table="SlatwallProductType" name="local.columns" />
 	<cfquery name="getColumnInfo" dbtype="query">
 		SELECT * 
 		FROM columns

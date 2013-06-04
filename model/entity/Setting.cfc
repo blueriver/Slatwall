@@ -53,6 +53,7 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID"; 
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID" hb_cascadeCalculate="true";
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
+	property name="site" cfc="Site" fieldtype="many-to-one" fkcolumn="siteID";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	property name="shippingMethodRate" cfc="ShippingMethodRate" fieldtype="many-to-one" fkcolumn="shippingMethodRateID";
@@ -93,22 +94,13 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	
 	public string function getPropertyTitle(required string propertyName) {
 		if(propertyName == "settingValue") {
-			
-			if(left(getSettingName(), 11) == "integration") {
-				for(var settingName in getService("integrationService").getAllSettings()) {
-					if(settingName == getSettingName()) {
-						return getService("integrationService").getAllSettings()[settingName].displayName;
-					}
-				}
-			}
-			
 			return rbKey('setting.#getSettingName()#');
 		}
 		return super.getPropertyTitle(propertyName=arguments.propertyName);
 	}
 
 	public array function getSettingValueOptions() {
-		return getService("settingService").getSettingOptions(getSettingName());
+		return getService("settingService").getSettingOptions( getSettingName(), this );
 	}
 	
 	public any function getSettingValueOptionsSmartList() {
@@ -134,6 +126,7 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 			}
 		}
 		
+		return getHibachiErrors();
 	}
 	
 	// @hint public method for returning the validation class of a property

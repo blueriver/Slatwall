@@ -42,6 +42,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	property name="accountService";
 	property name="addressService";
+	property name="commentService";
 	property name="emailService";
 	property name="locationService";
 	property name="fulfillmentService";
@@ -656,7 +657,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var newOrderPayment = processObject.getNewOrderPayment();
 		
 		// Make sure that this new orderPayment gets attached to the order
-		if(isNull(newOrderPayment.gettOrder())) {
+		if(isNull(newOrderPayment.getOrder())) {
 			newOrderPayment.setOrder( arguments.order );
 		}
 		
@@ -684,6 +685,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				var newAccountPaymentMethod = getAccountService().newAccountPaymentMethod();
 				newAccountPaymentMethod.copyFromOrderPayment( newOrderPayment );
 				newAccountPaymentMethod.setAccount( arguments.order.getAccount() );
+				
+				newAccountPaymentMethod = getAccountService().saveAccountPaymentMethod( newAccountPaymentMethod );
 			}
 
 		}
@@ -731,6 +734,27 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		arguments.order = this.saveOrder(arguments.order);
 		
 		return arguments.order;
+	}
+	
+	public any function processOrder_clear(required any order) {
+		
+		// Remove the cart from the session
+		getHibachiScope().getSession().removeOrder( arguments.order );
+		
+		var hasPaymentTransaction = false;
+		
+		// Loop over to make sure there are no payment transactions
+		for(var p=1; p<=arrayLen(arguments.order.getOrderPayments()); p++) {
+			if( arrayLen(arguments.order.getOrderPayments()[p].getPaymentTransactions()) ) {
+				hasPaymentTransaction = true;
+				break;
+			}	
+		}
+		
+		// As long as there is no payment transactions, then we can delete the order
+		if( !hasPaymentTransaction ) {
+			this.deleteOrder( arguments.order );
+		}
 	}
 	
 	public any function processOrder_placeOrder(required any order, required struct data) {
@@ -821,6 +845,138 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 			
 		}	// END OF LOCK
+		
+		return arguments.order;
+	}
+	
+	public any function processOrder_placeOnHold(required any order, struct data={}) {
+		
+		// Set up the comment if someone typed in the box
+		if(structKeyExists(arguments.data, "comment") && len(trim(arguments.data.comment))) {
+			var comment = getCommentService().newComment();
+			comment = getCommentService().saveComment(comment, arguments.data);
+		}
+		
+		// Change the status
+		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostOnHold") );
+		
+		return arguments.order;
+	}
+	
+	public any function processOrder_takeOffHold(required any order, struct data={}) {
+		
+		// Set up the comment if someone typed in the box
+		if(structKeyExists(arguments.data, "comment") && len(trim(arguments.data.comment))) {
+			var comment = getCommentService().newComment();
+			comment = getCommentService().saveComment(comment, arguments.data);
+		}
+		
+		// Change the status
+		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostProcessing") );
+		
+		// Call the update order status incase this needs to be changed to closed.
+		updateOrderStatus( arguments.order );
+
+		return arguments.order;
+	}
+	
+	public any function processOrder_closeOrder(required any order, struct data={}) {
+		
+		// Call the update order status incase this needs to be changed to closed.
+		updateOrderStatus( arguments.order );
+		
+		return arguments.order;
+	}
+	
+	public any function processOrder_cancelOrder(required any order, struct data={}) {
+		
+		// Set up the comment if someone typed in the box
+		if(structKeyExists(arguments.data, "comment") && len(trim(arguments.data.comment))) {
+			var comment = getCommentService().newComment();
+			comment = getCommentService().saveComment(comment, arguments.data);
+		}
+		
+		// Loop over all the orderItems and set them to 0
+		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+			arguments.order.getOrderItems()[i].setQuantity(0);
+			
+			// Remove any promotionsApplied
+			for(var p=arrayLen(arguments.order.getOrderItems()[i].getAppliedPromotions()); p>=1; p--) {
+				arguments.order.getOrderItems()[i].getAppliedPromotions()[p].removeOrderItem();
+			}
+			
+			// Remove any taxApplied
+			for(var t=arrayLen(arguments.order.getOrderItems()[i].getAppliedTaxes()); t>=1; t--) {
+				arguments.order.getOrderItems()[i].getAppliedTaxes()[t].removeOrderItem();
+			}
+		}
+		
+		// Loop over all the fulfillments and remove any fulfillmentCharges, and promotions applied
+		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments()); i++) {
+			arguments.order.getOrderFulfillments()[i].setFulfillmentCharge(0);
+			// Remove over any promotionsApplied
+			for(var p=arrayLen(arguments.order.getOrderFulfillments()[i].getAppliedPromotions()); p>=1; p--) {
+				arguments.order.getOrderFulfillments()[i].getAppliedPromotions()[p].removeOrderFulfillment();
+			}
+		}
+		
+		// Loop over all of the order discounts and remove them
+		for(var p=arrayLen(arguments.order.getAppliedPromotions()); p>=1; p--) {
+			arguments.order.getAppliedPromotions()[p].removeOrder();
+		}
+		
+		// Loop over all the payments and credit for any charges, and set paymentAmount to 0
+		for(var p=1; p<=arrayLen(arguments.order.getOrderPayments()); p++) {
+			var totalReceived = precisionEvaluate(arguments.order.getOrderPayments()[p].getAmountReceived() - arguments.order.getOrderPayments()[p].getAmountCredited());
+			if(totalReceived gt 0) {
+				var transactionData = {
+					amount = totalReceived,
+					transactionType = 'credit'
+				};
+				this.processOrderPayment(arguments.order.getOrderPayments()[p], transactionData, 'createTransaction');
+			}
+			// Set payment amount to 0
+			arguments.order.getOrderPayments()[p].setAmount(0);
+		}
+		
+		// Change the status
+		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostCanceled") );
+		
+		return arguments.order;
+	}
+	
+	public any function processOrder_addPromotionCode(required any order, required any processObject) {
+			
+		var pc = getPromotionService().getPromotionCodeByPromotionCode(arguments.processObject.getPromotionCode());
+		
+		if(isNull(pc) || !pc.getPromotion().getActiveFlag()) {
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
+		} else if ( (!isNull(pc.getStartDateTime()) && pc.getStartDateTime() > now()) || (!isNull(pc.getEndDateTime()) && pc.getEndDateTime() < now()) || !pc.getPromotion().getCurrentFlag()) {
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
+		} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(getSlatwallScope().getCurrentAccount())) {
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
+		} else {
+			if(!arguments.order.hasPromotionCode( pc )) {
+				arguments.order.addPromotionCode( pc );
+				recalculateOrderAmounts(order=arguments.order);
+			}
+		}		
+		
+		return arguments.order;
+	}
+
+	public any function processOrder_removePromotionCode(required any order, required struct data) {
+		
+		if(structKeyExists(arguments.data, "promotionCodeID")) {
+			var promotionCode = getPromotionService().getPromotionCode( arguments.data.promotionCodeID );
+		}
+		
+		if(!isNull(promotionCode)) {
+			arguments.order.removePromotionCode( promotionCode );
+		}
+		
+		// Call saveOrder to recalculate all the orderTotal stuff
+		arguments.order = this.saveOrder(arguments.order);
 		
 		return arguments.order;
 	}
@@ -943,300 +1099,87 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
-	public any function processOrder_placeOnHold(required any order, struct data={}, string processContext="process") {
+	// Process: Order Delivery
+	public any function processOrderDelivery_create(required any orderDelivery, required any processObject, struct data={}) {
 		
-		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostOnHold") );
+		var amountToBeCaptured = 0;
 		
-		return arguments.order;
-	}
-	
-	public any function processOrder_takeOffHold(required any order, struct data={}, string processContext="process") {
-		
-		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostProcessing") );
-		updateOrderStatus(arguments.order);
+		// If we need to capture payments first, then we do that to make sure the rest of the delivery can take place
+		if(arguments.processObject.getCaptureAuthorizedPaymentsFlag()) {
+			var amountToBeCaptured = arguments.processObject.getCapturableAmount();
+			
+			var opArr = arguments.processObject.getOrder().getOrderPayments();
+			
+			for(var p=1; p<=arrayLen(opArr); p++) {
+				
+				var orderPayment = opArr[p];
+				
+				if(orderPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard" && orderPayment.getAmountUnreceived() gt 0 && amountToBeCaptured gt 0) {
+					var transactionData = {
+						transactionType = 'capturePreAuthorization',
+						amount = amountToBeCaptured
+					};
 					
-		return arguments.order;
-	}
-	
-	public any function processOrder_cancelOrder(required any order, struct data={}, string processContext="process") {
-			
-		// Loop over all the orderItems and set them to 0
-		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
-			arguments.order.getOrderItems()[i].setQuantity(0);
-			
-			// Remove any promotionsApplied
-			for(var p=arrayLen(arguments.order.getOrderItems()[i].getAppliedPromotions()); p>=1; p--) {
-				arguments.order.getOrderItems()[i].getAppliedPromotions()[p].removeOrderItem();
-			}
-			
-			// Remove any taxApplied
-			for(var t=arrayLen(arguments.order.getOrderItems()[i].getAppliedTaxes()); t>=1; t--) {
-				arguments.order.getOrderItems()[i].getAppliedTaxes()[t].removeOrderItem();
+					if(transactionData.amount gt orderPayment.getAmountUnreceived()) {
+						transactionData.amount = orderPayment.getAmountUnreceived();
+					}
+					
+					orderPayment = processOrderPayment(orderPayment, transactionData, 'createTransaction');
+					
+					if(!orderPayment.hasErrors()) {
+						amountToBeCaptured = precisionEvaluate(amountToBeCaptured - transactionData.amount);
+					}
+				}
 			}
 		}
 		
-		// Loop over all the fulfillments and remove any fulfillmentCharges, and promotions applied
-		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments()); i++) {
-			arguments.order.getOrderFulfillments()[i].setFulfillmentCharge(0);
-			// Remove over any promotionsApplied
-			for(var p=arrayLen(arguments.order.getOrderFulfillments()[i].getAppliedPromotions()); p>=1; p--) {
-				arguments.order.getOrderFulfillments()[i].getAppliedPromotions()[p].removeOrderFulfillment();
-			}
-		}
-		
-		// Loop over all of the order discounts and remove them
-		for(var p=arrayLen(arguments.order.getAppliedPromotions()); p>=1; p--) {
-			arguments.order.getAppliedPromotions()[p].removeOrder();
-		}
-		
-		// Loop over all the payments and credit for any charges, and set paymentAmount to 0
-		for(var p=1; p<=arrayLen(arguments.order.getOrderPayments()); p++) {
-			var totalReceived = precisionEvaluate(arguments.order.getOrderPayments()[p].getAmountReceived() - arguments.order.getOrderPayments()[p].getAmountCredited());
-			if(totalReceived gt 0) {
-				var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[p], "credit", totalReceived, arguments.order.getOrderPayments()[p].getMostRecentChargeProviderTransactionID());
-			}
-			// Set payment amount to 0
-			arguments.order.getOrderPayments()[p].setAmount(0);
-		}
-		
-		// Set the status code to canceld
-		arguments.order.setOrderStatusType( getSettingService().getTypeBySystemCode("ostCanceled") );
-	
-		
-		return arguments.order;
-	}
-	
-	public any function processOrder_addPromotionCode(required any order, required any processObject) {
+		// As long as the amount to be captured is eq 0 then we can continue making the order delivery
+		if(amountToBeCaptured eq 0) {
 			
-		var pc = getPromotionService().getPromotionCodeByPromotionCode(arguments.processObject.getPromotionCode());
-		
-		if(isNull(pc) || !pc.getPromotion().getActiveFlag()) {
-			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
-		} else if ( (!isNull(pc.getStartDateTime()) && pc.getStartDateTime() > now()) || (!isNull(pc.getEndDateTime()) && pc.getEndDateTime() < now()) || !pc.getPromotion().getCurrentFlag()) {
-			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
-		} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(getSlatwallScope().getCurrentAccount())) {
-			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
+			// Setup the header information
+			arguments.orderDelivery.setOrder( arguments.processObject.getOrder() );
+			arguments.orderDelivery.setLocation( arguments.processObject.getLocation() );
+			arguments.orderDelivery.setFulfillmentMethod( arguments.processObject.getFulfillmentMethod() );
+			arguments.orderDelivery.setShippingMethod( arguments.processObject.getShippingMethod() );
+			arguments.orderDelivery.setShippingAddress( arguments.processObject.getShippingAddress().copyAddress( saveNewAddress=true ) );
+			
+			// Setup the tracking number
+			if(!isNull(arguments.processObject.getTrackingNumber()) && len(arguments.processObject.getTrackingNumber())) {
+				argumnets.orderDelivery.setTrackingNumber(arguments.processObject.getTrackingNumber());
+			}
+			
+			// Loop over delivery items from processObject and add them with stock to the orderDelivery
+			for(var i=1; i<=arrayLen(arguments.processObject.getOrderDeliveryItems()); i++) {
+				arguments.processObject.getOrderDeliveryItems()[i].setStock( getStockService().getStockBySkuAndLocation(sku=arguments.processObject.getOrderDeliveryItems()[i].getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
+				arguments.processObject.getOrderDeliveryItems()[i].setOrderDelivery( arguments.orderDelivery );
+			}
+			
+			// Save the orderDelivery
+			arguments.orderDelivery = this.saveOrderDelivery(arguments.orderDelivery);
+			
+			// Update the orderStatus
+			updateOrderStatus( arguments.orderDelivery.getOrder(), true );
+			
 		} else {
-			if(!arguments.order.hasPromotionCode( pc )) {
-				arguments.order.addPromotionCode( pc );
-				recalculateOrderAmounts(order=arguments.order);
-			}
-		}		
-		
-		return arguments.order;
-	}
-
-	public any function processOrder_removePromotionCode(required any order, required struct data) {
-		
-		if(structKeyExists(arguments.data, "promotionCodeID")) {
-			var promotionCode = getPromotionService().getPromotionCode( arguments.data.promotionCodeID );
+			arguments.processObject.addError('capturableAmount', rbKey('validate.processOrderDelivery_create.captureAmount'));
 		}
 		
-		if(!isNull(promotionCode)) {
-			arguments.order.removePromotionCode( promotionCode );
-		}
-		
-		// Call saveOrder to recalculate all the orderTotal stuff
-		arguments.order = this.saveOrder(arguments.order);
-		
-		return arguments.order;
+		return arguments.orderDelivery;
 	}
-	
 	
 	// Process: Order Fulfillment
-	// (needs refactor)
-	public any function processOrderFulfillment_fulfillItems(required any orderFulfillment, struct data={}, string processContext="process") {
+	public any function processOrderFulfillment_manualFulfillmentCharge(required any orderFulfillment, struct data={}) {
 		
-		// Make sure that a location was passed in
-		if(structKeyExists(arguments.data, "locationID")) {
-			var location = getLocationService().getLocation(  arguments.data.locationID );
-			
-			// Make sure that the location is not Null
-			if(!isNull(location)) {
-				
-				// Create a new Order Delivery and set the relevent values
-				var orderDelivery = this.newOrderDelivery();
-				orderDelivery.setFulfillmentMethod( arguments.orderFulfillment.getFulfillmentMethod() );
-				orderDelivery.setLocation( location );
-				
-				// Attach this delivery to the order
-				orderDelivery.setOrder( arguments.orderFulfillment.getOrder() );
-				
-				// Per Fulfillment Method Type set whatever other details need to be set
-				switch(arguments.orderFulfillment.getFulfillmentMethodType()) {
-					
-					case "auto": {
-						// With an 'auto' type of setup, if no records exist in the data, then we can just create deliveryItems for the unfulfilled quantities of each item
-						if(!structKeyExists(arguments.data, "records")) {
-							arguments.data.records = [];
-							for(var i=1; i<=arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()); i++) {
-								arrayAppend(arguments.data.records, {orderItemID=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID(), quantity=arguments.orderFulfillment.getOrderFulfillmentItems()[i].getQuantityUndelivered()});
-							}
-						}
-						break;
-					}
-					case "shipping": {
-						// Set the shippingAddress, shippingMethod & potentially tracking number
-						orderDelivery.setShippingAddress( arguments.orderFulfillment.getShippingAddress().copyAddress( saveNewAddress=true ) );
-						orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
-						if(structkeyExists(arguments.data, "trackingNumber") && len(arguments.data.trackingNumber)) {
-							orderDelivery.setTrackingNumber(arguments.data.trackingNumber);
-						}
-						break;
-					}
-					default: {
-						
-						break;
-					}
-				}
-				
-				// Setup a total item value delivered so we can charge the proper amount for the payment later
-				var totalItemValueDelivered = 0;
-				
-				// Loop over the records in the data to set the quantity for the delivery
-				if(structKeyExists(arguments.data, "records")) {
-					for(var i=1; i<=arrayLen(arguments.data.records); i++) {
-						
-						// Only add this orderItem to the delivery if it has an orderItemID, a quantity is defined, and the quantity is numeric and gt 1 
-						if(structKeyExists(arguments.data.records[i], "orderItemID") && isSimpleValue(arguments.data.records[i].orderItemID) && structKeyExists(arguments.data.records[i], "quantity") && isNumeric(arguments.data.records[i].quantity) && arguments.data.records[i].quantity > 0) {
-							
-							var orderItem = this.getOrderItem(arguments.data.records[i].orderItemID);
-							if(!isNull(orderItem)) {
-								
-								// Make sure that we aren't trying to deliver more than was ordered
-								if(orderItem.getQuantityUndelivered() >= arguments.data.records[i].quantity) {
-									
-									// Grab the stock that matches the item and the location from which we are delivering
-									var stock = getStockService().getStockBySkuAndLocation(orderItem.getSku(), orderDelivery.getLocation());
-									
-									// Create and Populate a new delivery item
-									var orderDeliveryItem = this.newOrderDeliveryItem();
-									orderDeliveryItem.setOrderDelivery( orderDelivery );
-									orderDeliveryItem.setOrderItem( orderItem );
-									orderDeliveryItem.setStock( stock );
-									orderDeliveryItem.setQuantity( arguments.data.records[i].quantity );
-									
-									// Add the value of this item to the total charge
-									totalItemValueDelivered = precisionEvaluate(totalItemValueDelivered + (orderItem.getExtendedPriceAfterDiscount() + orderItem.getTaxAmount()) * ( arguments.data.records[i].quantity / orderItem.getQuantity() ) );
-									
-									// setup subscription data if this was subscriptionOrder item
-									getSubscriptionService().setupSubscriptionOrderItem( orderItem );
-								
-									// setup content access if this was content purchase
-									setupOrderItemContentAccess( orderItem );
-								
-								} else {
-									arguments.orderFulfillment.addError('orderFulfillmentItem', 'You are trying to fulfill a quantity of #arguments.data.records[i].quantity# for #orderItem.getSku().getProduct().getTitle()# - #orderItem.getSku().displayOptions()# and that item only has an undelivered quantity of #orderItem.getQuantityUndelivered()#');
-									
-								}
-								
-							} else {
-								arguments.orderFulfillment.addError('orderFulfillmentItem', 'An orderItem with the ID: #arguments.data.records[i].orderItemID# was trying to be processed with this fulfillment, but that orderItem does not exist');
-							}
-						}
-					}
-				}
-				
-				// Validate the orderDelivery
-				orderDelivery.validate();
-				
-				if(!orderDelivery.hasErrors()) {
-					
-					// Call save on the orderDelivery so that it is persisted
-					getHibachiDAO().save( orderDelivery );
-					
-					// Update the Order Status
-					updateOrderStatus( arguments.orderFulfillment.getOrder(), true );
-					
-					// Look to charge orderPayments
-					if(structKeyExists(arguments.data, "processCreditCard") && isBoolean(arguments.data.processCreditCard) && arguments.data.processCreditCard) {
-						var totalAmountToCharge = arguments.orderFulfillment.getOrder().getDeliveredItemsPaymentAmountUnreceived();
-						var totalAmountCharged = 0;
-						
-						for(var p=1; p<=arrayLen(arguments.orderFulfillment.getOrder().getOrderPayments()); p++) {
-							
-							var orderPayment = arguments.orderFulfillment.getOrder().getOrderPayments()[p];
-							
-							// Make sure that this is a credit card, and that it is a charge type of payment
-							if(orderPayment.getPaymentMethodType() == "creditCard" && orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
-								
-								// Check to make sure this payment hasn't been fully received
-								if(orderPayment.getAmount() > orderPayment.getAmountReceived()) {
-									
-									var thisAmountToCharge = 0;
-									
-									// Attempt to capture preAuthorizations first
-									if(orderPayment.getAmountAuthorized() > orderPayment.getAmountReceived()) {
-										var thisAmountToCharge = orderPayment.getAmountAuthorized() - orderPayment.getAmountReceived();
-										if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
-											thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
-										}
-										
-										orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge}, "chargePreAuthorization");
-										if(!orderPayment.hasErrors()) {
-											totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
-											
-											// Set the new payment transaction into the orderDelivery for later use
-											var pts = orderPayment.getPaymentTransactions();
-											orderDelivery.setPaymentTransaction( pts[arrayLen(pts)] );
-										} else {
-											structDelete(orderPayment.getErrors(), "processing");
-										}
-									}
-									
-									// Attempt to authorizeAndCharge now
-									if(orderPayment.getAmountReceived() < orderPayment.getAmount() && totalAmountToCharge > totalAmountCharged) {
-										var thisAmountToCharge = orderPayment.getAmount() - orderPayment.getAmountReceived();
-										if(thisAmountToCharge > (totalAmountToCharge - totalAmountCharged)) {
-											thisAmountToCharge = totalAmountToCharge - totalAmountCharged;
-										}
-										orderPayment = processOrderPayment(orderPayment, {amount=thisAmountToCharge}, "authorizeAndCharge");
-										if(!orderPayment.hasErrors()) {
-											totalAmountCharged = precisionEvaluate(totalAmountCharged + thisAmountToCharge);
-											
-											// Set the new payment transaction into the orderDelivery for later use
-											var pts = orderPayment.getPaymentTransactions();
-											orderDelivery.setPaymentTransaction( pts[arrayLen(pts)] );
-										} else {
-											structDelete(orderPayment.getErrors(), "processing");
-										}
-									}
-									
-									// Stop trying to charge payments, if we have charged everything we need to
-									if(totalAmountToCharge == totalAmountCharged) {
-										break;
-									}
-								}
-							}
-						}
-					}
-					
-				} else {
-					
-					getSlatwallScope().setORMHasErrors( true );
-					
-					arguments.orderFulfillment.addError('location', 'The delivery that would have been created had errors');
-				}
-				
-			} else {
-				arguments.orderFulfillment.addError('location', 'The Location id that was passed in does not represent a valid location');	
-				
-			}
-		} else {
-			arguments.orderFulfillment.addError('location', 'No Location was passed in');
-			
+		arguments.orderFulfillment.setManualFulfillmentChargeFlag( true );
+		arguments.orderFulfillment = this.saveOrderFulfillment(arguments.orderFulfillment, arguments.data);
+		
+		if(arguments.orderFulfillment.hasErrors()) {
+			arguments.orderFulfillment.setManualFulfillmentChargeFlag( false );
 		}
 		
-		// if this fulfillment had error then we don't want to persist anything
-		if(arguments.orderFulfillment.hasErrors()) {
-			
-			getSlatwallScope().setORMHasErrors( true );
-			
-		}		
-			
 		return arguments.orderFulfillment;
 	}
-	
+		
 	// Process: Order Return
 	// (needs refactor)
 	public any function processOrderReturn_receiveReturn(required any orderReturn, struct data={}, string processContext="process") {

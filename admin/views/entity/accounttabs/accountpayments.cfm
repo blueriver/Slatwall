@@ -51,15 +51,6 @@ Notes:
 		
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('define.charge')#" icon="plus" buttonClass="btn-inverse">
-		<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
-				<cf_HibachiActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.charge')#" action="admin:entity.createaccountpayment" querystring="accountID=#rc.accountID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&accountPaymentTypeSystemCode=aptCharge" modal=true />
-		</cfloop>
-	</cf_HibachiActionCallerDropdown><br />
-	<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('define.credit')#" icon="plus" buttonClass="btn-inverse">
-		<cfloop array="#rc.account.getPaymentMethodOptionsSmartList().getRecords()#" index="local.paymentMethod">
-				<cf_HibachiActionCaller text="#$.slatwall.rbKey('define.add')# #local.paymentMethod.getPaymentMethodName()# #$.slatwall.rbKey('define.refund')#" action="admin:entity.createaccountpayment" querystring="accountID=#rc.accountID#&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#&accountPaymentTypeSystemCode=aptCredit" modal=true />
-		</cfloop>
-	</cf_HibachiActionCallerDropdown>
 	
+	<cf_HibachiProcessCaller action="admin:entity.preprocessaccount" entity="#rc.account#" processContext="addAccountPayment" class="btn" icon="plus" modal="true" />
 </cfoutput>

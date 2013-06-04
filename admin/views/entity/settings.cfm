@@ -36,6 +36,11 @@
 Notes:
 
 --->
+<cfset sites = $.slatwall.getService('siteService').getSiteSmartList() />
+<cfset sites.addFilter('activeFlag', 1) />
+
+<cfset rc.sitesArray = sites.getRecords() />
+
 <cfoutput>
 	<cf_HibachiEntityActionBar type="static"></cf_HibachiEntityActionBar>
 	

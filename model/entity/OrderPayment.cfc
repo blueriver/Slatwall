@@ -58,8 +58,8 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="orderPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderPaymentTypeID" hb_optionsSmartListData="f:parentType.systemCode=orderPaymentType";
-	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID";
+	property name="orderPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderPaymentTypeID" hb_optionsSmartListData="f:parentType.systemCode=orderPaymentType" fetch="join";
+	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" fetch="join";
 	property name="referencedOrderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="referencedOrderPaymentID";
 	property name="termPaymentAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="termPaymentAccountID";
 	
@@ -513,7 +513,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 			variables.creditCardNumber = arguments.creditCardNumber;
 			setCreditCardLastFour( right(arguments.creditCardNumber, 4) );
 			setCreditCardType( getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber) );
-			if(getCreditCardType() != "Invalid" && !isNull(getPaymentMethod()) && getPaymentMethod().getSaveOrderPaymentEncryptFlag()) {
+			if(getCreditCardType() != "Invalid" && !isNull(getPaymentMethod()) && !isNull(getPaymentMethod().getSaveOrderPaymentEncryptFlag()) && getPaymentMethod().getSaveOrderPaymentEncryptFlag()) {
 				setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
 			}
 		} else {

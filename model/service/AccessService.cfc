@@ -38,7 +38,7 @@ Notes:
 */
 component extends="HibachiService" persistent="false" accessors="true" output="false" {
 
-	public boolean function hasAccess(required any cmsContentID) {
+	public boolean function hasAccess(required any cmsContentID, required string cmsSiteID) {
 		// set request scope variable to specify if the access was granted because of subscription or purchase
 		getSlatwallScope().setValue("purchasedAccess","false");
 		getSlatwallScope().setValue("subscriptionAccess","false");
@@ -48,7 +48,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		var currentContent = getSlatwallScope().getCurrentContent();
 		// get restricted content by cmsContentID
-		var restrictedContent = getService("contentService").getRestrictedContentBycmsContentID(arguments.cmsContentID);
+		var restrictedContent = getService("contentService").getRestrictedContentByCMSContentIDAndCMSSiteID(arguments.cmsContentID, arguments.cmsSiteID);
 		if(isNull(restrictedContent)) {
 			return true;
 		}

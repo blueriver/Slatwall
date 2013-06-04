@@ -42,8 +42,8 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	public void function setUp() {
 		super.setup();
 		
-		variables.objectNoInit = createObject("component", "Slatwall.com.utility.payment.CreditCardTransactionResponseBean");
-		variables.object = new Slatwall.com.utility.payment.CreditCardTransactionResponseBean();
+		variables.objectNoInit = createObject("component", "Slatwall.model.utility.payment.CreditCardTransactionResponseBean");
+		variables.object = new Slatwall.model.utility.payment.CreditCardTransactionResponseBean();
 	}
 	
 	public void function defaults_are_correct() {

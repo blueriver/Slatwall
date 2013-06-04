@@ -52,13 +52,6 @@ Notes:
 		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/jquery-ui-1.8.16.custom.css" rel="stylesheet">
 		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/global.css" rel="stylesheet">
 		
-		<script type="text/javascript">
-			var hibachi = {
-				dateFormat : '#request.slatwallScope.setting("globalDateFormat")#'
-				,timeFormat : '#request.slatwallScope.setting("globalTimeFormat")#'
-				,rootURL : '#request.slatwallScope.getBaseURL()#'
-			};
-		</script>
 		<cfif arrayLen($.slatwall.getPrintQueue()) and request.context.slatAction neq "admin:print.default">
 			<script type="text/javascript">
 				var printWindow = window.open('#request.slatwallScope.getBaseURL()#?slatAction=admin:print.default', '_blank');
@@ -67,7 +60,7 @@ Notes:
 		</cfif>
 	</head>
 	<body>
-		<div class="navbar navbar-fixed-top">
+		<div class="navbar navbar-fixed-top navbar-inverse">
 			<div class="navbar-inner">
 				<div class="container-fluid">
 					<ul class="nav">
@@ -274,6 +267,9 @@ Notes:
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-typewatch-2.0.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/bootstrap.min.js"></script>
 		#request.slatwallScope.renderJSObject()#
+		<script type="text/javascript">
+			var hibachiConfig = $.slatwall.getConfig();
+		</script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/global.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/assets/js/admin.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/ckeditor/ckeditor.js"></script>
@@ -284,7 +280,7 @@ Notes:
 				var _gaq = _gaq || [];
 				_gaq.push(['_setAccount', 'UA-22767386-5']);
 				_gaq.push(['_setCustomVar', 1, 'instance', '#HASH(CGI.HTTP_HOST)#']);
-				_gaq.push(["_set", "title", "#request.context.pageTitle#"]);
+				_gaq.push(["_set", "title", "#request.context.slatAction#"]);
 				_gaq.push(['_trackPageview']);
 				
 				(function() {

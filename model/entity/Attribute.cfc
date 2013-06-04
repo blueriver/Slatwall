@@ -68,9 +68,9 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="formFieldType" persistent="false";
 	property name="attributeTypeOptions" persistent="false";
 	property name="validationTypeOptions" persistent="false";
-	
 	
 	public array function getAttributeOptions(string orderby, string sortType="text", string direction="asc") {
 		if(!structKeyExists(arguments,"orderby")) {
@@ -81,6 +81,14 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	}
 
     // ============ START: Non-Persistent Property Methods =================
+    
+	public string function getFormFieldType() {
+		if(!structKeyExists(variables, "formFieldType")) {
+			var attributeTypeSystemCode = getAttributeType().getSystemCode();
+			variables.formFieldType = right(attributeTypeSystemCode, len(attributeTypeSystemCode)-2);
+		}
+		return variables.formFieldType;
+	}
 	
 	public array function getAttributeTypeOptions() {
 		if(!structKeyExists(variables, "attributeTypeOptions")) {

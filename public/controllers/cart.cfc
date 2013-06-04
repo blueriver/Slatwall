@@ -49,6 +49,45 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		getFW().setView("public:main.blank");
 	}
 	
+	// Update
+	public void function update( required struct rc ) {
+		var cart = getOrderService().saveOrder( rc.$.slatwall.cart(), arguments.rc );
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.update", cart.hasErrors() );
+	}
+	
+	// Clear
+	public void function clear( required struct rc ) {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'clear');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.clear", cart.hasErrors() );
+	}
+	
+	// Change
+	public void function change( required struct rc ){
+		param name="arguments.rc.orderID" default="";
+		
+		var order = getOrderService().getOrder( arguments.rc.orderID );
+		if(!isNull(order) && order.getAccount().getAccountID() == arguments.rc.$.slatwall.getAccount().getAccountID()) {
+			arguments.rc.$.slatwall.getSession().setOrder( order );
+			arguments.rc.$.slatwall.addActionResult( "public:cart.change", false );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:cart.change", true );
+		}
+	}
+	
+	// Delete
+	public void function delete( required struct rc ) {
+		param name="arguments.rc.orderID" default="";
+		
+		var order = getOrderService().getOrder( arguments.rc.orderID );
+		if(!isNull(order) && order.getAccount().getAccountID() == arguments.rc.$.slatwall.getAccount().getAccountID()) {
+			var deleteOk = getOrderService().deleteOrder(order);
+			arguments.rc.$.slatwall.addActionResult( "public:cart.delete", !deleteOK );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:cart.delete", true );
+		}
+	}
 	
 	// Add Order Item
 	public void function addOrderItem(required any rc) {
@@ -59,21 +98,70 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		param name="rc.fulfillmentMethodID" default="";
 		
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addOrderItem');
-
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.addOrderItem", cart.hasErrors() );
+		
+		if(!cart.hasErrors()) {
+			cart.clearProcessObject("addOrderItem");
+		}
 	}
 	
 	// Remove Order Item
 	public void function removeOrderItem(required any rc) {
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removeOrderItem');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.removeOrderItem", cart.hasErrors() );
 	}
 	
 	// Add Promotion Code
 	public void function addPromotionCode(required any rc) {
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addPromotionCode');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.addPromotionCode", cart.hasErrors() );
+		
+		if(!cart.hasErrors()) {
+			cart.clearProcessObject("addPromotionCode");
+		}
 	}
 	
 	// Remove Promotion Code
-	public void function removePromotionCode() {
+	public void function removePromotionCode(required any rc) {
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removePromotionCode');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.removePromotionCode", cart.hasErrors() );
+	}
+	
+	// Add Order Payment
+	public void function addOrderPayment(required any rc) {
+		
+		// Setup newOrderPayment requirements
+		if(structKeyExists(rc, "newOrderPayment")) {
+			rc.newOrderPayment.orderPaymentID = '';
+			rc.newOrderPayment.order.orderID = rc.$.slatwall.cart().getOrderID();
+			rc.newOrderPayment.orderPaymentType.typeID = '444df2f0fed139ff94191de8fcd1f61b';
+		}
+		
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addOrderPayment');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.addOrderPayment", cart.hasErrors() );
+	}
+	
+	// Place Order
+	public void function placeOrder(required any rc) {
+	
+		// Setup newOrderPayment requirements
+		if(structKeyExists(rc, "newOrderPayment")) {
+			rc.newOrderPayment.orderPaymentID = '';
+			rc.newOrderPayment.order.orderID = rc.$.slatwall.cart().getOrderID();
+			rc.newOrderPayment.orderPaymentType.typeID = '444df2f0fed139ff94191de8fcd1f61b';
+		}
+		
+		var order = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'placeOrder');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.placeOrder", order.hasErrors() );
+		
+		if(!order.hasErrors) {
+			rc.$.slatwall.setSessionValue('confirmationOrderID', order.getOrderID());
+		}
 	}
 }

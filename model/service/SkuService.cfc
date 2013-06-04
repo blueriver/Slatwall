@@ -287,7 +287,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: DAO Passthrough ===========================
 	
-	public any function getSkuBySkuCode(string skuCode){
+	public boolean function getSkuStocksDeletableFlag( required string skuID ) {
+		return getSkuDAO().getSkuStocksDeletableFlag(argumentCollection=arguments);
+	}
+	
+	public any function getSkuBySkuCode( string skuCode ){
 		return getSkuDAO().getSkuBySkuCode(argumentCollection=arguments);
 	}
 	
@@ -319,8 +323,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		smartList.addKeywordProperty(propertyIdentifier="skuID", weight=1);
 		smartList.addKeywordProperty(propertyIdentifier="product.productName", weight=1);
 		smartList.addKeywordProperty(propertyIdentifier="product.productType.productTypeName", weight=1);
-		
-		
+		smartList.addKeywordProperty(propertyIdentifier="alternateSkuCodes.alternateSkuCode", weight=1);
+				
 		return smartList;
 	}
 	

@@ -46,6 +46,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="priceGroupService" type="any";
 	property name="validationService" type="any";
 	
+	
 	public string function getHashedAndSaltedPassword(required string password, required string salt) {
 		return hash(arguments.password & arguments.salt, 'SHA-512');
 	}
@@ -68,17 +69,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: Process Methods ===========================
 	
-	public any function processAccount_createPassword(required any account, required any processObject) {
-		var accountAuthentication = this.newAccountAuthentication();
-		accountAuthentication.setAccount( arguments.account );
-	
-		// Put the accountAuthentication into the hibernate scope so that it has an id which will allow the hash / salting below to work
-		getHibachiDAO().save(accountAuthentication);
-	
-		// Set the password
-		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );	
-	}
-	
+	// Account
 	public any function processAccount_changePassword(required any account, required any processObject) {
 		var authArray = arguments.account.getAccountAuthentications();
 		for(var i=1; i<=arrayLen(authArray); i++) {
@@ -132,6 +123,44 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		return arguments.account;
 	}
+
+	public any function processAccount_createPassword(required any account, required any processObject) {
+		var accountAuthentication = this.newAccountAuthentication();
+		accountAuthentication.setAccount( arguments.account );
+	
+		// Put the accountAuthentication into the hibernate scope so that it has an id which will allow the hash / salting below to work
+		getHibachiDAO().save(accountAuthentication);
+	
+		// Set the password
+		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );	
+	}
+	
+	public any function processAccount_login(required any account, required any processObject) {
+		
+		// Take the email address and get all of the user accounts by primary e-mail address
+		var accountAuthentications = getInternalAccountAuthenticationsByEmailAddress( emailAddress=arguments.processObject.getEmailAddress() );
+		
+		if(arrayLen(accountAuthentications)) {
+			for(var i=1; i<=arrayLen(accountAuthentications); i++) {
+				// If the password matches what it should be, then set the account in the session and 
+				if(!isNull(accountAuthentications[i].getPassword()) && len(accountAuthentications[i].getPassword()) && accountAuthentications[i].getPassword() == getHashedAndSaltedPassword(password=arguments.processObject.getPassword(), salt=accountAuthentications[i].getAccountAuthenticationID())) {
+					getHibachiSessionService().loginAccount( accountAuthentications[i].getAccount(), accountAuthentications[i] );
+					return arguments.account;
+				}
+			}
+			arguments.processObject.addError('password', rbKey('validate.session_authorizeAccount.password.incorrect'));
+		} else {
+			arguments.processObject.addError('emailAddress', rbKey('validate.session_authorizeAccount.emailAddress.notfound'));
+		}
+		
+		return arguments.account;
+	}
+	
+	public any function processAccount_logout( required any account ) {
+		getHibachiSessionService().logoutAccount();
+		
+		return arguments.account;
+	}
 	
 	public any function processAccount_setupInitialAdmin(required any account, required struct data={}, required any processObject) {
 		
@@ -170,15 +199,83 @@ component extends="HibachiService" accessors="true" output="false" {
 	}
 	
 	public any function processAccount_addAccountPayment(required any account, required any processObject) {
+		
+		// Get the populated newAccountPayment out of the processObject
+		var newAccountPayment = processObject.getNewAccountPayment();
+		
+		// Make sure that this new accountPayment gets attached to the order
+		if(isNull(newAccountPayment.getAccount())) {
+			newAccountPayment.setAccount( arguments.account );
+		}
+		
+		// If this is an existing account payment method, then we can pull the data from there
+		if( len(arguments.processObject.getAccountPaymentMethodID()) ) {
+			
+			// Setup the newAccountPayment from the existing payment method
+			var accountPaymentMethod = this.getAccountPaymentMethod( arguments.processObject.getAccountPaymentMethodID() );
+			newAccountPayment.copyFromAccountPaymentMethod( accountPaymentMethod );
+			
+		// This is a new payment, so we need to setup the billing address and see if there is a need to save it against the account
+		} else {
+			
+			// Setup the billing address as an accountAddress if it existed, otherwise the billing address will have most likely just been populated already
+			if(!isNull(arguments.processObject.getAccountAddressID()) && len(arguments.processObject.getAccountAddressID())) {
+				var accountAddress = this.getAccountAddress( arguments.processObject.getAccountAddressID() );
+				
+				if(!isNull(accountAddress)) {
+					newAccountPayment.setBillingAddress( accountAddress.getAddress().copyAddress( true ) );
+				}
+			}
+			
+			// If saveAccountPaymentMethodFlag is set to true, then we need to save this object
+			if(arguments.processObject.getSaveAccountPaymentMethodFlag()) {
+				var newAccountPaymentMethod = this.newAccountPaymentMethod();
+				newAccountPaymentMethod.copyFromAccountPayment( newAccountPayment );
+				newAccountPaymentMethod.setAccount( arguments.account );
+				
+				newAccountPaymentMethod = this.saveAccountPaymentMethod();
+			}
+
+		}
+		
+		// Save the newAccountPayment
+		newAccountPayment = this.saveAccountPayment( newAccountPayment );
+		
+		// If there are errors in the newAccountPayment after save, then add them to the account
+		if(newAccountPayment.hasErrors()) {
+			arguments.account.addError('accountPayment', rbKey('admin.entity.order.addAccountPayment_error'));
+			
+		// If no errors, then we can process a transaction
+		} else {
+			
+			var transactionData = {
+				amount = newAccountPayment.getAmount()
+			};
+			
+			if(newAccountPayment.getAccountPaymentType().getSystemCode() eq "aptCharge") {
+				if(newAccountPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
+					transactionData.transactionType = 'authorizeAndCharge';
+				} else {
+					transactionData.transactionType = 'receive';	
+				}
+			} else {
+				transactionData.transactionType = 'credit';
+			}
+			
+			newAccountPayment = this.processAccountPayment(newAccountPayment, transactionData, 'createTransaction');
+				
+		}
+		
 		return arguments.account;
 	}
 	
+	// Account Payment
 	public any function processAccountPayment_createTransaction(required any accountPayment, required any processObject) {
 		
 		// Create a new payment transaction
 		var paymentTransaction = getPaymentService().newPaymentTransaction();
 		
-		// Setup the orderPayment in the transaction to be used by the 'runTransaction'
+		// Setup the accountPayment in the transaction to be used by the 'runTransaction'
 		paymentTransaction.setAccountPayment( arguments.accountPayment );
 		
 		// Setup the transaction data
@@ -193,28 +290,28 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.accountPayment;	
 	}
 	
-	
-	/*
-	public any function processAccountPayment_offlineTransaction(required any account, required struct data={}) {
-		var newPaymentTransaction = getPaymentService().newPaymentTransaction();
-		newPaymentTransaction.setTransactionType( "offline" );
-		newPaymentTransaction.setAccountPayment( arguments.accountPayment );
-		newPaymentTransaction = getPaymentService().savePaymentTransaction(newPaymentTransaction, arguments.data);
-		
-		if(newPaymentTransaction.hasErrors()) {
-			arguments.accountPayment.addError('processing', rbKey('validate.accountPayment.offlineProcessingError'));	
-		}
-	}
-	
-	public any function processAccountPayment_process(required any account, required struct data={}) {
-		getPaymentService().processPayment(arguments.accountPayment, arguments.processContext, arguments.data.amount);
-	}
-	*/
-	
 	// =====================  END: Process Methods ============================
 	
 	// ====================== START: Save Overrides ===========================
 	
+	public any function saveAccountPaymentMethod(required any accountPaymentMethod, struct data={}, string context="save") {
+		
+		// Call the generic save method to populate and validate
+		arguments.accountPaymentMethod = save(arguments.accountPaymentMethod, arguments.data, arguments.context);
+		
+		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
+		if(!arguments.accountPaymentMethod.hasErrors() && !isNull(arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()) && len(arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()) && arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType() neq "none") {
+			var transactionData = {
+				amount = 0,
+				transactionType = arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()
+			};
+			arguments.accountPaymentMethod = this.processAccountPayment(arguments.accountPaymentMethod, transactionData, 'createTransaction');
+		}
+		
+		return arguments.accountPaymentMethod;
+		
+	}
+		
 	public any function savePermissionGroup(required any permissionGroup, struct data={}, string context="save") {
 	
 		arguments.permissionGroup.setPermissionGroupName( arguments.data.permissionGroupName );

@@ -51,7 +51,7 @@ component accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiS
 			
 		// If the current order doesn't have an account, and the current order is not new, then set this account in the current order
 		} else if ( isNull(getHibachiScope().getSession().getOrder().getAccount()) && !getHibachiScope().getSession().getOrder().isNew() ) {
-			getHibachiScope().getSession().getOrder().setAccount( currentSession.getAccount() );
+			getHibachiScope().getSession().getOrder().setAccount( getHibachiScope().getAccount() );
 		}
 		
 		// Force persistance

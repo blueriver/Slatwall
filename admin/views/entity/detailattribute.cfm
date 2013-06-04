@@ -41,15 +41,15 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.attribute#" edit="#rc.edit#" sRedirectAction="admin:entity.detailAttributeSet" sRedirectQS="attributeSetID=#rc.attributeSet.getAttributeSetID()#">
+	<cf_HibachiEntityDetailForm object="#rc.attribute#" edit="#rc.edit#" 
+									saveActionQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.attribute#" edit="#rc.edit#"
 								   backAction="admin:entity.detailAttributeSet"
 								   backQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
-								   deleteQueryString="redirectAction=admin:entity.detailAttributeSet&attributeSetID=#rc.attributeSet.getAttributeSetID()#" />
+								   cancelAction="admin:entity.detailAttributeSet"
+								   cancelQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#" />
 		
 		<cfif rc.edit>
-			<!--- Hidden field to allow rc.attributeSet to be set on invalid submit --->
-			<input type="hidden" name="attributeSetID" value="#rc.attributeSet.getAttributeSetID()#" />
 			
 			<!--- Hidden field to attach this to the attributeSet --->
 			<input type="hidden" name="attributeSet.attributeSetID" value="#rc.attributeSet.getAttributeSetID()#" />

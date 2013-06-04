@@ -38,6 +38,19 @@ Notes:
 --->
 <cfcomponent extends="HibachiDAO">
 	
+	<cffunction name="getContentByCMSContentIDAndCMSSiteID" access="public">
+		<cfargument name="cmsContentID" type="string" required="true">
+		<cfargument name="cmsSiteID" type="string" required="true">
+		
+		<cfset var contents = ormExecuteQuery(" FROM SlatwallContent c WHERE c.cmsContentID = ? AND c.site.cmsSiteID = ?", [ arguments.cmsContentID, arguments.cmsSiteID ] ) />
+		
+		<cfif arrayLen(contents)>
+			<cfreturn contents[1] />
+		</cfif>
+		
+		<cfreturn entityNew("SlatwallContent") />
+	</cffunction>
+	
 	<cffunction name="getCategoriesByCmsCategoryIDs" access="public">
 		<cfargument name="CmsCategoryIDs" type="string" />
 			
@@ -62,6 +75,11 @@ Notes:
 	
 	<cffunction name="getDisplayTemplates" access="public">
 		<cfargument name="templateType" type="string" />
+		<cfargument name="siteID" type="string" />
+		
+		<cfif structKeyExists(arguments, "siteID")>
+			<cfreturn ormExecuteQuery(" FROM SlatwallContent WHERE contentTemplateType.systemCode = ? AND site.siteID = ?", ["ctt#arguments.templateType#", arguments.siteID]) />
+		</cfif>
 		
 		<cfreturn ormExecuteQuery(" FROM SlatwallContent WHERE contentTemplateType.systemCode = ?", ["ctt#arguments.templateType#"]) />
 	</cffunction>

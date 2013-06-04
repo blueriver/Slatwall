@@ -58,6 +58,7 @@ Notes:
 	<!--- If in edit and order is of correct status then we can add sale order items --->
 		
 	<cfif rc.edit and listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
+		<!---
 		<ul>
 			<li class="active"><a href="##tabsaddsku" data-toggle="tab">#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.sku')#</a></li>
 			<li><a href="##tabsaddstock" data-toggle="tab">#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.stock')#</a></li> 
@@ -65,6 +66,7 @@ Notes:
 		<div class="tab-content">
 			<div class="tab-pane active" id="tabsaddsku">
 				<div class="row-fluid">
+					--->
 					<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemSkuOptionsSmartList()#"
 											  recordProcessAction="admin:entity.processOrder"
 											  recordProcessQueryString="orderItemTypeSystemCode=oitSale"
@@ -78,10 +80,11 @@ Notes:
 						<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" />
 						<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" />
 						<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" />
-						<cf_HibachiListingColumn propertyIdentifier="price" />
 						<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
+						<cf_HibachiListingColumn processObjectProperty="price" fieldClass="span1" />
 						<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 					</cf_HibachiListingDisplay>
+					<!---
 				</div>
 			</div>
 			<div class="tab-pane" id="tabsaddstock">
@@ -100,13 +103,14 @@ Notes:
 						<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.productName" />
 						<cf_HibachiListingColumn propertyIdentifier="sku.product.productType.productTypeName" />
 						<cf_HibachiListingColumn propertyIdentifier="sku.calculatedQATS" />
-						<cf_HibachiListingColumn propertyIdentifier="sku.price" />
 						<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
+						<cf_HibachiListingColumn processObjectProperty="price" fieldClass="span1" />
 						<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 					</cf_HibachiListingDisplay>
 				</div>
 			</div>
 		</div>
+		--->
 	</cfif>
 	
 </cfoutput>

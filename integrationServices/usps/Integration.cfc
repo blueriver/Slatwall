@@ -52,10 +52,10 @@ component accessors="true" output="false" displayname="USPS" extends="Slatwall.i
 
 	public struct function getSettings() {
 		var settings = {
-			userID = {fieldType="text", displayName="USPS Web Tools UserID"},
-			shipFromPostalCode = {fieldType="text", displayName="Shipping From Postal Code"},
-			testingFlag = {fieldType="yesno", displayName="Test Mode", defaultValue="1"},
-			useSSLFlag = {fieldType="yesno", displayName="Secure API over SSL", defaultValue="1"}
+			userID = {fieldType="text"},
+			shipFromPostalCode = {fieldType="text"},
+			testingFlag = {fieldType="yesno", defaultValue="1"},
+			useSSLFlag = {fieldType="yesno", defaultValue="1"}
 		};
 		
 		return settings;

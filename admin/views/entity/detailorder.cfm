@@ -72,7 +72,7 @@ Notes:
 			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="placeOnHold" type="list" modal="true" />
 			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="takeOffHold" type="list" modal="true" />
 			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="cancelOrder" type="list" modal="true" />
-			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="closeOrder" type="list" modal="true" />
+			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="closeOrder" type="list" />
 			
 			<!--- Create Return --->
 			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="createReturn" queryString="orderID=#rc.order.getOrderID()#" type="list" />

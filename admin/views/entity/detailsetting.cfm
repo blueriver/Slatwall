@@ -46,14 +46,17 @@ Notes:
 
 <cfloop collection="#rc#" item="local.key" >
 	<cfif local.key neq "settingID" and right(local.key, 2) eq "ID" and isSimpleValue(rc[local.key]) and len(rc[local.key]) gt 30>
+		
 		<cfset local.hasRelationshipKey = true />
+		<cfset local.settingObjectName = left(local.key, len(local.key)-2) />
+		
 		<cfset local.redirectQS = listAppend(local.redirectQS, '#local.key#=#rc[local.key]#', '&') />
-		<cfif local.key eq "contentID">
-			<cfset rc.content = $.slatwall.getService("contentService").getContent(rc.contentID) />
-			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="cmsContentID" value="#rc.content.getCMSContentID()#" />', chr(13)) />	
-		<cfelse>
-			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#left(local.key, len(local.key)-2)#.#local.key#" value="#rc[local.key]#" />', chr(13)) />
-			<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#local.key#" value="#rc[local.key]#" />', chr(13)) />	
+		
+		<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#left(local.key, len(local.key)-2)#.#local.key#" value="#rc[local.key]#" />', chr(13)) />
+		<cfset local.hiddenKeyFields = listAppend(local.hiddenKeyFields, '<input type="hidden" name="#local.key#" value="#rc[local.key]#" />', chr(13)) />
+		
+		<cfif rc.setting.hasProperty(local.settingObjectName)>
+			<cfset rc.setting.invokeMethod("set#local.settingObjectName#", {1=rc[ local.settingObjectName ]}) />
 		</cfif>
 	</cfif>
 </cfloop>
