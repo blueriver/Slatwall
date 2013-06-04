@@ -1,7 +1,5 @@
 <!--- ADD BUTTON GEN CODE HERE --->
-<cfparam name="params.edit" type="boolean" default="true" />
-<cfparam name="params.orderPayment" type="any" />
-<cfparam name="params.orderPaymentIndex" type="string" />
-<cfparam name="params.paymentMethod" type="any" />
-
-<a href="&returnURL={domainHere}?slatAction=paypalexpress:main.processResponse&orderID=#$.slatwall.cart().getOrderID()#&pmid=#params.paymentMethod.getPaymentMethodID()#">$.slatwall.</a>
+<form action="" method="post">
+	<input type="hidden" name="returnURL" value="?slatAction=paypalexpress:main.processResponse&orderID=#$.slatwall.cart().getOrderID()#&pmid=#params.paymentMethod.getPaymentMethodID()#" />
+	<button>Checkout with Paypal Express</button>
+</form>

@@ -1,39 +1,28 @@
-component {
+component accessors="true" output="false" {
+
+	property name="orderService";
 	
 	public void function processResponse( required struct rc ) {
 		param name="rc.orderID" default="";
-		param name="rc.pmid" default="";
+		param name="rc.paymentMethodID" default="";
 		
-		rc.guestAccountOK = true;
+		// Setup newOrderPayment
+		rc.newOrderPayment = {};
+		rc.newOrderPayment.orderPaymentID = '';
+		rc.newOrderPayment.amount = 'ADD AMOUNT CHARGED HERE';
+		rc.newOrderPayment.paymentMethod.paymentMethodID = rc.paymentMethodID;
+		rc.newOrderPayment.order.orderID = rc.$.slatwall.cart().getOrderID();
+		rc.newOrderPayment.orderPaymentType.typeID = '444df2f0fed139ff94191de8fcd1f61b';
 		
-		// Insure that all items in the cart are within their max constraint
-		if(!getSlatwallScope().cart().hasItemsQuantityWithinMaxOrderQuantity()) {
-			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart',queryString='slatAction=frontend:cart.forceItemQuantityUpdate'));
+		var order = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'placeOrder');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.placeOrder", order.hasErrors() );
+		
+		if(!order.hasErrors) {
+			rc.$.slatwall.setSessionValue('confirmationOrderID', order.getOrderID());
 		}
 		
-		// Setup the order
-		var order = getOrderService().getOrder(rc.orderID);
-		
-		rc.orderPayments = [];
-		rc.orderPayments[1].orderPaymentID = "";
-		rc.orderPayments[1].paymentMethod.paymentMethodID = rc.pmid;
-		rc.orderPayments[1].amount = "ADD AMOUNT HERE";
-		
-		// Attemp to process the order 
-		order = getOrderService().processOrder(order, rc, "placeOrder");
-		
-		if(!order.hasErrors()) {
-			
-			// Save the order ID temporarily in the session for the confirmation page.  It will be removed by that controller
-			getHibachiScope().setSessionValue("orderConfirmationID", rc.orderID);
-			
-			// Redirect to order Confirmation
-			getFW().redirectExact($.createHREF(filename='order-confirmation'), false);
-			
-		}
-			
-		detail(rc);
-		getFW().setView("frontend:checkout.detail");
 	}
+	
 	
 }
