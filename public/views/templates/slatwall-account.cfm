@@ -59,308 +59,465 @@ Notes:
 
 <cfoutput>
 	<div class="container">
-		<!--- Make sure that the user is logged in --->
+		
+		
+		<!--- USER MY-ACCOUNT SECTION IF LOGGED IN --->
 		<cfif $.slatwall.getLoggedInFlag()>
-			
 			<div class="row">
 				<div class="span12">
-					<h2>My Account</h2>
-					<ul>
-						<li><a href="##profile">Profile</a></li>
-						<li><a href="##order-history">Order History</a></li>
-						<li><a href="##subscription-management">Subscription Management</a></li>
-						<li><a href="?slatAction=public:account.logout">Logout</a></li>
+					
+					<h2>#$.slatwall.getAccount().getFullName()# - My Account <span class="pull-right" style="font-size:14px;"><a href="?slatAction=public:account.logout">logout</a></span></h2>
+					
+					<!--- PRIMARY TAB NAV --->
+					<div class="tabable">
+					<ul class="nav nav-tabs" id="myTab">
+						<li class="active"><a href="##profile" data-toggle="tab">Profile</a></li>
+						<li><a href="##orders" data-toggle="tab">Orders</a></li>
+						<li><a href="##carts-and-quotes" data-toggle="tab">Carts & Quotes</a></li>
+						<li><a href="##subscriptions" data-toggle="tab">Subscriptions</a></li>
 					</ul>
-				</div>
-			</div>
-			
-			<!--- Profile --->
-			<a name="profile"></a>
-			<div class="row">
-				<div class="span12">
-					<h4>Profile</h4>
 					
-				</div>
-			</div>
-			
-			<!--- Order History --->
-			<a name="order-history"></a>
-			<div class="row">
-				<div class="span12">
-					<h4>Order History</h4>
-					
-					<!--- Setup an accordian view for existing orders --->
-					<div class="accordion" id="order-history-acc">
+					<!--- PRIMARY TAB CONTENT --->
+					<div class="tab-content">
 						
-						<!--- Loop over all of the orders that this account has placed --->
-						<cfloop array="#$.slatwall.account().getOrdersPlacedSmartList().getRecords()#" index="order">
-					  	
-						  	<!--- create a DOM ID to be used for open and closing --->
-						  	<cfset orderDOMID = "oid#order.getOrderID()#" />
+						<!--- ================== PROFILE TAB ======================== --->
+						<div class="tab-pane active" id="profile">
+							<h4>Profile Details</h4>
+						</div>
+						
+						<!--- ================== ORDER HISTORY TAB ================== --->
+						<div class="tab-pane" id="orders">
+							<h4>Order History</h4>
 							
-							<div class="accordion-group">
+							<!--- Setup an accordian view for existing orders --->
+							<div class="accordion" id="order-history-acc">
 								
-								<!--- This is the top accordian header row --->
-								<div class="accordion-heading">
-									<a class="accordion-toggle" data-toggle="collapse" data-parent="##order-history-acc" href="###orderDOMID#">Order ## #order.getOrderNumber()# &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; #$.slatwall.formatValue( order.getOrderOpenDateTime(), 'date' )# &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; #order.getFormattedValue('total')# <span class="pull-right">#order.getOrderStatusType().getType()#</span></a>
-								</div>
-								
-								<!--- This is the accordian details when expanded --->
-								<div id="#orderDOMID#" class="accordion-body collapse">
+								<!--- Loop over all of the orders that this account has placed --->
+								<cfloop array="#$.slatwall.account().getOrdersPlacedSmartList().getRecords()#" index="order">
+							  	
+								  	<!--- create a DOM ID to be used for open and closing --->
+								  	<cfset orderDOMID = "oid#order.getOrderID()#" />
 									
-									<div class="accordion-inner">
-											
-										<!--- Overview & Status --->
-										<h5>Overview & Status</h5>
-										<div class="row">
-											
-											<div class="span4">
-												<table class="table table-bordered table-condensed">
-													<tr>
-														<td>Order Status</td>
-														<td>#order.getOrderStatusType().getType()#</td>
-													</tr>
-													<tr>
-														<td>Order ##</td>
-														<td>#order.getOrderNumber()#</td>
-													</tr>
-													<tr>
-														<td>Order Placed</td>
-														<td>#order.getFormattedValue('orderOpenDateTime')#</td>
-													</tr>
-												</table>
-											</div>
-											<div class="span3">
-												<div class="btn-group">
-												    <a class="btn btn-large" href="##"><i class="icon-phone"></i></a>
-												    <a class="btn btn-large" href="##"><i class="icon-envelope"></i></a>
-												    <a class="btn btn-large" href="##"><i class="icon-print"></i></a>
-												</div>
-												<br />
-												<br />
-												<p>
-													If you have questions about your order, please contact customer service <a href="tel:888.555.5555">888.555.5555</a>
-												</p>
-											</div>
-											<div class="span4 pull-right">
-												<table class="table table-bordered table-condensed">
-													<tr>
-														<td>Subtotal</td>
-														<td>#order.getFormattedValue('subTotalAfterItemDiscounts')#</td>
-													</tr>
-													<tr>
-														<td>Delivery Charges</td>
-														<td>#order.getFormattedValue('fulfillmentChargeAfterDiscountTotal')#</td>
-													</tr>
-													<tr>
-														<td>Taxes</td>
-														<td>#order.getFormattedValue('taxTotal')#</td>
-													</tr>
-													<tr>
-														<td><strong>Total</strong></td>
-														<td><strong>#order.getFormattedValue('total')#</strong></td>
-													</tr>
-													<cfif order.getDiscountTotal() gt 0>
-														<tr>
-															<td colspan="2" class="text-error">You saved #order.getFormattedValue('discountTotal')# on this order.</td>
-														</tr>
-													</cfif>
-												</table>
-											</div>
+									<div class="accordion-group">
+										
+										<!--- This is the top accordian header row --->
+										<div class="accordion-heading">
+											<a class="accordion-toggle" data-toggle="collapse" data-parent="##order-history-acc" href="###orderDOMID#">Order ## #order.getOrderNumber()# &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; #order.getFormattedValue('orderOpenDateTime', 'date' )# &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; #order.getFormattedValue('total')# <span class="pull-right">Status: #order.getOrderStatusType().getType()#</span></a>
 										</div>
 										
-										<!--- Start: Order Details --->
-										<hr />
-										<h5>Order Details</h5>
-										<cfloop array="#order.getOrderFulfillments()#" index="orderFulfillment">
+										<!--- This is the accordian details when expanded --->
+										<div id="#orderDOMID#" class="accordion-body collapse">
 											
-											<!--- Start: Fulfillment Table --->
-											<table class="table table-bordered table-condensed">
-												<tr>
-													<!--- Fulfillment Details --->
-													<td class="well span3" rowspan="#arrayLen(orderFulfillment.getOrderFulfillmentItems()) + 1#">
-														
-														<!--- Fulfillment Name --->
-														<strong>#orderFulfillment.getFulfillmentMethod().getFulfillmentMethodName()#</strong><br />
-														
-														<!--- Fulfillment Details: Email --->
-														<cfif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "email">
-															<strong>Email Address:</strong> #orderFulfillment.getEmailAddress()#<br />
-															
-														<!--- Fulfillment Details: Pickup --->
-														<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup">
-															<strong>Pickup Location:</strong> #orderFulfillment.getPickupLocation().getLocationName()#<br />
-															<sw:addressDisplay address="#orderFulfillment.getPickupLocation().getPrimaryAddress().getAddress()#" />
-															
-														<!--- Fulfillment Details: Shipping --->
-														<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
-															<sw:addressDisplay address="#orderFulfillment.getShippingAddress()#" />
-															<strong>Shipping Method:</strong> #orderFulfillment.getShippingMethod().getShippingMethodName()#<br />
-															
-														</cfif>
-														
+											<div class="accordion-inner">
+													
+												<!--- Overview & Status --->
+												<h5>Overview & Status</h5>
+												<div class="row">
+													
+													<div class="span4">
+														<table class="table table-bordered table-condensed">
+															<tr>
+																<td>Order Status</td>
+																<td>#order.getOrderStatusType().getType()#</td>
+															</tr>
+															<tr>
+																<td>Order ##</td>
+																<td>#order.getOrderNumber()#</td>
+															</tr>
+															<tr>
+																<td>Order Placed</td>
+																<td>#order.getFormattedValue('orderOpenDateTime')#</td>
+															</tr>
+														</table>
+													</div>
+													<div class="span3">
+														<div class="btn-group">
+														    <a class="btn btn-large" href="##"><i class="icon-phone"></i></a>
+														    <a class="btn btn-large" href="##"><i class="icon-envelope"></i></a>
+														    <a class="btn btn-large" href="##"><i class="icon-print"></i></a>
+														</div>
 														<br />
-														<!--- Delivery Fee --->
-														<strong>Delivery Fee:</strong> #orderFulfillment.getFormattedValue('chargeAfterDiscount')#
-													</td>
-													
-													<!--- Additional Header Rows --->
-													<th>Sku Code</th>
-													<th>Product Title</th>
-													<th>Qty.</th>
-													<th>Price</th>
-													<th>Status</th>
-												</tr>
-												
-												<!--- Loop over the actual items in this orderFulfillment --->
-												<cfloop array="#orderFulfillment.getOrderFulfillmentItems()#" index="orderItem">
-													
-													<tr>
-														<!--- Sku Code --->
-														<td>#orderItem.getSku().getSkuCode()#</td>
-														
-														<!--- Product Title --->
-														<td>#orderItem.getSku().getProduct().getTitle()#</td>
-														
-														<!--- Quantity --->
-														<td>#orderItem.getQuantity()#</td>
-														
-														<!--- Price --->
-														<td>
-															<cfif orderItem.getExtendedPrice() gt orderItem.getExtendedPriceAfterDiscount()>
-																<span style="text-decoration:line-through;">#orderItem.getFormattedValue('extendedPrice')#</span> <span class="text-error">#orderItem.getFormattedValue('extendedPriceAfterDiscount')#</span><br />
-															<cfelse>
-																#orderItem.getFormattedValue('extendedPriceAfterDiscount')#	
+														<br />
+														<p>
+															If you have questions about your order, please contact customer service <a href="tel:888.555.5555">888.555.5555</a>
+														</p>
+													</div>
+													<div class="span4 pull-right">
+														<table class="table table-bordered table-condensed">
+															<tr>
+																<td>Subtotal</td>
+																<td>#order.getFormattedValue('subTotalAfterItemDiscounts')#</td>
+															</tr>
+															<tr>
+																<td>Delivery Charges</td>
+																<td>#order.getFormattedValue('fulfillmentChargeAfterDiscountTotal')#</td>
+															</tr>
+															<tr>
+																<td>Taxes</td>
+																<td>#order.getFormattedValue('taxTotal')#</td>
+															</tr>
+															<tr>
+																<td><strong>Total</strong></td>
+																<td><strong>#order.getFormattedValue('total')#</strong></td>
+															</tr>
+															<cfif order.getDiscountTotal() gt 0>
+																<tr>
+																	<td colspan="2" class="text-error">You saved #order.getFormattedValue('discountTotal')# on this order.</td>
+																</tr>
 															</cfif>
-														</td>
-														
-														<!--- Status --->
-														<td>#orderItem.getOrderItemStatusType().getType()#</td>
-													</tr>
-												</cfloop>
+														</table>
+													</div>
+												</div>
 												
-											</table>
-											<!--- End: Fulfillment Table --->
-												
-										</cfloop>
-										<!--- End: Order Details --->
-										
-										<!--- Start: Order Payments --->
-										<hr />
-										<h5>Order Payments</h5>
-										<table class="table table-bordered table-condensed">
-											<tr>
-												<th>Payment Details</td>
-												<th>Amount</td>
-											</tr>
-											<cfloop array="#order.getOrderPayments()#" index="orderPayment">
-												<tr>
-													<td>#orderPayment.getSimpleRepresentation()#</td>
-													<td>#orderPayment.getAmount()#</td>
-												</tr>
-											</cfloop>
-										</table>
-										<!--- End: Order Payments --->
-											
-										<!--- Start: Order Deliveries --->
-										<cfif arrayLen(order.getOrderDeliveries())>
-											<hr />
-											<h5>Order Deliveries</h5>
-											
-											<cfloop array="#order.getOrderDeliveries()#" index="orderDelivery">
-												<table class="table table-bordered table-condensed">
-													<tr>
-														<!--- Delivery Details --->
-														<td class="well span3" rowspan="#arrayLen(orderFulfillment.getOrderDeliveryItems()) + 1#">
-															<!---
-															<!--- Fulfillment Name --->
-															<strong>#orderFulfillment.getFulfillmentMethod().getFulfillmentMethodName()#</strong><br />
-															
-															<!--- Fulfillment Details: Email --->
-															<cfif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "email">
-																<strong>Email Address:</strong> #orderFulfillment.getEmailAddress()#<br />
-																
-															<!--- Fulfillment Details: Pickup --->
-															<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup">
-																<strong>Pickup Location:</strong> #orderFulfillment.getPickupLocation().getLocationName()#<br />
-																<sw:addressDisplay address="#orderFulfillment.getPickupLocation().getPrimaryAddress().getAddress()#" />
-																
-															<!--- Fulfillment Details: Shipping --->
-															<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
-																<sw:addressDisplay address="#orderFulfillment.getShippingAddress()#" />
-																<strong>Shipping Method:</strong> #orderFulfillment.getShippingMethod().getShippingMethodName()#<br />
-																
-															</cfif>
-															
-															<br />
-															
-															<!--- Amount Captured --->
-															<strong>Delivery Fee:</strong> #orderFulfillment.getFormattedValue('chargeAfterDiscount')#
-															--->
-														</td>
-														
-														<!--- Additional Header Rows --->
-														<th>Sku Code</th>
-														<th>Product Title</th>
-														<th>Qty.</th>
-													</tr>
-													<cfloop array="#orderDelivery.getOrderDeliveryItems()#" index="orderDeliveryItem">
+												<!--- Start: Order Details --->
+												<hr />
+												<h5>Order Details</h5>
+												<cfloop array="#order.getOrderFulfillments()#" index="orderFulfillment">
+													
+													<!--- Start: Fulfillment Table --->
+													<table class="table table-bordered table-condensed">
 														<tr>
-															<td>#orderDeliveryItem.getOrderItem().getSku().getSkuCode()#</td>
-															<td>#orderDeliveryItem.getOrderItem().getSku().getProduct().getTitle()#</td>
-															<td>#orderDeliveryItem.getQuantity()#</td>
+															<!--- Fulfillment Details --->
+															<td class="well span3" rowspan="#arrayLen(orderFulfillment.getOrderFulfillmentItems()) + 1#">
+																
+																<!--- Fulfillment Name --->
+																<strong>#orderFulfillment.getFulfillmentMethod().getFulfillmentMethodName()#</strong><br />
+																
+																<!--- Fulfillment Details: Email --->
+																<cfif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "email">
+																	<strong>Email Address:</strong> #orderFulfillment.getEmailAddress()#<br />
+																	
+																<!--- Fulfillment Details: Pickup --->
+																<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup">
+																	<strong>Pickup Location:</strong> #orderFulfillment.getPickupLocation().getLocationName()#<br />
+																	<sw:addressDisplay address="#orderFulfillment.getPickupLocation().getPrimaryAddress().getAddress()#" />
+																	
+																<!--- Fulfillment Details: Shipping --->
+																<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
+																	<sw:addressDisplay address="#orderFulfillment.getAddress()#" />
+																	<strong>Shipping Method:</strong> #orderFulfillment.getShippingMethod().getShippingMethodName()#<br />
+																	
+																</cfif>
+																
+																<br />
+																<!--- Delivery Fee --->
+																<strong>Delivery Fee:</strong> #orderFulfillment.getFormattedValue('chargeAfterDiscount')#
+															</td>
+															
+															<!--- Additional Header Rows --->
+															<th>Sku Code</th>
+															<th>Product Title</th>
+															<th>Qty.</th>
+															<th>Price</th>
+															<th>Status</th>
+														</tr>
+														
+														<!--- Loop over the actual items in this orderFulfillment --->
+														<cfloop array="#orderFulfillment.getOrderFulfillmentItems()#" index="orderItem">
+															
+															<tr>
+																<!--- Sku Code --->
+																<td>#orderItem.getSku().getSkuCode()#</td>
+																
+																<!--- Product Title --->
+																<td>#orderItem.getSku().getProduct().getTitle()#</td>
+																
+																<!--- Quantity --->
+																<td>#orderItem.getQuantity()#</td>
+																
+																<!--- Price --->
+																<td>
+																	<cfif orderItem.getExtendedPrice() gt orderItem.getExtendedPriceAfterDiscount()>
+																		<span style="text-decoration:line-through;">#orderItem.getFormattedValue('extendedPrice')#</span> <span class="text-error">#orderItem.getFormattedValue('extendedPriceAfterDiscount')#</span><br />
+																	<cfelse>
+																		#orderItem.getFormattedValue('extendedPriceAfterDiscount')#	
+																	</cfif>
+																</td>
+																
+																<!--- Status --->
+																<td>#orderItem.getOrderItemStatusType().getType()#</td>
+															</tr>
+														</cfloop>
+														
+													</table>
+													<!--- End: Fulfillment Table --->
+														
+												</cfloop>
+												<!--- End: Order Details --->
+												
+												<!--- Start: Order Payments --->
+												<hr />
+												<h5>Order Payments</h5>
+												<table class="table table-bordered table-condensed table-striped">
+													<tr>
+														<th>Payment Details</td>
+														<th>Amount</td>
+													</tr>
+													<cfloop array="#order.getOrderPayments()#" index="orderPayment">
+														<tr>
+															<td>#orderPayment.getSimpleRepresentation()#</td>
+															<td>#orderPayment.getFormattedValue('amount')#</td>
 														</tr>
 													</cfloop>
 												</table>
-											</cfloop>
+												<!--- End: Order Payments --->
+													
+												<!--- Start: Order Deliveries --->
+												<cfif arrayLen(order.getOrderDeliveries())>
+													<hr style="border-top-style:dashed !important; border-top-width:5px !important;" />
+													<h5>Order Deliveries</h5>
+													
+													<cfloop array="#order.getOrderDeliveries()#" index="orderDelivery">
+														<table class="table table-bordered table-condensed">
+															<tr>
+																<!--- Delivery Details --->
+																<td class="well span3" rowspan="#arrayLen(orderDelivery.getOrderDeliveryItems()) + 1#">
+																	
+																	<!--- Fulfillment Name --->
+																	<strong>Date:</strong> #orderDelivery.getFormattedValue('createdDateTime')#<br />
+																	
+																	<!--- Fulfillment Details: Email --->
+																	<cfif orderDelivery.getFulfillmentMethod().getFulfillmentMethodType() eq "email">
+																		<strong>Emailed To:</strong> #orderFulfillment.getEmailAddress()#<br />
+																		
+																	<!--- Fulfillment Details: Pickup --->
+																	<cfelseif orderDelivery.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup">
+																		<strong>Picked Up At:</strong> #orderDelivery.getPickupLocation().getLocationName()#<br />
+																		
+																	<!--- Fulfillment Details: Shipping --->
+																	<cfelseif orderDelivery.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
+																		<strong>Shipped To:</strong><br />
+																		<sw:addressDisplay address="#orderDelivery.getShippingAddress()#" />
+																		<cfif not isNull(orderDelivery.getTrackingNumber())>
+																			<br />
+																			<strong>Tracking Number: <a href="##">#orderDelivery.getTrackingNumber()#</a></strong>
+																		</cfif>
+																	</cfif>
+																	
+																	<!--- Amount Captured --->
+																	<cfif not isNull(orderDelivery.getPaymentTransaction())>
+																		<br />
+																		<strong>Charged:</strong> #orderDelivery.getPaymentTransaction().getFormattedValue('amountReceived')#
+																	</cfif>
+																	
+																</td>
+																
+																<!--- Additional Header Rows --->
+																<th>Sku Code</th>
+																<th>Product Title</th>
+																<th>Qty.</th>
+															</tr>
+															<cfloop array="#orderDelivery.getOrderDeliveryItems()#" index="orderDeliveryItem">
+																<tr>
+																	<td>#orderDeliveryItem.getOrderItem().getSku().getSkuCode()#</td>
+																	<td>#orderDeliveryItem.getOrderItem().getSku().getProduct().getTitle()#</td>
+																	<td>#orderDeliveryItem.getQuantity()#</td>
+																</tr>
+															</cfloop>
+														</table>
+													</cfloop>
+													
+												</cfif>
+												<!--- End: Order Deliveries --->
+													
+											</div> <!--- END: accordion-inner --->
 											
-										</cfif>
-										<!--- End: Order Deliveries --->
-											
-									</div> <!--- END: accordion-inner --->
-									
-								</div> <!--- END: accordion-body --->
+										</div> <!--- END: accordion-body --->
+										
+									</div> <!--- END: accordion-group --->
+										
+								</cfloop>
 								
-							</div> <!--- END: accordion-group --->
-								
-						</cfloop>
+							</div>
+							
+						</div>
 						
+						<!--- =================== CARTS & QUOTES ===================== --->
+						<div class="tab-pane" id="carts-and-quotes">
+							<h4>Shopping Carts & Quotes</h4>
+							
+							<div class="accordion" id="cart-and-quotes-acc">
+								
+								<cfset $.slatwall.account().getOrdersNotPlacedSmartList().addOrder('createdDateTime|DESC') />
+								
+								<!--- Loop over all of the 'notPlaced' orders --->
+								<cfloop array="#$.slatwall.account().getOrdersNotPlacedSmartList().getRecords()#" index="order">
+									
+									<!--- Setup an orderID for the accordion --->
+									<cfset orderDOMID = "oid#order.getOrderID()#" />
+									
+									<div class="accordion-group">
+										
+										<!--- Main Button to expand order --->
+										<div class="accordion-heading">
+											<a class="accordion-toggle" data-toggle="collapse" data-parent="##cart-and-quotes-acc" href="###orderDOMID#">#order.getFormattedValue('createdDateTime', 'date')# <cfif order.getOrderID() eq $.slatwall.cart().getOrderID()><span class="pull-right"><i class="icon-shopping-cart"></i></span></cfif></a>
+			    						</div>
+										
+										<!--- Saved order content --->
+										<div id="#orderDOMID#" class="accordion-body collapse">
+											
+											<div class="accordion-inner">
+												
+												<!--- Overview & Status --->
+												<h5>Overview & Status</h5>
+												<div class="row">
+													
+													<div class="span4">
+														<table class="table table-bordered table-condensed">
+															<tr>
+																<td>Cart Created</td>
+																<td>#order.getFormattedValue('createdDateTime')#</td>
+															</tr>
+															<tr>
+																<td>Last Updated</td>
+																<td>#order.getFormattedValue('modifiedDateTime')#</td>
+															</tr>
+														</table>
+													</div>
+													<div class="span4 pull-right">
+														<table class="table table-bordered table-condensed">
+															<tr>
+																<td>Current Subtotal</td>
+																<td>#order.getFormattedValue('subTotalAfterItemDiscounts')#</td>
+															</tr>
+															<tr>
+																<td>Est. Delivery Charges</td>
+																<td>#order.getFormattedValue('fulfillmentChargeAfterDiscountTotal')#</td>
+															</tr>
+															<tr>
+																<td>Est. Taxes</td>
+																<td>#order.getFormattedValue('taxTotal')#</td>
+															</tr>
+															<tr>
+																<td><strong>Est. Total</strong></td>
+																<td><strong>#order.getFormattedValue('total')#</strong></td>
+															</tr>
+															<cfif order.getDiscountTotal() gt 0>
+																<tr>
+																	<td colspan="2" class="text-error">This cart includes #order.getFormattedValue('discountTotal')# of savings.</td>
+																</tr>
+															</cfif>
+														</table>
+													</div>
+												</div>
+												
+												<!--- Start: Order Details --->
+												<hr />
+												<h5>Cart Items</h5>
+												<cfloop array="#order.getOrderFulfillments()#" index="orderFulfillment">
+													
+													<!--- Start: Fulfillment Table --->
+													<table class="table table-bordered table-condensed">
+														<tr>
+															<!--- Fulfillment Details --->
+															<td class="well span3" rowspan="#arrayLen(orderFulfillment.getOrderFulfillmentItems()) + 1#">
+																
+																<!--- Fulfillment Name --->
+																<strong>#orderFulfillment.getFulfillmentMethod().getFulfillmentMethodName()#</strong><br />
+																
+																<!--- Fulfillment Details: Email --->
+																<cfif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "email">
+																	<strong>Email Address:</strong> #orderFulfillment.getEmailAddress()#<br />
+																	
+																<!--- Fulfillment Details: Pickup --->
+																<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup">
+																	<strong>Pickup Location:</strong> #orderFulfillment.getPickupLocation().getLocationName()#<br />
+																	<sw:addressDisplay address="#orderFulfillment.getPickupLocation().getPrimaryAddress().getAddress()#" />
+																	
+																<!--- Fulfillment Details: Shipping --->
+																<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
+																	<cfif not orderFulfillment.getAddress().getNewFlag()>
+																		<sw:addressDisplay address="#orderFulfillment.getAddress()#" />
+																	</cfif>
+																	<cfif not isNull(orderFulfillment.getShippingMethod())>
+																	<strong>Shipping Method:</strong> #orderFulfillment.getShippingMethod().getShippingMethodName()#<br />
+																	</cfif>
+																	
+																</cfif>
+																
+																<!--- Delivery Fee --->
+																<cfif orderFulfillment.getChargeAfterDiscount() gt 0>
+																	<br />
+																	<strong>Est. Delivery Fee:</strong> #orderFulfillment.getFormattedValue('chargeAfterDiscount')#
+																</cfif>
+															</td>
+															
+															<!--- Additional Header Rows --->
+															<th>Sku Code</th>
+															<th>Product Title</th>
+															<th>Qty.</th>
+															<th>Price</th>
+															<th>Status</th>
+														</tr>
+														
+														<!--- Loop over the actual items in this orderFulfillment --->
+														<cfloop array="#orderFulfillment.getOrderFulfillmentItems()#" index="orderItem">
+															
+															<tr>
+																<!--- Sku Code --->
+																<td>#orderItem.getSku().getSkuCode()#</td>
+																
+																<!--- Product Title --->
+																<td>#orderItem.getSku().getProduct().getTitle()#</td>
+																
+																<!--- Quantity --->
+																<td>#orderItem.getQuantity()#</td>
+																
+																<!--- Price --->
+																<td>
+																	<cfif orderItem.getExtendedPrice() gt orderItem.getExtendedPriceAfterDiscount()>
+																		<span style="text-decoration:line-through;">#orderItem.getFormattedValue('extendedPrice')#</span> <span class="text-error">#orderItem.getFormattedValue('extendedPriceAfterDiscount')#</span><br />
+																	<cfelse>
+																		#orderItem.getFormattedValue('extendedPriceAfterDiscount')#	
+																	</cfif>
+																</td>
+																
+																<!--- Status --->
+																<td>#orderItem.getOrderItemStatusType().getType()#</td>
+															</tr>
+														</cfloop>
+														
+													</table>
+													<!--- End: Fulfillment Table --->
+														
+												</cfloop>
+												<!--- End: Order Details --->
+													
+												<!--- Action Buttons --->
+												<cfif order.getOrderID() neq $.slatwall.cart().getOrderID()>
+													<div class="row">
+														<div class="span3 pull-right">
+															<div class="btn-group pull-right">
+																<a class="btn" href="?slatAction=public:cart.change&orderID=#order.getOrderID()#"><i class="icon-shopping-cart"></i> Swap to this Cart</a>
+																<a class="btn" href="?slatAction=public:cart.delete&orderID=#order.getOrderID()#"><i class="icon-trash"></i> Delete</a>
+															</div>
+														</div>
+													</div>
+												</cfif>
+														
+											</div> <!--- END: accordion-inner --->
+											
+										</div> <!--- END: accordion-body --->
+											
+									</div> <!--- END: accordion-group --->
+										
+								</cfloop>
+								
+		 					</div>
+						</div>
+						
+						<!--- ==================== SUBSCRIPTIONS ==================== --->
+						<div class="tab-pane" id="subscriptions">
+							<h4>Subscription Management</h4>
+							Show Subscriptions Here
+						</div>
+						
+						</div>
 					</div>
 				</div>
 			</div>
 			
-			<!--- Unplaced Carts --->
-			<a name="order-history"></a>
-			<div class="row">
-				<div class="span12">
-					<h4>Unplaced Carts</h4>
-					<div class="accordion" id="order-history-acc">
-  						<cfloop array="#$.slatwall.account().getOrdersNotPlacedSmartList().getRecords()#" index="order">
-						  	<cfset orderDOMID = "oid#order.getOrderID()#" />
-							  
-							<div class="accordion-group">
-								<div class="accordion-heading">
-									<a class="accordion-toggle" data-toggle="collapse" data-parent="##order-history-acc" href="###orderDOMID#">#order.getSimpleRepresentation()#</a>
-	    						</div>
-								<div id="#orderDOMID#" class="accordion-body collapse">
-									<div class="accordion-inner">
-										
-									</div>
-								</div>
-							</div>
-						</cfloop>
- 					</div>
-				</div>
-			</div>
-			
-			<!--- Subscription Management --->
-			<a name="subscription-management"></a>
-			<div class="row">
-				<div class="span12">
-					<h4>Subscription Management</h4>
-				</div>
-			</div>
-		<!--- Otherwise display the create / login form --->
+		<!--- CREATE / LOGIN FORMS --->
 		<cfelse>
 			<div class="row">
 								

@@ -436,7 +436,7 @@ component extends="FW1.framework" {
 		var originalCFCBase = "";
 		var originalBase = "";
 		var originalURLAction = "";
-		var originalFromAction = "";
+		var originalFormAction = "";
 		
 		// If there was already a request._fw1, then we need to save it to be used later
 		if(structKeyExists(request, "_fw1")) {

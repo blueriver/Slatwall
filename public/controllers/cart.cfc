@@ -63,6 +63,32 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.$.slatwall.addActionResult( "public:cart.clear", cart.hasErrors() );
 	}
 	
+	// Change
+	public void function change( required struct rc ){
+		param name="arguments.rc.orderID" default="";
+		
+		var order = getOrderService().getOrder( arguments.rc.orderID );
+		if(!isNull(order) && order.getAccount().getAccountID() == arguments.rc.$.slatwall.getAccount().getAccountID()) {
+			arguments.rc.$.slatwall.getSession().setOrder( order );
+			arguments.rc.$.slatwall.addActionResult( "public:cart.change", false );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:cart.change", true );
+		}
+	}
+	
+	// Delete
+	public void function delete( required struct rc ) {
+		param name="arguments.rc.orderID" default="";
+		
+		var order = getOrderService().getOrder( arguments.rc.orderID );
+		if(!isNull(order) && order.getAccount().getAccountID() == arguments.rc.$.slatwall.getAccount().getAccountID()) {
+			var deleteOk = getOrderService().deleteOrder(order);
+			arguments.rc.$.slatwall.addActionResult( "public:cart.delete", !deleteOK );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:cart.delete", true );
+		}
+	}
+	
 	// Add Order Item
 	public void function addOrderItem(required any rc) {
 		// Setup the frontend defaults
