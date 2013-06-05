@@ -324,7 +324,7 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 		super.validate(argumentCollection=arguments);
 		
 		// If the attribute is required
-		if(getAttribute().getRequiredFlag()){
+		if(!isNull(getAttribute()) && getAttribute().getRequiredFlag()){
 			var constraintDetail = {
 				constraintType = "required",
 				constraintValue = true
@@ -332,6 +332,10 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 			getService("hibachiValidationService").validateConstraint(object=this, propertyIdentifier="settingValue", constraintDetails=constraintDetail, errorBean=getHibachiErrors(), context=arguments.context);
 		}
 		
+	}
+	
+	public any function getSimpleRepresentationPropertyName() {
+		return "attributeValue";
 	}
 	
 	// @hint public method for returning the validation class of a property

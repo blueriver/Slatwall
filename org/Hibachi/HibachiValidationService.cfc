@@ -358,8 +358,11 @@
 	}
 	
 	public boolean function validate_eq(required any object, required string propertyIdentifier, required string constraintValue) {
-		var objectOnly = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier );
-		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
+		var lastObject = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier );
+		var propertyValue = javaCast("null", "");
+		if(!isNull(lastObject)) {
+			propertyValue = lastObject.invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
+		} 
 		if(!isNull(propertyValue) && !isNull(propertyValue) && propertyValue == arguments.constraintValue) {
 			return true;
 		}

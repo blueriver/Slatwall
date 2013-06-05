@@ -42,19 +42,11 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	public void function setUp() {
 		super.setup();
 		
-		variables.objectNoInit = createObject("component", "Slatwall.model.utility.payment.CreditCardTransactionResponseBean");
-		variables.object = new Slatwall.model.utility.payment.CreditCardTransactionResponseBean();
+		variables.object = request.slatwallScope.getTransient("CreditCardTransactionRequestBean");
 	}
 	
 	public void function defaults_are_correct() {
-		assertEquals("", variables.object.getTransactionID());
-		assertEquals("", variables.object.getAuthorizationCode());
-		assertEquals(0, variables.object.getAmountAuthorized());
-		assertEquals(0, variables.object.getAmountCharged());
-		assertEquals(0, variables.object.getAmountCredited());
-		assertEquals("E", variables.object.getAVSCode());
-		assertFalse(variables.object.getSecurityCodeMatch());
-		assertEquals("", variables.object.getProviderToken());
+		assert(isNull(variables.object.getTransactionID()));
 	}
 	
 }
