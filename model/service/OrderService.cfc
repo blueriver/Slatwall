@@ -40,6 +40,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 	property name="orderDAO";
 	
+	property name="accessService";
 	property name="accountService";
 	property name="addressService";
 	property name="commentService";
@@ -246,16 +247,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			order.addError("currency", rbKey('validate.order.orderitemwrongcurrency'));
 		}
 		
-	}
-	
-	public void function setupOrderItemContentAccess(required any orderItem) {
-		for(var accessContent in arguments.orderItem.getSku().getAccessContents()) {
-			var accountContentAccess = getAccountService().newAccountContentAccess();
-			accountContentAccess.setAccount(arguments.orderItem.getOrder().getAccount());
-			accountContentAccess.setOrderItem(arguments.orderItem);
-			accountContentAccess.addAccessContent(accessContent);
-			getAccountService().saveAccountContentAccess(accountContentAccess);
-		}
 	}
 	
 	public string function getOrderRequirementsList(required any order) {
@@ -830,7 +821,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							
 							// If this order is the same as the current cart, then set the current cart to a new order
 							if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getCurrentSession().getOrder().getOrderID()) {
-								getHibachiScope().getCurrentSession().setOrder(javaCast("null", ""));
+								getHibachiScope().getSession().setOrder(javaCast("null", ""));
 							}
 						
 							// Update the order status
@@ -840,7 +831,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							order.confirmOrderNumberOpenDateCloseDatePaymentAmount();
 						
 							// Save the order to the database
-							getHibachiDAO().save(order);
+							getHibachiDAO().save( arguments.order );
 						
 							// Do a flush so that the order is commited to the DB
 							getHibachiDAO().flushORMSession();
@@ -848,6 +839,24 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							// Log that the order was placed
 							logHibachi(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
 							
+							// Look for 'auto' order fulfillments
+							for(var i=1; i<=arrayLen( arguments.order.getOrderFulfillments() ); i++) {
+								
+								// As long as the amount received for this orderFulfillment is within the treshold of the auto fulfillment setting
+								if(arguments.order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto" && (order.getTotal() == 0 || order.getOrderFulfillments()[i].getFulfillmentMethod().setting('fulfillmentMethodAutoMinReceivedPercentage') <= (order.getPaymentAmountReceivedTotal()*100/order.getTotal())) ) {
+									
+									var newOrderDelivery = this.newOrderDelivery();
+									
+									// Setup the processData
+									var processData = {};
+									processData.order = {};
+									processData.order.orderID = arguments.order.getOrderID();
+									processData.location.locationID = arguments.order.getOrderFulfillments()[i].getFulfillmentMethod().setting('fulfillmentMethodAutoLocation');
+									processData.orderFulfillment.orderFulfillmentID = arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID();
+									
+									newOrderDelivery = processOrderDelivery(newOrderDelivery, processData, 'create');
+								}
+							}
 						}
 					}
 					
@@ -1149,25 +1158,64 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Setup the header information
 			arguments.orderDelivery.setOrder( arguments.processObject.getOrder() );
 			arguments.orderDelivery.setLocation( arguments.processObject.getLocation() );
-			arguments.orderDelivery.setFulfillmentMethod( arguments.processObject.getFulfillmentMethod() );
-			arguments.orderDelivery.setShippingMethod( arguments.processObject.getShippingMethod() );
-			arguments.orderDelivery.setShippingAddress( arguments.processObject.getShippingAddress().copyAddress( saveNewAddress=true ) );
+			arguments.orderDelivery.setFulfillmentMethod( arguments.processObject.getOrderFulfillment().getFulfillmentMethod() );
+			
+			// If this is a shipping fulfillment, then populate the correct values
+			if(arguments.orderDelivery.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
+				arguments.orderDelivery.setShippingMethod( arguments.processObject.getShippingMethod() );
+				arguments.orderDelivery.setShippingAddress( arguments.processObject.getShippingAddress().copyAddress( saveNewAddress=true ) );
+			}
 			
 			// Setup the tracking number
 			if(!isNull(arguments.processObject.getTrackingNumber()) && len(arguments.processObject.getTrackingNumber())) {
 				arguments.orderDelivery.setTrackingNumber(arguments.processObject.getTrackingNumber());
 			}
 			
-			// Loop over delivery items from processObject and add them with stock to the orderDelivery
-			for(var i=1; i<=arrayLen(arguments.processObject.getOrderDeliveryItems()); i++) {
+			// If the orderFulfillmentMethod is auto, and there aren't any delivery items then we can just fulfill all that are "undelivered"
+			if(arguments.orderDelivery.getFulfillmentMethod().getFulfillmentMethodType() eq "auto" && !arrayLen(arguments.processObject.getOrderDeliveryItems())) {
 				
-				// Create a new orderDeliveryItem
-				var orderDeliveryItem = this.newOrderDeliveryItem();
+				// Loop over delivery items from processObject and add them with stock to the orderDelivery
+				for(var i=1; i<=arrayLen(arguments.processObject.getOrderFulfillment().getOrderFulfillmentItems()); i++) {
+					
+					// Local pointer to the orderItem
+					var thisOrderItem = arguments.processObject.getOrderFulfillment().getOrderFulfillmentItems();
+					
+					if(thisOrderItem.getQuantityUndelivered()) {
+						// Create a new orderDeliveryItem
+						var orderDeliveryItem = this.newOrderDeliveryItem();
+						
+						// Populate with the data
+						orderDeliveryItem.setOrderItem( thisOrderItem );
+						orderDeliveryItem.setQuantity( thisOrderItem.getQuantityUndelivered() );
+						orderDeliveryItem.setStock( getStockService().getStockBySkuAndLocation(sku=orderDeliveryItem.getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
+						orderDeliveryItem.setOrderDelivery( arguments.orderDelivery );	
+					}
+					
+				}
+			} else {
+				// Loop over delivery items from processObject and add them with stock to the orderDelivery
+				for(var i=1; i<=arrayLen(arguments.processObject.getOrderDeliveryItems()); i++) {
+					
+					// Create a new orderDeliveryItem
+					var orderDeliveryItem = this.newOrderDeliveryItem();
+					
+					// Populate with the data
+					orderDeliveryItem.populate( arguments.processObject.getOrderDeliveryItems()[i] );
+					orderDeliveryItem.setStock( getStockService().getStockBySkuAndLocation(sku=orderDeliveryItem.getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
+					orderDeliveryItem.setOrderDelivery( arguments.orderDelivery );
+				}	
+			}
+			
+			// Loop over the orderDeliveryItems to setup subscriptions and contentAccess
+			for(var di=1; di<=arrayLen(arguments.orderDelivery.getOrderDeliveryItems()); di++) {
 				
-				// Populate with the data
-				orderDeliveryItem.populate( arguments.processObject.getOrderDeliveryItems()[i] );
-				orderDeliveryItem.setStock( getStockService().getStockBySkuAndLocation(sku=orderDeliveryItem.getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
-				orderDeliveryItem.setOrderDelivery( arguments.orderDelivery );
+				var orderDeliveryItem = arguments.orderDelivery.getOrderDeliveryItems()[di];
+				
+				// setup subscription data if this was subscriptionOrder item
+				getSubscriptionService().setupSubscriptionOrderItem( orderDeliveryItem.getOrderItem() );
+	
+				// setup content access if this was content purchase
+				getAccessService().setupOrderItemContentAccess( orderDeliveryItem.getOrderItem() );			
 			}
 			
 			// Save the orderDelivery

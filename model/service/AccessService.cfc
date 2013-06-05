@@ -38,6 +38,7 @@ Notes:
 */
 component extends="HibachiService" persistent="false" accessors="true" output="false" {
 
+	property name="accountService" type="any";
 	property name="contentService" type="any";
 	property name="subscriptionService" type="any";
 
@@ -153,6 +154,22 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// persist the content access log, needed in case file download aborts the request 
 		getHibachiDAO().flushORMSession();
 	}
+	
+	
+	public void function setupOrderItemContentAccess( required any orderItem ) {
+		
+		for(var accessContent in arguments.orderItem.getSku().getAccessContents()) {
+			
+			var accountContentAccess = getAccountService().newAccountContentAccess();
+			accountContentAccess.setAccount(arguments.orderItem.getOrder().getAccount());
+			accountContentAccess.setOrderItem(arguments.orderItem);
+			accountContentAccess.addAccessContent(accessContent);
+			getAccountService().saveAccountContentAccess(accountContentAccess);
+			
+		}
+		
+	}
+	
 	
 	// ===================== START: Logical Methods ===========================
 	

@@ -43,7 +43,7 @@ Notes:
 <cfset rc.processObject.setOrderFulfillment( rc.orderFulfillment ) />
 
 <cfoutput>
-	<cf_HibachiEntityProcessForm entity="#rc.orderDelivery#" edit="#rc.edit#" processActionQueryString="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" sRedirectAction="admin:entity.detailorderfulfillment" fRenderItem="preprocessorderdelivery">
+	<cf_HibachiEntityProcessForm entity="#rc.orderDelivery#" edit="#rc.edit#" processActionQueryString="orderFulfillmentID=#rc.processObject.getOrderFulfillment().getOrderFulfillmentID()#" sRedirectAction="admin:entity.detailorderfulfillment" fRenderItem="preprocessorderdelivery">
 		
 		<cf_HibachiEntityActionBar type="preprocess" object="#rc.orderDelivery#">
 		</cf_HibachiEntityActionBar>
@@ -54,16 +54,15 @@ Notes:
 				<input type="hidden" name="order.orderID" value="#rc.processObject.getOrder().getOrderID()#" />
 				<input type="hidden" name="orderFulfillment.orderFulfillmentID" value="#rc.processObject.getOrderFulfillment().getOrderFulfillmentID()#" />
 				<input type="hidden" name="location.locationID" value="#rc.processObject.getLocation().getLocationID()#" />
-				<input type="hidden" name="fulfillmentMethod.fulfillmentMethodID" value="#rc.processObject.getFulfillmentMethod().getFulfillmentMethodID()#" />
 				
 				<!--- Shipping - Hidden Fields --->
-				<cfif rc.processObject.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
+				<cfif rc.processObject.getOrderFulfillment().getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
 					<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.processObject.getShippingMethod().getShippingMethodID()#" />
 					<input type="hidden" name="shippingAddress.addressID" value="#rc.processObject.getShippingAddress().getAddressID()#" />
 				</cfif>
 				
 				<!--- Shipping - Inputs --->
-				<cfif rc.processObject.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
+				<cfif rc.processObject.getOrderFulfillment().getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
 					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="trackingNumber" edit="true" />
 				</cfif>
 				
