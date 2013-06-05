@@ -67,10 +67,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getContentDAO().getCategoriesByCmsCategoryIDs(arguments.cmsCategoryIDs);
 	}
 	
-	public any function getCmsCategoriesByCmsContentID(required any cmsContentID) {
-		return getContentDAO().getCmsCategoriesByCmsContentID(arguments.cmsContentID);
-	}
-	
 	// ===================== START: Logical Methods ===========================
 	
 	// =====================  END: Logical Methods ============================

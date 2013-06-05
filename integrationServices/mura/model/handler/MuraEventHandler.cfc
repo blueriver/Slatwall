@@ -179,35 +179,43 @@
 				$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
 			}
 			
+			var accessToContentDetails = $.slatwall.getService("accessService").getAccessToContentDetails( $.slatwall.getAccount(), $.slatwall.getContent() );
+			
+			// Pass all of the accessDetails into the slatwallScope to be used by templates
+			$.slatwall.setValue('accessToContentDetails', accessToContentDetails);
+			
+			// DEPRECATED (pass in these additional values to slatwallScope so that legacy templates work)
+			$.slatwall.setValue("purchasedAccess", accessToContentDetails.purchasedAccessFlag);
+			$.slatwall.setValue("subscriptionAccess", accessToContentDetails.subscribedAccessFlag);
+			
 			// If the user does not have access to this page, then we need to modify the request
-			if( !$.slatwall.getService("accessService").hasAccess( $.slatwall.getContent() ) ){
+			if( !accessToContentDetails.accessFlag ){
 				
-				/*
-				// save the current content to be used on the barrier page
-				$.event("restrictedContent",$.content());
+				// DEPRECATED (save the current content to be used on the barrier page)
+				$.event("restrictedContentBody", $.content('body'));
+				// DEPRECATED (set slatwallContent in rc to be used on the barrier page)
+				$.event("slatwallContent", $.slatwall.getContent());
 				
-				// save the current content to be used on the barrier page
-				$.event("restrictedContentBody",$.content('body'));
 				
-				// Set the content of the current content to noAccess
-				$.content('body', $.slatwall.doAction('frontend:account.noaccess'));
+				// save the restriced Slatwall content in the slatwallScope to be used on the barrier page
+				$.slatwall.setValue('restrictedContent', $.slatwall.getContent());
 				
-				// get the slatwall content
-				var slatwallContent = $.slatwall.getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));
-				
-				// set slatwallContent in rc to be used on the barrier page
-				$.event("slatwallContent",slatwallContent);
+				// save the restriced Mura content in the muraScope to be used on the barrier page
+				$.event("restrictedContent", $.content());
 				
 				// get the barrier page template
-				var restrictedContentTemplate = $.slatwall.getService("contentService").getContent(slatwallContent.getSettingDetails('contentRestrictedContentDisplayTemplate').settingvalue);
+				var barrierPage = $.slatwall.getService("contentService").getContent( $.slatwall.getContent().setting('contentRestrictedContentDisplayTemplate'), true );
 				
-				// set the content to the barrier page template
-				if(!isNull(restrictedContentTemplate)) {
-					$.event('contentBean', $.getBean("content").loadBy(contentID=restrictedContentTemplate.getCMSContentID()));
+				// Update the slatwall content to use the barrier page
+				$.slatwall.setContent( barrierPage );
+				
+				// Update the mura content to use the barrier page or 404
+				if(!isNull(barrierPage.getCMSContentID()) && len(barrierPage.getCMSContentID())) {
+					$.event('contentBean', $.getBean("content").loadBy( contentID=barrierPage.getCMSContentID() ) );
+				} else {
+					$.event('contentBean', $.getBean("content") );
 				}
-				*/
 			}
-			
 		}
 		
 		public void function onRenderEnd( required any $ ) {

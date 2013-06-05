@@ -73,7 +73,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 
 	// Related Object Properties (many-to-many - inverse)
 	property name="promotionCodes" hb_populateEnabled="false" singularname="promotionCode" cfc="PromotionCode" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionCodeAccount" fkcolumn="accountID" inversejoincolumn="promotionCodeID" inverse="true";
-
+	
 	// Remote properties
 	property name="remoteID" hb_populateEnabled="false" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteEmployeeID" hb_populateEnabled="false" ormtype="string" hint="Only used when integrated with a remote system";
@@ -87,6 +87,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
+	property name="activeSubscriptionUsageBenefitsSmartList" persistent="false";
 	property name="address" persistent="false";
 	property name="adminIcon" persistent="false";
 	property name="adminAccountFlag" persistent="false" hb_formatType="yesno";
@@ -106,6 +107,15 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getActiveSubscriptionUsageBenefitsSmartList() {
+		if(!structKeyExists(variables, "activeSubscriptionUsageBenefitsSmartList")) {
+			variables.activeSubscriptionUsageBenefitsSmartList = getService("subscriptionService").getSubscriptionUsageBenefitSmartList();
+			variables.activeSubscriptionUsageBenefitsSmartList.addRange('subscriptionUsageBenefitAccounts.endDateTime', '#now()#^');
+			variables.activeSubscriptionUsageBenefitsSmartList.addFilter('subscriptionUsageBenefitAccounts.account.accountID', getAccountID());
+		}
+		return variables.activeSubscriptionUsageBenefitsSmartList;
+	}
 	
 	public any function getAddress() {
 		return getPrimaryAddress().getAddress();
