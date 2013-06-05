@@ -62,7 +62,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// Check the content's setting to determine if access is restriced
 		if( !content.setting('contentRestrictAccessFlag') ) {
-			accessDetails.access = true;
+			accessDetails.accessFlag = true;
 			accessDetails.nonRestrictedFlag = true;
 			return accessDetails;
 		}
@@ -78,6 +78,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// If any purchase records come back, then we can set purchasedAccess to true
 		if(arrayLen(accountContentAccessSmartList.getRecords())) {
 			
+			accessDetails.accessFlag = true;
 			accessDetails.purchasedAccessFlag = true;
 			
 			// If the content node does not 'requireSubscription' then we can return true and log it
@@ -99,6 +100,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			activeAccountBenefitsViaContentSmartList.addInFilter('contents.contentID', arguments.content.getContentIDPath());
 			
 			if(arrayLen(activeAccountBenefitsViaContentSmartList.getRecords())) {
+				
+				accessDetails.accessFlag = true;
 				accessDetails.subscribedAccessFlag = true;
 				accessDetails.subscribedByContentFlag = true;
 				
@@ -113,6 +116,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				activeAccountBenefitsViaCategorySmartList.addInFilter('categories.categoryID', arguments.content.getAllCategoryIDPaths());
 				
 				if(arrayLen(activeAccountBenefitsViaCategorySmartList.getRecords())) {
+					
+					accessDetails.accessFlag = true;
 					accessDetails.subscribedAccessFlag = true;
 					accessDetails.subscribedByCategoryFlag = true;
 					
