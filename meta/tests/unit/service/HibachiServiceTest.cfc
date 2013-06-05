@@ -41,7 +41,7 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	public void function setUp() {
 		super.setup();
 		
-		variables.service = request.slatwallScope.getService("utilityORMService");
+		variables.service = request.slatwallScope.getService("hibachiService");
 	}
 	
 	// getProperlyCasedShortEntityName()
@@ -74,7 +74,10 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 		assertFalse(variables.service.getHasPropertyByEntityNameAndPropertyIdentifier("SlatwallSku", "product.brand.notRealProperty"));
 	}
 	
-	public void function getHasPropertyByEntityNameAndPropertyIdentifier_returns_false_when_entity_chain_is_invalid() {
+	/**
+	* @mxunit:expectedException Application
+	*/
+	public void function getHasPropertyByEntityNameAndPropertyIdentifier_returns_exception_when_entity_chain_is_invalid() {
 		assertFalse(variables.service.getHasPropertyByEntityNameAndPropertyIdentifier("SlatwallSku", "product.brokenChain.notRealProperty"));
 	}
 }
