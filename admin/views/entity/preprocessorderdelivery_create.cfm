@@ -56,13 +56,20 @@ Notes:
 				<input type="hidden" name="orderFulfillment.orderFulfillmentID" value="#rc.processObject.getOrderFulfillment().getOrderFulfillmentID()#" />
 				<input type="hidden" name="location.locationID" value="#rc.processObject.getLocation().getLocationID()#" />
 				<input type="hidden" name="fulfillmentMethod.fulfillmentMethodID" value="#rc.processObject.getFulfillmentMethod().getFulfillmentMethodID()#" />
-				<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.processObject.getShippingMethod().getShippingMethodID()#" />
-				<input type="hidden" name="shippingAddress.addressID" value="#rc.processObject.getShippingAddress().getAddressID()#" />
 				
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="trackingNumber" edit="true" />
+				<!--- Shipping - Hidden Fields --->
+				<cfif rc.processObject.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
+					<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.processObject.getShippingMethod().getShippingMethodID()#" />
+					<input type="hidden" name="shippingAddress.addressID" value="#rc.processObject.getShippingAddress().getAddressID()#" />
+				</cfif>
+				
+				<!--- Shipping - Inputs --->
+				<cfif rc.processObject.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
+					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="trackingNumber" edit="true" />
+				</cfif>
+				
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="captureAuthorizedPaymentsFlag" edit="true" />
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="capturableAmount" edit="false" />
-				<!---<cf_HibachiPropertyDisplay object="#rc.orderDelivery#" property="trackingNumber" edit="true" fieldName="trackingNumber" />--->
 				
 				<hr />
 				

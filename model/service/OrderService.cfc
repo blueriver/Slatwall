@@ -1134,7 +1134,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						transactionData.amount = orderPayment.getAmountUnreceived();
 					}
 					
-					orderPayment = processOrderPayment(orderPayment, transactionData, 'createTransaction');
+					orderPayment = this.processOrderPayment(orderPayment, transactionData, 'createTransaction');
 					
 					if(!orderPayment.hasErrors()) {
 						amountToBeCaptured = precisionEvaluate(amountToBeCaptured - transactionData.amount);
