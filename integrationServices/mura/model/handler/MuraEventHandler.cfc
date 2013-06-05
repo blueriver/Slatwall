@@ -179,8 +179,35 @@
 				$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
 			}
 			
-			// check if user has access to this page
-			checkAccess( $=$ );
+			// If the user does not have access to this page, then we need to modify the request
+			if( !$.slatwall.getService("accessService").hasAccess( $.slatwall.getContent() ) ){
+				
+				/*
+				// save the current content to be used on the barrier page
+				$.event("restrictedContent",$.content());
+				
+				// save the current content to be used on the barrier page
+				$.event("restrictedContentBody",$.content('body'));
+				
+				// Set the content of the current content to noAccess
+				$.content('body', $.slatwall.doAction('frontend:account.noaccess'));
+				
+				// get the slatwall content
+				var slatwallContent = $.slatwall.getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));
+				
+				// set slatwallContent in rc to be used on the barrier page
+				$.event("slatwallContent",slatwallContent);
+				
+				// get the barrier page template
+				var restrictedContentTemplate = $.slatwall.getService("contentService").getContent(slatwallContent.getSettingDetails('contentRestrictedContentDisplayTemplate').settingvalue);
+				
+				// set the content to the barrier page template
+				if(!isNull(restrictedContentTemplate)) {
+					$.event('contentBean', $.getBean("content").loadBy(contentID=restrictedContentTemplate.getCMSContentID()));
+				}
+				*/
+			}
+			
 		}
 		
 		public void function onRenderEnd( required any $ ) {
@@ -450,35 +477,6 @@
 				
 				// Logout Slatwall Account
 				$.slatwall.getService("hibachiSessionService").logoutAccount();
-			}
-		}
-		
-		// Helper method to do our access check
-		private void function checkAccess( required any $ ) {
-			if(!$.slatwall.getService("accessService").hasAccess($.content('contentID'), $.content('siteID'))){
-				
-				// save the current content to be used on the barrier page
-				$.event("restrictedContent",$.content());
-				
-				// save the current content to be used on the barrier page
-				$.event("restrictedContentBody",$.content('body'));
-				
-				// Set the content of the current content to noAccess
-				$.content('body', $.slatwall.doAction('frontend:account.noaccess'));
-				
-				// get the slatwall content
-				var slatwallContent = $.slatwall.getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));
-				
-				// set slatwallContent in rc to be used on the barrier page
-				$.event("slatwallContent",slatwallContent);
-				
-				// get the barrier page template
-				var restrictedContentTemplate = $.slatwall.getService("contentService").getContent(slatwallContent.getSettingDetails('contentRestrictedContentDisplayTemplate').settingvalue);
-				
-				// set the content to the barrier page template
-				if(!isNull(restrictedContentTemplate)) {
-					$.event('contentBean', $.getBean("content").loadBy(contentID=restrictedContentTemplate.getCMSContentID()));
-				}
 			}
 		}
 		
