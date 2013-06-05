@@ -107,6 +107,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// If the product was need, then set the necessary values
 		if(product.isNew()) {
+			product.setPublishedFlag( 1 );
 			product.setProductType( productType );
 			product.setProductName( arguments.content.getTitle() );
 			product.setProductCode( arguments.processObject.getProductCode() );
