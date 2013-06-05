@@ -39,9 +39,12 @@ Notes:
 component extends="SlatwallUnitTestBase" {
 
 	public void function issue_1331() {
+		
 		var product = request.slatwallScope.getService("productService").newProduct();
-		product.setProductType( request.slatwallScope.getService("productService").getProductType('444df2f9c7deaa1582e021e894c0e299') );
-		assertFalse(product.isProcessable('addOptionGroup'));
+		
+		product.setProductType( request.slatwallScope.getService("productService").getProductType('444df313ec53a08c32d8ae434af5819a') );
+		
+		assertFalse( product.isProcessable('addOptionGroup') );
 	}
 }
 
