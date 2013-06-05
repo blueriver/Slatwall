@@ -40,7 +40,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 	property name="orderDAO";
 	
-	property name="accessService";
 	property name="accountService";
 	property name="addressService";
 	property name="commentService";
@@ -1209,13 +1208,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Loop over the orderDeliveryItems to setup subscriptions and contentAccess
 			for(var di=1; di<=arrayLen(arguments.orderDelivery.getOrderDeliveryItems()); di++) {
 				
-				var orderDeliveryItem = arguments.orderDelivery.getOrderDeliveryItems()[di];
+				var orderDeliveryItem = arguments.orderDelivery.getOrderDeliveryItems()[di].getOrderItem();
 				
-				// setup subscription data if this was subscriptionOrder item
-				getSubscriptionService().setupSubscriptionOrderItem( orderDeliveryItem.getOrderItem() );
-	
-				// setup content access if this was content purchase
-				getAccessService().setupOrderItemContentAccess( orderDeliveryItem.getOrderItem() );			
+				// If the sku has a subscriptionTerm, then we can process the item to setupSubscription
+				if(!isNull(orderDeliveryItem.getOrderItem().getSku().getSubscriptionTerm())) {
+					orderDeliveryItem = this.processOrderDeliveryItem(orderDeliveryItem, {}, 'setupSubscription');
+				}
+				
+				// If there are accessContents associated with this sku, then we can setupContentAccess
+				if(arrayLen(orderDeliveryItem.getOrderItem().getSku().getAccessContents())) {
+					orderDeliveryItem = this.processOrderDeliveryItem(orderDeliveryItem, {}, 'setupContentAccess');
+				}
+
 			}
 			
 			// Save the orderDelivery
@@ -1232,6 +1236,56 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		updateOrderStatus( arguments.orderDelivery.getOrder() );
 		
 		return arguments.orderDelivery;
+	}
+	
+	// Process: Order Delivery Item
+	public any function processOrderDeliveryItem_setupSubscription(required any orderDeliveryItem) {
+		
+		// check if orderItem is assigned to a subscriptionOrderItem
+		var subscriptionOrderItem = getSubscriptionService().getSubscriptionOrderItem({orderItem=arguments.orderDeliveryItem.getOrderItem()});
+		
+		// If we couldn't fine the subscriptionOrderItem, then setup a new one
+		if(isNull(subscriptionOrderItem)) {
+			
+			// new orderItem, setup subscription
+			getSubscriptionService().setupInitialSubscriptionOrderItem( arguments.orderDeliveryItem.getOrderItem() );
+			
+		} else {
+			
+			// orderItem already exists in subscription, just setup access and expiration date
+			if(isNull(subscriptionOrderItem.getSubscriptionUsage().getExpirationDate())) {
+				var startDate = now();
+			} else {
+				var startDate = subscriptionOrderItem.getSubscriptionUsage().getExpirationDate();
+			}
+			
+			subscriptionOrderItem.getSubscriptionUsage().setExpirationDate( subscriptionOrderItem.getSubscriptionUsage().getRenewalTerm().getEndDate(startDate) );
+			
+			getSubscriptionService().updateSubscriptionUsageStatus( subscriptionOrderItem.getSubscriptionUsage() );
+			
+			// set renewal benefit if needed
+			getSubscriptionService().setupRenewalSubscriptionBenefitAccess( subscriptionOrderItem.getSubscriptionUsage() );
+		}
+		
+		return arguments.orderDeliveryItem;
+	}
+	
+	public any function processOrderDeliveryItem_setupContentAccess(required any orderDeliveryItem) {
+		
+		for(var accessContent in arguments.orderDeliveryItem.getOrderItem().getSku().getAccessContents()) {
+			
+			// Setup the new accountContentAccess
+			var accountContentAccess = getAccountService().newAccountContentAccess();
+			accountContentAccess.setAccount( arguments.orderDeliveryItem.getOrderItem().getOrder().getAccount() );
+			accountContentAccess.setOrderItem( arguments.orderDeliveryItem.getOrderItem() );
+			accountContentAccess.addAccessContent( accessContent );
+			
+			// Place new accessContent into hibernate session
+			accountContentAccess = getAccountService().saveAccountContentAccess( accountContentAccess );
+			
+		}
+		
+		return arguments.orderDeliveryItem;
 	}
 	
 	// Process: Order Fulfillment

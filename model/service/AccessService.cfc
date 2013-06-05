@@ -155,22 +155,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		getHibachiDAO().flushORMSession();
 	}
 	
-	
-	public void function setupOrderItemContentAccess( required any orderItem ) {
-		
-		for(var accessContent in arguments.orderItem.getSku().getAccessContents()) {
-			
-			var accountContentAccess = getAccountService().newAccountContentAccess();
-			accountContentAccess.setAccount(arguments.orderItem.getOrder().getAccount());
-			accountContentAccess.setOrderItem(arguments.orderItem);
-			accountContentAccess.addAccessContent(accessContent);
-			getAccountService().saveAccountContentAccess(accountContentAccess);
-			
-		}
-		
-	}
-	
-	
 	// ===================== START: Logical Methods ===========================
 	
 	// =====================  END: Logical Methods ============================
