@@ -1126,7 +1126,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				
 				if(orderPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard" && orderPayment.getAmountUnreceived() gt 0 && amountToBeCaptured gt 0) {
 					var transactionData = {
-						transactionType = 'capturePreAuthorization',
+						transactionType = 'chargePreAuthorization',
 						amount = amountToBeCaptured
 					};
 					
@@ -1155,13 +1155,19 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// Setup the tracking number
 			if(!isNull(arguments.processObject.getTrackingNumber()) && len(arguments.processObject.getTrackingNumber())) {
-				argumnets.orderDelivery.setTrackingNumber(arguments.processObject.getTrackingNumber());
+				arguments.orderDelivery.setTrackingNumber(arguments.processObject.getTrackingNumber());
 			}
 			
 			// Loop over delivery items from processObject and add them with stock to the orderDelivery
 			for(var i=1; i<=arrayLen(arguments.processObject.getOrderDeliveryItems()); i++) {
-				arguments.processObject.getOrderDeliveryItems()[i].setStock( getStockService().getStockBySkuAndLocation(sku=arguments.processObject.getOrderDeliveryItems()[i].getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
-				arguments.processObject.getOrderDeliveryItems()[i].setOrderDelivery( arguments.orderDelivery );
+				
+				// Create a new orderDeliveryItem
+				var orderDeliveryItem = this.newOrderDeliveryItem();
+				
+				// Populate with the data
+				orderDeliveryItem.populate( arguments.processObject.getOrderDeliveryItems()[i] );
+				orderDeliveryItem.setStock( getStockService().getStockBySkuAndLocation(sku=orderDeliveryItem.getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
+				orderDeliveryItem.setOrderDelivery( arguments.orderDelivery );
 			}
 			
 			// Save the orderDelivery
@@ -1173,6 +1179,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		} else {
 			arguments.processObject.addError('capturableAmount', rbKey('validate.processOrderDelivery_create.captureAmount'));
 		}
+		
+		// Call the update order status incase this needs to be changed to closed.
+		updateOrderStatus( arguments.orderDelivery.getOrder() );
 		
 		return arguments.orderDelivery;
 	}

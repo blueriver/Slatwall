@@ -168,24 +168,29 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			// Check to see if this property has a key in the data that was passed in
 			if( structKeyExists(arguments.data, currentProperty.name) ) {
 			
-			
+				// ( COLUMN )
 				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && !structKeyExists(currentProperty, "hb_fileUpload") ) {
 					
-						// If the value is blank, then we check to see if the property can be set to NULL.
-						if( trim(arguments.data[ currentProperty.name ]) == "" && ( !structKeyExists(currentProperty, "notNull") || !currentProperty.notNull ) ) {
-							_setProperty(currentProperty.name);
+					// If the value is blank, then we check to see if the property can be set to NULL.
+					if( trim(arguments.data[ currentProperty.name ]) == "" && ( !structKeyExists(currentProperty, "notNull") || !currentProperty.notNull ) ) {
+						_setProperty(currentProperty.name);
+					
+					// If the value isn't blank, or we can't set to null... then we just set the value.
+					} else {
 						
-						// If the value isn't blank, or we can't set to null... then we just set the value.
-						} else {
-							
-							_setProperty(currentProperty.name, trim(arguments.data[ currentProperty.name ]));
-							
-							// if this property has a sessionDefault defined for it, then we should update that value with what was used
-							if(structKeyExists(currentProperty, "hb_sessionDefault")) {
-								setPropertySessionDefault(currentProperty.name, trim(arguments.data[ currentProperty.name ]));
-							}
+						_setProperty(currentProperty.name, trim(arguments.data[ currentProperty.name ]));
+						
+						// if this property has a sessionDefault defined for it, then we should update that value with what was used
+						if(structKeyExists(currentProperty, "hb_sessionDefault")) {
+							setPropertySessionDefault(currentProperty.name, trim(arguments.data[ currentProperty.name ]));
 						}
-						
+					}
+				
+				// ( POPULATE-ARRAY )
+				} else if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && structKeyExists(currentProperty, "hb_populateArray") && currentProperty.hb_populateArray && isArray( arguments.data[ currentProperty.name ] ) ) {
+					
+					_setProperty(currentProperty.name, arguments.data[ currentProperty.name ] );
+				
 				// (MANY-TO-ONE) Do this logic if this property is a many-to-one relationship, and the data passed in is of type struct
 				} else if( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "many-to-one" && isStruct( arguments.data[ currentProperty.name ] ) ) {
 					

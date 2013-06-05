@@ -41,7 +41,6 @@ Notes:
 <cfparam name="rc.processObject" type="any" />
 
 <cfset rc.processObject.setOrderFulfillment( rc.orderFulfillment ) />
-<cfset $.slatwall.setORMHasErrors( true ) />
 
 <cfoutput>
 	<cf_HibachiEntityProcessForm entity="#rc.orderDelivery#" edit="#rc.edit#" processActionQueryString="orderFulfillmentID=#rc.orderFulfillment.getOrderFulfillmentID()#" sRedirectAction="admin:entity.detailorderfulfillment" fRenderItem="preprocessorderdelivery">
@@ -68,8 +67,10 @@ Notes:
 					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="trackingNumber" edit="true" />
 				</cfif>
 				
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="captureAuthorizedPaymentsFlag" edit="true" />
-				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="capturableAmount" edit="false" />
+				<cfif rc.processObject.getCapturableAmount() gt 0>
+					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="captureAuthorizedPaymentsFlag" edit="true" />
+					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="capturableAmount" edit="false" />
+				</cfif>
 				
 				<hr />
 				
@@ -82,25 +83,26 @@ Notes:
 						<th>Quantity</th>
 					</tr>
 					<cfset orderItemIndex = 0 />
-					<cfloop array="#rc.processObject.getOrderDeliveryItems()#" index="orderDeliveryItem">
+					<cfloop array="#rc.processObject.getOrderDeliveryItems()#" index="recordData">
 						<tr>
 							
 							<cfset orderItemIndex++ />
 							
-							<td>#orderDeliveryItem.getOrderItem().getSku().getSkuCode()#</td>
-							<td>#orderDeliveryItem.getOrderItem().getSku().getProduct().getTitle()#</td>
-							<td>#orderDeliveryItem.getOrderItem().getSku().displayOptions()#</td>
-							<cfset thisQuantity = orderDeliveryItem.getQuantity() />
-							<cfif thisQuantity gt orderDeliveryItem.getOrderItem().getQuantityUndelivered()>
-								<cfset thisQuantity = orderDeliveryItem.getOrderItem().getQuantityUndelivered() />
-								<td style="color:##cc0000;">Updated from #orderDeliveryItem.getQuantity()# to Max: #thisQuantity#</td>	
+							<cfset orderItem = $.slatwall.getService("orderService").getOrderItem( recordData.orderItem.orderItemID ) />
+							
+							<td>#orderItem.getSku().getSkuCode()#</td>
+							<td>#orderItem.getSku().getProduct().getTitle()#</td>
+							<td>#orderItem.getSku().displayOptions()#</td>
+							<cfset thisQuantity = recordData.quantity />
+							<cfif thisQuantity gt orderItem.getQuantityUndelivered()>
+								<cfset thisQuantity = orderItem.getQuantityUndelivered() />
+								<td style="color:##cc0000;">Updated from #recordData.quantity# to Max: #thisQuantity#</td>	
 							<cfelse>
 								<td></td>
 							</cfif>
 							<td>#thisQuantity#</td>
 							
-							<input type="hidden" name="orderDeliveryItems[#orderItemIndex#].orderDeliveryItemID" value="" />
-							<input type="hidden" name="orderDeliveryItems[#orderItemIndex#].orderItem.orderItemID" value="#orderDeliveryItem.getOrderItem().getOrderItemID()#" />
+							<input type="hidden" name="orderDeliveryItems[#orderItemIndex#].orderItem.orderItemID" value="#recordData.orderItem.orderItemID#" />
 							<input type="hidden" name="orderDeliveryItems[#orderItemIndex#].quantity" value="#thisQuantity#" />
 						</tr>
 					</cfloop>

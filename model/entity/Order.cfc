@@ -60,7 +60,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" fkcolumn="orderID"  cascade="all-delete-orphan" inverse="true";
+	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" fkcolumn="orderID" cascade="delete-orphan" inverse="true";
 	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderReturns" singularname="orderReturn" cfc="OrderReturn" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
@@ -85,6 +85,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="addOrderItemSkuOptionsSmartList" persistent="false";
 	property name="addOrderItemStockOptionsSmartList" persistent="false";
 	property name="addPaymentRequirementDetails" persistent="false";
+	property name="deliveredItemsAmountTotal" persistent="false";
 	property name="discountTotal" persistent="false" hb_formatType="currency";
 	property name="eligiblePaymentMethodDetails" persistent="false";
 	property name="itemDiscountAmountTotal" persistent="false" hb_formatType="currency";
@@ -253,6 +254,30 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.addOrderItemStockOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'brand');
 		}
 		return variables.addOrderItemStockOptionsSmartList;
+	}
+	
+	public numeric function getDeliveredItemsAmountTotal() {
+		if(!structKeyExists(variables, "deliveredItemsAmountTotal")) {
+			
+			variables.deliveredItemsAmountTotal = 0;
+			var fulfillmentChargeAddedList = "";
+			
+			for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+				
+				if(getOrderItems()[i].getQuantityDelivered()) {
+					
+					variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + ((getOrderItems()[i].getQuantityDelivered() / thisQuantity) * getOrderItems()[i].getExtendedPriceAfterDiscount()));
+					
+					if(!listFindNoCase(fulfillmentChargeAddedList, getOrderItems()[i].getOrderFulfillment().getOrderFulfillmentID())) {
+						
+						listAppend(fulfillmentChargeAddedList, getOrderItems()[i].getOrderFulfillment().getOrderFulfillmentID());
+						
+						variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + getOrderItems()[i].getOrderFulfillment().getChargeAfterDiscount());
+					}
+				}
+			}
+		}
+		return variables.deliveredItemsAmountTotal;
 	}
 	
 	public numeric function getDiscountTotal() {

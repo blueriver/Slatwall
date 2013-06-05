@@ -76,7 +76,6 @@ Notes:
 						<tr>
 							<cfset orderItemIndex++ />
 							
-							<input type="hidden" name="orderDeliveryItems[#orderItemIndex#].orderDeliveryItemID" value="" />
 							<input type="hidden" name="orderDeliveryItems[#orderItemIndex#].orderItem.orderItemID" value="#orderItem.getOrderItemID()#" />
 							
 							<td>#orderItem.getSku().getSkuCode()#</td>
