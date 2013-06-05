@@ -38,6 +38,26 @@ Notes:
 */
 component extends="SlatwallUnitTestBase" {
 
+	public void function issue_1097() {
+		
+		var product = entityNew("SlatwallProduct");
+		
+		productData = {
+			productName = "My Product",
+			productType = {
+				productTypeID = "444df2f7ea9c87e60051f3cd87b435a1"
+			}
+		};
+		
+		product.populate( productData );
+		
+		entitySave( product );
+		
+		ormFlush();
+		
+		entityDelete( product );
+	}
+
 	public void function issue_1331() {
 		
 		var product = request.slatwallScope.getService("productService").newProduct();
