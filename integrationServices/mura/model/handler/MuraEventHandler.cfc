@@ -93,6 +93,12 @@
 						}
 						arrayPrepend(crumbDataArray, $.slatwall.getProduct().getCrumbData(path=$.event('path'), siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
 						$.event('crumbdata', crumbDataArray);
+						
+					// If the template couldn't be found then we throw a custom exception
+					} else {
+						
+						throw("Slatwall has attempted to display a product on your website, however the 'Product Display Template' setting is either blank or invalid.  Please navigate to the Slatwall admin and make sure that there is a valid 'Product Display Template' assigned.");
+						
 					}
 					
 				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getProductType().isNew() && $.slatwall.getProductType().getActiveFlag() ) {
@@ -112,6 +118,11 @@
 						// Change Title & HTMLTitle of page
 						$.content().setTitle( $.slatwall.getProductType().getProductTypeName() );
 						$.content().setHTMLTitle( $.slatwall.getProductType().getProductTypeName() );
+						
+					} else {
+						
+						throw("Slatwall has attempted to display a 'Product Type' on your website, however the 'Product Type Display Template' setting is either blank or invalid.  Please navigate to the Slatwall admin and make sure that there is a valid 'Product Type Display Template' assigned.");
+						
 					}
 					
 				} else if ( brandKeyLocation && !$.slatwall.getBrand().isNew() && $.slatwall.getBrand().getActiveFlag()  ) {
@@ -131,6 +142,11 @@
 						// Change Title & HTMLTitle of page
 						$.content().setTitle( $.slatwall.getBrand().getBrandName() );
 						$.content().setHTMLTitle( $.slatwall.getBrand().getBrandName() );
+						
+					} else {
+						
+						throw("Slatwall has attempted to display a 'Brand' on your website, however the 'Brand Display Template' setting is either blank or invalid.  Please navigate to the Slatwall admin and make sure that there is a valid 'Brand Display Template' assigned.");
+						
 					}
 
 				}
