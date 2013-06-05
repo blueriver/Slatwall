@@ -489,82 +489,92 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Last if we can't use an existing one, then we need to create a new one
 			if(isNull(orderFulfillment) || orderFulfillment.getOrder().getOrderID() != arguments.order.getOrderID()) {
 				
-				// Setup a new order fulfillment
-				var orderFulfillment = this.newOrderFulfillment();
-				
 				// get the correct fulfillment method for this new order fulfillment
 				if(len(arguments.processObject.getFulfillmentMethodID())) {
 					var fulfillmentMethod = getFulfillmentService().getFulfillmentMethod( arguments.processObject.getFulfillmentMethodID() );
 				}
 				
 				// If the fulfillmentMethod is still null because the above didn't execute, then we can pull it in from the first ID in the sku settings
-				if(isNull(fulfillmentMethod)) {
+				if(isNull(fulfillmentMethod) && listLen(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods'))) {
 					var fulfillmentMethod = getFulfillmentService().getFulfillmentMethod( listFirst(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods')) );
 				}
 				
-				orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
-				orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() );
-				orderFulfillment.setOrder( arguments.order );
-				
-				// Populate the shipping address info
-				if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
+				if(!isNull(fulfillmentMethod)) {
+					// Setup a new order fulfillment
+					var orderFulfillment = this.newOrderFulfillment();
 					
-					// Check for an accountAddress
-					if(len(arguments.processObject.getShippingAccountAddressID()) && arguments.processObject.getShippingAccountAddressID() neq "new") {
-						
-						// Find the correct account address, and set it in the order fulfillment
-						var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );
-						orderFulfillment.setAccountAddress( accountAddress );
+					orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
+					orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() );
+					orderFulfillment.setOrder( arguments.order );
 					
-					// Otherwise try to setup a new shipping address
-					} else {
+					// Populate the shipping address info
+					if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
 						
-						// Check to see if the new shipping address passes full validation.
-						fullAddressErrors = getHibachiValidationService().validate( arguments.processObject.getShippingAddress(), 'full', false );
-						
-						if(!fullAddressErrors.hasErrors()) {
-							// First we need to persist the address from the processObject
-							getAddressService().saveAddress( arguments.processObject.getShippingAddress() );
+						// Check for an accountAddress
+						if(len(arguments.processObject.getShippingAccountAddressID()) && arguments.processObject.getShippingAccountAddressID() neq "new") {
 							
-							// If we are supposed to save the new address, then we can do that here
-							if(arguments.processObject.getSaveShippingAccountAddressFlag() && !isNull(arguments.order.getAccount()) ) {
+							// Find the correct account address, and set it in the order fulfillment
+							var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );
+							orderFulfillment.setAccountAddress( accountAddress );
+						
+						// Otherwise try to setup a new shipping address
+						} else {
+							
+							// Check to see if the new shipping address passes full validation.
+							fullAddressErrors = getHibachiValidationService().validate( arguments.processObject.getShippingAddress(), 'full', false );
+							
+							if(!fullAddressErrors.hasErrors()) {
+								// First we need to persist the address from the processObject
+								getAddressService().saveAddress( arguments.processObject.getShippingAddress() );
 								
-								var newAccountAddress = getAccountService().newAccountAddress();
-								newAccountAddress.setAccount( arguments.order.getAccount() );
-								newAccountAddress.setAccountAddressName( arguments.processObject.getSaveShippingAccountAddressName() );
-								newAccountAddress.setAddress( arguments.processObject.getShippingAddress() );
-								orderFulfillment.setAccountAddress( newAccountAddress );
-								
-							// Otherwise just set then new address in the order fulfillment
-							} else {
-								
-								orderFulfillment.setShippingAddress( arguments.processObject.getShippingAddress() );
+								// If we are supposed to save the new address, then we can do that here
+								if(arguments.processObject.getSaveShippingAccountAddressFlag() && !isNull(arguments.order.getAccount()) ) {
+									
+									var newAccountAddress = getAccountService().newAccountAddress();
+									newAccountAddress.setAccount( arguments.order.getAccount() );
+									newAccountAddress.setAccountAddressName( arguments.processObject.getSaveShippingAccountAddressName() );
+									newAccountAddress.setAddress( arguments.processObject.getShippingAddress() );
+									orderFulfillment.setAccountAddress( newAccountAddress );
+									
+								// Otherwise just set then new address in the order fulfillment
+								} else {
+									
+									orderFulfillment.setShippingAddress( arguments.processObject.getShippingAddress() );
+								}
 							}
 						}
 					}
+					
+					orderFulfillment = this.saveOrderFulfillment( orderFulfillment );
+					
+				} else {
+					
+					arguments.processObject.addError('orderFulfillmentID', rbKey('validate.processOrder_addOrderitem.orderFulfillmentID.noValidFulfillmentMethod'));
+					
 				}
 				
-				orderFulfillment = this.saveOrderFulfillment( orderFulfillment );
 			}
 			
-			// Check for the sku in the orderFulfillment already
-			for(var i=1; i<=arrayLen(orderFulfillment.getOrderFulfillmentItems()); i++) {
-				
-				var thisItem = orderFulfillment.getOrderFulfillmentItems()[i];
-				
-				// If the sku, price & stock all match then just increse the quantity
-				if( 	thisItem.getSku().getSkuID() == arguments.processObject.getSku().getSkuID()
-					  		&&
-						thisItem.getPrice() == arguments.processObject.getPrice()
-							&&
-						((isNull(thisItem.getStock()) && isNull(arguments.processObject.getStock())) || (!isNull(thisItem.getStock()) && !isNull(arguments.processObject.getStock()) && thisItem.getStock().getStockID() == arguments.processObject.getStock().getStockID() ))
-					) {
+			// Check for the sku in the orderFulfillment already, so long that the order doens't have any errors
+			if(!arguments.order.hasErrors()) {
+				for(var i=1; i<=arrayLen(orderFulfillment.getOrderFulfillmentItems()); i++) {
+					
+					var thisItem = orderFulfillment.getOrderFulfillmentItems()[i];
+					
+					// If the sku, price & stock all match then just increse the quantity
+					if( 	thisItem.getSku().getSkuID() == arguments.processObject.getSku().getSkuID()
+						  		&&
+							thisItem.getPrice() == arguments.processObject.getPrice()
+								&&
+							((isNull(thisItem.getStock()) && isNull(arguments.processObject.getStock())) || (!isNull(thisItem.getStock()) && !isNull(arguments.processObject.getStock()) && thisItem.getStock().getStockID() == arguments.processObject.getStock().getStockID() ))
+						) {
+							
+						foundItem = true;
+						orderFulfillment.getOrderFulfillmentItems()[i].setQuantity(orderFulfillment.getOrderFulfillmentItems()[i].getQuantity() + arguments.processObject.getQuantity());
 						
-					foundItem = true;
-					orderFulfillment.getOrderFulfillmentItems()[i].setQuantity(orderFulfillment.getOrderFulfillmentItems()[i].getQuantity() + arguments.processObject.getQuantity());
-					
-					break;
-					
+						break;
+						
+					}
 				}
 			}
 			
@@ -592,7 +602,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		// If we didn't already find the item in an orderFulfillment, then we can add it here.
-		if(!foundItem) {
+		if(!foundItem && !arguments.order.hasErrors()) {
 			// Create a new Order Item
 			var newOrderItem = this.newOrderItem();
 			
