@@ -46,5 +46,15 @@ component extends="SlatwallUnitTestBase" {
 		
 		assertFalse( product.isProcessable('addOptionGroup') );
 	}
+	
+	public void function issue_1348() {
+		var sku = request.slatwallScope.getService("skuService").newSku();
+		
+		sku.setPrice( -20 );
+		
+		sku.validate(context="save");
+		
+		assert( sku.hasError('price') );
+	}
 }
 
