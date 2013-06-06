@@ -142,7 +142,7 @@ Notes:
 <!--- Allow for nulls in order payments --->
 <cftry>
 	<cfquery name="local.allowNull" dbtype="query">
-		<cfif getApplicationValue("databaseType") eq "MySQL">
+		<cfif request.slatwallScope.getApplicationValue("databaseType") eq "MySQL">
 			ALTER TABLE SlatwallOrderPayment MODIFY COLUMN amount decimal(19,2) NULL
 		<cfelse>
 			ALTER TABLE SlatwallOrderPayment ALTER COLUMN amount decimal(19,2) NULL
