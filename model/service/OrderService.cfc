@@ -248,16 +248,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 	}
 	
-	public void function setupOrderItemContentAccess(required any orderItem) {
-		for(var accessContent in arguments.orderItem.getSku().getAccessContents()) {
-			var accountContentAccess = getAccountService().newAccountContentAccess();
-			accountContentAccess.setAccount(arguments.orderItem.getOrder().getAccount());
-			accountContentAccess.setOrderItem(arguments.orderItem);
-			accountContentAccess.addAccessContent(accessContent);
-			getAccountService().saveAccountContentAccess(accountContentAccess);
-		}
-	}
-	
 	public string function getOrderRequirementsList(required any order) {
 		var orderRequirementsList = "";
 		
@@ -479,7 +469,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Next if orderFulfillment is still null, then we can check the order to see if there is already an orderFulfillment
 			if(isNull(orderFulfillment) && arrayLen(arguments.order.getOrderFulfillments())) {
 				for(var f=1; f<=arrayLen(arguments.order.getOrderFulfillments()); f++) {
-					if(listFindNoCase(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods'),arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID()) ) {
+					if(listFindNoCase(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods'),arguments.order.getOrderFulfillments()[f].getOrderFulfillmentID()) ) {
 						var orderFulfillment = this.getOrderFulfillment();
 						break;
 					}	
@@ -489,82 +479,92 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Last if we can't use an existing one, then we need to create a new one
 			if(isNull(orderFulfillment) || orderFulfillment.getOrder().getOrderID() != arguments.order.getOrderID()) {
 				
-				// Setup a new order fulfillment
-				var orderFulfillment = this.newOrderFulfillment();
-				
 				// get the correct fulfillment method for this new order fulfillment
 				if(len(arguments.processObject.getFulfillmentMethodID())) {
 					var fulfillmentMethod = getFulfillmentService().getFulfillmentMethod( arguments.processObject.getFulfillmentMethodID() );
 				}
 				
 				// If the fulfillmentMethod is still null because the above didn't execute, then we can pull it in from the first ID in the sku settings
-				if(isNull(fulfillmentMethod)) {
+				if(isNull(fulfillmentMethod) && listLen(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods'))) {
 					var fulfillmentMethod = getFulfillmentService().getFulfillmentMethod( listFirst(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods')) );
 				}
 				
-				orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
-				orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() );
-				orderFulfillment.setOrder( arguments.order );
-				
-				// Populate the shipping address info
-				if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
+				if(!isNull(fulfillmentMethod)) {
+					// Setup a new order fulfillment
+					var orderFulfillment = this.newOrderFulfillment();
 					
-					// Check for an accountAddress
-					if(len(arguments.processObject.getShippingAccountAddressID()) && arguments.processObject.getShippingAccountAddressID() neq "new") {
-						
-						// Find the correct account address, and set it in the order fulfillment
-						var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );
-						orderFulfillment.setAccountAddress( accountAddress );
+					orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
+					orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() );
+					orderFulfillment.setOrder( arguments.order );
 					
-					// Otherwise try to setup a new shipping address
-					} else {
+					// Populate the shipping address info
+					if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
 						
-						// Check to see if the new shipping address passes full validation.
-						fullAddressErrors = getHibachiValidationService().validate( arguments.processObject.getShippingAddress(), 'full', false );
-						
-						if(!fullAddressErrors.hasErrors()) {
-							// First we need to persist the address from the processObject
-							getAddressService().saveAddress( arguments.processObject.getShippingAddress() );
+						// Check for an accountAddress
+						if(len(arguments.processObject.getShippingAccountAddressID()) && arguments.processObject.getShippingAccountAddressID() neq "new") {
 							
-							// If we are supposed to save the new address, then we can do that here
-							if(arguments.processObject.getSaveShippingAccountAddressFlag() && !isNull(arguments.order.getAccount()) ) {
+							// Find the correct account address, and set it in the order fulfillment
+							var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );
+							orderFulfillment.setAccountAddress( accountAddress );
+						
+						// Otherwise try to setup a new shipping address
+						} else {
+							
+							// Check to see if the new shipping address passes full validation.
+							fullAddressErrors = getHibachiValidationService().validate( arguments.processObject.getShippingAddress(), 'full', false );
+							
+							if(!fullAddressErrors.hasErrors()) {
+								// First we need to persist the address from the processObject
+								getAddressService().saveAddress( arguments.processObject.getShippingAddress() );
 								
-								var newAccountAddress = getAccountService().newAccountAddress();
-								newAccountAddress.setAccount( arguments.order.getAccount() );
-								newAccountAddress.setAccountAddressName( arguments.processObject.getSaveShippingAccountAddressName() );
-								newAccountAddress.setAddress( arguments.processObject.getShippingAddress() );
-								orderFulfillment.setAccountAddress( newAccountAddress );
-								
-							// Otherwise just set then new address in the order fulfillment
-							} else {
-								
-								orderFulfillment.setShippingAddress( arguments.processObject.getShippingAddress() );
+								// If we are supposed to save the new address, then we can do that here
+								if(arguments.processObject.getSaveShippingAccountAddressFlag() && !isNull(arguments.order.getAccount()) ) {
+									
+									var newAccountAddress = getAccountService().newAccountAddress();
+									newAccountAddress.setAccount( arguments.order.getAccount() );
+									newAccountAddress.setAccountAddressName( arguments.processObject.getSaveShippingAccountAddressName() );
+									newAccountAddress.setAddress( arguments.processObject.getShippingAddress() );
+									orderFulfillment.setAccountAddress( newAccountAddress );
+									
+								// Otherwise just set then new address in the order fulfillment
+								} else {
+									
+									orderFulfillment.setShippingAddress( arguments.processObject.getShippingAddress() );
+								}
 							}
 						}
 					}
+					
+					orderFulfillment = this.saveOrderFulfillment( orderFulfillment );
+					
+				} else {
+					
+					arguments.processObject.addError('orderFulfillmentID', rbKey('validate.processOrder_addOrderitem.orderFulfillmentID.noValidFulfillmentMethod'));
+					
 				}
 				
-				orderFulfillment = this.saveOrderFulfillment( orderFulfillment );
 			}
 			
-			// Check for the sku in the orderFulfillment already
-			for(var i=1; i<=arrayLen(orderFulfillment.getOrderFulfillmentItems()); i++) {
-				
-				var thisItem = orderFulfillment.getOrderFulfillmentItems()[i];
-				
-				// If the sku, price & stock all match then just increse the quantity
-				if( 	thisItem.getSku().getSkuID() == arguments.processObject.getSku().getSkuID()
-					  		&&
-						thisItem.getPrice() == arguments.processObject.getPrice()
-							&&
-						((isNull(thisItem.getStock()) && isNull(arguments.processObject.getStock())) || (!isNull(thisItem.getStock()) && !isNull(arguments.processObject.getStock()) && thisItem.getStock().getStockID() == arguments.processObject.getStock().getStockID() ))
-					) {
+			// Check for the sku in the orderFulfillment already, so long that the order doens't have any errors
+			if(!arguments.order.hasErrors()) {
+				for(var i=1; i<=arrayLen(orderFulfillment.getOrderFulfillmentItems()); i++) {
+					
+					var thisItem = orderFulfillment.getOrderFulfillmentItems()[i];
+					
+					// If the sku, price & stock all match then just increse the quantity
+					if( 	thisItem.getSku().getSkuID() == arguments.processObject.getSku().getSkuID()
+						  		&&
+							thisItem.getPrice() == arguments.processObject.getPrice()
+								&&
+							((isNull(thisItem.getStock()) && isNull(arguments.processObject.getStock())) || (!isNull(thisItem.getStock()) && !isNull(arguments.processObject.getStock()) && thisItem.getStock().getStockID() == arguments.processObject.getStock().getStockID() ))
+						) {
+							
+						foundItem = true;
+						orderFulfillment.getOrderFulfillmentItems()[i].setQuantity(orderFulfillment.getOrderFulfillmentItems()[i].getQuantity() + arguments.processObject.getQuantity());
 						
-					foundItem = true;
-					orderFulfillment.getOrderFulfillmentItems()[i].setQuantity(orderFulfillment.getOrderFulfillmentItems()[i].getQuantity() + arguments.processObject.getQuantity());
-					
-					break;
-					
+						break;
+						
+					}
 				}
 			}
 			
@@ -592,7 +592,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		// If we didn't already find the item in an orderFulfillment, then we can add it here.
-		if(!foundItem) {
+		if(!foundItem && !arguments.order.hasErrors()) {
 			// Create a new Order Item
 			var newOrderItem = this.newOrderItem();
 			
@@ -820,7 +820,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							
 							// If this order is the same as the current cart, then set the current cart to a new order
 							if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getCurrentSession().getOrder().getOrderID()) {
-								getHibachiScope().getCurrentSession().setOrder(javaCast("null", ""));
+								getHibachiScope().getSession().setOrder(javaCast("null", ""));
 							}
 						
 							// Update the order status
@@ -830,7 +830,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							order.confirmOrderNumberOpenDateCloseDatePaymentAmount();
 						
 							// Save the order to the database
-							getHibachiDAO().save(order);
+							getHibachiDAO().save( arguments.order );
 						
 							// Do a flush so that the order is commited to the DB
 							getHibachiDAO().flushORMSession();
@@ -838,6 +838,24 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							// Log that the order was placed
 							logHibachi(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
 							
+							// Look for 'auto' order fulfillments
+							for(var i=1; i<=arrayLen( arguments.order.getOrderFulfillments() ); i++) {
+								
+								// As long as the amount received for this orderFulfillment is within the treshold of the auto fulfillment setting
+								if(arguments.order.getOrderFulfillments()[i].getFulfillmentMethodType() == "auto" && (order.getTotal() == 0 || order.getOrderFulfillments()[i].getFulfillmentMethod().setting('fulfillmentMethodAutoMinReceivedPercentage') <= (order.getPaymentAmountReceivedTotal()*100/order.getTotal())) ) {
+									
+									var newOrderDelivery = this.newOrderDelivery();
+									
+									// Setup the processData
+									var processData = {};
+									processData.order = {};
+									processData.order.orderID = arguments.order.getOrderID();
+									processData.location.locationID = arguments.order.getOrderFulfillments()[i].getFulfillmentMethod().setting('fulfillmentMethodAutoLocation');
+									processData.orderFulfillment.orderFulfillmentID = arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID();
+									
+									newOrderDelivery = processOrderDelivery(newOrderDelivery, processData, 'create');
+								}
+							}
 						}
 					}
 					
@@ -1116,7 +1134,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				
 				if(orderPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard" && orderPayment.getAmountUnreceived() gt 0 && amountToBeCaptured gt 0) {
 					var transactionData = {
-						transactionType = 'capturePreAuthorization',
+						transactionType = 'chargePreAuthorization',
 						amount = amountToBeCaptured
 					};
 					
@@ -1124,7 +1142,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						transactionData.amount = orderPayment.getAmountUnreceived();
 					}
 					
-					orderPayment = processOrderPayment(orderPayment, transactionData, 'createTransaction');
+					orderPayment = this.processOrderPayment(orderPayment, transactionData, 'createTransaction');
 					
 					if(!orderPayment.hasErrors()) {
 						amountToBeCaptured = precisionEvaluate(amountToBeCaptured - transactionData.amount);
@@ -1139,19 +1157,69 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Setup the header information
 			arguments.orderDelivery.setOrder( arguments.processObject.getOrder() );
 			arguments.orderDelivery.setLocation( arguments.processObject.getLocation() );
-			arguments.orderDelivery.setFulfillmentMethod( arguments.processObject.getFulfillmentMethod() );
-			arguments.orderDelivery.setShippingMethod( arguments.processObject.getShippingMethod() );
-			arguments.orderDelivery.setShippingAddress( arguments.processObject.getShippingAddress().copyAddress( saveNewAddress=true ) );
+			arguments.orderDelivery.setFulfillmentMethod( arguments.processObject.getOrderFulfillment().getFulfillmentMethod() );
+			
+			// If this is a shipping fulfillment, then populate the correct values
+			if(arguments.orderDelivery.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
+				arguments.orderDelivery.setShippingMethod( arguments.processObject.getShippingMethod() );
+				arguments.orderDelivery.setShippingAddress( arguments.processObject.getShippingAddress().copyAddress( saveNewAddress=true ) );
+			}
 			
 			// Setup the tracking number
 			if(!isNull(arguments.processObject.getTrackingNumber()) && len(arguments.processObject.getTrackingNumber())) {
-				argumnets.orderDelivery.setTrackingNumber(arguments.processObject.getTrackingNumber());
+				arguments.orderDelivery.setTrackingNumber(arguments.processObject.getTrackingNumber());
 			}
 			
-			// Loop over delivery items from processObject and add them with stock to the orderDelivery
-			for(var i=1; i<=arrayLen(arguments.processObject.getOrderDeliveryItems()); i++) {
-				arguments.processObject.getOrderDeliveryItems()[i].setStock( getStockService().getStockBySkuAndLocation(sku=arguments.processObject.getOrderDeliveryItems()[i].getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
-				arguments.processObject.getOrderDeliveryItems()[i].setOrderDelivery( arguments.orderDelivery );
+			// If the orderFulfillmentMethod is auto, and there aren't any delivery items then we can just fulfill all that are "undelivered"
+			if(arguments.orderDelivery.getFulfillmentMethod().getFulfillmentMethodType() eq "auto" && !arrayLen(arguments.processObject.getOrderDeliveryItems())) {
+				
+				// Loop over delivery items from processObject and add them with stock to the orderDelivery
+				for(var i=1; i<=arrayLen(arguments.processObject.getOrderFulfillment().getOrderFulfillmentItems()); i++) {
+					
+					// Local pointer to the orderItem
+					var thisOrderItem = arguments.processObject.getOrderFulfillment().getOrderFulfillmentItems();
+					
+					if(thisOrderItem.getQuantityUndelivered()) {
+						// Create a new orderDeliveryItem
+						var orderDeliveryItem = this.newOrderDeliveryItem();
+						
+						// Populate with the data
+						orderDeliveryItem.setOrderItem( thisOrderItem );
+						orderDeliveryItem.setQuantity( thisOrderItem.getQuantityUndelivered() );
+						orderDeliveryItem.setStock( getStockService().getStockBySkuAndLocation(sku=orderDeliveryItem.getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
+						orderDeliveryItem.setOrderDelivery( arguments.orderDelivery );	
+					}
+					
+				}
+			} else {
+				// Loop over delivery items from processObject and add them with stock to the orderDelivery
+				for(var i=1; i<=arrayLen(arguments.processObject.getOrderDeliveryItems()); i++) {
+					
+					// Create a new orderDeliveryItem
+					var orderDeliveryItem = this.newOrderDeliveryItem();
+					
+					// Populate with the data
+					orderDeliveryItem.populate( arguments.processObject.getOrderDeliveryItems()[i] );
+					orderDeliveryItem.setStock( getStockService().getStockBySkuAndLocation(sku=orderDeliveryItem.getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
+					orderDeliveryItem.setOrderDelivery( arguments.orderDelivery );
+				}	
+			}
+			
+			// Loop over the orderDeliveryItems to setup subscriptions and contentAccess
+			for(var di=1; di<=arrayLen(arguments.orderDelivery.getOrderDeliveryItems()); di++) {
+				
+				var orderDeliveryItem = arguments.orderDelivery.getOrderDeliveryItems()[di].getOrderItem();
+				
+				// If the sku has a subscriptionTerm, then we can process the item to setupSubscription
+				if(!isNull(orderDeliveryItem.getOrderItem().getSku().getSubscriptionTerm())) {
+					orderDeliveryItem = this.processOrderDeliveryItem(orderDeliveryItem, {}, 'setupSubscription');
+				}
+				
+				// If there are accessContents associated with this sku, then we can setupContentAccess
+				if(arrayLen(orderDeliveryItem.getOrderItem().getSku().getAccessContents())) {
+					orderDeliveryItem = this.processOrderDeliveryItem(orderDeliveryItem, {}, 'setupContentAccess');
+				}
+
 			}
 			
 			// Save the orderDelivery
@@ -1164,7 +1232,60 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.processObject.addError('capturableAmount', rbKey('validate.processOrderDelivery_create.captureAmount'));
 		}
 		
+		// Call the update order status incase this needs to be changed to closed.
+		updateOrderStatus( arguments.orderDelivery.getOrder() );
+		
 		return arguments.orderDelivery;
+	}
+	
+	// Process: Order Delivery Item
+	public any function processOrderDeliveryItem_setupSubscription(required any orderDeliveryItem) {
+		
+		// check if orderItem is assigned to a subscriptionOrderItem
+		var subscriptionOrderItem = getSubscriptionService().getSubscriptionOrderItem({orderItem=arguments.orderDeliveryItem.getOrderItem()});
+		
+		// If we couldn't fine the subscriptionOrderItem, then setup a new one
+		if(isNull(subscriptionOrderItem)) {
+			
+			// new orderItem, setup subscription
+			getSubscriptionService().setupInitialSubscriptionOrderItem( arguments.orderDeliveryItem.getOrderItem() );
+			
+		} else {
+			
+			// orderItem already exists in subscription, just setup access and expiration date
+			if(isNull(subscriptionOrderItem.getSubscriptionUsage().getExpirationDate())) {
+				var startDate = now();
+			} else {
+				var startDate = subscriptionOrderItem.getSubscriptionUsage().getExpirationDate();
+			}
+			
+			subscriptionOrderItem.getSubscriptionUsage().setExpirationDate( subscriptionOrderItem.getSubscriptionUsage().getRenewalTerm().getEndDate(startDate) );
+			
+			getSubscriptionService().updateSubscriptionUsageStatus( subscriptionOrderItem.getSubscriptionUsage() );
+			
+			// set renewal benefit if needed
+			getSubscriptionService().setupRenewalSubscriptionBenefitAccess( subscriptionOrderItem.getSubscriptionUsage() );
+		}
+		
+		return arguments.orderDeliveryItem;
+	}
+	
+	public any function processOrderDeliveryItem_setupContentAccess(required any orderDeliveryItem) {
+		
+		for(var accessContent in arguments.orderDeliveryItem.getOrderItem().getSku().getAccessContents()) {
+			
+			// Setup the new accountContentAccess
+			var accountContentAccess = getAccountService().newAccountContentAccess();
+			accountContentAccess.setAccount( arguments.orderDeliveryItem.getOrderItem().getOrder().getAccount() );
+			accountContentAccess.setOrderItem( arguments.orderDeliveryItem.getOrderItem() );
+			accountContentAccess.addAccessContent( accessContent );
+			
+			// Place new accessContent into hibernate session
+			accountContentAccess = getAccountService().saveAccountContentAccess( accountContentAccess );
+			
+		}
+		
+		return arguments.orderDeliveryItem;
 	}
 	
 	// Process: Order Fulfillment

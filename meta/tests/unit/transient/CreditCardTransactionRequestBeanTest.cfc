@@ -38,44 +38,16 @@ Notes:
 */
 component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
+	// @hint put things in here that you want to run befor EACH test
 	public void function setUp() {
 		super.setup();
 		
-		variables.service = request.slatwallScope.getService("utilityORMService");
+		variables.object = request.slatwallScope.getTransient("CreditCardTransactionRequestBean");
 	}
 	
-	// getProperlyCasedShortEntityName()
-	public void function getProperlyCasedShortEntityName_returns_entity_name_correctly() {
-		assertEquals("OrderItem", variables.service.getProperlyCasedShortEntityName("SLATWALLORDERITEM"));
+	public void function defaults_are_correct() {
+		assert(isNull(variables.object.getTransactionID()));
 	}
 	
-	
-	// getProperlyCasedFullEntityName()
-	public void function getProperlyCasedFullEntityName_returns_entity_name_correctly_if_CAPS() {
-		assertEquals("SlatwallOrderItem", variables.service.getProperlyCasedFullEntityName("ORDERITEM"));
-	}
-	
-	public void function getProperlyCasedFullEntityName_returns_entity_name_correctly_if_mixed() {
-		assertEquals("SlatwallOrderItem", variables.service.getProperlyCasedFullEntityName("SlaTWAllOrderItEM"));
-	}
-	
-	// getProperlyCasedFullClassNameByEntityName()
-	public void function getProperlyCasedFullClassNameByEntityName() {
-		assertEquals("Slatwall.model.entity.OrderItem", variables.service.getProperlyCasedFullClassNameByEntityName("SlaTWAllOrderItEM"));
-	}
-	
-	
-	// getHasPropertyByEntityNameAndPropertyIdentifier()
-	public void function getHasPropertyByEntityNameAndPropertyIdentifier_returns_true_when_property_exists() {
-		assertTrue(variables.service.getHasPropertyByEntityNameAndPropertyIdentifier("SlatwallSku", "product.brand.brandName"));
-	}
-	
-	public void function getHasPropertyByEntityNameAndPropertyIdentifier_returns_false_when_property_doesnt_exists() {
-		assertFalse(variables.service.getHasPropertyByEntityNameAndPropertyIdentifier("SlatwallSku", "product.brand.notRealProperty"));
-	}
-	
-	public void function getHasPropertyByEntityNameAndPropertyIdentifier_returns_false_when_entity_chain_is_invalid() {
-		assertFalse(variables.service.getHasPropertyByEntityNameAndPropertyIdentifier("SlatwallSku", "product.brokenChain.notRealProperty"));
-	}
 }
 

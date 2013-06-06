@@ -106,28 +106,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 	}
 	
-	public void function setupSubscriptionOrderItem(required any orderItem) {
-		if(!isNull(arguments.orderItem.getSku().getSubscriptionTerm())) {
-			// check if orderItem is assigned to a subscriptionOrderItem
-			var subscriptionOrderItem = this.getSubscriptionOrderItem({orderItem=arguments.orderItem});
-			if(isNull(subscriptionOrderItem)) {
-				// new orderItem, setup subscription
-				setupInitialSubscriptionOrderItem(arguments.orderItem);
-			} else {
-				// orderItem already exists in subscription, just setup access and expiration date
-				if(isNull(subscriptionOrderItem.getSubscriptionUsage().getExpirationDate())) {
-					var startDate = now();
-				} else {
-					var startDate = subscriptionOrderItem.getSubscriptionUsage().getExpirationDate();
-				}
-				subscriptionOrderItem.getSubscriptionUsage().setExpirationDate(subscriptionOrderItem.getSubscriptionUsage().getRenewalTerm().getEndDate(startDate));
-				updateSubscriptionUsageStatus(subscriptionOrderItem.getSubscriptionUsage());
-				// set renewal benefit if needed
-				setupRenewalSubscriptionBenefitAccess(subscriptionOrderItem.getSubscriptionUsage());
-			}
-		}
-	}
-	
 	// setup Initial SubscriptionOrderItem
 	private void function setupInitialSubscriptionOrderItem(required any orderItem) {
 		var subscriptionOrderItemType = "soitInitial";

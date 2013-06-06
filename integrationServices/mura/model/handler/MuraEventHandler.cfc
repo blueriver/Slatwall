@@ -93,6 +93,12 @@
 						}
 						arrayPrepend(crumbDataArray, $.slatwall.getProduct().getCrumbData(path=$.event('path'), siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
 						$.event('crumbdata', crumbDataArray);
+						
+					// If the template couldn't be found then we throw a custom exception
+					} else {
+						
+						throw("Slatwall has attempted to display a product on your website, however the 'Product Display Template' setting is either blank or invalid.  Please navigate to the Slatwall admin and make sure that there is a valid 'Product Display Template' assigned.");
+						
 					}
 					
 				} else if ( productTypeKeyLocation && productTypeKeyLocation > brandKeyLocation && !$.slatwall.getProductType().isNew() && $.slatwall.getProductType().getActiveFlag() ) {
@@ -112,6 +118,11 @@
 						// Change Title & HTMLTitle of page
 						$.content().setTitle( $.slatwall.getProductType().getProductTypeName() );
 						$.content().setHTMLTitle( $.slatwall.getProductType().getProductTypeName() );
+						
+					} else {
+						
+						throw("Slatwall has attempted to display a 'Product Type' on your website, however the 'Product Type Display Template' setting is either blank or invalid.  Please navigate to the Slatwall admin and make sure that there is a valid 'Product Type Display Template' assigned.");
+						
 					}
 					
 				} else if ( brandKeyLocation && !$.slatwall.getBrand().isNew() && $.slatwall.getBrand().getActiveFlag()  ) {
@@ -131,6 +142,11 @@
 						// Change Title & HTMLTitle of page
 						$.content().setTitle( $.slatwall.getBrand().getBrandName() );
 						$.content().setHTMLTitle( $.slatwall.getBrand().getBrandName() );
+						
+					} else {
+						
+						throw("Slatwall has attempted to display a 'Brand' on your website, however the 'Brand Display Template' setting is either blank or invalid.  Please navigate to the Slatwall admin and make sure that there is a valid 'Brand Display Template' assigned.");
+						
 					}
 
 				}
@@ -179,8 +195,43 @@
 				$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
 			}
 			
-			// check if user has access to this page
-			checkAccess( $=$ );
+			var accessToContentDetails = $.slatwall.getService("accessService").getAccessToContentDetails( $.slatwall.getAccount(), $.slatwall.getContent() );
+			
+			// Pass all of the accessDetails into the slatwallScope to be used by templates
+			$.slatwall.setValue('accessToContentDetails', accessToContentDetails);
+			
+			// DEPRECATED (pass in these additional values to slatwallScope so that legacy templates work)
+			$.slatwall.setValue("purchasedAccess", accessToContentDetails.purchasedAccessFlag);
+			$.slatwall.setValue("subscriptionAccess", accessToContentDetails.subscribedAccessFlag);
+			
+			// If the user does not have access to this page, then we need to modify the request
+			if( !accessToContentDetails.accessFlag ){
+				
+				// DEPRECATED (save the current content to be used on the barrier page)
+				$.event("restrictedContentBody", $.content('body'));
+				// DEPRECATED (set slatwallContent in rc to be used on the barrier page)
+				$.event("slatwallContent", $.slatwall.getContent());
+				
+				
+				// save the restriced Slatwall content in the slatwallScope to be used on the barrier page
+				$.slatwall.setValue('restrictedContent', $.slatwall.getContent());
+				
+				// save the restriced Mura content in the muraScope to be used on the barrier page
+				$.event("restrictedContent", $.content());
+				
+				// get the barrier page template
+				var barrierPage = $.slatwall.getService("contentService").getContent( $.slatwall.getContent().setting('contentRestrictedContentDisplayTemplate'), true );
+				
+				// Update the slatwall content to use the barrier page
+				$.slatwall.setContent( barrierPage );
+				
+				// Update the mura content to use the barrier page or 404
+				if(!isNull(barrierPage.getCMSContentID()) && len(barrierPage.getCMSContentID())) {
+					$.event('contentBean', $.getBean("content").loadBy( contentID=barrierPage.getCMSContentID() ) );
+				} else {
+					$.event('contentBean', $.getBean("content") );
+				}
+			}
 		}
 		
 		public void function onRenderEnd( required any $ ) {
@@ -450,35 +501,6 @@
 				
 				// Logout Slatwall Account
 				$.slatwall.getService("hibachiSessionService").logoutAccount();
-			}
-		}
-		
-		// Helper method to do our access check
-		private void function checkAccess( required any $ ) {
-			if(!$.slatwall.getService("accessService").hasAccess($.content('contentID'), $.content('siteID'))){
-				
-				// save the current content to be used on the barrier page
-				$.event("restrictedContent",$.content());
-				
-				// save the current content to be used on the barrier page
-				$.event("restrictedContentBody",$.content('body'));
-				
-				// Set the content of the current content to noAccess
-				$.content('body', $.slatwall.doAction('frontend:account.noaccess'));
-				
-				// get the slatwall content
-				var slatwallContent = $.slatwall.getService("contentService").getRestrictedContentBycmsContentID($.content("contentID"));
-				
-				// set slatwallContent in rc to be used on the barrier page
-				$.event("slatwallContent",slatwallContent);
-				
-				// get the barrier page template
-				var restrictedContentTemplate = $.slatwall.getService("contentService").getContent(slatwallContent.getSettingDetails('contentRestrictedContentDisplayTemplate').settingvalue);
-				
-				// set the content to the barrier page template
-				if(!isNull(restrictedContentTemplate)) {
-					$.event('contentBean', $.getBean("content").loadBy(contentID=restrictedContentTemplate.getCMSContentID()));
-				}
 			}
 		}
 		

@@ -49,6 +49,7 @@ component entityname="SlatwallSubscriptionUsageBenefit" table="SlatwallSubscript
 	property name="accessType" cfc="Type" fieldtype="many-to-one" fkcolumn="accessTypeID" hb_optionsSmartListData="f:parentType.systemCode=accessType";
 	
 	// Related Object Properties (one-to-many)
+	property name="subscriptionUsageBenefitAccounts" singularname="subscriptionUsageBenefitAccount" cfc="SubscriptionUsageBenefitAccount" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageBenefitID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPriceGroup" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="priceGroupID";

@@ -297,10 +297,13 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	
 	public any function getPeerOrderPaymentNullAmountExistsFlag() {
 		if(!structKeyExists(variables, "peerOrderPaymentNullAmountExistsFlag")) {
-			if(!isNull(getOrderPaymentID())) {
-				variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").getPeerOrderPaymentNullAmountExistsFlag(orderID=getOrder().getOrderID(), orderPaymentID=getOrderPaymentID());	
-			} else {
-				variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").getPeerOrderPaymentNullAmountExistsFlag(orderID=getOrder().getOrderID());
+			variables.peerOrderPaymentNullAmountExistsFlag = false;
+			if(!isNull(getOrder())) {
+				if(!isNull(getOrderPaymentID())) {
+					variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").getPeerOrderPaymentNullAmountExistsFlag(orderID=getOrder().getOrderID(), orderPaymentID=getOrderPaymentID());	
+				} else {
+					variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").getPeerOrderPaymentNullAmountExistsFlag(orderID=getOrder().getOrderID());
+				}	
 			}
 		}
 		return variables.peerOrderPaymentNullAmountExistsFlag;

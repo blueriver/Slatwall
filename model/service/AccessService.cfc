@@ -38,139 +38,122 @@ Notes:
 */
 component extends="HibachiService" persistent="false" accessors="true" output="false" {
 
-	public boolean function hasAccess(required any cmsContentID, required string cmsSiteID) {
-		// set request scope variable to specify if the access was granted because of subscription or purchase
-		getSlatwallScope().setValue("purchasedAccess","false");
-		getSlatwallScope().setValue("subscriptionAccess","false");
-		// make sure there is restricted content in the system before doing any check
-		if(!getService("contentService").restrictedContentExists()) {
-			return true;
-		}
-		var currentContent = getSlatwallScope().getCurrentContent();
-		// get restricted content by cmsContentID
-		var restrictedContent = getService("contentService").getRestrictedContentByCMSContentIDAndCMSSiteID(arguments.cmsContentID, arguments.cmsSiteID);
-		if(isNull(restrictedContent)) {
-			return true;
-		}
-		// get the purchase required content
-		var purchaseRequiredContentSetting = restrictedContent.getSettingDetails('contentRequirePurchaseFlag');
-		if(purchaseRequiredContentSetting.settingValueFormatted) {
-			if(structKeyExists(purchaseRequiredContentSetting, "settingRelationShips")) {
-				var purchaseRequiredCmsContentID = purchaseRequiredContentSetting.settingRelationShips.cmsContentID;
-			} else {
-				var purchaseRequiredCmsContentID = restrictedContent.getCmsContentID();
-			}
-		} else {
-			var purchaseRequiredCmsContentID = "";
-		}
-		// get the subscription required content
-		var subscriptionRequiredContentSetting = restrictedContent.getSettingDetails('contentRequireSubscriptionFlag');
-		if(subscriptionRequiredContentSetting.settingValueFormatted) {
-			if(structKeyExists(subscriptionRequiredContentSetting, "settingRelationShips")) {
-				var subscriptionRequiredCmsContentID = subscriptionRequiredContentSetting.settingRelationShips.cmsContentID;
-			} else {
-				var subscriptionRequiredCmsContentID = restrictedContent.getCmsContentID();
-			}
-		} else {
-			var subscriptionRequiredCmsContentID = "";
-		}
-		var purchasedAccess = false;
-		var subcriptionAccess = false;
+	property name="accountService" type="any";
+	property name="contentService" type="any";
+	property name="subscriptionService" type="any";
+
+	public struct function getAccessToContentDetails( required any account, required any content ) {
 		
-		// check if purchase is allowed for restricted content
-		if(!isNull(restrictedContent.getAllowPurchaseFlag()) && restrictedContent.getAllowPurchaseFlag()) {
-			// check if the content was purchased
-			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
-			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=getSlatwallScope().getCurrentAccount().getAccountID());
-			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_contentID", value=restrictedContent.getContentID());
-			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredCmsContentID == "") {
-				logAccess(content=currentContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
-				getSlatwallScope().setValue("purchasedAccess","true");
-				return true;
-			} else if(accountContentAccessSmartList.getRecordsCount()) {
-				purchasedAccess = true;
-			}
-			// check if the content is not allowed for purchase but requires purchase of parent
-		} else if((isNull(restrictedContent.getAllowPurchaseFlag()) || !restrictedContent.getAllowPurchaseFlag()) && purchaseRequiredCmsContentID != "") {
-			// check if any parent content was purchased
-			var accountContentAccessSmartList = this.getAccountContentAccessSmartList();
-			accountContentAccessSmartList.addFilter(propertyIdentifier="account_accountID", value=getSlatwallScope().getCurrentAccount().getAccountID());
-			accountContentAccessSmartList.addFilter(propertyIdentifier="accessContents_cmsContentID", value=purchaseRequiredCmsContentID);
-			// check if the content requires subcription in addition to purchase
-			if(accountContentAccessSmartList.getRecordsCount() && subscriptionRequiredCmsContentID == "") {
-				logAccess(content=currentContent,accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
-				getSlatwallScope().setValue("purchasedAccess","true");
-				return true;
-			} else if(accountContentAccessSmartList.getRecordsCount()) {
-				purchasedAccess = true;
-			}
+		// Setup the return struct
+		var accessDetails = {
+			accessFlag = false,
+			nonRestrictedFlag = false,
+			purchasedAccessFlag = false,
+			subscribedAccessFlag = false,
+			subscribedByContentFlag = false,
+			subscribedByCategoryFlag = false
+		};
+		
+		// Make sure there is restricted content in the system before doing any check
+		if( !getService("contentService").restrictedContentExists() ) {
+			accessDetails.accessFlag = true;
+			accessDetails.nonRestrictedFlag = true;
+			return accessDetails;
 		}
-		// check if restricted content is part of subscription access and doesn't require purchase or it does require purchased and was purchased
-		if(purchaseRequiredCmsContentID == "" || purchasedAccess) {
-			// check if content is part of subscription access
-			for(var subscriptionUsageBenefitAccount in getSlatwallScope().getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
-				if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().getSubscriptionUsage().isActive()
-					&& subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasContent(restrictedContent)
-					&& !subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasExcludedContent(restrictedContent)) {
-					logAccess(content=currentContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
-					getSlatwallScope().setValue("subscriptionAccess","true");
-					return true;
+		
+		// Check the content's setting to determine if access is restriced
+		if( !content.setting('contentRestrictAccessFlag') ) {
+			accessDetails.accessFlag = true;
+			accessDetails.nonRestrictedFlag = true;
+			return accessDetails;
+		}
+		
+		// Get the details of if this content requires a purchase or subscription (or both)
+		var requirePurchaseSettingDetails = content.getSettingDetails('contentRequirePurchaseFlag');
+		var requireSubscriptionSettingDetails = content.getSettingDetails('contentRequireSubscriptionFlag');
+		
+		// First, because it is faster we can check if the user has purchased access to any parent content
+		var accountContentAccessSmartList = arguments.account.getAccountContentAccessesSmartList();
+		accountContentAccessSmartList.addInFilter(propertyIdentifier="accessContents.contentID", value=content.getContentIDPath());
+		
+		// If any purchase records come back, then we can set purchasedAccess to true
+		if(arrayLen(accountContentAccessSmartList.getRecords())) {
+			
+			accessDetails.accessFlag = true;
+			accessDetails.purchasedAccessFlag = true;
+			
+			// If the content node does not 'requireSubscription' then we can return true and log it
+			if(!requireSubscriptionSettingDetails.settingValue) {
+				
+				logAccess(content=arguments.content, accountContentAccess=accountContentAccessSmartList.getRecords()[1]);
+				
+				return accessDetails;
+				
+			}
+			
+		}
+		
+		// If either purchasing is not required, or it WAS purchased... then we can check subscriptions
+		if(!requirePurchaseSettingDetails.settingValue || getSlatwallScope().getValue("purchasedAccess")) {
+			
+			// First we can check if a subscription to this content or parent conent exist
+			var activeAccountBenefitsViaContentSmartList = duplicate(arguments.account.getActiveSubscriptionUsageBenefitsSmartList());
+			activeAccountBenefitsViaContentSmartList.addInFilter('contents.contentID', arguments.content.getContentIDPath());
+			
+			if(arrayLen(activeAccountBenefitsViaContentSmartList.getRecords())) {
+				
+				accessDetails.accessFlag = true;
+				accessDetails.subscribedAccessFlag = true;
+				accessDetails.subscribedByContentFlag = true;
+				
+				logAccess(content=arguments.content, accountContentAccess=activeAccountBenefitsViaContentSmartList.getRecords()[1]);
+				
+				return accessDetails;
+			}
+			
+			// If there was not acess via content, then we can check via category or parent category... but only if this content has been categorized
+			if(len(arguments.content.getAllCategoryIDPaths())) {
+				var activeAccountBenefitsViaCategorySmartList = duplicate(arguments.account.getActiveSubscriptionUsageBenefitsSmartList());
+				activeAccountBenefitsViaCategorySmartList.addInFilter('categories.categoryID', arguments.content.getAllCategoryIDPaths());
+				
+				if(arrayLen(activeAccountBenefitsViaCategorySmartList.getRecords())) {
+					
+					accessDetails.accessFlag = true;
+					accessDetails.subscribedAccessFlag = true;
+					accessDetails.subscribedByCategoryFlag = true;
+					
+					logAccess(content=arguments.content, accountContentAccess=activeAccountBenefitsViaCategorySmartList.getRecords()[1]);
+					
+					return accessDetails;
 				}
 			}
 			
-			// get all the cms categories assigned to the restricted content
-			var cmsCategoryIDs = getService("contentService").getCmsCategoriesByCmsContentID(restrictedContent.getCmsContentID());;
-			// check if any of this content's category is part of subscription access
-			if(cmsCategoryIDs != "") {
-				var categories = getService("contentService").getCategoriesByCmsCategoryIDs(cmsCategoryIDs);
-				for(var subscriptionUsageBenefitAccount in getSlatwallScope().getCurrentAccount().getSubscriptionUsageBenefitAccounts()) {
-					// check if subscription is active and the benefit account is not expired
-					if((isNull(subscriptionUsageBenefitAccount.getEndDateTime()) || dateCompare(now(),subscriptionUsageBenefitAccount.getEndDateTime()) == -1)
-						&& subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().getSubscriptionUsage().isActive()) {
-						// check if there is any exclusion
-						var hasExcludedCategory = false;
-						for(var category in categories) {
-							if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasExcludedCategory(category)) {
-								hasExcludedCategory = true;
-							}
-						}
-						
-						// if no excluded category found, check if user has access to this category
-						if(!hasExcludedCategory) {
-							for(var category in categories) {
-								if(subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit().hasCategory(category)) {
-									logAccess(content=currentContent,subscriptionUsageBenefit=subscriptionUsageBenefitAccount.getSubscriptionUsageBenefit());
-									getSlatwallScope().setValue("subscriptionAccess","true");
-									return true;
-								}
-							}
-						}
-					}
-				}
-			}
 		}
-		return false;
+		
+		// By Default return the default data
+		return accessDetails;
 	}
 	
-	public void function logAccess(required any content) {
+	public void function logAccess(required any content, any subscriptionUsageBenefit, any accountContentAccess) {
+		
+		// Create a new content access log
 		var contentAccess = this.newContentAccess();
 		contentAccess.setContent(arguments.content);
 		contentAccess.setAccount(getSlatwallScope().getCurrentAccount());
-		if(structKeyExists(arguments,"subscriptionUsageBenefit")) {
+		
+		// Setup the correct access type
+		if( structKeyExists(arguments, "subscriptionUsageBenefit") ) {
 			contentAccess.setSubscriptionUsageBenefit(arguments.subscriptionUsageBenefit);
-		} else if(structKeyExists(arguments,"accountContentAccess")) {
+		} else if( structKeyExists(arguments,"accountContentAccess") ) {
 			contentAccess.setAccountContentAccess(arguments.accountContentAccess);
 		}
+		
+		// Pass into the hibernate context
 		this.saveContentAccess(contentAccess);
+		
 		// persist the content access log, needed in case file download aborts the request 
 		getHibachiDAO().flushORMSession();
 	}
-	
-	public string function createAccessCode() {
-		// TODO: access code generation
-		
-	}
-	
 	
 	// ===================== START: Logical Methods ===========================
 	

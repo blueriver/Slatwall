@@ -36,11 +36,45 @@
 Notes:
 
 */
-component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
+component extends="SlatwallUnitTestBase" {
 
-	public void function inst_ok() {
-		var obj = request.slatwallScope.getBean("accessDAO");
-		assertTrue(isObject(obj));
+	public void function issue_1097() {
+		
+		var product = entityNew("SlatwallProduct");
+		
+		productData = {
+			productName = "My Product",
+			productType = {
+				productTypeID = "444df2f7ea9c87e60051f3cd87b435a1"
+			}
+		};
+		
+		product.populate( productData );
+		
+		entitySave( product );
+		
+		ormFlush();
+		
+		entityDelete( product );
+	}
+
+	public void function issue_1331() {
+		
+		var product = request.slatwallScope.getService("productService").newProduct();
+		
+		product.setProductType( request.slatwallScope.getService("productService").getProductType('444df313ec53a08c32d8ae434af5819a') );
+		
+		assertFalse( product.isProcessable('addOptionGroup') );
+	}
+	
+	public void function issue_1348() {
+		var sku = request.slatwallScope.getService("skuService").newSku();
+		
+		sku.setPrice( -20 );
+		
+		sku.validate(context="save");
+		
+		assert( sku.hasError('price') );
 	}
 }
 

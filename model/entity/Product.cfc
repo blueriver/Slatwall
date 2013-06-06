@@ -89,6 +89,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="baseProductType" type="string" persistent="false";
 	property name="brandName" type="string" persistent="false";
 	property name="brandOptions" type="array" persistent="false";
 	property name="salePriceDetailsForSkus" type="struct" persistent="false";
@@ -322,10 +323,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public string function getResizedImagePath() {
 		return getDefaultSku().getResizedImagePath(argumentCollection = arguments);
 	}
-	 
-	public any function getBaseProductType() {
-		return getProductType().getBaseProductType();
-	}
 	
 	public array function getOptionsByOptionGroup(required string optionGroupID) {
 		var smartList = getService("optionService").getOptionSmartList();
@@ -478,6 +475,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getBaseProductType() {
+		return getProductType().getBaseProductType();
+	}
 	
 	public array function getDefaultProductImageFiles() {
 		if(!structKeyExists(variables, "defaultProductImageFiles")) {

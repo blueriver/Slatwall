@@ -7,10 +7,9 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="location" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
-	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
-	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderDeliveryID";
+	property name="orderDeliveryItems" type="array" hb_populateArray="true";
 	
 	property name="trackingNumber";
 	property name="captureAuthorizedPaymentsFlag" hb_formFieldType="yesno";
@@ -18,23 +17,30 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	
 	variables.orderDeliveryItems = [];
 	
-	public void function addOrderDeliveryItem( required any orderDeliveryItem ) {
-		arrayAppend(variables.orderDeliveryItems, arguments.orderDeliveryItem );
-	}
-	
 	public numeric function getCapturableAmount() {
 		if(!structKeyExists(variables, "capturableAmount")) {
+			
 			variables.capturableAmount = 0;
+			
 			for(var i=1; i<=arrayLen(getOrderDeliveryItems()); i++) {
-				var thisQuantity = getOrderDeliveryItems()[i].getQuantity();
-				if(thisQuantity > getOrderDeliveryItems()[i].getOrderItem().getQuantityUndelivered()) {
-					thisQuantity = getOrderDeliveryItems()[i].getOrderItem().getQuantityUndelivered();
+				var orderItem = getService('orderService').getOrderItem(getOrderDeliveryItems()[i].orderItem.orderItemID);
+				var thisQuantity = getOrderDeliveryItems()[i].quantity;
+				if(thisQuantity > orderItem.getQuantityUndelivered()) {
+					thisQuantity = orderItem.getQuantityUndelivered();
 				}
-				variables.capturableAmount = precisionEvaluate(variables.capturableAmount + (getOrderDeliveryItems()[i].getOrderItem().getQuantityUndelivered() / thisQuantity) * getOrderDeliveryItems()[i].getOrderItem().getExtendedPriceAfterDiscount());
+				variables.capturableAmount = precisionEvaluate(variables.capturableAmount + ((orderItem.getQuantityUndelivered() / thisQuantity) * orderItem.getExtendedPriceAfterDiscount()));
 			}
+			
 			if(getOrder().getPaymentAmountReceivedTotal() eq 0) {
 				variables.capturableAmount = precisionEvaluate(variables.capturableAmount + getOrderFulfillment().getChargeAfterDiscount());
+			} else {
+				variables.capturableAmount = precisionEvaluate(variables.capturableAmount - precisionEvaluate(getOrder().getPaymentAmountReceivedTotal() - getOrder().getDeliveredItemsAmountTotal()));
 			}
+			
+			if(variables.capturableAmount lt 0) {
+				variables.capturableAmount = 0;
+			}
+			
 		}
 		return variables.capturableAmount;
 	}

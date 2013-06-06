@@ -50,9 +50,12 @@ Notes:
 				<!--- Pass the info across --->
 				<input type="hidden" name="order.orderID" value="#rc.orderFulfillment.getOrder().getOrderID()#" />
 				<input type="hidden" name="orderFulfillment.orderFulfillmentID" value="#rc.orderFulfillment.getOrderFulfillmentID()#" />
-				<input type="hidden" name="fulfillmentMethod.fulfillmentMethodID" value="#rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID()#" />
-				<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.orderFulfillment.getShippingMethod().getShippingMethodID()#" />
-				<input type="hidden" name="shippingAddress.addressID" value="#rc.orderFulfillment.getAddress().getAddressID()#" />
+				
+				<!--- Shipping - Hidden Fields --->
+				<cfif rc.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
+					<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.orderFulfillment.getShippingMethod().getShippingMethodID()#" />
+					<input type="hidden" name="shippingAddress.addressID" value="#rc.orderFulfillment.getAddress().getAddressID()#" />
+				</cfif>
 				
 				<!--- Location --->
 				<cf_HibachiFieldDisplay title="#$.slatwall.rbKey('entity.location')#" fieldName="location.locationID" valueOptions="#$.slatwall.getService('locationService').getLocationOptions()#" fieldType="select" edit="true" />
@@ -72,7 +75,6 @@ Notes:
 						<tr>
 							<cfset orderItemIndex++ />
 							
-							<input type="hidden" name="orderDeliveryItems[#orderItemIndex#].orderDeliveryItemID" value="" />
 							<input type="hidden" name="orderDeliveryItems[#orderItemIndex#].orderItem.orderItemID" value="#orderItem.getOrderItemID()#" />
 							
 							<td>#orderItem.getSku().getSkuCode()#</td>

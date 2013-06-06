@@ -318,6 +318,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		smartList.joinRelatedProperty("SlatwallSku", "product");
 		smartList.joinRelatedProperty("SlatwallProduct", "productType");
+		smartList.joinRelatedProperty("SlatwallSku", "alternateSkuCodes", "left");
 		
 		smartList.addKeywordProperty(propertyIdentifier="skuCode", weight=1);
 		smartList.addKeywordProperty(propertyIdentifier="skuID", weight=1);

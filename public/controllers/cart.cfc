@@ -160,7 +160,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		
 		arguments.rc.$.slatwall.addActionResult( "public:cart.placeOrder", order.hasErrors() );
 		
-		if(!order.hasErrors) {
+		if(!order.hasErrors()) {
 			rc.$.slatwall.setSessionValue('confirmationOrderID', order.getOrderID());
 		}
 	}

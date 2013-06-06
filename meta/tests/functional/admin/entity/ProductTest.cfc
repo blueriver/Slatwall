@@ -38,8 +38,6 @@ Notes:
 */
 component extends="Slatwall.meta.tests.functional.SlatwallFunctionalTestBase" {
 
-	public void function html_title_is_correct() {
-		selenium.open("/sp/air-jordan/");
-		assertEquals("Nike Air Jordan", selenium.getTitle());
-	}
+	
+	
 }

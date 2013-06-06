@@ -70,6 +70,9 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Non Persistent
+	property name="allCategoryIDPaths" persistent="false";
+	
 	// Deprecated Properties
 	property name="disableProductAssignmentFlag" ormtype="boolean";			// no longer needed because the listingPageFlag is defined for all objects
 	property name="templateFlag" ormtype="boolean";							// use contentTemplateType instead
@@ -78,6 +81,10 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
     
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public string function getAllCategoryIDPaths() {
+		return '';
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
