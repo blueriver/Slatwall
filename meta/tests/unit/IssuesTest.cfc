@@ -56,6 +56,8 @@ component extends="SlatwallUnitTestBase" {
 		ormFlush();
 		
 		entityDelete( product );
+		
+		ormFlush();
 	}
 
 	public void function issue_1331() {
