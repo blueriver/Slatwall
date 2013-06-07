@@ -218,7 +218,7 @@ Notes:
 						
 				</ul>
 
-				<sw:smartListPager smartList="#$.slatwall.getProductSmartList()#" index="" />
+				<sw:smartListPager smartList="#$.slatwall.getProductSmartList()#" />
 
 			<!--- If there are no products for this current listing page, then tell the customer --->
 			<cfelse>
