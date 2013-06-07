@@ -68,13 +68,17 @@ component extends="SlatwallUnitTestBase" {
 	}
 	
 	public void function issue_1348() {
-		var sku = request.slatwallScope.getService("skuService").newSku();
+		var product = entityNew("SlatwallProduct");
+		var sku = entityNew("SlatwallSku");
 		
+		sku.setProduct( product );
+		sku.setSkuCode( "issue_1348" );
 		sku.setPrice( -20 );
 		
 		sku.validate(context="save");
 		
 		assert( sku.hasError('price') );
+		assertValidRBKey(  sku.getError('price')[1] );
 	}
 }
 
