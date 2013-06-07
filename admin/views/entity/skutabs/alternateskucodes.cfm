@@ -37,18 +37,19 @@ Notes:
 
 --->
 <cfparam name="rc.sku" type="any" />
+<cfparam name="rc.edit" type="boolean">
+
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.sku.getAlternateSkuCodesSmartList()#"
 			recordEditAction="admin:entity.editalternateskucode"
-			recordEditQueryString="skuID=#rc.sku.getSkuID()#"
+			recordEditQueryString="redirectAction=admin:entity.detailsku&skuID=#rc.sku.getSkuID()#"
 			recordEditModal=true
 			recordDeleteAction="admin:entity.deletealternateskucode"
-			recordDeleteQueryString="skuID=#rc.sku.getSkuID()#&redirectAction=admin:entity.detailsku##tabalternateskucodes"
-			edit="#rc.edit#">
+			recordDeleteQueryString="redirectAction=admin:entity.detailsku&skuID=#rc.sku.getSkuID()###tabalternateskucodes">
 			
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="alternateSkuCode" />
 		
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createalternateskucode" class="btn" icon="plus" queryString="skuID=#rc.sku.getSkuID()#" modal="true" />
+	<cf_HibachiActionCaller action="admin:entity.createalternateskucode" class="btn" icon="plus" queryString="redirectAction=admin:entity.detailsku&skuID=#rc.sku.getSkuID()#" modal="true" />
 </cfoutput>
