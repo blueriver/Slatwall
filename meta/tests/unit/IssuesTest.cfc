@@ -79,7 +79,7 @@ component extends="SlatwallUnitTestBase" {
 		
 		assert( sku.hasError('price') );
 		
-		assert( sku.getError('price')[1] neq "_missing");
+		assert( right( sku.getError('price')[1], 8) neq "_missing");
 	}
 
 }
