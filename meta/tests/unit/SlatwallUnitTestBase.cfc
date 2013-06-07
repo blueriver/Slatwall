@@ -49,10 +49,4 @@ component extends="mxunit.framework.TestCase" output="false" {
 		//variables.slatwallFW1Application.endSlatwallLifecycle();
 	}
 	
-	// ===================== CUSTOM ASSERTIONS ==========================
-	
-	public boolean function assertValidRBKey( required string value ) {
-		assert( right(arguments.value, 8) neq "_missing");
-	}
-	
 }

@@ -78,7 +78,9 @@ component extends="SlatwallUnitTestBase" {
 		sku.validate(context="save");
 		
 		assert( sku.hasError('price') );
-		assertValidRBKey(  sku.getError('price')[1] );
+		
+		assert( sku.getError('price')[1] neq "_missing");
 	}
+
 }
 
