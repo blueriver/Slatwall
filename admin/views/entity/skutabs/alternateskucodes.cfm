@@ -45,7 +45,7 @@ Notes:
 			recordEditQueryString="redirectAction=admin:entity.detailsku&skuID=#rc.sku.getSkuID()#"
 			recordEditModal=true
 			recordDeleteAction="admin:entity.deletealternateskucode"
-			recordDeleteQueryString="redirectAction=admin:entity.detailsku&skuID=#rc.sku.getSkuID()#">
+			recordDeleteQueryString="redirectAction=admin:entity.detailsku&skuID=#rc.sku.getSkuID()###tabalternateskucodes">
 			
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="alternateSkuCode" />
 		
