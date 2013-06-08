@@ -108,8 +108,8 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 	}
 	
-	// Guest Checkout
-	public void function guestCheckout(required any rc) {
+	// Guest Account
+	public void function guestAccount(required any rc) {
 		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'create');
 		
 		if( !account.hasErrors() ) {
