@@ -97,7 +97,7 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 	public string function getExternalPaymentHTML() {
 		if(!isNull(getPaymentIntegration())) {
 			arguments.paymentMethod = this;
-			return getPaymentIntegration().getIntegrationCFC( "payment" ).getExternalPaymentHTML( argumentsCollection=arguments );
+			return getPaymentIntegration().getIntegrationCFC( "payment" ).getExternalPaymentHTML( argumentCollection=arguments );
 		}
 		return "";
 	}
