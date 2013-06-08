@@ -43,4 +43,14 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 		return "external";
 	}
 	
+	public string function getExternalPaymentHTML( required any paymentMethod ) {
+		var returnHTML = "";
+		
+		savecontent variable="returnHTML" {
+			include "views/main/externalpayment.cfm";
+		}
+		
+		return returnHTML; 
+	}
+	
 }
