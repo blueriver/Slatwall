@@ -69,6 +69,16 @@ component extends="SlatwallUnitTestBase" {
 		assertFalse( product.isProcessable('addOptionGroup') );
 	}
 	
+	public void function issue_1335() {
+		
+		var skuCurrency = entityNew("SlatwallSkuCurrency");
+		
+		skuCurrency.setPrice('xx');
+		skuCurrency.validate(context='save');
+		
+		assert( skuCurrency.hasError('price') );	
+	}
+	
 	public void function issue_1348() {
 		var product = entityNew("SlatwallProduct");
 		var sku = entityNew("SlatwallSku");
@@ -83,6 +93,7 @@ component extends="SlatwallUnitTestBase" {
 		
 		assert( right( sku.getError('price')[1], 8) neq "_missing");
 	}
+	
 
 }
 
