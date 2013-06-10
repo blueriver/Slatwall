@@ -88,7 +88,7 @@ Notes:
 	<cfset orderRequirementsList = listPrepend(orderRequirementsList, "account") />
 
 	<!--- OPTIONAL: This should be left in if you would like to allow for guest checkout --->
-	<cfif $.slatwall.account().getGuestAccountFlag()>
+	<cfif $.slatwall.cart().getAccount().getGuestAccountFlag()>
 		
 		<!--- OPTIONAL: This condition can be left in if you would like to make it so that a guest checkout is only valid if the page is refreshed via a form post with guestCheckoutFlag always passed across --->
 		<cfif structKeyExists(form, "guestAccountFlag") && form.guestAccountFlag>
@@ -733,12 +733,17 @@ Notes:
 													<!--- END: SPLIT PAYMENT --->
 												</div>
 											</div>
+										<!--- EXTERNAL --->
+										<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "external">
+											
+											#paymentDetails.paymentMethod.getExternalPaymentHTML()#
+											
 										<!--- GIFT CARD --->
 										<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "giftCard">
 											
 										<!--- TERM PAYMENT --->
 										<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "termPayment">
-											
+												
 										</cfif>
 										
 										<div class="control-group pull-right">
