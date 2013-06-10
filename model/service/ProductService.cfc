@@ -197,6 +197,14 @@ component extends="HibachiService" accessors="true" {
 	
 	}
 	
+	public any function processProduct_deleteDefaultImage(required any product, required struct data) {
+		if(structKeyExists(arguments.data, "imageFile")) {
+			if(fileExists(getHibachiScope().setting('globalAssetsImageFolderPath') & '/product/default/#imageFile#')) {
+				fileDelete(getHibachiScope().setting('globalAssetsImageFolderPath') & '/product/default/#imageFile#');	
+			}
+		}
+	}
+	
 	public any function processProduct_uploadDefaultImage(required any product, required any processObject) {
 		// Wrap in try/catch to add validation error based on fileAcceptMIMEType
 		try {
