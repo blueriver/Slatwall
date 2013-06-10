@@ -1658,6 +1658,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var smartList = getHibachiDAO().getSmartList(argumentCollection=arguments);
 		
 		smartList.joinRelatedProperty("SlatwallOrderItem", "order", "inner", true);
+		smartList.joinRelatedProperty("SlatwallOrderItem", "orderItemType", "inner", true);
+		smartList.joinRelatedProperty("SlatwallOrderItem", "orderItemStatusType", "inner", true);
 		smartList.joinRelatedProperty("SlatwallOrder", "account", "left", true);
 		
 		smartList.addKeywordProperty(propertyIdentifier="order.orderNumber", weight=1);
