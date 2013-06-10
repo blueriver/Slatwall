@@ -1652,7 +1652,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return smartList;
 	}
 	
-	public any function getOrderItemSmartList( struct data={} ) {
+		public any function getOrderItemSmartList( struct data={} ) {
 		arguments.entityName = "SlatwallOrderItem";
 	
 		var smartList = getHibachiDAO().getSmartList(argumentCollection=arguments);
@@ -1660,7 +1660,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		smartList.joinRelatedProperty("SlatwallOrderItem", "order", "inner", true);
 		smartList.joinRelatedProperty("SlatwallOrderItem", "orderItemType", "inner", true);
 		smartList.joinRelatedProperty("SlatwallOrderItem", "orderItemStatusType", "inner", true);
-		smartList.joinRelatedProperty("SlatwallOrder", "account", "left", true);
+		smartList.joinRelatedProperty("SlatwallOrder", "orderOrigin", "left");
+		smartList.joinRelatedProperty("SlatwallOrder", "account", "left");
+		smartList.joinRelatedProperty("SlatwallAccount", "primaryEmailAddress", "left");
+		smartList.joinRelatedProperty("SlatwallAccount", "primaryPhoneNumber", "left");
 		
 		smartList.addKeywordProperty(propertyIdentifier="order.orderNumber", weight=1);
 		smartList.addKeywordProperty(propertyIdentifier="order.account.firstName", weight=1);
