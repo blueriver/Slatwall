@@ -42,9 +42,16 @@ Notes:
 <cfparam name="rc.skuID" type="any" />
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.skuCurrency#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.skuCurrency#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
-		
+	<cf_HibachiEntityDetailForm object="#rc.skuCurrency#" edit="#rc.edit#" 
+								saveActionQueryString="skuID=#rc.skuID#"
+								saveActionHash="tabcurrencies">
+								
+		<cf_HibachiEntityActionBar type="detail" object="#rc.skuCurrency#" edit="#rc.edit#"
+								   backAction="admin:entity.detailsku"
+								   backQueryString="accountID=#rc.skuID#"
+								   cancelAction="admin:entity.detailsku"
+								   cancelQueryString="accountID=#rc.skuID#" />
+								   
 		<input type="hidden" name="sku.skuID" value="#rc.skuID#" />
 		<input type="hidden" name="currency.currencyCode" value="#rc.currencyCode#" />
 		
@@ -53,11 +60,11 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.skuCurrency#" property="price" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.skuCurrency#" property="listPrice" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
-			
-			<cfif !rc.skuCurrency.isNew()>
-				<cf_HibachiActionCaller action="admin:entity.deleteskucurrency" queryString="skuCurrencyID=#rc.skuCurrency.getSkuCurrencyID()#&redirectAction=#request.context.returnAction#&skuID=#rc.skuID#" class="btn btn-danger" />
-			</cfif>
-		</cf_HibachiPropertyRow>
+		</cf_HibachiPropertyRow>	
+		
+		<cfif !rc.skuCurrency.isNew()>
+			<cf_HibachiActionCaller action="admin:entity.deleteskucurrency" queryString="skuCurrencyID=#rc.skuCurrency.getSkuCurrencyID()#&redirectAction=admin:entity.detailsku&skuID=#rc.skuID#" class="btn btn-danger" />
+		</cfif>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
