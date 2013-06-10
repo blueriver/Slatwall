@@ -80,13 +80,19 @@ component extends="SlatwallUnitTestBase" {
 	}
 	
 	public void function issue_1335() {
-		
+
 		var skuCurrency = entityNew("SlatwallSkuCurrency");
+
+		skuCurrency.setPrice( -20 );
+		skuCurrency.setListPrice( 'test' );
 		
-		skuCurrency.setPrice('xx');
-		skuCurrency.validate(context='save');
+		skuCurrency.validate(context="save");
 		
-		assert( skuCurrency.hasError('price') );	
+		assert( skuCurrency.hasError('price') );
+		assert( skuCurrency.hasError('listPrice') );
+		
+		assert( right( skuCurrency.getError('price')[1], 8) neq "_missing");
+		assert( right( skuCurrency.getError('listPrice')[1], 8) neq "_missing");
 	}
 	
 	public void function issue_1348() {
