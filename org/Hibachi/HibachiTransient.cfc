@@ -166,7 +166,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			var currentProperty = properties[p];
 			
 			// Check to see if this property has a key in the data that was passed in
-			if( structKeyExists(arguments.data, currentProperty.name) ) {
+			if( structKeyExists(arguments.data, currentProperty.name) && (!isPersistent() || getHibachiScope().authenticateEntityProperty( crudType="update", entityName=this.getClassName(), propertyName=currentProperty.name) ) ) {
 			
 				// ( COLUMN )
 				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) && !structKeyExists(currentProperty, "hb_fileUpload") ) {
