@@ -90,8 +90,8 @@ Notes:
 	<!--- OPTIONAL: This should be left in if you would like to allow for guest checkout --->
 	<cfif $.slatwall.cart().getAccount().getGuestAccountFlag()>
 		
-		<!--- OPTIONAL: This condition can be left in if you would like to make it so that a guest checkout is only valid if the page is refreshed via a form post with guestCheckoutFlag always passed across --->
-		<cfif structKeyExists(form, "guestAccountFlag") && form.guestAccountFlag>
+		<!--- OPTIONAL: This condition can be left in if you would like to make it so that a guest checkout is only valid if the page submitted with a slatAction.  This prevents guest checkouts from still being valid if the user navigates away, and then back --->
+		<cfif arrayLen($.slatwall.getCalledActions())>
 			<cfset orderRequirementsList = listDeleteAt(orderRequirementsList, listFindNoCase(orderRequirementsList, "account")) />
 		</cfif>
 		<!--- IMPORTANT: If you delete the above contitional so that a guest can move about the site without loosing their checkout data, then you will want to uncomment below --->
@@ -220,9 +220,6 @@ Notes:
 									<!--- This hidden input is what tells slatwall to 'create' an account, it is then chained by the 'login' method so that happens directly after --->
 									<input type="hidden" name="slatAction" value="public:account.create,public:account.login" />
 									
-									<!--- This is also passed so that guestCheckout will work when the page is reloaded --->
-									<input type="hidden" name="guestCheckoutFlag" value="1" />
-									
 									<!--- Name --->
 									<div class="row">
 										
@@ -305,8 +302,10 @@ Notes:
 												$('body').on('change', 'input[name="createAuthenticationFlag"]', function(e){
 													if( $(this).val() == 0 ) {
 														$('##password-details').hide();
+														$(this).closest('form').find('input[name="slatAction"]').val('public:cart.guestaccount');
 													} else {
-														$('##password-details').show();	
+														$('##password-details').show();
+														$(this).closest('form').find('input[name="slatAction"]').val('public:account.create,public:account.login');
 													}
 												});
 												$('input[name="createAuthenticationFlag"]:checked').change();
