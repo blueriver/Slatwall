@@ -59,6 +59,16 @@ component extends="SlatwallUnitTestBase" {
 		
 		ormFlush();
 	}
+	
+	public void function issue_1329() {
+		
+		var smartList = request.slatwallScope.getService("productService").getProductSmartList();
+		
+		smartList.addRange( 'calculatedQATS', 'XXX^' );
+		
+		smartList.getPageRecords();
+		
+	}
 
 	public void function issue_1331() {
 		
