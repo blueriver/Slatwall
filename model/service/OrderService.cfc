@@ -1652,6 +1652,25 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return smartList;
 	}
 	
+	public any function getOrderItemSmartList( struct data={} ) {
+		arguments.entityName = "SlatwallOrderItem";
+	
+		var smartList = getHibachiDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.joinRelatedProperty("SlatwallOrderItem", "order", "inner", true);
+		smartList.joinRelatedProperty("SlatwallOrder", "account", "left", true);
+		
+		smartList.addKeywordProperty(propertyIdentifier="order.orderNumber", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="order.account.firstName", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="order.account.lastName", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="order.account.company", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="order.account.primaryEmailAddress.emailAddress", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="order.account.primaryPhoneNumber.phoneNumber", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="order.orderOrigin.orderOriginName", weight=1);
+		
+		return smartList;
+	}
+	
 	// ====================  END: Smart List Overrides ========================
 	
 	// ====================== START: Get Overrides ============================
