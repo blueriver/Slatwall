@@ -40,7 +40,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Persistent Properties
 	property name="accountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="superUserFlag" ormtype="boolean";
+	property name="superUserFlag" hb_populateEnabled="false" ormtype="boolean";
 	property name="cmsAccountID" ormtype="string" hb_populateEnabled="false";
 	property name="firstName" ormtype="string";
 	property name="lastName" ormtype="string";
