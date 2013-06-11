@@ -180,7 +180,7 @@ component extends="HibachiService" accessors="true" {
 		var newSku = getSkuService().newSku();
 		
 		newSku.setPrice( arguments.processObject.getPrice() );
-		newSku.setPrice( arguments.processObject.getRenewalPrice() );
+		newSku.setRenewalPrice( arguments.processObject.getRenewalPrice() );
 		if( arguments.processObject.getListPrice() != "" && isNumeric(arguments.processObject.getListPrice() )) {
 			newSku.setListPrice( arguments.data.listPrice );	
 		}

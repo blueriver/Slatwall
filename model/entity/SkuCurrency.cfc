@@ -41,6 +41,7 @@ component entityname="SlatwallSkuCurrency" table="SlatwallSkuCurrency" persisten
 	// Persistent Properties
 	property name="skuCurrencyID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="price" ormtype="big_decimal" hb_formatType="currency" default="0";
+	property name="renewalPrice" ormtype="big_decimal" hb_formatType="currency" default="0";
 	property name="listPrice" ormtype="big_decimal" hb_formatType="currency" default="0";
 	
 	// Related Object Properties (many-to-one)

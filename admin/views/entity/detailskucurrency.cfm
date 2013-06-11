@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.skuCurrency" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 <cfparam name="rc.currencyCode" type="string" />
-<cfparam name="rc.skuID" type="any" />
+<cfparam name="rc.sku" type="any" />
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.skuCurrency#" edit="#rc.edit#" 
@@ -48,22 +48,25 @@ Notes:
 								
 		<cf_HibachiEntityActionBar type="detail" object="#rc.skuCurrency#" edit="#rc.edit#"
 								   backAction="admin:entity.detailsku"
-								   backQueryString="accountID=#rc.skuID#"
+								   backQueryString="skuID=#rc.sku.getSkuID()#"
 								   cancelAction="admin:entity.detailsku"
-								   cancelQueryString="accountID=#rc.skuID#" />
+								   cancelQueryString="skuID=#rc.sku.getSkuID()#" />
 								   
-		<input type="hidden" name="sku.skuID" value="#rc.skuID#" />
+		<input type="hidden" name="sku.skuID" value="#rc.sku.getSkuID()#" />
 		<input type="hidden" name="currency.currencyCode" value="#rc.currencyCode#" />
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.skuCurrency#" property="price" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.skuCurrency#" property="listPrice" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.skuCurrency#" property="price" edit="#rc.edit#" value="#rc.sku.getPriceByCurrencyCode( rc.currencyCode )#">
+				<cfif rc.sku.getProduct().getBaseProductType() eq "subscription">
+					<cf_HibachiPropertyDisplay object="#rc.skuCurrency#" property="renewalPrice" edit="#rc.edit#" value="#rc.sku.getRenewalPriceByCurrencyCode( rc.currencyCode )#">
+				</cfif>
+				<cf_HibachiPropertyDisplay object="#rc.skuCurrency#" property="listPrice" edit="#rc.edit#" value="#rc.sku.getListPriceByCurrencyCode( rc.currencyCode )#">
 			</cf_HibachiPropertyList>
-		</cf_HibachiPropertyRow>	
+		</cf_HibachiPropertyRow>
 		
 		<cfif !rc.skuCurrency.isNew()>
-			<cf_HibachiActionCaller action="admin:entity.deleteskucurrency" queryString="skuCurrencyID=#rc.skuCurrency.getSkuCurrencyID()#&redirectAction=admin:entity.detailsku&skuID=#rc.skuID#" class="btn btn-danger" />
+			<cf_HibachiActionCaller action="admin:entity.deleteskucurrency" queryString="skuCurrencyID=#rc.skuCurrency.getSkuCurrencyID()#&redirectAction=admin:entity.detailsku&skuID=#rc.sku.getSkuID()#" class="btn btn-danger" />
 		</cfif>
 		
 	</cf_HibachiEntityDetailForm>
