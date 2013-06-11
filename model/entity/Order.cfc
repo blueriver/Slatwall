@@ -239,8 +239,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.addOrderItemSkuOptionsSmartList = getService("skuService").getSkuSmartList();
 			variables.addOrderItemSkuOptionsSmartList.addFilter('activeFlag', 1);
 			variables.addOrderItemSkuOptionsSmartList.addFilter('product.activeFlag', 1);
-			variables.addOrderItemSkuOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'productType');
-			variables.addOrderItemSkuOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'brand');
+			variables.addOrderItemSkuOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'productType', 'inner');
+			variables.addOrderItemSkuOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'brand', 'left');
 		}
 		return variables.addOrderItemSkuOptionsSmartList;
 	}
@@ -250,8 +250,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.addOrderItemStockOptionsSmartList = getService("stockService").getStockSmartList();
 			variables.addOrderItemStockOptionsSmartList.addFilter('sku.activeFlag', 1);
 			variables.addOrderItemStockOptionsSmartList.addFilter('sku.product.activeFlag', 1);
-			variables.addOrderItemStockOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'productType');
-			variables.addOrderItemStockOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'brand');
+			variables.addOrderItemStockOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'productType', 'inner');
+			variables.addOrderItemStockOptionsSmartList.joinRelatedProperty('SlatwallProduct', 'brand', 'left');
 		}
 		return variables.addOrderItemStockOptionsSmartList;
 	}
