@@ -47,7 +47,7 @@ Notes:
 								
 		<cf_HibachiEntityActionBar type="detail" object="#rc.promotioncode#" edit="#rc.edit#"
 								   backAction="admin:entity.detailpromotion"
-								   backQueryString="productID=#rc.promotion.getPromotionID()#"
+								   backQueryString="promotionID=#rc.promotion.getPromotionID()#"
 								   cancelAction="admin:entity.detailpromotion"
 								   cancelQueryString="promotionID=#rc.promotion.getPromotionID()#" />
 		
