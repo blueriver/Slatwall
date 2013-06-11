@@ -42,7 +42,9 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.sku#" edit="#rc.edit#" saveActionQueryString="skuID=#rc.sku.getSkuID()#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.sku#" edit="#rc.edit#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.sku#" edit="#rc.edit#"
+					backAction="admin:entity.detailproduct"
+					backQueryString="productID=#rc.product.getProductID()#">
 			<cf_HibachiActionCaller action="admin:entity.createalternateskucode" querystring="skuID=#rc.sku.getSkuID()#&redirectAction=#request.context.slatAction#" type="list" modal="true" />
 		</cf_HibachiEntityActionBar>
 		
