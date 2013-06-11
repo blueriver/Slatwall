@@ -473,7 +473,7 @@ Notes:
 													<!--- We should still pass the shipping method as a hidden value --->
 													<input type="hidden" name="orderFulfillments[#orderFulfillmentIndex#].shippingMethod.shippingMethodID" value="#orderFulfillment.getShippingMethodOptions()[1]['value']#" />
 													
-													<p>This order will be shipped via: #orderFulfillment.getShippingMethodOptions()[1].getShippingMethodRate().getShippingMethod().getShippingMethodName()# ( #orderFulfillment.getShippingMethodOptions()[1].getFormattedValue('totalCharge')# )</p>
+													<p>This order will be shipped via: #orderFulfillment.getFulfillmentShippingMethodOptions()[1].getShippingMethodRate().getShippingMethod().getShippingMethodName()# ( #orderFulfillment.getFulfillmentShippingMethodOptions()[1].getFormattedValue('totalCharge')# )</p>
 													
 												<!--- Show message to customer telling them that they need to fill in an address before we can provide a shipping method quote --->
 												<cfelse>
