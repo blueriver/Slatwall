@@ -110,6 +110,49 @@ component extends="SlatwallUnitTestBase" {
 		assert( right( sku.getError('price')[1], 8) neq "_missing");
 	}
 	
+	public void function issue_1376() {
+		
+		var accountService = request.slatwallScope.getService("accountService");
+		
+		var accountData = {
+			firstName = "1376",
+			lastName = "Issue",
+			phoneNumber = "1234567890",
+			emailAddress = "issue1376@github.com",
+			emailAddressConfirm = "issue1376@github.com",
+			createAuthenticationFlag = 1,
+			password = "issue1376",
+			passwordConfirm = "issue1376"
+		};
+		 
+		var account = entityNew("SlatwallAccount");
+		var account2 = entityNew("SlatwallAccount");
+		
+		account = accountService.processAccount(account, accountData, 'create'); 
+		var accountHasErrors = account.hasErrors();
+		
+		ormFlush();
+		
+		accountData.firstName="1376 - 2";
+		
+		account2 = accountService.processAccount(account2, accountData, 'create');
+		
+		var account2HasErrors = account2.hasErrors();
+		
+		account.setPrimaryEmailAddress(javaCast("null",""));
+		account.setPrimaryPhoneNumber(javaCast("null",""));
+		account2.setPrimaryEmailAddress(javaCast("null",""));
+		account2.setPrimaryPhoneNumber(javaCast("null",""));
+		
+		entityDelete(account);
+		entityDelete(account2);
+		
+		ormFlush();
+		
+		assertFalse(accountHasErrors);
+		assert(account2HasErrors);
+	}
+	
 
 }
 
