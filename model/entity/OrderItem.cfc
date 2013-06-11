@@ -43,7 +43,7 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 	property name="price" ormtype="big_decimal";
 	property name="skuPrice" ormtype="big_decimal";
 	property name="currencyCode" ormtype="string" length="3";
-	property name="quantity" ormtype="integer";
+	property name="quantity" hb_populateEnabled="public" ormtype="integer";
 	property name="estimatedFulfillmentDateTime" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)

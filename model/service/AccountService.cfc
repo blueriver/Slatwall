@@ -294,20 +294,6 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ====================== START: Save Overrides ===========================
 	
-	public any function saveAccount(required any account, struct data={}, string context="save") {
-	
-		// Call the generic save method to populate and validate
-		arguments.account = save(entity=arguments.account, data=arguments.data, context=arguments.context);
-	
-		// If the super admin flag is being adjusted then we need to make sure the current user is a super admin
-		if(structKeyExists(arguments.data, "superUserFlag") && isBoolean(arguments.data.superUserFlag) && getHibachiScope().getSuperUserFlag()) {
-			arguments.account.setSuperUserFlag(arguments.data.superUserFlag);
-		}
-		
-		return arguments.order;
-	}
-	
-	
 	public any function saveAccountPaymentMethod(required any accountPaymentMethod, struct data={}, string context="save") {
 		
 		// Call the generic save method to populate and validate
