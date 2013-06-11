@@ -1,7 +1,9 @@
-component extends="handler" output="false" accessors="true" {
-
-	property name="assignedSiteIDArray";
-
+<cfcomponent extends="handler" output="false" accessors="true">
+	
+	<cfproperty name="assignedSiteIDArray" type="array" />
+	
+	<cfscript>
+	
 	// Cached the assigned sites
 	private array function getAssignedSiteIDArray() {
 		if(!structKeyExists(variables, "assignedSiteIDArray")) {
@@ -87,5 +89,30 @@ component extends="handler" output="false" accessors="true" {
 			updatePluginSetting(moduleID=getMuraPluginConfig().getModuleID(), settingName=replaceNoCase(arguments.entity.getSettingName(), "integrationmura", ""), settingValue=arguments.entity.getSettingValue());
 		}
 	}
+	
+	</cfscript>
 
-}
+	<cffunction name="afterAccountSaveSuccess">
+		<cfargument name="slatwallScope" type="any" required="true" />
+		<cfargument name="entity" type="any" required="true" />
+		
+		<cfif !isNull(arguments.entity.getCMSAccountID()) and len(arguments.entity.getCMSAccountID()) >
+			<cfquery name="rs">
+				UPDATE
+					tusers
+				SET
+					Fname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.entity.getFirstName()#" />,
+					Lname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.entity.getLastName()#" />,
+					<cfif not isNull(arguments.entity.getCompany())>
+						Company = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.entity.getCompany()#" />,
+					<cfelse>
+						Company = '',
+					</cfif>
+					Email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.entity.getEmailAddress()#" />,
+					MobilePhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.entity.getPhoneNumber()#" />
+				WHERE
+					tusers.userID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.entity.getCMSAccountID()#" />
+			</cfquery>
+		</cfif>
+	</cffunction>
+</cfcomponent>
