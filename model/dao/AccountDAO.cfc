@@ -38,6 +38,12 @@ Notes:
 --->
 <cfcomponent extends="HibachiDAO">
 	
+	<cffunction name="getEmailAddressNotInUseFlag" returntype="boolean" access="public">
+		<cfargument name="emailAddress" required="true" type="string" />
+		
+		<cfreturn not arrayLen(ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.accountEmailAddresses aea WHERE aea.emailAddress=:emailAddress", {emailAddress=arguments.emailAddress})) />
+	</cffunction>
+	
 	<cffunction name="getInternalAccountAuthenticationsByEmailAddress" returntype="any" access="public">
 		<cfargument name="emailAddress" required="true" type="string" />
 		

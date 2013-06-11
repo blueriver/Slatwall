@@ -106,7 +106,6 @@ component extends="SlatwallUnitTestBase" {
 		sku.validate(context="save");
 		
 		assert( sku.hasError('price') );
-		
 		assert( right( sku.getError('price')[1], 8) neq "_missing");
 	}
 	
