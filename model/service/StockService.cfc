@@ -279,10 +279,51 @@ component extends="HibachiService" accessors="true" output="false" {
 			}
 		}
 		
-	return arguments.stockAdjustment;
+		return arguments.stockAdjustment;
 	}
-
-	//Process: StockAdjustment Context: processAdjustment 	
+	
+	// Process: StockAdjustment
+	public any function processStockAdjustment_addStockAdjustmentItem(required any stockAdjustment, required any processObject) {
+		var foundItem = false;
+		
+		if( listFindNoCase("satLocationTransfer,satManualOut", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+			var fromStock = getStockBySkuAndLocation(arguments.processObject.getSku(), arguments.stockAdjustment.getFromLocation());	
+		}
+		if( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+			var toStock = getStockBySkuAndLocation(arguments.processObject.getSku(), arguments.stockAdjustment.getToLocation());
+		}
+		
+		
+		// Look for the orderItem in the vendorOrder
+		for(var ai=1; ai<=arrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); ai++) {
+			// If the location, sku, cost & estimated arrival are already the same as an item on the order then we can merge them.  Otherwise seperate
+			if( ( listFindNoCase("satLocationTransfer,satManualOut", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) && arguments.stockAdjustment.getStockAdjustmentItems()[ai].getFromStock().getSku().getSkuID() == arguments.processObject.getSku().getSkuID() )
+				||
+				( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) && arguments.stockAdjustment.getStockAdjustmentItems()[ai].getToStock().getSku().getSkuID() == arguments.processObject.getSku().getSkuID() )
+				) {
+					
+				foundItem = true;
+				arguments.stockAdjustment.getStockAdjustmentItems()[ai].setQuantity( arguments.stockAdjustment.getStockAdjustmentItems()[ai].getQuantity() + int(arguments.processObject.getQuantity()) );
+			}
+		}
+		
+		if(!foundItem) {
+			
+			var stockAdjustmentItem = this.newStockAdjustmentItem();
+			stockAdjustmentItem.setQuantity( int(arguments.processObject.getQuantity()) );
+			if( listFindNoCase("satLocationTransfer,satManualOut", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+				stockAdjustmentItem.setFromStock( fromStock );
+			}
+			if( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
+				stockAdjustmentItem.setToStock( toStock );
+			}
+			stockAdjustmentItem.setStockAdjustment( arguments.stockAdjustment );
+			
+		}
+		
+		return arguments.stockAdjustment;
+	}
+	
 	public any function processStockAdjustment_processAdjustment(required any stockAdjustment) {
 		
 		// Incoming (Transfer or ManualIn)
@@ -378,104 +419,6 @@ component extends="HibachiService" accessors="true" output="false" {
 	return arguments.stockAdjustment;
 
 	}
-	
-	/*public any function processStockAdjustment(required any stockAdjustment, struct data={}, string processContext="process") {
-		
-		if(arguments.processcontext eq 'addItems'){
-				
-			for(var i=1; i<=arrayLen(arguments.data.records); i++) {
-				
-				var thisRecord = arguments.data.records[i];
-				
-				if(val(thisRecord.quantity)) {
-					
-					var foundItem = false;
-					var sku = getSkuService().getSku( thisRecord.skuid );
-					
-					if( listFindNoCase("satLocationTransfer,satManualOut", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
-						var fromStock = getStockBySkuAndLocation(sku, arguments.stockAdjustment.getFromLocation());	
-					}
-					if( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
-						var toStock = getStockBySkuAndLocation(sku, arguments.stockAdjustment.getToLocation());
-					}
-					
-					
-					// Look for the orderItem in the vendorOrder
-					for(var ai=1; ai<=arrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); ai++) {
-						// If the location, sku, cost & estimated arrival are already the same as an item on the order then we can merge them.  Otherwise seperate
-						if( ( listFindNoCase("satLocationTransfer,satManualOut", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) && arguments.stockAdjustment.getStockAdjustmentItems()[ai].getFromStock().getSku().getSkuID() == thisRecord.skuid )
-							||
-							( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) && arguments.stockAdjustment.getStockAdjustmentItems()[ai].getToStock().getSku().getSkuID() == thisRecord.skuid )
-							) {
-								
-							foundItem = true;
-							arguments.stockAdjustment.getStockAdjustmentItems()[ai].setQuantity( arguments.stockAdjustment.getStockAdjustmentItems()[ai].getQuantity() + int(thisRecord.quantity) );
-						}
-					}
-					
-					
-					if(!foundItem) {
-						
-						var stockAdjustmentItem = this.newStockAdjustmentItem();
-						stockAdjustmentItem.setQuantity( int(thisRecord.quantity) );
-						if( listFindNoCase("satLocationTransfer,satManualOut", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
-							stockAdjustmentItem.setFromStock( fromStock );
-						}
-						if( listFindNoCase("satLocationTransfer,satManualIn", arguments.stockAdjustment.getStockAdjustmentType().getSystemCode()) ) {
-							stockAdjustmentItem.setToStock( toStock );
-						}
-						stockAdjustmentItem.setStockAdjustment( arguments.stockAdjustment );
-						
-					}
-					
-				}
-			}
-			
-		} else if(arguments.processcontext eq 'processAdjustment'){
-			
-			// Incoming
-			if(arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualIn") {
-				var stockReceiver = this.newStockReceiver();
-				stockReceiver.setReceiverType("stockAdjustment");
-				stockReceiver.setStockAdjustment(arguments.stockAdjustment);
-				
-				for(var i=1; i <= ArrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
-					var stockAdjustmentItem = arguments.stockAdjustment.getStockAdjustmentItems()[i];
-					var stockReceiverItem = this.newStockReceiverItem();
-					stockReceiverItem.setStockReceiver( stockReceiver );
-					stockReceiverItem.setStockAdjustmentItem( stockAdjustmentItem );
-					stockReceiverItem.setQuantity(stockAdjustmentItem.getQuantity());
-					stockReceiverItem.setCost(0);
-					stockReceiverItem.setStock(stockAdjustmentItem.getToStock());
-				}
-				
-				this.saveStockReceiver( stockReceiver );
-			}
-			
-			// Outgoing
-			if(arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualOut") {
-				var stockAdjustmentDelivery = this.newStockAdjustmentDelivery();
-				stockAdjustmentDelivery.setStockAdjustment(arguments.stockAdjustment);
-				
-				for(var i=1; i <= ArrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
-					var stockAdjustmentItem = arguments.stockAdjustment.getStockAdjustmentItems()[i];
-					var stockAdjustmentDeliveryItem = this.newStockAdjustmentDeliveryItem();
-					stockAdjustmentDeliveryItem.setStockAdjustmentDelivery(stockAdjustmentDelivery);
-					stockAdjustmentDeliveryItem.setStockAdjustmentItem(stockAdjustmentItem);
-					stockAdjustmentDeliveryItem.setQuantity(stockAdjustmentItem.getQuantity());
-					stockAdjustmentDeliveryItem.setStock(stockAdjustmentItem.getFromStock());
-				}
-				
-				this.saveStockAdjustmentDelivery(stockAdjustmentDelivery);
-			}
-			
-			
-			// Set the status to closed
-			arguments.stockAdjustment.setStockAdjustmentStatusType( getSettingService().getTypeBySystemCode("sastClosed") );
-		}
-		
-		return arguments.stockAdjustment;
-	}*/
 	
 	// =====================  END: Process Methods ============================
 	

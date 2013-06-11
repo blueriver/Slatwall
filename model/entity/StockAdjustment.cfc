@@ -59,6 +59,7 @@ component entityname="SlatwallStockAdjustment" table="SlatwallStockAdjustment" p
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="addStockAdjustmentItemSkuOptionsSmartList" persistent="false";
 	property name="adjustmentSkuOptions" persistent="false";
 	property name="displayName" persistent="false";
 	property name="stockAdjustmentStatusTypeSystemCode" persistent="false";
@@ -116,6 +117,15 @@ component entityname="SlatwallStockAdjustment" table="SlatwallStockAdjustment" p
 	
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getAddStockAdjustmentItemSkuOptionsSmartList() {
+		if(!structKeyExists(variables, "addStockAdjustmentItemSkuOptionsSmartList")) {
+			variables.addStockAdjustmentItemSkuOptionsSmartList = getService("skuService").getSkuSmartList();
+			variables.addStockAdjustmentItemSkuOptionsSmartList.addFilter('activeFlag', 1);
+			variables.addStockAdjustmentItemSkuOptionsSmartList.addFilter('product.activeFlag', 1);
+		}
+		return variables.addStockAdjustmentItemSkuOptionsSmartList;
+	}
 	
 	public string function getDisplayName(){
 		var displayName = "#getStockAdjustmentType().getType()#:";

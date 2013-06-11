@@ -39,11 +39,11 @@ Notes:
 <cfparam name="rc.stockAdjustment" type="any" />
 
 <cf_HibachiListingDisplay smartList="#rc.stockAdjustment.getstockAdjustmentItemsSmartList()#"
-						   recorddeleteaction="admin:warehouse.deleteStockAdjustmentItem"
-						   recorddeletequerystring="redirectAction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#"
-						   recordeditmodal="true"
-						   recordeditaction="admin:warehouse.editStockAdjustmentItem"
-						   recordeditquerystring="redirectAction=admin:warehouse.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#">
+						  recordDeleteAction="admin:entity.deleteStockAdjustmentItem"
+						  recordDeleteQueryString="redirectAction=admin:entity.editstockadjustment&stockAdjustmentID=#rc.stockadjustment.getStockAdjustmentID()#"
+						  recordEditAction="admin:entity.editStockAdjustmentItem"
+						  recordEditQueryString="redirectAction=admin:entity.editstockadjustment"
+						  recordEditModal="true">
 						   	   
 	<cfif listFindNoCase("satLocationTransfer,satManualOut,satPhysicalCount", rc.stockAdjustment.getStockAdjustmentType().getSystemCode())>
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="fromstock.sku.skucode" />
@@ -66,5 +66,18 @@ Notes:
 	<cf_HibachiListingColumn propertyIdentifier="quantity" />
 </cf_HibachiListingDisplay>
 
-<cf_HibachiProcessCaller entity="#rc.stockAdjustment#" action="admin:entity.processStockAdjustment" processContext="addItems" class="btn" icon="plus" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#" modal=true />
-
+<cfif rc.edit>
+	<cf_HibachiListingDisplay smartList="#rc.stockAdjustment.getAddStockAdjustmentItemSkuOptionsSmartList()#"
+							  recordProcessAction="admin:entity.processStockAdjustment"
+							  recordProcessContext="addStockAdjustmentItem"
+							  recordProcessEntity="#rc.stockAdjustment#"
+							  recordProcessUpdateTableID="LD#replace(rc.stockAdjustment.getstockAdjustmentItemsSmartList().getSavedStateID(),'-','','all')#">
+							    
+		<cf_HibachiListingColumn propertyIdentifier="skuCode" />
+		<cf_HibachiListingColumn propertyIdentifier="product.productCode" />
+		<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" />
+		<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" />
+		<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
+	</cf_HibachiListingDisplay>
+</cfif>
