@@ -48,10 +48,10 @@ Notes:
 					cancelAction="admin:entity.detailAccount"
 					cancelQueryString="accountID=#rc.account.getAccountID()#">
 		</cf_HibachiEntityActionBar>
-		
+
 		<!--- Hidden field to attach this to the account --->
 		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
-		
+
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.accountAddress#" property="accountAddressName" edit="#rc.edit#">
@@ -60,7 +60,6 @@ Notes:
 		</cf_HibachiPropertyRow>
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
-
 
 
 

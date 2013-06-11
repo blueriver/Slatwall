@@ -2,6 +2,6 @@
 	"properties":{
 		"promotionCode":			[{"contexts":"save","required":true,"method":"hasUniquePromotionCode"}],
 		"startDateTime":			[{"contexts":"save","dataType":"date"}],
-		"endDateTime":				[{"contexts":"save","dataType":"date"}]
+		"endDateTime":				[{"contexts":"save","dataType":"date","gtProperty":"startDateTime"}]
 	}
 }
