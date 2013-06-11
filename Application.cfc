@@ -42,14 +42,14 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	
 	// @hint this method always fires one time, even if the request is coming from an outside application.
 	public void function onEveryRequest() {
-		if(listFindNoCase("public,frontend", getSubsystem(request.context.slatAction))) {
-			getHibachiScope().setPublicPopulateFlag( true );
-		}
+		
 	}
 	
 	// @hint this will fire 1 time if you are running the application.  If the application is bootstraped then it won't run
 	public void function onInternalRequest() {
-		
+		if(listFindNoCase("public,frontend", getSubsystem(request.context.slatAction))) {
+			getHibachiScope().setPublicPopulateFlag( true );
+		}
 	}
 	
 	public void function onFirstRequest() {
