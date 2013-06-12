@@ -118,12 +118,12 @@ component extends="HibachiService" accessors="true" output="false" {
 	public any function saveCountry(required any country, struct data={}, string context="save") {
 	
 		// Call the generic save method to populate and validate
-		arguments.country = save(entity=arguments.order, data=arguments.data, context=arguments.context);
+		arguments.country = save(entity=arguments.country, data=arguments.data, context=arguments.context);
 	
 		// remove the cache of country code options
 		structDelete(variables, "countryCodeOptions");
 		
-		return arguments.order;
+		return arguments.country;
 	}
 	
 	// ======================  END: Save Overrides ============================

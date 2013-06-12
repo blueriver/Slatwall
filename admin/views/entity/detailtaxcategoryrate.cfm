@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.taxCategoryRate" type="any" />
-<cfparam name="rc.taxCategory" type="any" default="#rc.taxCategoryRate.getTaxCategoryID()#" />
+<cfparam name="rc.taxCategory" type="any" default="#rc.taxCategoryRate.getTaxCategory()#" />
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>

@@ -2,8 +2,8 @@
 	"properties":{
 		"orderType":						[{"contexts":"save","required":true}],
 		"orderStatusType":					[{"contexts":"save","required":true}],
-		"statusCode":		[
-												{"contexts":"placeOrder","inList":"ostNotPlaced"},
+		"statusCode":						[
+		    									{"contexts":"placeOrder,delete","inList":"ostNotPlaced"},
 												{"contexts":"addSaleOrderItem","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"},
 												{"contexts":"cancelOrder,closeOrder","inList":"ostNew,ostProcessing,ostOnHold"},
 												{"contexts":"createReturn","inList":"ostNew,ostProcessing,ostOnHold,ostClosed"},
