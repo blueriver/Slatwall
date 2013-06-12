@@ -853,7 +853,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 									processData.location.locationID = arguments.order.getOrderFulfillments()[i].getFulfillmentMethod().setting('fulfillmentMethodAutoLocation');
 									processData.orderFulfillment.orderFulfillmentID = arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID();
 									
-									newOrderDelivery = processOrderDelivery(newOrderDelivery, processData, 'create');
+									newOrderDelivery = this.processOrderDelivery(newOrderDelivery, processData, 'create');
 								}
 							}
 						}
