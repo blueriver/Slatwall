@@ -576,7 +576,7 @@
 		 * ...in which XXX is an ORM entity name.
 		 */
 		private function onMissingExportMethod( required string missingMethodName, required struct missingMethodArguments ){
-			var entityName = missingMethodName.substring( 6 );
+			var entityName = getProperlyCasedFullEntityName(missingMethodName.substring( 6 ));
 			var exportQry = getHibachiDAO().getExportQuery(entityName = entityName);
 			
 			export(data=exportQry);
