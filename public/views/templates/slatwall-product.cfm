@@ -69,8 +69,14 @@ Notes:
 		<div class="row">
 			<div class="span4">
 				<div class="well">
-					<!--- This displays the primary image which is pulled from the default sku --->
-					<a href="#$.slatwall.product().getImagePath()#" target="_blank">#$.slatwall.product().getImage(size="m")#</a>
+					<!--- Display primary product image if it exists or the product image placeholder  --->
+					<cfif $.slatwall.product().getImageExistsFlag()>
+						<!--- If the image exists, display image with link to full version --->
+						<a href="#$.slatwall.product().getImagePath()#" target="_blank">#$.slatwall.product().getImage(size="m")#</a>
+					<cfelse>
+						<!--- If the image doesn't exists, display image with link to full version --->
+						#$.slatwall.product().getImage(size="m")#
+					</cfif>
 				</div>
 			</div>
 			<div class="span8">
@@ -492,15 +498,29 @@ Notes:
 					http://docs.getslatwall.com/reference/product-images-and-cropping/							
 																												
 				--->
-				<cfloop array="#local.galleryDetails#" index="local.image">
-					
-					<!---[ DEVELOPER NOTES ]																		
-																													
-						Now that we are inside of the loop of images being returned, you have access to the			
-						following detials insilde of the local.image struct that came back in the array				
-																													
-					--->
-				</cfloop>
+				
+				<!--- If the product has more than the default image assigned, let's display all images --->
+				<cfif arraylen(local.galleryDetails) GT "1">
+					<ul class="thumbnails">
+						<cfloop array="#local.galleryDetails#" index="local.image">
+							<!---[ DEVELOPER NOTES ]																		
+								Now that we are inside of the loop of images being returned, you have access to the			
+								following detials insilde of the local.image struct that came back in the array				
+							--->
+							<li class="span3">
+								<a href="#local.image.resizedimagepaths[2]#" target="_blank" class="thumbnail" title="zoom">
+									<img src="#local.image.resizedimagepaths[1]#" alt="#local.image.name#">
+									<i class="icon-zoom-in"></i>
+									<span class="pull-right">
+										#local.image.name#
+									</span>
+								</a>
+							</li>
+						</cfloop>
+					</ul>
+				<cfelse>
+					<p>There are no additional images.</p>
+				</cfif>
 				
 			</div>
 		</div>
