@@ -398,13 +398,17 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		if(!structKeyExists(variables, cacheKey)) {
 			
 			var propertyMeta = getPropertyMetaData( arguments.propertyName );
-			var entityService = getService("hibachiService").getServiceByEntityName( listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.') );
+			var entityService = getService("hibachiService").getServiceByEntityName( listLast(propertyMeta.cfc,'.') );
 			
-			variables[ cacheKey ] = entityService.invokeMethod("get#listLast(getPropertyMetaData( arguments.propertyName ).cfc,'.')#SmartList");
+			variables[ cacheKey ] = entityService.invokeMethod("get#listLast(propertyMeta.cfc,'.')#SmartList");
 			
 			// If there was an hb_optionsSmartListData defined, then we can now apply that data to this smart list
 			if(structKeyExists(propertyMeta, "hb_optionsSmartListData")) {
 				variables[ cacheKey ].applyData( propertyMeta.hb_optionsSmartListData );
+			}
+			
+			if( getService("hibachiService").getEntityHasPropertyByEntityName(listLast(propertyMeta.cfc,'.'), 'activeFlag') ) {
+				variables[ cacheKey ].addFilter( 'activeFlag', 1 );
 			}
 		}
 		
