@@ -157,7 +157,16 @@
 			
 			// Now that there is a mura contentBean in the muraScope for sure, we can setup our content Variable, but only if the current content node is new
 			if($.slatwall.getContent().getNewFlag()) {
-				$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
+				var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') );
+				
+				if( (slatwallContent.getContentTemplateType().getSystemCode() eq "cttProduct" && $.slatwall.getProduct().getNewFlag()) ||
+					(slatwallContent.getContentTemplateType().getSystemCode() eq "cttProductType" && $.slatwall.getProductType().getNewFlag()) ||
+					(slatwallContent.getContentTemplateType().getSystemCode() eq "cttBrand" && $.slatwall.getBrand().getNewFlag())
+					) {
+					$.event('contentBean', $.getBean("content"));
+				} else {
+					$.slatwall.setContent( slatwallContent );
+				}
 			}
 			
 			// Check for any slatActions that might have been passed in and render that page as the first
