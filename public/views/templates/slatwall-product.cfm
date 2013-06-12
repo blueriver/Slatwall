@@ -95,7 +95,7 @@ Notes:
 							
 							<!--- Brand --->
 							<cfif !isNull($.slatwall.product().getBrand())>
-								<dt>Product Type</dt>
+								<dt>Brand</dt>
 								<dd>#$.slatwall.product().getBrand().getBrandName()#</dd>
 							</cfif>
 							
