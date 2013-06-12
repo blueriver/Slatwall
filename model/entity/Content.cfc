@@ -187,4 +187,17 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	// The setting method is not deprecated, but 
+	public any function setting(required string settingName, array filterEntities=[], formatValue=false) {
+		if(arguments.settingName == 'contentProductListingFlag') {
+			return getProductListingPageFlag();
+		}
+		return super.setting(argumentcollection=arguments);
+	}
+	
+	// ==================  END:  Deprecated Methods ========================
+	
 }
