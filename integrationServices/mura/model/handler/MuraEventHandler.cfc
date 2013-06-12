@@ -360,7 +360,7 @@
 					var parentContent = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( muraContent.getParentID(), muraContent.getSiteID() );
 					
 					// If the parent has changed, we need to update all nested
-					if(parentContent.getContentID() != slatwallContent.getParentContent().getContentID()) {
+					if(isNull(slatwallContent.getParentContent()) || parentContent.getContentID() != slatwallContent.getParentContent().getContentID()) {
 						
 						// Pull out the old IDPath so that we can update all nested nodes
 						var oldContentIDPath = slatwallContent.getContentIDPath();
