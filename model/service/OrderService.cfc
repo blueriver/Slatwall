@@ -1177,7 +1177,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				for(var i=1; i<=arrayLen(arguments.processObject.getOrderFulfillment().getOrderFulfillmentItems()); i++) {
 					
 					// Local pointer to the orderItem
-					var thisOrderItem = arguments.processObject.getOrderFulfillment().getOrderFulfillmentItems();
+					var thisOrderItem = arguments.processObject.getOrderFulfillment().getOrderFulfillmentItems()[i];
 					
 					if(thisOrderItem.getQuantityUndelivered()) {
 						// Create a new orderDeliveryItem
