@@ -380,10 +380,10 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	}
 	
 	public any function getMaximumItemPriceFormatted() {
-		if(isNull(getMinimumItemPrice()) || !isNumeric(getMinimumItemPrice()) || getMinimumItemPrice() == 0) {
+		if(isNull(getMaximumItemPrice()) || !isNumeric(getMaximumItemPrice()) || getMaximumItemPrice() == 0) {
 			return rbKey('define.unlimited');
 		}
-		return formatValue(getMinimumItemPrice(), "currency");
+		return formatValue(getMaximumItemPrice(), "currency");
 	}
 	
 	public any function getMinimumFulfillmentWeightFormatted() {
