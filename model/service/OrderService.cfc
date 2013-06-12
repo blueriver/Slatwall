@@ -1232,9 +1232,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.processObject.addError('capturableAmount', rbKey('validate.processOrderDelivery_create.captureAmount'));
 		}
 		
-		// Call the update order status incase this needs to be changed to closed.
-		updateOrderStatus( arguments.orderDelivery.getOrder() );
-		
 		return arguments.orderDelivery;
 	}
 	
