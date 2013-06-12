@@ -321,7 +321,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getDefaultSku().getResizedImagePath(argumentCollection = arguments);
 	}
 	
-	public string function getImageExistsFlag() {
+	public boolean function getImageExistsFlag() {
 		return getDefaultSku().getImageExistsFlag();
 	}
 	
