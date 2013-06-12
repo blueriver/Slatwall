@@ -101,7 +101,7 @@ Notes:
 								
 								<tr>
 									<!--- Display Product Name --->
-									<td>#orderItem.getSku().getProduct().getTitle()#</td>
+									<td><a href="#orderItem.getSku().getProduct().getProductURL()#">#orderItem.getSku().getProduct().getTitle()#</a></td>
 									
 									<!--- This is a list of whatever options are there for this product --->
 									<td>#orderItem.getSku().displayOptions()#</td>
