@@ -538,7 +538,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getSubscriptionDAO().getUnusedProductSubscriptionTerms( argumentCollection=arguments );
 	}
 	
-	public any function getProductSkusBySelectedOptions(required string subscriptionUsageID ){
+	public any function getSubscriptionCurrentStatus(required string subscriptionUsageID ){
 		return getSubscriptionDAO().getSubscriptionCurrentStatus( argumentCollection=arguments );
 	}
 	
