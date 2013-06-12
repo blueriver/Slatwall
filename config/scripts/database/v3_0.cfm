@@ -154,6 +154,33 @@ Notes:
 	</cfcatch>
 </cftry>
 
+<!--- Move the listing flags from SlatwallSetting to the content --->
+<cftry>
+	<cfquery name="local.listingpagesettings">
+		SELECT cmsContentID FROM SlatwallSetting WHERE settingName = 'contentProductListingFlag' and cmsContentID is not null and settingValue = 1
+	</cfquery>
+	
+	<cfloop query="#local.listingpagesettings#">
+		<cfquery name="local.listingflagupdate">
+			UPDATE
+				SlatwallContent
+			SET
+				productListingPageFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+			WHERE
+				SlatwallContent.cmsContentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.listingpagesettings.cmsContentID#">
+		</cfquery>
+	</cfloop>
+	
+	<cfquery name="local.deletelistingpagesettings">
+		DELETE FROM SlatwallSetting WHERE settingName = 'contentProductListingFlag' and cmsContentID is not null
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Updating the listing page flags out of settings and into content nodes">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
 <cfif local.scriptHasErrors>
 	<cflog file="Slatwall" text="General Log - Part of Script v3_0 had errors when running">
 	<cfthrow detail="Part of Script v3_0 had errors when running">
