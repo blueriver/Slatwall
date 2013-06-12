@@ -94,7 +94,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		// If either purchasing is not required, or it WAS purchased... then we can check subscriptions
-		if(!requirePurchaseSettingDetails.settingValue || getSlatwallScope().getValue("purchasedAccess")) {
+		if(!requirePurchaseSettingDetails.settingValue || accessDetails.purchasedAccessFlag) {
 			
 			// First we can check if a subscription to this content or parent conent exist
 			var activeAccountBenefitsViaContentSmartList = duplicate(arguments.account.getActiveSubscriptionUsageBenefitsSmartList());

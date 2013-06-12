@@ -154,8 +154,8 @@ Notes:
 				    					<label class="control-label" for="rating">#attribute.getAttributeName()#</label>
 				    					<div class="controls">
 				    						
-											<sw:formField type="#attribute.getFormFieldType()#" name="#attribute.getAttributeCode()#" valueObject="#attributeValueObject#" valueObjectProperty="attributeValue" valueOptions="#attributeValueObject.getAttributeValueOptions()#" />
-											<sw:errorDisplay object="#attributeValueObject#" errorName="password" />
+											<sw:FormField type="#attribute.getFormFieldType()#" name="#attribute.getAttributeCode()#" valueObject="#attributeValueObject#" valueObjectProperty="attributeValue" valueOptions="#attributeValueObject.getAttributeValueOptions()#" />
+											<sw:ErrorDisplay object="#attributeValueObject#" errorName="password" />
 											
 				    					</div>
 				  					</div>
@@ -269,8 +269,8 @@ Notes:
 							<div class="control-group">
 								<div class="controls">
 									
-									<sw:formField type="text" name="promotionCode" valueObject="#addPromotionCodeObj#" valueObjectProperty="promotionCode" fieldAttributes=' placeholder="Enter Promo Code Here."' />
-									<sw:errorDisplay object="#addPromotionCodeObj#" errorName="promotionCode" />
+									<sw:FormField type="text" name="promotionCode" valueObject="#addPromotionCodeObj#" valueObjectProperty="promotionCode" fieldAttributes=' placeholder="Enter Promo Code Here."' />
+									<sw:ErrorDisplay object="#addPromotionCodeObj#" errorName="promotionCode" />
 									
 								</div>
 							</div>

@@ -321,6 +321,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getDefaultSku().getResizedImagePath(argumentCollection = arguments);
 	}
 	
+	public boolean function getImageExistsFlag() {
+		return getDefaultSku().getImageExistsFlag();
+	}
+	
 	public array function getOptionsByOptionGroup(required string optionGroupID) {
 		var smartList = getService("optionService").getOptionSmartList();
 		smartList.addFilter("optionGroup_optionGroupID",arguments.optionGroupID);
