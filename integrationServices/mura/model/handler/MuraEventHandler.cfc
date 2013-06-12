@@ -159,10 +159,10 @@
 			if($.slatwall.getContent().getNewFlag()) {
 				var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') );
 				
-				if( (slatwallContent.getContentTemplateType().getSystemCode() eq "cttProduct" && $.slatwall.getProduct().getNewFlag()) ||
+				if( !isNull(slatwallContent.getContentTemplateType()) && ((slatwallContent.getContentTemplateType().getSystemCode() eq "cttProduct" && $.slatwall.getProduct().getNewFlag()) ||
 					(slatwallContent.getContentTemplateType().getSystemCode() eq "cttProductType" && $.slatwall.getProductType().getNewFlag()) ||
 					(slatwallContent.getContentTemplateType().getSystemCode() eq "cttBrand" && $.slatwall.getBrand().getNewFlag())
-					) {
+					)) {
 					$.event('contentBean', $.getBean("content"));
 				} else {
 					$.slatwall.setContent( slatwallContent );
