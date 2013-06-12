@@ -70,18 +70,25 @@ Notes:
 		
 		<cfset var rs = "" />
 		<cfset var rs2 = "" />
+		<cfset var rsResult = "" />
 		<cfset var updatedSettings = 0 />
 		
-		<cfquery name="rs" result="rsResult">
+		<cfquery name="rs">
 			SELECT settingID, settingValue FROM SlatwallSetting WHERE settingValue LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#arguments.primaryIDValue#%">
 		</cfquery>
 		
 		<cfloop query="rs">
 			<cfset var updatedSettings += 1 />
 			
-			<cfquery name="rs2">
-				UPDATE SlatwallSetting SET settingValue = <cfqueryparam cfsqltype="cf_sql_varchar" value="#listDeleteAt(rs.settingValue, listFindNoCase(rs.settingValue, arguments.primaryIDValue))#"> WHERE settingID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rs.settingID#">
-			</cfquery>	
+			<cfset var oldListIndex = listFindNoCase(rs.settingValue, arguments.primaryIDValue) />
+			
+			<cfif oldListIndex>
+				<cfset var newValue = listDeleteAt(rs.settingValue, oldListIndex) />
+				
+				<cfquery name="rs2">
+					UPDATE SlatwallSetting SET settingValue = <cfqueryparam cfsqltype="cf_sql_varchar" value="#newValue#"> WHERE settingID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rs.settingID#">
+				</cfquery>
+			</cfif>
 		</cfloop>
 		
 		<cfreturn updatedSettings />
