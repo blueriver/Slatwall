@@ -249,8 +249,12 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 		}
 		
 		// DEPRECATED SIZE LOGIC
-		if(structKeyExists(arguments, "size") && !isNull(getProduct()) && !structKeyExists(arguments, "width") && !structKeyExists(arguments, "height")) {
-			arguments.size = lcase(arguments.size);
+		if((structKeyExists(arguments, 1) || structKeyExists(arguments, "size")) && !isNull(getProduct()) && !structKeyExists(arguments, "width") && !structKeyExists(arguments, "height")) {
+			if(structKeyExists(arguments, "size")) {
+				arguments.size = lcase(arguments.size);	
+			} else if (structKeyExists(arguments, 1)) {
+				arguments.size = arguments[1];
+			}
 			if(arguments.size eq "l") {
 				arguments.size = "Large";
 			} else if (arguments.size eq "m") {
