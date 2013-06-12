@@ -39,7 +39,7 @@ Notes:
 <cfcomponent extends="HibachiDAO">
 	
 	<cffunction name="getSubscriptionCurrentStatus">
-		<cfargument name="subscriptionUsageID" type="any" required="true" />
+		<cfargument name="subscriptionUsageID" type="string" required="true" />
 		
 		<cfset var hql = "FROM SlatwallSubscriptionStatus ss
 							WHERE ss.subscriptionUsage.subscriptionUsageID = :subscriptionUsageID

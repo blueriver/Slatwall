@@ -535,7 +535,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: DAO Passthrough ===========================
 	
 	public array function getUnusedProductSubscriptionTerms( required string productID ){
-		return getSubscriptionDAO().getUnusedProductSubscriptionTerms( arguments.productID );
+		return getSubscriptionDAO().getUnusedProductSubscriptionTerms( argumentCollection=arguments );
+	}
+	
+	public any function getProductSkusBySelectedOptions(required string subscriptionUsageID ){
+		return getSubscriptionDAO().getSubscriptionCurrentStatus( argumentCollection=arguments );
 	}
 	
 	// ===================== START: DAO Passthrough ===========================
