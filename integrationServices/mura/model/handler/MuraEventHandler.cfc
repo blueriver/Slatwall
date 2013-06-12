@@ -450,12 +450,19 @@
 		public void function onAfterUserDelete( required any $ ) {
 			verifySlatwallRequest( $=$ );
 			
-			// TODO: Delete Slatwall User
 			var slatwallAccount = $.slatwall.getService("accountService").getAccountByCMSAccountID( $.event('userID') );
+			
 			if(!isNull(slatwallAccount)) {
+				
+				// Delete account if we can
 				if(slatwallAccount.isDeletable()) {
 					$.slatwall.getService("accountService").deleteAccount( slatwallAccount );
+					
+				// Otherwise just remove the cmsAccountID & account authentication
 				} else {
+					
+					slatwallAccount.setCMSAccountID( javaCase("null", "") );
+					
 					for(var i=arrayLen(account.getAccountAuthentications()); i>=1; i--) {
 						if(!isNull(account.getAccountAuthentications()[i].getIntegration()) && account.getAccountAuthentications()[i].getIntegration().getIntegrationPackage() eq "mura") {
 							$.slatwall.getService("accountService").deleteAccountAuthentication(account.getAccountAuthentications()[i]);
@@ -934,7 +941,9 @@
 		<cfargument name="muraUserID" type="string" />
 		
 		<cfif arguments.accountSyncType neq "none">
+			
 			<cfset var missingUsersQuery = "" />
+			
 			<cfquery name="missingUsersQuery">
 				SELECT
 					UserID,
@@ -955,92 +964,183 @@
 					AND tusers.isPublic = <cfqueryparam cfsqltype="cf_sql_integer" value="1" />
 				</cfif>
 				
-				<cfif structKeyExists(arguments, "userID") and len(arguments.muraUserID)>
+				<cfif structKeyExists(arguments, "muraUserID") and len(arguments.muraUserID)>
 					AND tusers.userID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.muraUserID#" />
 				<cfelse>
 					AND NOT EXISTS( SELECT cmsAccountID FROM SlatwallAccount WHERE SlatwallAccount.cmsAccountID = tusers.userID )
 				</cfif>
 			</cfquery>
 			
-			<cfset var muraIntegrationQuery = "" />
-			<cfquery name="muraIntegrationQuery">
-				SELECT integrationID FROM SlatwallIntegration WHERE integrationPackage = <cfqueryparam cfsqltype="cf_sql_varchar" value="mura" />
-			</cfquery>
-			
+			<!--- Loop over all accounts to sync --->
 			<cfloop query="missingUsersQuery">
 				
-				<cfset var rs = "" />
-				<cfset var newAccountID = $.slatwall.createHibachiUUID() />
+				<cfset var slatwallAccountID = "" />
+				<cfset var primaryEmailAddressID = "" />
+				<cfset var primaryPhoneNumberID = "" />
 				
-				<!--- Create Account --->
+				<cfset var rs = "" />
+				<cfset var rs2 = "" />
+				
 				<cfquery name="rs">
-					INSERT INTO SlatwallAccount (
-						accountID,
-						firstName,
-						lastName,
-						company,
-						cmsAccountID,
-						superUserFlag
-					) VALUES (
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Fname#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Lname#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Company#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />,
-						<cfif arguments.superUserSyncFlag and missingUsersQuery.s2>
-							<cfqueryparam cfsqltype="cf_sql_bit" value="1" />	
-						<cfelse>
-							<cfqueryparam cfsqltype="cf_sql_bit" value="0" />
-						</cfif>
-					)
+					SELECT
+						SlatwallAccount.accountID,
+						(SELECT SlatwallAccountAuthentication.accountAuthenticationID FROM SlatwallAccountAuthentication WHERE SlatwallAccountAuthentication.accountID = SlatwallAccount.accountID AND SlatwallAccountAuthentication.integrationID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#getMuraIntegrationID()#" />) as 'accountAuthenticationID'
+					FROM
+						SlatwallAccount
+					WHERE
+						SlatwallAccount.cmsAccountID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />
 				</cfquery>
 				
-				<!--- Create Email --->
+				<cfif rs.recordCount>
+					<cfset slatwallAccountID = rs.accountID />
+				<cfelse>
+					
+					<cfset slatwallAccountID = $.slatwall.createHibachiUUID() />
+					
+					<!--- Create Account --->
+					<cfquery name="rs2">
+						INSERT INTO SlatwallAccount (
+							accountID,
+							firstName,
+							lastName,
+							company,
+							cmsAccountID,
+							superUserFlag
+						) VALUES (
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#slatwallAccountID#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Fname#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Lname#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Company#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />,
+							<cfif arguments.superUserSyncFlag and missingUsersQuery.s2>
+								<cfqueryparam cfsqltype="cf_sql_bit" value="1" />	
+							<cfelse>
+								<cfqueryparam cfsqltype="cf_sql_bit" value="0" />
+							</cfif>
+						)
+					</cfquery>
+					
+				</cfif>
+				
+				<!--- Insert Account Auth if Needed --->
+				<cfif not rs.recordCount or (rs.recordCount and not len(rs.accountAuthenticationID))>
+					
+					<!--- Create Authentication --->
+					<cfquery name="rs2">
+						INSERT INTO SlatwallAccountAuthentication (
+							accountAuthenticationID,
+							accountID,
+							integrationID,
+							integrationAccessToken,
+							integrationAccountID
+						) VALUES (
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#$.slatwall.createHibachiUUID()#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#slatwallAccountID#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#getMuraIntegrationID()#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />
+						)
+					</cfquery>
+					
+				</cfif> 
+				
+				<!--- Check / Create Email --->
 				<cfif len(missingUsersQuery.Email)>
 					<cfquery name="rs">
-						INSERT INTO SlatwallAccountEmailAddress (
+						SELECT
 							accountEmailAddressID,
-							accountID,
-							emailAddress
-						) VALUES (
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#$.slatwall.createHibachiUUID()#" />,
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Email#" />
-						)
+							accountID
+						FROM
+							SlatwallAccountEmailAddress
+						WHERE
+							emailAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Email#" />
+						  AND
+						  	EXISTS ( SELECT SlatwallAccountAuthentication.accountAuthenticationID FROM SlatwallAccountAuthentication WHERE SlatwallAccountAuthentication.accountID = SlatwallAccountEmailAddress.accountID)
 					</cfquery>
+					
+					<cfif rs.recordCount and rs.accountID eq slatwallAccountID>
+						
+						<cfset primaryEmailAddressID = rs.accountEmailAddressID />
+						
+					<cfelseif not rs.recordCount>
+						
+						<cfset primaryEmailAddressID = $.slatwall.createHibachiUUID() />
+						
+						<cfquery name="rs2">
+							INSERT INTO SlatwallAccountEmailAddress (
+								accountEmailAddressID,
+								accountID,
+								emailAddress
+							) VALUES (
+								<cfqueryparam cfsqltype="cf_sql_varchar" value="#primaryEmailAddressID#" />,
+								<cfqueryparam cfsqltype="cf_sql_varchar" value="#slatwallAccountID#" />,
+								<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Email#" />
+							)
+						</cfquery>
+						
+					</cfif>
 				</cfif>
 				
-				<!--- Create Phone --->
+				<!--- Check / Create Phone --->
 				<cfif len(missingUsersQuery.MobilePhone)>
 					<cfquery name="rs">
-						INSERT INTO SlatwallAccountPhoneNumber (
+						SELECT
 							accountPhoneNumberID,
-							accountID,
-							phoneNumber
-						) VALUES (
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#$.slatwall.createHibachiUUID()#" />,
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.MobilePhone#" />
-						)
+							accountID
+						FROM
+							SlatwallAccountPhoneNumber
+						WHERE
+							phoneNumber = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.MobilePhone#" />
+						  AND
+						  	EXISTS ( SELECT SlatwallAccountAuthentication.accountAuthenticationID FROM SlatwallAccountAuthentication WHERE SlatwallAccountAuthentication.accountID = SlatwallAccountPhoneNumber.accountID)
 					</cfquery>
+					
+					<cfif rs.recordCount and rs.accountID eq slatwallAccountID>
+						
+						<cfset primaryPhoneNumberID = rs.accountPhoneNumberID />
+						
+					<cfelseif not rs.recordCount>
+						
+						<cfset primaryPhoneNumberID = $.slatwall.createHibachiUUID() />
+						
+						<cfquery name="rs2">
+							INSERT INTO SlatwallAccountPhoneNumber (
+								accountPhoneNumberID,
+								accountID,
+								phoneNumber
+							) VALUES (
+								<cfqueryparam cfsqltype="cf_sql_varchar" value="#primaryPhoneNumberID#" />,
+								<cfqueryparam cfsqltype="cf_sql_varchar" value="#slatwallAccountID#" />,
+								<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.MobilePhone#" />
+							)
+						</cfquery>
+						
+					</cfif>
 				</cfif>
 				
-				<!--- Create Authentication --->
-				<cfquery name="rs">
-					INSERT INTO SlatwallAccountAuthentication (
-						accountAuthenticationID,
-						accountID,
-						integrationID,
-						integrationAccessToken,
-						integrationAccountID
-					) VALUES (
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#$.slatwall.createHibachiUUID()#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#newAccountID#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#getMuraIntegrationID()#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.UserID#" />
-					)
+				<!--- Update Account --->
+				<cfquery name="rs2">
+					UPDATE
+						SlatwallAccount
+					SET
+						firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Fname#" />
+						,lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Lname#" />
+						,company = <cfqueryparam cfsqltype="cf_sql_varchar" value="#missingUsersQuery.Company#" />
+						<cfif len(primaryEmailAddressID)>
+							,primaryEmailAddressID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#primaryEmailAddressID#" />
+						</cfif>
+						<cfif len(primaryPhoneNumberID)>
+							,primaryPhoneNumberID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#primaryPhoneNumberID#" />
+						</cfif>
+						<cfif arguments.superUserSyncFlag and missingUsersQuery.s2>
+							,superUserFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="1" />	
+						<cfelse>
+							,superUserFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="0" />
+						</cfif>
+					WHERE
+						accountID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#slatwallAccountID#" />
 				</cfquery>
+				
 			</cfloop>
 		</cfif>
 	</cffunction>
