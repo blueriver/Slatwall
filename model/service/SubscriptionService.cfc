@@ -197,7 +197,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			for(var i = 0; i < recordCountForCreation; i++) {
 				var subscriptionUsageBenefitAccount = this.newSubscriptionUsageBenefitAccount();
 				subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(arguments.subscriptionUsageBenefit);
-				saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+				this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
 				var access = getAccessService().newAccess();
 				access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
 				getAccessService().saveAccess(access);
