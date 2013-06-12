@@ -323,14 +323,14 @@
 							</cfif>
 						</cfsilent>
 						<th class="data #column.tdClass#" <cfif len(column.propertyIdentifier)>data-propertyIdentifier="#column.propertyIdentifier#"<cfelseif len(column.processObjectProperty)>data-processobjectproperty="#column.processObjectProperty#"<cfif structKeyExists(column, "fieldClass")> data-fieldclass="#column.fieldClass#"</cfif></cfif>>
-							<cfif not column.sort and (not column.search or thistag.expandable) and (not column.filter or thistag.expandable) and (not column.range or thistag.expandable)>
+							<cfif (not column.sort or thistag.expandable) and (not column.search or thistag.expandable) and (not column.filter or thistag.expandable) and (not column.range or thistag.expandable)>
 								#column.title#
 							<cfelse>
 								<div class="dropdown">
 									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
 									<ul class="dropdown-menu nav">
 										<cf_HibachiDividerHider>
-											<cfif column.sort>
+											<cfif column.sort and not thistag.expandable>
 												<li class="nav-header">#attributes.hibachiScope.rbKey('define.sort')#</li>
 												<li><a href="##" class="listing-sort" data-sortdirection="ASC"><i class="icon-arrow-down"></i> Sort Ascending</a></li>
 												<li><a href="##" class="listing-sort" data-sortdirection="DESC"><i class="icon-arrow-up"></i> Sort Decending</a></li>
