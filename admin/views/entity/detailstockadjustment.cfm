@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.stockAdjustment#" edit="#rc.edit#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.stockAdjustment#" edit="#rc.edit#">
-			<cf_HibachiProcessCaller entity="#rc.stockAdjustment#" action="admin:entity.processStockAdjustment" processContext="processAdjustment" queryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#&process=1&redirectAction=admin:entity.detailStockAdjustment" type="list" />
+			<cf_HibachiProcessCaller entity="#rc.stockAdjustment#" action="admin:entity.processStockAdjustment" processContext="processAdjustment" queryString="redirectAction=admin:entity.detailStockAdjustment" type="list" />
 			<cf_HibachiActionCaller action="admin:entity.createcomment" querystring="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#&redirectAction=#request.context.slatAction#" modal="true" type="list" />
 		</cf_HibachiEntityActionBar>
 					
