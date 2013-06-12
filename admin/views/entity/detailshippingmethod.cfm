@@ -46,7 +46,11 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.shippingMethod#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.shippingMethod#" edit="#rc.edit#" backAction="admin:entity.detailfulfillmentMethod" backQueryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.shippingMethod#" edit="#rc.edit#" 
+					backAction="admin:entity.detailfulfillmentMethod" 
+					backQueryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#"
+					deleteQueryString="fulfillmentMethodID=#rc.fulfillmentMethod.getFulfillmentMethodID()#&redirectAction=admin:entity.detailfulfillmentMethod">
+					
 			<cfset local.integrationOptions = rc.shippingMethod.getShippingMethodRateIntegrationOptions()>
 			<cfloop array="#local.integrationOptions#" index="local.integration">
 				<cf_HibachiActionCaller text="#request.slatwallScope.rbKey('define.add')# #local.integration['name']# #request.slatwallScope.rbKey('define.rate')#" action="admin:entity.createshippingmethodrate" type="list" queryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#&integrationID=#local.integration['value']#" modal="true" />
