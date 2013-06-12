@@ -160,7 +160,7 @@ Notes:
 		SELECT cmsContentID FROM SlatwallSetting WHERE settingName = 'contentProductListingFlag' and cmsContentID is not null and settingValue = 1
 	</cfquery>
 	
-	<cfloop query="#local.listingpagesettings#">
+	<cfloop query="local.listingpagesettings">
 		<cfquery name="local.listingflagupdate">
 			UPDATE
 				SlatwallContent
@@ -175,6 +175,64 @@ Notes:
 		DELETE FROM SlatwallSetting WHERE settingName = 'contentProductListingFlag' and cmsContentID is not null
 	</cfquery>
 	
+	<cfcatch>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Updating the listing page flags out of settings and into content nodes">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<!--- Update the content that has null for siteID --->
+<cftry>
+	<cfquery name="local.uniqueCMSSiteID">
+		SELECT DISTINCT
+			cmsSiteID
+		FROM
+			SlatwallContent
+		WHERE
+			siteID is null
+	</cfquery>
+	
+	<cfloop query="local.uniqueCMSSiteID">
+		
+		<cfquery name="local.findSite">
+			SELECT
+				siteID
+			FROM
+				SlatwallSite
+			WHERE
+				cmsSiteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.uniqueCMSSiteID.cmsSiteID#" />
+		</cfquery>
+		
+		<cfif not local.findSite.recordCount>
+			
+			<cfset local.slatwallSiteID = replace(lcase(createUUID()), '-', '', 'all') />
+			
+			<cfquery name="local.addSite">
+				INSERT INTO SlatwallSite(
+					siteID,
+					siteName,
+					cmsSiteID
+				) VALUES (
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.slatwallSiteID#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.uniqueCMSSiteID.cmsSiteID#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.uniqueCMSSiteID.cmsSiteID#" />
+				)
+			</cfquery>
+			
+		<cfelse>
+			<cfset local.slatwallSiteID = local.findSite.siteID />
+		</cfif>
+		
+		<cfquery name="local.findSite">
+			UPDATE
+				SlatwallContent
+			SET
+				siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.slatwallSiteID#" />
+			WHERE
+				siteID is null and cmsSiteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.uniqueCMSSiteID.cmsSiteID#" />
+		</cfquery>
+	</cfloop>
+		
 	<cfcatch>
 		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Updating the listing page flags out of settings and into content nodes">
 		<cfset local.scriptHasErrors = true />
