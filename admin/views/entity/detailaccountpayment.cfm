@@ -37,11 +37,17 @@ Notes:
 
 --->
 <cfparam name="rc.accountPayment" type="any" />
+<cfparam name="rc.account" type="any" default="#rc.accountPayment.getAccount()#">
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.accountPayment#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
+								
+		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPayment#" edit="#rc.edit#"
+								   backAction="admin:entity.detailaccount"
+								   backQueryString="accountID=#rc.account.getAccountID()#" />
+		
+		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divClass="span6">
