@@ -107,7 +107,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 	
 	// setup Initial SubscriptionOrderItem
-	private void function setupInitialSubscriptionOrderItem(required any orderItem) {
+	public void function setupInitialSubscriptionOrderItem(required any orderItem) {
 		var subscriptionOrderItemType = "soitInitial";
 		var subscriptionUsage = this.newSubscriptionUsage();
 		
