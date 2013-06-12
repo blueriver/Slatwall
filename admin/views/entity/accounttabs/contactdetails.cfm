@@ -59,7 +59,7 @@ Notes:
 				<cf_HibachiListingColumn propertyIdentifier="verifiedFlag" />
 			</cf_HibachiListingDisplay>
 			
-			<cf_HibachiActionCaller action="admin:entity.createaccountemailaddress" class="btn" icon="plus" queryString="redirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal=true />
+			<cf_HibachiActionCaller action="admin:entity.createaccountemailaddress" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal=true />
 		</cf_HibachiPropertyList>
 		
 		<!--- Phone Numbers --->
@@ -81,7 +81,7 @@ Notes:
 				
 			</cf_HibachiListingDisplay>
 			
-			<cf_HibachiActionCaller action="admin:entity.createaccountphonenumber" class="btn" icon="plus" queryString="redirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal=true />
+			<cf_HibachiActionCaller action="admin:entity.createaccountphonenumber" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal=true />
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 	<hr />
@@ -109,7 +109,7 @@ Notes:
 				<cf_HibachiListingColumn propertyIdentifier="address.postalCode" />
 			</cf_HibachiListingDisplay>
 			
-			<cf_HibachiActionCaller action="admin:entity.createaccountaddress" class="btn" icon="plus" queryString="accountID=#rc.account.getAccountID()#" modal=true />
+			<cf_HibachiActionCaller action="admin:entity.createaccountaddress" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal=true />
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 </cfoutput>
