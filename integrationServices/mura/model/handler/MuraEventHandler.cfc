@@ -155,6 +155,11 @@
 		
 		public void function onRenderStart( required any $ ) {
 			
+			// Now that there is a mura contentBean in the muraScope for sure, we can setup our content Variable, but only if the current content node is new
+			if($.slatwall.getContent().getNewFlag()) {
+				$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
+			}
+			
 			// Check for any slatActions that might have been passed in and render that page as the first
 			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") == "frontend") {
 				
@@ -190,10 +195,6 @@
 				}
 			}
 			
-			// Now that there is a mura contentBean in the muraScope for sure, we can setup our content Variable, but only if the current content node is new
-			if($.slatwall.getContent().getNewFlag()) {
-				$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
-			}
 			
 			var accessToContentDetails = $.slatwall.getService("accessService").getAccessToContentDetails( $.slatwall.getAccount(), $.slatwall.getContent() );
 			
