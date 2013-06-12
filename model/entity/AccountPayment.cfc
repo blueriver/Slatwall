@@ -156,6 +156,39 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 		return variables.paymentMethodOptions;
 	}
 	
+	public void function copyFromAccountPaymentMethod(required any accountPaymentMethod) {
+		
+		// Connect this to the original account payment method
+		setAccountPaymentMethod( arguments.accountPaymentMethod );
+		
+		// Make sure the payment method matches
+		setPaymentMethod( arguments.accountPaymentMethod.getPaymentMethod() );
+		
+		// Credit Card
+		if(listFindNoCase("creditCard", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
+			setNameOnCreditCard( arguments.accountPaymentMethod.getNameOnCreditCard() );
+			setCreditCardNumber( arguments.accountPaymentMethod.getCreditCardNumber() );
+			setExpirationMonth( arguments.accountPaymentMethod.getExpirationMonth() );
+			setExpirationYear( arguments.accountPaymentMethod.getExpirationYear() );
+		}
+		
+		// Gift Card
+		if(listFindNoCase("giftCard", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
+			setGiftCardNumber( arguments.accountPaymentMethod.getGiftCardNumber() );
+		}
+		
+		// Credit Card & Gift Card
+		if(listFindNoCase("creditCard,giftCard", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
+			setProviderToken( arguments.accountPaymentMethod.getProviderToken() );
+		}
+		
+		// Credit Card & Term Payment
+		if(listFindNoCase("creditCard,termPayment", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
+			setBillingAddress( arguments.accountPaymentMethod.getBillingAddress().copyAddress( true ) );
+		}
+		
+	}	
+	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
