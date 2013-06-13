@@ -104,7 +104,7 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public any function getCurrentStatus() {
-		return getService("subscriptionService").getDAO().getSubscriptionCurrentStatus( variables.subscriptionUsageID );
+		return getService("subscriptionService").getSubscriptionCurrentStatus( variables.subscriptionUsageID );
 	}
 	
 	public string function getCurrentStatusCode() {

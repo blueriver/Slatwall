@@ -155,6 +155,23 @@
 		
 		public void function onRenderStart( required any $ ) {
 			
+			// Now that there is a mura contentBean in the muraScope for sure, we can setup our content Variable, but only if the current content node is new
+			if($.slatwall.getContent().getNewFlag()) {
+				var slatwallContent = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') );
+				
+				if( !isNull(slatwallContent.getContentTemplateType()) && ((slatwallContent.getContentTemplateType().getSystemCode() eq "cttProduct" && $.slatwall.getProduct().getNewFlag()) ||
+					(slatwallContent.getContentTemplateType().getSystemCode() eq "cttProductType" && $.slatwall.getProductType().getNewFlag()) ||
+					(slatwallContent.getContentTemplateType().getSystemCode() eq "cttBrand" && $.slatwall.getBrand().getNewFlag())
+					)) {
+						
+					$.event('contentBean', $.getBean("content"));
+					$.event().getHandler('standard404').handle($.event());
+					
+				} else {
+					$.slatwall.setContent( slatwallContent );
+				}
+			}
+			
 			// Check for any slatActions that might have been passed in and render that page as the first
 			if(len($.event('slatAction')) && listFirst($.event('slatAction'), ":") == "frontend") {
 				
@@ -190,10 +207,6 @@
 				}
 			}
 			
-			// Now that there is a mura contentBean in the muraScope for sure, we can setup our content Variable, but only if the current content node is new
-			if($.slatwall.getContent().getNewFlag()) {
-				$.slatwall.setContent( $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( $.content('contentID'), $.event('siteID') ) );
-			}
 			
 			var accessToContentDetails = $.slatwall.getService("accessService").getAccessToContentDetails( $.slatwall.getAccount(), $.slatwall.getContent() );
 			
@@ -360,7 +373,7 @@
 					var parentContent = $.slatwall.getService("contentService").getContentByCMSContentIDAndCMSSiteID( muraContent.getParentID(), muraContent.getSiteID() );
 					
 					// If the parent has changed, we need to update all nested
-					if(parentContent.getContentID() != slatwallContent.getParentContent().getContentID()) {
+					if(isNull(slatwallContent.getParentContent()) || parentContent.getContentID() != slatwallContent.getParentContent().getContentID()) {
 						
 						// Pull out the old IDPath so that we can update all nested nodes
 						var oldContentIDPath = slatwallContent.getContentIDPath();
@@ -554,7 +567,7 @@
 					
 					var assetSetting = $.slatwall.getService("settingService").getSettingBySettingName("globalAssetsImageFolderPath", true);
 					if(assetSetting.isNew()) {
-						assetSetting.setSettingValue( expandPath('/muraWRM') & '/default/assets/Image/Slatwall' );
+						assetSetting.setSettingValue( replace(expandPath('/muraWRM'), '\', '/', 'all') & '/default/assets/Image/Slatwall' );
 						assetSetting.setSettingName('globalAssetsImageFolderPath');
 						$.slatwall.getService("settingService").saveSetting( assetSetting );
 					}

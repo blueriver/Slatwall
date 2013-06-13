@@ -67,7 +67,9 @@ Notes:
 					if(!isNull(templateObject)) {
 						
 						// Setup the print content
-						arguments.print.setPrintContent( templateObject.stringReplace( printTemplate.getPrintContent() ) );
+						if(!isNull(printTemplate.getPrintContent())) {
+							arguments.print.setPrintContent( templateObject.stringReplace( printTemplate.getPrintContent() ) );	
+						}
 						
 						var templateFileResponse = "";
 						var templatePath = getTemplateService().getTemplateFileIncludePath(templateType="print", objectName=printTemplate.getPrintTemplateObject(), fileName=printTemplate.getPrintTemplateFile());

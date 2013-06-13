@@ -107,7 +107,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 	
 	// setup Initial SubscriptionOrderItem
-	private void function setupInitialSubscriptionOrderItem(required any orderItem) {
+	public void function setupInitialSubscriptionOrderItem(required any orderItem) {
 		var subscriptionOrderItemType = "soitInitial";
 		var subscriptionUsage = this.newSubscriptionUsage();
 		
@@ -197,7 +197,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			for(var i = 0; i < recordCountForCreation; i++) {
 				var subscriptionUsageBenefitAccount = this.newSubscriptionUsageBenefitAccount();
 				subscriptionUsageBenefitAccount.setSubscriptionUsageBenefit(arguments.subscriptionUsageBenefit);
-				saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+				this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
 				var access = getAccessService().newAccess();
 				access.setSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
 				getAccessService().saveAccess(access);
@@ -535,7 +535,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: DAO Passthrough ===========================
 	
 	public array function getUnusedProductSubscriptionTerms( required string productID ){
-		return getSubscriptionDAO().getUnusedProductSubscriptionTerms( arguments.productID );
+		return getSubscriptionDAO().getUnusedProductSubscriptionTerms( argumentCollection=arguments );
+	}
+	
+	public any function getSubscriptionCurrentStatus(required string subscriptionUsageID ){
+		return getSubscriptionDAO().getSubscriptionCurrentStatus( argumentCollection=arguments );
 	}
 	
 	// ===================== START: DAO Passthrough ===========================

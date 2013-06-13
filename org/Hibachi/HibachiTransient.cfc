@@ -481,7 +481,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		// This is the null format option
 		if(isNull(arguments.value)) {
 			var propertyMeta = getPropertyMetaData( arguments.propertyName );
-			if(structKeyExists(propertyMeta, "nullRBKey")) {
+			if(structKeyExists(propertyMeta, "hb_nullRBKey")) {
 				return rbKey(propertyMeta.nullRBKey);
 			}
 			

@@ -249,18 +249,23 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 		}
 		
 		// DEPRECATED SIZE LOGIC
-		if(structKeyExists(arguments, "size") && !isNull(getProduct()) && !structKeyExists(arguments, "width") && !structKeyExists(arguments, "height")) {
-			arguments.size = lcase(arguments.size);
-			if(arguments.size eq "l") {
-				arguments.size = "Large";
-			} else if (arguments.size eq "m") {
-				arguments.size = "Medium";
-			} else {
-				arguments.size = "Small";
+		if((structKeyExists(arguments, 1) || structKeyExists(arguments, "size")) && !isNull(getProduct()) && !structKeyExists(arguments, "width") && !structKeyExists(arguments, "height")) {
+			if(structKeyExists(arguments, "size")) {
+				var thisSize = lcase(arguments.size);
+				structDelete(arguments, "size");	
+			} else if (structKeyExists(arguments, 1)) {
+				var thisSize = lcase(arguments[1]);
+				structDelete(arguments, 1);
 			}
-			arguments.width = getProduct().setting("productImage#arguments.size#Width");
-			arguments.height = getProduct().setting("productImage#arguments.size#Height");
-			structDelete(arguments, "size");
+			if(thisSize eq "l") {
+				thisSize = "Large";
+			} else if (thisSize eq "m") {
+				thisSize = "Medium";
+			} else if (thisSize eq "s") {
+				thisSize = "Small";
+			}
+			arguments.width = getProduct().setting("productImage#thisSize#Width");
+			arguments.height = getProduct().setting("productImage#thisSize#Height");
 		}
 		
 		return getService("imageService").getResizedImage(argumentCollection=arguments);

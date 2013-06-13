@@ -98,11 +98,11 @@ component extends="HibachiService" accessors="true" {
 	// ===================== START: DAO Passthrough ===========================
 	
 	public boolean function getProductIsOnTransaction(required any product) {
-		return getProductDAO().getProductIsOnTransaction(product=arguments.product);
+		return getProductDAO().getProductIsOnTransaction( argumentCollection=arguments );
 	}
 	
 	public any function getProductSkusBySelectedOptions(required string selectedOptions, required string productID){
-		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments);
+		return getSkuDAO().getSkusBySelectedOptions( argumentCollection=arguments );
 	}
 	
 	// ===================== START: DAO Passthrough ===========================
