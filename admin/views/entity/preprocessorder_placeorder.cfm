@@ -86,7 +86,7 @@ Notes:
 					</cfloop>
 					
 					<!--- Add an order payment for the remaining amount if needed --->
-					<cfif rc.order.getTotalPaymentAmount() neq rc.order.getTotal()>
+					<cfif rc.order.getPaymentAmountTotal() neq rc.order.getTotal()>
 						<h4>Add Order Payment</h4>
 						
 						<cfset rc.addOrderPaymentProcessObject = rc.order.getProcessObject("addOrderPayment") />
