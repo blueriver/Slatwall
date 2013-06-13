@@ -1416,8 +1416,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// Setup the transaction data
 		transactionData = {
-			transactionType = processObject.getTransactionType(),
-			amount = processObject.getAmount()
+			transactionType = arguments.processObject.getTransactionType(),
+			amount = arguments.processObject.getAmount()
 		};
 		
 		// Run the transaction
@@ -1445,6 +1445,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				transactionType = transactionType,
 				amount = arguments.orderPayment.getAmount()
 			};
+			
+			// Clear out any previous 'createTransaction' process objects
+			arguments.orderPayment.clearProcessObject( 'createTransaction' );
 			
 			// Call the processing method
 			arguments.orderPayment = this.processOrderPayment(arguments.orderPayment, processData, 'createTransaction');
@@ -1610,10 +1613,16 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
 		if(!arguments.orderPayment.hasErrors() && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
+			
+			// Setup the transaction data
 			var transactionData = {
 				amount = arguments.orderPayment.getAmount(),
 				transactionType = arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()
 			};
+			
+			// Clear out any previous 'createTransaction' process objects
+			arguments.orderPayment.clearProcessObject( 'createTransaction' );
+			
 			arguments.orderPayment = this.processOrderPayment(arguments.orderPayment, transactionData, 'createTransaction');
 		}
 		

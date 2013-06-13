@@ -305,10 +305,16 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
 		if(!arguments.accountPaymentMethod.hasErrors() && !isNull(arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()) && len(arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()) && arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType() neq "none") {
+			
+			// Setup transaction data
 			var transactionData = {
 				amount = 0,
 				transactionType = arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()
 			};
+			
+			// Clear out any previous 'createTransaction' process objects
+			arguments.accountPaymentMethod.clearProcessObject( 'createTransaction' );
+			
 			arguments.accountPaymentMethod = this.processAccountPayment(arguments.accountPaymentMethod, transactionData, 'createTransaction');
 		}
 		
