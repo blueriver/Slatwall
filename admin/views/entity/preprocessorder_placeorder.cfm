@@ -95,10 +95,7 @@ Notes:
 						<input type="hidden" name="newOrderPayment.order.orderID" value="#rc.order.getOrderID()#" />
 						
 						<!--- Display the amount that is going to be used --->
-						<cfset formatDetails = {
-							currencyCode = rc.order.getCurrencyCode()
-						} />
-						<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="amount" value="#$.slatwall.formatValue(rc.order.getAddPaymentRequirementDetails().amount, 'currency', formatDetails)#" edit="false">
+						<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="amount" edit="false">
 						
 						<!--- Add hidden value for payment type, and display what it is going to be --->
 						<input type="hidden" name="newOrderPayment.orderPaymentType.typeID" value="#rc.order.getAddPaymentRequirementDetails().orderPaymentType.getTypeID()#" />
