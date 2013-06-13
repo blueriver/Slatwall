@@ -334,6 +334,8 @@
 			var slatwallSite = $.slatwall.getService("siteService").getSiteByCMSSiteID($.event('siteID'));
 			syncMuraCategories($=$, slatwallSite=slatwallSite, muraSiteID=$.event('siteID'));
 			
+			syncMuraContentCategoryAssignment( muraSiteID=$.event('siteID') );
+			
 			endSlatwallRequest();
 		}
 		
@@ -343,16 +345,21 @@
 			var slatwallCategory = $.slatwall.getService("contentService").getCategoryByCMSCategoryID($.event('categoryID'));
 			if(!isNull(slatwallCategory)) {
 				if(slatwallCategory.isDeletable()) {
-					$.slatwall.getService("contentService").deleteCategory(slatwallCategory);
+					$.slatwall.getService("contentService").deleteCategory( slatwallCategory );
+					ormFlush();
 				} else {
 					slatwallCategory.setActiveFlag(0);
 				}	
 			}
 			
+			syncMuraContentCategoryAssignment( muraSiteID=$.event('siteID') );
+			
 			endSlatwallRequest();
 		}
 		
+
 		// SAVE / DELETE EVENTS ===== CONTENT
+		
 		public void function onAfterContentSave( required any $ ) {
 			verifySlatwallRequest( $=$ );
 			
@@ -431,6 +438,8 @@
 				}
 			}
 			
+			// Sync all content category assignments
+			syncMuraContentCategoryAssignment( muraSiteID=$.event('siteID') );
 			
 			endSlatwallRequest();
 		}
@@ -447,11 +456,14 @@
 				}
 			}
 			
+			// Sync all content category assignments
+			syncMuraContentCategoryAssignment( muraSiteID=$.event('siteID') );
+			
 			endSlatwallRequest();
 		}
 		
 		
-		// SAVE / DELETE EVENTS ===== EVENT
+		// SAVE / DELETE EVENTS ===== USER
 		public void function onAfterUserSave( required any $ ) {
 			verifySlatwallRequest( $=$ );
 			
@@ -486,7 +498,6 @@
 			
 			endSlatwallRequest();
 		}
-		
 		
 		// ========================== MANUALLY CALLED MURA =================================
 		
@@ -653,6 +664,9 @@
 				
 				// Sync all missing categories
 				syncMuraCategories( $=$, slatwallSite=slatwallSite, muraSiteID=cmsSiteID );
+				
+				// Sync all content category assignments
+				syncMuraContentCategoryAssignment( muraSiteID=cmsSiteID );
 				
 				// Sync all missing accounts
 				syncMuraAccounts( $=$, accountSyncType=getMuraPluginConfig().getSetting("accountSyncType"), superUserSyncFlag=getMuraPluginConfig().getSetting("superUserSyncFlag") );
@@ -945,6 +959,77 @@
 		<cfif !allParentsFound>
 			<cfset syncMuraCategories(argumentcollection=arguments) />
 		</cfif>
+	</cffunction>
+	
+	<cffunction name="syncMuraContentCategoryAssignment">
+		<cfargument name="muraSiteID" type="string" required="true" />
+		
+		<cfset var allMissingAssignments = "" />
+		<cfset var rs = "" />
+		
+		<!--- Get the missing assingments --->
+		<cfquery name="allMissingAssignments">
+			SELECT
+				SlatwallContent.contentID,
+				SlatwallCategory.categoryID
+			FROM
+				tcontentcategoryassign
+			  INNER JOIN
+			  	SlatwallContent on tcontentcategoryassign.contentID = SlatwallContent.cmsContentID
+			  INNER JOIN
+			  	SlatwallCategory on tcontentcategoryassign.categoryID = SlatwallCategory.cmsCategoryID
+			WHERE
+				tcontentcategoryassign.siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#muraSiteID#" />
+			  AND
+			  	NOT EXISTS(
+				  	SELECT
+				  		SlatwallContentCategory.contentID
+				  	FROM
+				  		SlatwallContentCategory
+				  	  INNER JOIN
+				  	  	SlatwallContent on SlatwallContentCategory.contentID = SlatwallContent.contentID
+				  	  INNER JOIN
+				  	  	SlatwallCategory on SlatwallContentCategory.categoryID = SlatwallCategory.categoryID
+				  	WHERE
+				  		SlatwallContent.cmsContentID = tcontentcategoryassign.contentID
+				  	  AND
+				  	  	SlatwallCategory.cmsCategoryID = tcontentcategoryassign.categoryID
+			  	)
+		</cfquery>
+		
+		<!--- Loop over missing assignments --->
+		<cfloop query="allMissingAssignments">
+			<cfquery name="rs">
+				INSERT INTO SlatwallContentCategory (
+					contentID,
+					categoryID
+				) VALUES (
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#allMissingAssignments.contentID#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#allMissingAssignments.categoryID#" />
+				)
+			</cfquery>
+		</cfloop>
+			
+		<!--- Delete unneeded assignments --->
+		<cfquery name="rs">
+			DELETE FROM
+				SlatwallContentCategory
+			WHERE
+				NOT EXISTS(
+					SELECT
+						tcontentcategoryassign.contentID
+					FROM
+						tcontentcategoryassign
+					  INNER JOIN
+					  	SlatwallContent on tcontentcategoryassign.contentID = SlatwallContent.cmsContentID
+					  INNER JOIN
+					  	SlatwallCategory on tcontentcategoryassign.categoryID = SlatwallCategory.cmsCategoryID
+					WHERE
+						SlatwallContentCategory.contentID = SlatwallContent.contentID
+					  AND
+					  	SlatwallContentCategory.categoryID = SlatwallCategory.categoryID
+			  	)
+		</cfquery>
 	</cffunction>
 	
 	<cffunction name="syncMuraAccounts">

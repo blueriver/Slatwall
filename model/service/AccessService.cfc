@@ -112,10 +112,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 			
 			// If there was not acess via content, then we can check via category or parent category... but only if this content has been categorized
-			if(len(arguments.content.getAllCategoryIDPaths())) {
+			if(len(arguments.content.getCategoryIDList())) {
 				
 				var activeAccountBenefitsViaCategorySmartList = duplicate(arguments.account.getActiveSubscriptionUsageBenefitsSmartList());
-				activeAccountBenefitsViaCategorySmartList.addInFilter('categories.categoryID', arguments.content.getAllCategoryIDPaths());
+				activeAccountBenefitsViaCategorySmartList.addInFilter('categories.categoryID', arguments.content.getCategoryIDList());
 				
 				if(arrayLen(activeAccountBenefitsViaCategorySmartList.getRecords())) {
 					
