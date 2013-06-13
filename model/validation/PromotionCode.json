@@ -1,7 +1,13 @@
 {
+	"conditions":{
+	    "needsEndAfterStart":{
+	        "startDateTime":{"minLength":1},
+	        "endDateTime":{"minLength":1}
+	    }
+	},
 	"properties":{
 		"promotionCode":			[{"contexts":"save","required":true,"method":"hasUniquePromotionCode"}],
 		"startDateTime":			[{"contexts":"save","dataType":"date"}],
-		"endDateTime":				[{"contexts":"save","dataType":"date","gtProperty":"startDateTime"}]
+		"endDateTime":				[{"contexts":"save","dataType":"date"},{"contexts":"save","conditions":"needsEndAfterStart","gtProperty":"startDateTime"}]
 	}
 }
