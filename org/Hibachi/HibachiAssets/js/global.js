@@ -1203,14 +1203,14 @@ function updateGlobalSearchResults() {
 			success: function(result) {
 				
 				var buckets = {
-					product: {primaryIDProperty:'productID', listAction:'admin:product.listproduct', detailAction:'admin:product.detailproduct'},
-					productType: {primaryIDProperty:'productTypeID', listAction:'admin:product.listproducttype', detailAction:'admin:product.detailproducttype'},
-					brand: {primaryIDProperty:'brandID', listAction:'admin:product.listbrand', detailAction:'admin:product.detailbrand'},
-					promotion: {primaryIDProperty:'promotionID', listAction:'admin:pricing.listpromotion', detailAction:'admin:pricing.detailpromotion'},
-					order: {primaryIDProperty:'orderID', listAction:'admin:order.listorder', detailAction:'admin:order.detailorder'},
-					account: {primaryIDProperty:'accountID', listAction:'admin:account.listaccount', detailAction:'admin:account.detailaccount'},
-					vendorOrder: {primaryIDProperty:'vendorOrderID', listAction:'admin:order.listvendororder', detailAction:'admin:order.detailvendororder'},
-					vendor: {primaryIDProperty:'vendorID', listAction:'admin:vendor.listvendor', detailAction:'admin:vendor.detailvendor'}
+					product: {primaryIDProperty:'productID', listAction:'admin:entity.listproduct', detailAction:'admin:entity.detailproduct'},
+					productType: {primaryIDProperty:'productTypeID', listAction:'admin:entity.listproducttype', detailAction:'admin:entity.detailproducttype'},
+					brand: {primaryIDProperty:'brandID', listAction:'admin:entity.listbrand', detailAction:'admin:entity.detailbrand'},
+					promotion: {primaryIDProperty:'promotionID', listAction:'admin:entity.listpromotion', detailAction:'admin:entity.detailpromotion'},
+					order: {primaryIDProperty:'orderID', listAction:'admin:entity.listorder', detailAction:'admin:entity.detailorder'},
+					account: {primaryIDProperty:'accountID', listAction:'admin:entity.listaccount', detailAction:'admin:entity.detailaccount'},
+					vendorOrder: {primaryIDProperty:'vendorOrderID', listAction:'admin:entity.listvendororder', detailAction:'admin:entity.detailvendororder'},
+					vendor: {primaryIDProperty:'vendorID', listAction:'admin:entity.listvendor', detailAction:'admin:entity.detailvendor'}
 				};
 				for (var key in buckets) {
 					jQuery('#golbalsr-' + key).html('');
