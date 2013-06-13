@@ -169,7 +169,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				// Add the duplicate error to the payment, if this was
 				if(isDuplicateTransaction) {
 					
-					arguments.paymentTransaction.getPayment().addError('processing', "This transaction is duplicate of an already processed transaction.", true);
+					arguments.paymentTransaction.addError('runTransaction', "This transaction is duplicate of an already processed transaction.", true);
 					
 				// Otherwise continue with processing
 				} else {
@@ -271,13 +271,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							
 							// If the response had errors then add them to the payment
 							if(response.hasErrors()) {
-								arguments.paymentTransaction.getPayment().addError('processing', response.getAllErrorsHTML(), true);
+								arguments.paymentTransaction.addError('runTransaction', response.getErrors(), true);
 							}
 							
 						} catch (any e) {
 							
 							// Populate the orderPayment with the processing error and make it persistable
-							arguments.paymentTransaction.getPayment().addError('processing', rbKey('error.unexpected.checklog'), true);
+							arguments.paymentTransaction.addError('runTransaction', rbKey('error.unexpected.checklog'), true);
 							
 							// Log the exception
 							logHibachiException(e);

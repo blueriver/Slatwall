@@ -291,6 +291,11 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Run the transaction
 		paymentTransaction = getPaymentService().processPaymentTransaction(paymentTransaction, transactionData, 'runTransaction');
 		
+		// If the paymentTransaction has errors, then add those errors to the orderPayment itself
+		if(paymentTransaction.hasError('runTransaction')) {
+			arguments.accountPayment.addError('createTransaction', paymentTransaction.getError('runTransaction'), true);
+		}
+		
 		return arguments.accountPayment;	
 	}
 	
@@ -299,12 +304,14 @@ component extends="HibachiService" accessors="true" output="false" {
 	// ====================== START: Save Overrides ===========================
 	
 	public any function saveAccountPaymentMethod(required any accountPaymentMethod, struct data={}, string context="save") {
+		// See if the accountPaymentMethod was new
+		var wasNew = arguments.accountPaymentMethod.getNewFlag();
 		
 		// Call the generic save method to populate and validate
 		arguments.accountPaymentMethod = save(arguments.accountPaymentMethod, arguments.data, arguments.context);
 		
 		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
-		if(!arguments.accountPaymentMethod.hasErrors() && !isNull(arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()) && len(arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()) && arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType() neq "none") {
+		if(wasNew && !arguments.accountPaymentMethod.hasErrors() && !isNull(arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()) && len(arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType()) && arguments.accountPaymentMethod.getPaymentMethod().getSaveAccountPaymentMethodTransactionType() neq "none") {
 			
 			// Setup transaction data
 			var transactionData = {
