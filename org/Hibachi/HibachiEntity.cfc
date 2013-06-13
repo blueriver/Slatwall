@@ -138,7 +138,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	}
 		
 	// @hint overriding the addError method to allow for saying that the error doesn't effect persistance
-	public void function addError( required string errorName, required string errorMessage, boolean persistableError=false ) {
+	public void function addError( required string errorName, required any errorMessage, boolean persistableError=false ) {
 		if(persistableError) {
 			addPersistableError(arguments.errorName);
 		}

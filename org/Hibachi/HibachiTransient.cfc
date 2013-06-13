@@ -58,7 +58,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	}
 		
 	// @hint helper method to add an error to the error bean	
-	public void function addError( required string errorName, required string errorMessage) {
+	public void function addError( required string errorName, required any errorMessage) {
 		getHibachiErrors().addError(argumentCollection=arguments);
 	}
 	

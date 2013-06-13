@@ -694,8 +694,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Save the newOrderPayment
 		newOrderPayment = this.saveOrderPayment( newOrderPayment );
 		
-		if(newOrderPayment.hasErrors()) {
-			arguments.order.addError('orderPayment', rbKey('admin.entity.order.addOrderPayment_error'));
+		if(newOrderPayment.hasError('createTransaction')) {
+			arguments.order.addError('addOrderPayment', newOrderPayment.getError('createTransaction'));
 		}
 		
 		return arguments.order;
@@ -1423,6 +1423,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Run the transaction
 		paymentTransaction = getPaymentService().processPaymentTransaction(paymentTransaction, transactionData, 'runTransaction');
 		
+		// If the paymentTransaction has errors, then add those errors to the orderPayment itself
+		if(paymentTransaction.hasError('runTransaction')) {
+			arguments.orderPayment.addError('createTransaction', paymentTransaction.getError('runTransaction'), true);
+		}
+		
 		return arguments.orderPayment;
 		
 	}
@@ -1608,11 +1613,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public any function saveOrderPayment(required any orderPayment, struct data={}, string context="save") {
 		
+		// Find out if this is the first time the payment is being saved
+		var wasNew = arguments.orderPayment.getNewFlag();
+		
 		// Call the generic save method to populate and validate
 		arguments.orderPayment = save(arguments.orderPayment, arguments.data, arguments.context);
 		
 		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
-		if(!arguments.orderPayment.hasErrors() && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
+		if(wasNew && !arguments.orderPayment.hasErrors() && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
 			
 			// Setup the transaction data
 			var transactionData = {
