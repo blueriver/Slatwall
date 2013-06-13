@@ -224,7 +224,7 @@ component extends="HibachiService" accessors="true" {
 			fileMove("#getHibachiTempDirectory()#/#uploadData.serverFile#", fullFilePath);
 			
 		} catch(any e) {
-			this.addError(currentProperty.name, getHibachiScope().rbKey('validate.fileUpload'));
+			processObject.addError('imageFile', getHibachiScope().rbKey('validate.fileUpload'));
 		}
 	}
 	
