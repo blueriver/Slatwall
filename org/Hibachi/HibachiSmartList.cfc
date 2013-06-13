@@ -757,7 +757,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	
 	// Paging Methods
 	public array function getPageRecords(boolean refresh=false) {
-		if( !structKeyExists(variables, "pageRecords")) {
+		if( !structKeyExists(variables, "pageRecords") || arguments.refresh == true) {
 			saveState();
 			variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
 		}
