@@ -114,9 +114,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 			variables.activeSubscriptionUsageBenefitsSmartList.addRange('subscriptionUsage.expirationDate', '#now()#^');
 			variables.activeSubscriptionUsageBenefitsSmartList.addFilter('subscriptionUsageBenefitAccounts.account.accountID', getAccountID());
 			variables.activeSubscriptionUsageBenefitsSmartList.addWhereCondition(" ( aslatwallsubscriptionusagebenefitaccount.endDateTime is null OR aslatwallsubscriptionusagebenefitaccount.endDateTime >= :now ) ", {now=now()});
-			//writeDump(variables.activeSubscriptionUsageBenefitsSmartList.getHQL());
-			//writeDump(variables.activeSubscriptionUsageBenefitsSmartList.getHQLParams());
-			//abort;
 		}
 		return variables.activeSubscriptionUsageBenefitsSmartList;
 	}
