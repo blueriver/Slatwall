@@ -55,5 +55,7 @@ Notes:
 </cfif>
 </cfoutput>
 <script type="text/javascript">
+setTimeout(function(){
 	window.close();
+},500);
 </script>
