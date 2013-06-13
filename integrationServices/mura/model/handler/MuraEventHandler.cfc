@@ -163,7 +163,10 @@
 					(slatwallContent.getContentTemplateType().getSystemCode() eq "cttProductType" && $.slatwall.getProductType().getNewFlag()) ||
 					(slatwallContent.getContentTemplateType().getSystemCode() eq "cttBrand" && $.slatwall.getBrand().getNewFlag())
 					)) {
+						
 					$.event('contentBean', $.getBean("content"));
+					$.event().getHandler('standard404').handle($.event());
+					
 				} else {
 					$.slatwall.setContent( slatwallContent );
 				}
