@@ -39,10 +39,19 @@ Notes:
 <cfparam name="rc.subscriptionBenefit" type="any">
 <cfparam name="rc.edit" type="boolean">
 
+<cfset selectedCategories = rc.subscriptionBenefit.getCategories() />
+<cfset selectedCategoryIDs = "" />
+<cfloop array="#selectedCategories#" index="i">
+	<cfset selectedContentIDs = listAppend(selectedCategoryIDs, i.getPrimaryIDValue()) />
+</cfloop>
+
 <cfoutput>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.categories')#</h4>
-		<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="categories" edit="#rc.edit#" displaytype="plain" />
+		<cf_HibachiListingDisplay smartList="#rc.subscriptionBenefit.getCategoriesOptionsSmartList()#" multiselectFieldName="categories" multiselectValues="#selectedCategoryIDs#" edit="#rc.edit#">
+			<cf_HibachiListingColumn propertyIdentifier="categoryName" tdclass="primary" />
+			<cf_HibachiListingColumn propertyIdentifier="site.siteName" />
+		</cf_HibachiListingDisplay>
 	</div>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.excludedcategories')#</h4>
