@@ -404,59 +404,63 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 			variables.currencyDetails = {};
 			
 			var eligibleCurrencySL = getService("currencyService").getCurrencySmartList();
-			eligibleCurrencySL.addInFilter('currencyCode', setting('skuEligibleCurrencies') );
 			
-			for(var i = 1; i<=arrayLen(eligibleCurrencySL.getRecords()); i++) {
+			if(len(setting('skuEligibleCurrencies'))) {
 				
-				var thisCurrency = eligibleCurrencySL.getRecords()[i];
+				eligibleCurrencySL.addInFilter('currencyCode', setting('skuEligibleCurrencies') );
 				
-				variables.currencyDetails[ thisCurrency.getCurrencyCode() ] = {};
-				variables.currencyDetails[ thisCurrency.getCurrencyCode() ].skuCurrencyID = "";
-				
-				// Check to see if thisCurrency is the same as the default currency
-				if(thisCurrency.getCurrencyCode() eq this.setting('skuCurrency')) {
-					if(!isNull(getRenewalPrice())) {
-						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPrice = getRenewalPrice();
-						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPriceFormatted = getFormattedValue("renewalPrice");
-					}
-					if(!isNull(getListPrice())) {
-						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice = getListPrice();
-						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPriceFormatted = getFormattedValue("listPrice");
-					}
-					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price = getPrice();
-					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].priceFormatted = getFormattedValue("price");
-					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].converted = false;
-				}
-				// Look through the definitions to see if this currency is defined for this sku
-				for(var c=1; c<=arrayLen(getSkuCurrencies()); c++) {
-					if(getSkuCurrencies()[c].getCurrencyCode() eq thisCurrency.getCurrencyCode()) {
-						if(!isNull(getSkuCurrencies()[c].getRenewalPrice())) {
-							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPrice = getSkuCurrencies()[c].getRenewalPrice();
-							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPriceFormatted = getSkuCurrencies()[c].getFormattedValue("renewalPrice");
+				for(var i = 1; i<=arrayLen(eligibleCurrencySL.getRecords()); i++) {
+					
+					var thisCurrency = eligibleCurrencySL.getRecords()[i];
+					
+					variables.currencyDetails[ thisCurrency.getCurrencyCode() ] = {};
+					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].skuCurrencyID = "";
+					
+					// Check to see if thisCurrency is the same as the default currency
+					if(thisCurrency.getCurrencyCode() eq this.setting('skuCurrency')) {
+						if(!isNull(getRenewalPrice())) {
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPrice = getRenewalPrice();
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPriceFormatted = getFormattedValue("renewalPrice");
 						}
-						if(!isNull(getSkuCurrencies()[c].getListPrice())) {
-							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice = getSkuCurrencies()[c].getListPrice();
-							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPriceFormatted = getSkuCurrencies()[c].getFormattedValue("listPrice");
+						if(!isNull(getListPrice())) {
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice = getListPrice();
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPriceFormatted = getFormattedValue("listPrice");
 						}
-						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price = getSkuCurrencies()[c].getPrice();
-						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].priceFormatted = getSkuCurrencies()[c].getFormattedValue("price");
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price = getPrice();
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].priceFormatted = getFormattedValue("price");
 						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].converted = false;
-						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].skuCurrencyID = getSkuCurrencies()[c].getSkuCurrencyID();
 					}
-				}
-				// Use a conversion mechinism
-				if(!structKeyExists(variables.currencyDetails[ thisCurrency.getCurrencyCode() ], "price")) {
-					if(!isNull(getRenewalPrice())) {
-						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPrice = getService("currencyService").convertCurrency(getRenewalPrice(), this.setting('skuCurrency'), thisCurrency.getCurrencyCode());
-						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPriceFormatted = formatValue( variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPrice, "currency", {currencyCode=thisCurrency.getCurrencyCode()});
+					// Look through the definitions to see if this currency is defined for this sku
+					for(var c=1; c<=arrayLen(getSkuCurrencies()); c++) {
+						if(getSkuCurrencies()[c].getCurrencyCode() eq thisCurrency.getCurrencyCode()) {
+							if(!isNull(getSkuCurrencies()[c].getRenewalPrice())) {
+								variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPrice = getSkuCurrencies()[c].getRenewalPrice();
+								variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPriceFormatted = getSkuCurrencies()[c].getFormattedValue("renewalPrice");
+							}
+							if(!isNull(getSkuCurrencies()[c].getListPrice())) {
+								variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice = getSkuCurrencies()[c].getListPrice();
+								variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPriceFormatted = getSkuCurrencies()[c].getFormattedValue("listPrice");
+							}
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price = getSkuCurrencies()[c].getPrice();
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].priceFormatted = getSkuCurrencies()[c].getFormattedValue("price");
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].converted = false;
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].skuCurrencyID = getSkuCurrencies()[c].getSkuCurrencyID();
+						}
 					}
-					if(!isNull(getListPrice())) {
-						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice = getService("currencyService").convertCurrency(getListPrice(), this.setting('skuCurrency'), thisCurrency.getCurrencyCode());
-						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPriceFormatted = formatValue( variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice, "currency", {currencyCode=thisCurrency.getCurrencyCode()});
+					// Use a conversion mechinism
+					if(!structKeyExists(variables.currencyDetails[ thisCurrency.getCurrencyCode() ], "price")) {
+						if(!isNull(getRenewalPrice())) {
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPrice = getService("currencyService").convertCurrency(getRenewalPrice(), this.setting('skuCurrency'), thisCurrency.getCurrencyCode());
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPriceFormatted = formatValue( variables.currencyDetails[ thisCurrency.getCurrencyCode() ].renewalPrice, "currency", {currencyCode=thisCurrency.getCurrencyCode()});
+						}
+						if(!isNull(getListPrice())) {
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice = getService("currencyService").convertCurrency(getListPrice(), this.setting('skuCurrency'), thisCurrency.getCurrencyCode());
+							variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPriceFormatted = formatValue( variables.currencyDetails[ thisCurrency.getCurrencyCode() ].listPrice, "currency", {currencyCode=thisCurrency.getCurrencyCode()});
+						}
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price = getService("currencyService").convertCurrency(getPrice(), this.setting('skuCurrency'), thisCurrency.getCurrencyCode());
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].priceFormatted = formatValue( variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price, "currency", {currencyCode=thisCurrency.getCurrencyCode()});
+						variables.currencyDetails[ thisCurrency.getCurrencyCode() ].converted = true;
 					}
-					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price = getService("currencyService").convertCurrency(getPrice(), this.setting('skuCurrency'), thisCurrency.getCurrencyCode());
-					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].priceFormatted = formatValue( variables.currencyDetails[ thisCurrency.getCurrencyCode() ].price, "currency", {currencyCode=thisCurrency.getCurrencyCode()});
-					variables.currencyDetails[ thisCurrency.getCurrencyCode() ].converted = true;
 				}
 			}
 		}
