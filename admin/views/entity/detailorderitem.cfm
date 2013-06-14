@@ -104,7 +104,7 @@ Notes:
 		</cf_HibachiPropertyRow>
 		
 		<!--- Tabs --->
-		<cf_HibachiTabGroup object="#rc.orderItem#" allowComments="true" allowCustomAttributes="true">
+		<cf_HibachiTabGroup object="#rc.orderItem#">
 			<cf_HibachiTab view="admin:entity/orderitemtabs/taxes" />
 			<cf_HibachiTab view="admin:entity/orderitemtabs/promotions" />
 			

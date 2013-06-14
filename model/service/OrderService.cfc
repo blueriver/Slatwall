@@ -1672,7 +1672,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return smartList;
 	}
 	
-		public any function getOrderItemSmartList( struct data={} ) {
+	public any function getOrderItemSmartList( struct data={} ) {
 		arguments.entityName = "SlatwallOrderItem";
 	
 		var smartList = getHibachiDAO().getSmartList(argumentCollection=arguments);
