@@ -75,21 +75,12 @@ Notes:
 				
 				<!--- Update Order Payments --->
 				<cfif listFindNoCase(rc.order.getOrderRequirementsList(), 'payment')>
-					<cfset opIndex = 0 />
-					<cfloop array="#rc.order.getOrderPayments()#" index="orderPayment">
-						<cfset thisErrorBean = $.slatwall.getService("HibachiValidationService").validate(object=orderPayment, context='placeOrder', setErrors=false) />
-						<cfif thisErrorBean.hasErrors()>
-							<cfset opIndex++ />
-							<h4>#orderPayment.getSimpleRepresentation()#</h4>
-							<input type="hidden" name="orderPayments[#opIndex#].orderPaymentID" value="#orderPayment.getOrderPaymentID()#" />
-						</cfif>
-					</cfloop>
+					
+					<cfset rc.addOrderPaymentProcessObject = rc.order.getProcessObject("addOrderPayment") />
 					
 					<!--- Add an order payment for the remaining amount if needed --->
 					<cfif rc.order.getPaymentAmountTotal() neq rc.order.getTotal()>
 						<h4>Add Order Payment</h4>
-						
-						<cfset rc.addOrderPaymentProcessObject = rc.order.getProcessObject("addOrderPayment") />
 						
 						<!--- Add a hidden field for the orderID --->
 						<input type="hidden" name="newOrderPayment.order.orderID" value="#rc.order.getOrderID()#" />

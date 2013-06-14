@@ -357,11 +357,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getPaymentAmountTotal() {
 		var totalPayments = 0;
 		
-		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			if(getOrderPayments()[i].getOrderPaymentType().getSystemCode() == "optCharge") {
-				totalPayments = precisionEvaluate(totalPayments + getOrderPayments()[i].getAmount());
-			} else {
-				totalPayments = precisionEvaluate(totalPayments - getOrderPayments()[i].getAmount());	
+		for(var orderPayment in getOrderPayments()) {
+			if(!orderPayment.hasErrors()) {
+				if(orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
+					totalPayments = precisionEvaluate(totalPayments + orderPayment.getAmount());
+				} else {
+					totalPayments = precisionEvaluate(totalPayments - orderPayment.getAmount());	
+				}	
 			}
 		}
 		
