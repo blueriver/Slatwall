@@ -89,7 +89,7 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	property name="qualifierApplicationTypeOptions" type="array" persistent="false";
 	
 	public string function getSimpleRepresentation() {
-		return rbKey('entity.promotionQualifier');
+		return "#rbKey('entity.promotionQualifier')# - #getFormattedValue('qualifierType')#";
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
