@@ -22,6 +22,7 @@
 		"expirationYear":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
 		"nameOnCreditCard":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
 		"creditCardNumber":		[{"contexts":"save","conditions":"newPaymentTypeCreditCard","required":true}],
+		"securityCode":			[{"contexts":"save","conditions":"newPaymentTypeCreditCard","required":true}],
 		"orderStatusCode":		[
 		    {"contexts":"createTransaction","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"},
 			{"contexts":"edit","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"}
