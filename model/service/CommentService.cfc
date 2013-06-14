@@ -143,8 +143,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// If the object passed validation then call save in the DAO, otherwise set the errors flag
         if(!arguments.comment.hasErrors()) {
             arguments.comment = getHibachiDAO().save(target=arguments.comment);
-        } else {
-            getSlatwallScope().setORMHasErrors( true );
         }
         
         return arguments.comment;

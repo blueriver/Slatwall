@@ -425,6 +425,10 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			}
 		}
 		
+		if(this.isPersistent() && this.hasErrors()) {
+			getHibachiScope().setORMHasErrors( true );
+		}
+		
 		return getHibachiErrors();
 	}
 	

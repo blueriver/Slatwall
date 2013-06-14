@@ -360,8 +360,6 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Setup hibernate session correctly if it has errors or not
 		if(!arguments.permissionGroup.hasErrors()) {
 			getAccountDAO().save( arguments.permissionGroup );
-		} else {
-			getHibachiScope().setORMHasErrors( true );
 		}
 		
 		return arguments.permissionGroup;

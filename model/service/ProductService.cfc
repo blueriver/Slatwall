@@ -274,8 +274,6 @@ component extends="HibachiService" accessors="true" {
 		// If the product passed validation then call save in the DAO, otherwise set the errors flag
         if(!arguments.product.hasErrors()) {
         	arguments.product = getHibachiDAO().save(target=arguments.product);
-        } else {
-            getSlatwallScope().setORMHasErrors( true );
         }
         
         // Return the product
