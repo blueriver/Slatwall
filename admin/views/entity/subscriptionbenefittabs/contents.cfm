@@ -54,14 +54,14 @@ Notes:
 <cfoutput>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.contents')#</h4>
-		<cf_HibachiListingDisplay smartList="#rc.subscriptionBenefit.getContentsSmartList()#" multiselectFieldName="contents" multiselectValues="#selectedContentIDs#" edit="#rc.edit#">
+		<cf_HibachiListingDisplay smartList="#rc.subscriptionBenefit.getContentsOptionsSmartList()#" multiselectFieldName="contents" multiselectValues="#selectedContentIDs#" edit="#rc.edit#">
 			<cf_HibachiListingColumn propertyIdentifier="title" tdclass="primary" />
 			<cf_HibachiListingColumn propertyIdentifier="site.siteName" />
 		</cf_HibachiListingDisplay>
 	</div>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.excludedcontents')#</h4>
-		<cf_HibachiListingDisplay smartList="#rc.subscriptionBenefit.getExcludedContentsSmartList()#" multiselectFieldName="excludedContents" multiselectValues="#selectedExcludedContentIDs#" edit="#rc.edit#">
+		<cf_HibachiListingDisplay smartList="#rc.subscriptionBenefit.getExcludedContentsOptionsSmartList()#" multiselectFieldName="excludedContents" multiselectValues="#selectedExcludedContentIDs#" edit="#rc.edit#">
 			<cf_HibachiListingColumn propertyIdentifier="title" tdclass="primary" />
 			<cf_HibachiListingColumn propertyIdentifier="site.siteName" />
 		</cf_HibachiListingDisplay>	
