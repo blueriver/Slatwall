@@ -42,13 +42,13 @@ Notes:
 <cfset selectedContent = rc.subscriptionBenefit.getContents() />
 <cfset selectedContentIDs = "" />
 <cfloop array="#selectedContent#" index="i">
-	<cfset selectedContentIDs = listAppend(selectedContentIDs, i.getContentIDValue()) />
+	<cfset selectedContentIDs = listAppend(selectedContentIDs, i.getContentID()) />
 </cfloop>
 
 <cfset selectedExcludedContent = rc.subscriptionBenefit.getExcludedContents() />
 <cfset selectedExcludedContentIDs = "" />
 <cfloop array="#selectedExcludedContent#" index="i">
-	<cfset selectedExcludedContentIDs = listAppend(selectedExcludedContentIDs, i.getExcludedContentIDValue()) />
+	<cfset selectedExcludedContentIDs = listAppend(selectedExcludedContentIDs, i.getContentID()) />
 </cfloop>
 
 <cfoutput>
