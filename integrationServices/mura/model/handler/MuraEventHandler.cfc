@@ -407,7 +407,7 @@
 				}
 				
 				// Populate Template Type if it Exists
-				if(structKeyExists(contentData, "contentTemplateType") && structKeyExists(contentData.contentTemplateType, "typeID") && len(slatwallData.content.contentTemplateType.typeID)) {
+				if(structKeyExists(contentData, "contentTemplateType") && structKeyExists(contentData.contentTemplateType, "typeID") && len(contentData.contentTemplateType.typeID)) {
 					var type = $.slatwall.getService("settingService").getType( contentData.contentTemplateType.typeID );
 					slatwallContent.setContentTemplateType( type );
 				} else {
