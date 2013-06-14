@@ -175,7 +175,7 @@ function initUIElements( scopeSelector ) {
 function setupEventHandlers() {
 	
 	// Hide Alerts
-	jQuery('.alert-success').delay(2000).fadeOut(500);
+	jQuery('.alert-success').delay(3000).fadeOut(500);
 	
 	// Global Search
 	jQuery('body').on('keyup', '#global-search', function(e){
@@ -193,7 +193,6 @@ function setupEventHandlers() {
 			jQuery('#search-results').animate({
 				'margin-top': '-500px'
 			}, 150);
-			jQuery('#search-results .result-bucket .nav').html('');
 		}
 	});
 	jQuery('body').on('click', '.search-close', function(e){
@@ -1189,6 +1188,17 @@ function updateGlobalSearchResults() {
 		};
 		data[ hibachiConfig.action ] = 'admin:ajax.updateGlobalSearchResults';
 		
+		var buckets = {
+			product: {primaryIDProperty:'productID', listAction:'admin:entity.listproduct', detailAction:'admin:entity.detailproduct'},
+			productType: {primaryIDProperty:'productTypeID', listAction:'admin:entity.listproducttype', detailAction:'admin:entity.detailproducttype'},
+			brand: {primaryIDProperty:'brandID', listAction:'admin:entity.listbrand', detailAction:'admin:entity.detailbrand'},
+			promotion: {primaryIDProperty:'promotionID', listAction:'admin:entity.listpromotion', detailAction:'admin:entity.detailpromotion'},
+			order: {primaryIDProperty:'orderID', listAction:'admin:entity.listorder', detailAction:'admin:entity.detailorder'},
+			account: {primaryIDProperty:'accountID', listAction:'admin:entity.listaccount', detailAction:'admin:entity.detailaccount'},
+			vendorOrder: {primaryIDProperty:'vendorOrderID', listAction:'admin:entity.listvendororder', detailAction:'admin:entity.detailvendororder'},
+			vendor: {primaryIDProperty:'vendorID', listAction:'admin:entity.listvendor', detailAction:'admin:entity.detailvendor'}
+		};
+		
 		jQuery.ajax({
 			url: hibachiConfig.baseURL + '/',
 			method: 'post',
@@ -1202,27 +1212,23 @@ function updateGlobalSearchResults() {
 			},
 			success: function(result) {
 				
-				var buckets = {
-					product: {primaryIDProperty:'productID', listAction:'admin:entity.listproduct', detailAction:'admin:entity.detailproduct'},
-					productType: {primaryIDProperty:'productTypeID', listAction:'admin:entity.listproducttype', detailAction:'admin:entity.detailproducttype'},
-					brand: {primaryIDProperty:'brandID', listAction:'admin:entity.listbrand', detailAction:'admin:entity.detailbrand'},
-					promotion: {primaryIDProperty:'promotionID', listAction:'admin:entity.listpromotion', detailAction:'admin:entity.detailpromotion'},
-					order: {primaryIDProperty:'orderID', listAction:'admin:entity.listorder', detailAction:'admin:entity.detailorder'},
-					account: {primaryIDProperty:'accountID', listAction:'admin:entity.listaccount', detailAction:'admin:entity.detailaccount'},
-					vendorOrder: {primaryIDProperty:'vendorOrderID', listAction:'admin:entity.listvendororder', detailAction:'admin:entity.detailvendororder'},
-					vendor: {primaryIDProperty:'vendorID', listAction:'admin:entity.listvendor', detailAction:'admin:entity.detailvendor'}
-				};
 				for (var key in buckets) {
-					jQuery('#golbalsr-' + key).html('');
-					var records = result[key]['records'];
-				    for(var r=0; r < records.length; r++) {
-				    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachiConfig.baseURL + '/?' + hibachiConfig.action + '=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
-				    }
-				    if(result[key]['recordCount'] > 10) {
-				    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachiConfig.baseURL + '/?' + hibachiConfig.action + '=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
-				    } else if (result[key]['recordCount'] == 0) {
-				    	jQuery('#golbalsr-' + key).append('<li><em>none</em></li>');
-				    }
+					if(result.hasOwnProperty(key)) {
+						
+						jQuery('#golbalsr-' + key).html('');
+						
+						var records = result[key]['records'];
+						
+					    for(var r=0; r < records.length; r++) {
+					    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachiConfig.baseURL + '/?' + hibachiConfig.action + '=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
+					    }
+					    
+					    if(result[key]['recordCount'] > 10) {
+					    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachiConfig.baseURL + '/?' + hibachiConfig.action + '=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
+					    } else if (result[key]['recordCount'] == 0) {
+					    	jQuery('#golbalsr-' + key).append('<li><em>none</em></li>');
+					    }
+					}
 				}
 				
 				removeLoadingDiv( 'search-results' );

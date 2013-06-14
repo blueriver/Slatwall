@@ -188,14 +188,30 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.o
 		rc['P:Show'] = 10;
 		
 		var smartLists = {};
-		smartLists['product'] = getProductService().getProductSmartList(data=rc);
-		smartLists['productType'] = getProductService().getProductTypeSmartList(data=rc);
-		smartLists['brand'] = getBrandService().getBrandSmartList(data=rc);
-		smartLists['promotion'] = getPromotionService().getPromotionSmartList(data=rc);
-		smartLists['order'] = getOrderService().getOrderSmartList(data=rc);
-		smartLists['account'] = getAccountService().getAccountSmartList(data=rc);
-		smartLists['vendorOrder'] = getVendorOrderService().getVendorOrderSmartList(data=rc);
-		smartLists['vendor'] = getVendorService().getVendorSmartList(data=rc);
+		if(rc.$.slatwall.authenticateEntity("Read", "Product")) {
+			smartLists['product'] = getProductService().getProductSmartList(data=rc);	
+		}
+		if(rc.$.slatwall.authenticateEntity("Read", "ProductType")) {
+			smartLists['productType'] = getProductService().getProductTypeSmartList(data=rc);
+		}
+		if(rc.$.slatwall.authenticateEntity("Read", "Brand")) {
+			smartLists['brand'] = getBrandService().getBrandSmartList(data=rc);
+		}
+		if(rc.$.slatwall.authenticateEntity("Read", "Promotion")) {
+			smartLists['promotion'] = getPromotionService().getPromotionSmartList(data=rc);
+		}
+		if(rc.$.slatwall.authenticateEntity("Read", "Order")) {
+			smartLists['order'] = getOrderService().getOrderSmartList(data=rc);	
+		}
+		if(rc.$.slatwall.authenticateEntity("Read", "Account")) {
+			smartLists['account'] = getAccountService().getAccountSmartList(data=rc);
+		}
+		if(rc.$.slatwall.authenticateEntity("Read", "VendorOrder")) {
+			smartLists['vendorOrder'] = getVendorOrderService().getVendorOrderSmartList(data=rc);
+		}
+		if(rc.$.slatwall.authenticateEntity("Read", "Vendor")) {
+			smartLists['vendor'] = getVendorService().getVendorSmartList(data=rc);
+		}
 		
 		for(var key in smartLists) {
 			rc.ajaxResponse[ key ] = {};

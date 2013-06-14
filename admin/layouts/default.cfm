@@ -182,51 +182,86 @@ Notes:
 				</div>
 			</div>
 		</div>
+		
 		<div id="search-results" class="search-results">
 			<div class="container-fluid">
 				<div class="row-fluid">
+				
 					<div class="span3 result-bucket">
 						<h4>#$.slatwall.rbKey('entity.product_plural')#</h4>
 						<ul class="nav" id="golbalsr-product">
+							<cfif not $.slatwall.authenticateEntity("Read", "Product")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3 result-bucket">
 						<h4>#$.slatwall.rbKey('entity.productType_plural')#</h4>
 						<ul class="nav" id="golbalsr-productType">
+							<cfif not $.slatwall.authenticateEntity("Read", "ProductType")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3  result-bucket">
 						<h4>#$.slatwall.rbKey('entity.brand_plural')#</h4>
 						<ul class="nav" id="golbalsr-brand">
+							<cfif not $.slatwall.authenticateEntity("Read", "Brand")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3 result-bucket">
 						<h4>#$.slatwall.rbKey('entity.promotion_plural')#</h4>
 						<ul class="nav" id="golbalsr-promotion">
+							<cfif not $.slatwall.authenticateEntity("Read", "Promotion")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 				</div>
 				<div class="row-fluid">
+					
 					<div class="span3 result-bucket">
 						<h4>#$.slatwall.rbKey('entity.order_plural')#</h4>
 						<ul class="nav" id="golbalsr-order">
+							<cfif not $.slatwall.authenticateEntity("Read", "Order")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3 result-bucket">
 						<h4>#$.slatwall.rbKey('entity.account_plural')#</h4>
 						<ul class="nav" id="golbalsr-account">
+							<cfif not $.slatwall.authenticateEntity("Read", "Account")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3 result-bucket">
 						<h4>#$.slatwall.rbKey('entity.vendorOrder_plural')#</h4>
 						<ul class="nav" id="golbalsr-vendorOrder">
+							<cfif not $.slatwall.authenticateEntity("Read", "VendorOrder")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3 result-bucket">
 						<h4>#$.slatwall.rbKey('entity.vendor_plural')#</h4>
 						<ul class="nav" id="golbalsr-vendor">
+							<cfif not $.slatwall.authenticateEntity("Read", "Vendor")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+					
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
@@ -235,6 +270,7 @@ Notes:
 				</div>
 			</div>
 		</div>
+		
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span12">
