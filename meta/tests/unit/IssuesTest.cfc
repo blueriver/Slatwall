@@ -167,6 +167,5 @@ component extends="SlatwallUnitTestBase" {
 		assert(account2HasErrors);
 	}
 	
-
 }
 
