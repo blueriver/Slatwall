@@ -486,7 +486,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		if(isNull(arguments.value)) {
 			var propertyMeta = getPropertyMetaData( arguments.propertyName );
 			if(structKeyExists(propertyMeta, "hb_nullRBKey")) {
-				return rbKey(propertyMeta.nullRBKey);
+				return rbKey(propertyMeta.hb_nullRBKey);
 			}
 			
 			return "";
