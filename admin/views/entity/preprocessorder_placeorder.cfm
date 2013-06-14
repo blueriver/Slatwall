@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_HibachiEntityProcessForm entity="#rc.order#" edit="#rc.edit#" sRedirectAction="admin:entity.editorder">
+	<cf_HibachiEntityProcessForm entity="#rc.order#" edit="#rc.edit#">
 		
 		<cf_HibachiEntityActionBar type="preprocess" object="#rc.order#">
 		</cf_HibachiEntityActionBar>

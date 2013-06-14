@@ -62,7 +62,7 @@ Notes:
 			<!--- Place Order --->
 			<cfif rc.order.getOrderStatusType().getSystemCode() eq "ostNotPlaced">
 				<cfif len(rc.order.getOrderRequirementsList())>
-					<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="placeOrder" type="list" modal="true" />
+					<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="placeOrder" queryString="sRedirectAction=admin:entity.detailorder" type="list" modal="true" />
 				<cfelse>
 					<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOrder" type="list" />
 				</cfif>
