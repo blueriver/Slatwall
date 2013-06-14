@@ -971,8 +971,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalid'));
 		} else if ( (!isNull(pc.getStartDateTime()) && pc.getStartDateTime() > now()) || (!isNull(pc.getEndDateTime()) && pc.getEndDateTime() < now()) || !pc.getPromotion().getCurrentFlag()) {
 			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invaliddatetime'));
-		} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(getSlatwallScope().getCurrentAccount())) {
+		} else if (arrayLen(pc.getAccounts()) && !pc.hasAccount(arguments.order.getAccount())) {
 			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.invalidaccount'));
+		} else if( !isNull(pc.getMaximumAccountUseCount()) && pc.getMaximumAccountUseCount() <= getPromotionService().getPromotionCodeAccountUseCount(pc, arguments.order.getAccount()) ) {
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.overMaximumAccountUseCount'));
+		} else if( !isNull(pc.getMaximumUseCount()) && pc.getMaximumUseCount() <= getPromotionService().getPromotionCodeUseCount(pc) ) {
+			arguments.processObject.addError("promotionCode", rbKey('validate.promotionCode.overMaximumUseCount'));
 		} else {
 			if(!arguments.order.hasPromotionCode( pc )) {
 				arguments.order.addPromotionCode( pc );

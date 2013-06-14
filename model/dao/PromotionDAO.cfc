@@ -230,6 +230,50 @@ Notes:
 		<cfreturn results[1] />
 	</cffunction>
 	
+	<cffunction name="getPromotionCodeUseCount" returntype="numeric" access="public">
+		<cfargument name="promotionCode" required="true" type="any" />
+		
+		<cfset var results = ormExecuteQuery("SELECT count(o.orderID) as count FROM
+					SlatwallPromotionCode pc
+				  INNER JOIN
+				  	pc.orders o
+				WHERE
+					o.orderStatusType.systemCode != :ostNotPlaced
+				  AND
+				  	pc.promotionCodeID = :promotionCodeID	
+					", {
+						ostNotPlaced = "ostNotPlaced",
+						promotionCodeID = arguments.promotionCode.getPromotionCodeID()
+				}) />
+		
+		<cfreturn results[1] />
+		
+	</cffunction>
+	
+	<cffunction name="getPromotionCodeAccountUseCount" returntype="numeric" access="public">
+		<cfargument name="promotionCode" required="true" type="any" />
+		<cfargument name="account" required="true" type="any" />
+		
+		<cfset var results = ormExecuteQuery("SELECT count(o.orderID) as count
+				FROM
+					SlatwallPromotionCode pc
+				  INNER JOIN
+				  	pc.orders o
+				WHERE
+					o.orderStatusType.systemCode != :ostNotPlaced
+				  AND
+				  	pc.promotionCodeID = :promotionCodeID
+				  AND
+				  	o.account.accountID = :accountID	
+					", {
+						ostNotPlaced = "ostNotPlaced",
+						promotionCodeID = arguments.promotionCode.getPromotionCodeID(),
+						accountID = arguments.account.getAccountID()
+				}) />
+		
+		<cfreturn results[1] />
+	</cffunction>
+	
 	<cffunction name="getSalePricePromotionRewardsQuery">
 		<cfargument name="productID" type="string">
 		
