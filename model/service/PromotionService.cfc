@@ -633,7 +633,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return qualifiedFulfillmentIDs;
 	}
 	
-	
 	private numeric function getPromotionPeriodOrderItemQualificationCount(required any promotionPeriod, required any orderItem, required any order) {
 		// Setup the allQualifiersCount to the totalSaleQuantity, that way if there are no item qualifiers then every item quantity qualifies
 		var allQualifiersCount = arguments.order.getTotalSaleQuantity();
@@ -909,6 +908,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
+	
+	public boolean function getPromotionCodeUseCount(required any promotionCode) {
+		return getPromotionDAO().getPromotionCodeUseCount(argumentcollection=arguments);
+	}
+	
+	public boolean function getPromotionCodeAccountUseCount(required any promotionCode, required any account) {
+		return getPromotionDAO().getPromotionCodeAccountUseCount(argumentcollection=arguments);
+	}
 	
 	// ===================== START: DAO Passthrough ===========================
 	
