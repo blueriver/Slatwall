@@ -430,10 +430,10 @@ component extends="HibachiService" accessors="true" output="false" {
 			
 			getAccountDAO().removeAccountFromAllSessions( accountID );
 			
-			return delete(arguments.account);
+			return delete( arguments.account );
 		}
 		
-		return false;
+		return delete( arguments.account );
 	}
 	
 	public boolean function deleteAccountEmailAddress(required any accountEmailAddress) {

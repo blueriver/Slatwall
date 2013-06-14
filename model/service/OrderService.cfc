@@ -1702,4 +1702,28 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ======================  END: Get Overrides =============================
 	
+	// ===================== START: Delete Overrides ==========================
+	
+	public any function deleteOrderItem( required any orderItem ) {
+		
+		// Check delete validation
+		if(arguments.orderItem.isDeletable()) {
+			
+			// Remove the primary fields so that we can delete this entity
+			arguments.orderItem.removeOrder();
+			if(!isNull(arguments.orderItem.getOrderFulfillment())) {
+				arguments.orderItem.removeOrderFulfillment();
+			}
+			if(!isNull(arguments.orderItem.getOrderReturn())) {
+				arguments.orderItem.removeOrderReturn();	
+			}
+			
+			return delete( arguments.orderItem );
+		}
+		
+		return delete( arguments.orderItem );
+	}
+	
+	// =====================  END: Delete Overrides ===========================
+	
 }

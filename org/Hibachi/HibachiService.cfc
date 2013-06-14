@@ -75,9 +75,6 @@
 				
 			}
 			
-			// Setup ormHasErrors because it didn't pass validation
-			getHibachiScope().setORMHasErrors( true );
-			
 			// Announce After Events for Failure
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Delete", arguments);
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#DeleteFailure", arguments);
