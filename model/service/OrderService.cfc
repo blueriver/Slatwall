@@ -987,6 +987,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		if(structKeyExists(arguments.data, "promotionCodeID")) {
 			var promotionCode = getPromotionService().getPromotionCode( arguments.data.promotionCodeID );
+		} else if (structKeyExists(arguments.data, "promotionCode")) {
+			var promotionCode = getPromotionService().getPromotionCodeByPromotionCode( arguments.data.promotionCode );	
 		}
 		
 		if(!isNull(promotionCode)) {

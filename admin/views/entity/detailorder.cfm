@@ -184,7 +184,7 @@ Notes:
 			
 			<!--- Account Details --->
 			<cfif !isNull(rc.order.getAccount())>
-				<cf_HibachiTab view="admin:entity/ordertabs/accountdetails" count="#rc.order.getPromotionCodesCount()#" />
+				<cf_HibachiTab view="admin:entity/ordertabs/accountdetails" />
 			</cfif>
 			
 			<!--- Comments --->
