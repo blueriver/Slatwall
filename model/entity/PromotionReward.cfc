@@ -92,7 +92,10 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="amountTypeOptions" persistent="false";
 	property name="applicableTermOptions" persistent="false";
 	property name="rewards" type="string" persistent="false";
-
+	
+	public string function getSimpleRepresentation() {
+		return rbKey('entity.promotionReward');
+	}
 
 	// ============ START: Non-Persistent Property Methods =================
 	
