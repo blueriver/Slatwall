@@ -47,6 +47,7 @@ Notes:
 
 <cfset selectedExcludedCategories = rc.subscriptionBenefit.getExcludedCategories() />
 <cfset selectedExcludedCategoryIDs = "" />
+
 <cfloop array="#selectedExcludedCategories#" index="i">
 	<cfset selectedExcludedCategoryIDs = listAppend(selectedExcludedCategoryIDs, i.getCategoryID()) />
 </cfloop>
