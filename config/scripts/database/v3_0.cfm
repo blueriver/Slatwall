@@ -244,6 +244,9 @@ Notes:
 	<cfquery name="local.deleteEmail">
 		DELETE FROM SlatwallEmail WHERE emailTemplateID = 'dbb327e694534908c60ea354766bf0a8' OR emailTemplateID = 'dbb327e506090fde08cc4855fa14448d'
 	</cfquery>
+	<cfquery name="local.deleteEmailSetting">
+		DELETE FROM SlatwallSetting WHERE emailTemplateID = 'dbb327e694534908c60ea354766bf0a8' OR emailTemplateID = 'dbb327e506090fde08cc4855fa14448d'
+	</cfquery>
 	<cfquery name="local.deleteTemplate">
 		DELETE FROM SlatwallEmailTemplate WHERE emailTemplateID = 'dbb327e694534908c60ea354766bf0a8' OR emailTemplateID = 'dbb327e506090fde08cc4855fa14448d'
 	</cfquery>
