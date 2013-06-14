@@ -145,8 +145,8 @@ Notes:
 				    					<label class="control-label" for="rating">Email Address</label>
 				    					<div class="controls">
 				    						
-											<sw:formField type="text" valueObject="#accountLoginObj#" valueObjectProperty="emailAddress" class="span4" />
-											<sw:errorDisplay object="#accountLoginObj#" errorName="emailAddress" />
+											<sw:FormField type="text" valueObject="#accountLoginObj#" valueObjectProperty="emailAddress" class="span4" />
+											<sw:ErrorDisplay object="#accountLoginObj#" errorName="emailAddress" />
 											
 				    					</div>
 				  					</div>
@@ -156,8 +156,8 @@ Notes:
 				    					<label class="control-label" for="rating">Password</label>
 				    					<div class="controls">
 				    						
-											<sw:formField type="password" valueObject="#accountLoginObj#" valueObjectProperty="password" class="span4" />
-											<sw:errorDisplay object="#accountLoginObj#" errorName="password" />
+											<sw:FormField type="password" valueObject="#accountLoginObj#" valueObjectProperty="password" class="span4" />
+											<sw:ErrorDisplay object="#accountLoginObj#" errorName="password" />
 											
 				    					</div>
 				  					</div>
@@ -190,8 +190,8 @@ Notes:
 				    					<label class="control-label" for="rating">Email Address</label>
 				    					<div class="controls">
 				    						
-											<sw:formField type="text" valueObject="#accountLoginObj#" valueObjectProperty="emailAddress" class="span4" />
-											<sw:errorDisplay object="#forgotPasswordObj#" errorName="emailAddress" />
+											<sw:FormField type="text" valueObject="#accountLoginObj#" valueObjectProperty="emailAddress" class="span4" />
+											<sw:ErrorDisplay object="#forgotPasswordObj#" errorName="emailAddress" />
 											
 				    					</div>
 				  					</div>
@@ -229,8 +229,8 @@ Notes:
 						    					<label class="control-label" for="rating">First Name</label>
 						    					<div class="controls">
 						    						
-													<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="firstName" class="span2" />
-													<sw:errorDisplay object="#createAccountObj#" errorName="firstName" />
+													<sw:FormField type="text" valueObject="#createAccountObj#" valueObjectProperty="firstName" class="span2" />
+													<sw:ErrorDisplay object="#createAccountObj#" errorName="firstName" />
 													
 						    					</div>
 						  					</div>
@@ -242,8 +242,8 @@ Notes:
 						    					<label class="control-label" for="rating">Last Name</label>
 						    					<div class="controls">
 						    						
-													<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="lastName" class="span2" />
-													<sw:errorDisplay object="#createAccountObj#" errorName="lastName" />
+													<sw:FormField type="text" valueObject="#createAccountObj#" valueObjectProperty="lastName" class="span2" />
+													<sw:ErrorDisplay object="#createAccountObj#" errorName="lastName" />
 													
 						    					</div>
 						  					</div>
@@ -256,8 +256,8 @@ Notes:
 				    					<label class="control-label" for="rating">Phone Number</label>
 				    					<div class="controls">
 				    						
-											<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="phoneNumber" class="span4" />
-											<sw:errorDisplay object="#createAccountObj#" errorName="phoneNumber" />
+											<sw:FormField type="text" valueObject="#createAccountObj#" valueObjectProperty="phoneNumber" class="span4" />
+											<sw:ErrorDisplay object="#createAccountObj#" errorName="phoneNumber" />
 											
 				    					</div>
 				  					</div>
@@ -267,8 +267,8 @@ Notes:
 				    					<label class="control-label" for="rating">Email Address</label>
 				    					<div class="controls">
 				    						
-											<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="emailAddress" class="span4" />
-											<sw:errorDisplay object="#createAccountObj#" errorName="emailAddress" />
+											<sw:FormField type="text" valueObject="#createAccountObj#" valueObjectProperty="emailAddress" class="span4" />
+											<sw:ErrorDisplay object="#createAccountObj#" errorName="emailAddress" />
 											
 				    					</div>
 				  					</div>
@@ -278,8 +278,8 @@ Notes:
 				    					<label class="control-label" for="rating">Confirm Email Address</label>
 				    					<div class="controls">
 				    						
-											<sw:formField type="text" valueObject="#createAccountObj#" valueObjectProperty="emailAddressConfirm" class="span4" />
-											<sw:errorDisplay object="#createAccountObj#" errorName="emailAddressConfirm" />
+											<sw:FormField type="text" valueObject="#createAccountObj#" valueObjectProperty="emailAddressConfirm" class="span4" />
+											<sw:ErrorDisplay object="#createAccountObj#" errorName="emailAddressConfirm" />
 											
 				    					</div>
 				  					</div>
@@ -289,8 +289,8 @@ Notes:
 				    					<label class="control-label" for="rating">Save Account ( No for Guest Checkout )</label>
 				    					<div class="controls">
 				    						
-											<sw:formField type="yesno" valueObject="#createAccountObj#" valueObjectProperty="createAuthenticationFlag" />
-											<sw:errorDisplay object="#createAccountObj#" errorName="createAuthenticationFlag" />
+											<sw:FormField type="yesno" valueObject="#createAccountObj#" valueObjectProperty="createAuthenticationFlag" />
+											<sw:ErrorDisplay object="#createAccountObj#" errorName="createAuthenticationFlag" />
 											
 				    					</div>
 				  					</div>
@@ -319,8 +319,8 @@ Notes:
 					    					<label class="control-label" for="rating">Password</label>
 					    					<div class="controls">
 					    						
-												<sw:formField type="password" valueObject="#createAccountObj#" valueObjectProperty="password" class="span4" />
-												<sw:errorDisplay object="#createAccountObj#" errorName="password" />
+												<sw:FormField type="password" valueObject="#createAccountObj#" valueObjectProperty="password" class="span4" />
+												<sw:ErrorDisplay object="#createAccountObj#" errorName="password" />
 												
 					    					</div>
 					  					</div>
@@ -330,8 +330,8 @@ Notes:
 					    					<label class="control-label" for="rating">Confirm Password</label>
 					    					<div class="controls">
 					    						
-												<sw:formField type="password" valueObject="#createAccountObj#" valueObjectProperty="passwordConfirm" class="span4" />
-												<sw:errorDisplay object="#createAccountObj#" errorName="password" />
+												<sw:FormField type="password" valueObject="#createAccountObj#" valueObjectProperty="passwordConfirm" class="span4" />
+												<sw:ErrorDisplay object="#createAccountObj#" errorName="password" />
 												
 					    					</div>
 					  					</div>
@@ -392,8 +392,8 @@ Notes:
 						    					<label class="control-label" for="rating">Email Address</label>
 						    					<div class="controls">
 						    						
-													<sw:formField type="text" name="orderFulfillments[#orderFulfillmentIndex#].emailAddress" valueObject="#orderFulfillment#" valueObjectProperty="emailAddress" class="span4" />
-													<sw:errorDisplay object="#orderFulfillment#" errorName="emailAddress" />
+													<sw:FormField type="text" name="orderFulfillments[#orderFulfillmentIndex#].emailAddress" valueObject="#orderFulfillment#" valueObjectProperty="emailAddress" class="span4" />
+													<sw:ErrorDisplay object="#orderFulfillment#" errorName="emailAddress" />
 													
 						    					</div>
 						  					</div>
@@ -406,8 +406,8 @@ Notes:
 						    					<label class="control-label" for="rating">Pickup Location</label>
 						    					<div class="controls">
 						    						
-													<sw:formField type="select" name="orderFulfillments[#orderFulfillmentIndex#].pickupLocation.locationID" valueObject="#orderFulfillment#" valueObjectProperty="pickupLocation" valueOptions="#orderFulfillment.getPickupLocationOptions()#" class="span4" />
-													<sw:errorDisplay object="#orderFulfillment#" errorName="pickupLocation" />
+													<sw:FormField type="select" name="orderFulfillments[#orderFulfillmentIndex#].pickupLocation.locationID" valueObject="#orderFulfillment#" valueObjectProperty="pickupLocation" valueOptions="#orderFulfillment.getPickupLocationOptions()#" class="span4" />
+													<sw:ErrorDisplay object="#orderFulfillment#" errorName="pickupLocation" />
 													
 						    					</div>
 						  					</div>
@@ -430,8 +430,8 @@ Notes:
 								    					<label class="control-label" for="rating">Select Existing Address</label>
 								    					<div class="controls">
 								    						
-															<sw:formField type="select" name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID" valueObject="#orderFulfillment#" valueObjectProperty="accountAddress" valueOptions="#orderFulfillment.getAccountAddressOptions()#" class="span4" />
-															<sw:errorDisplay object="#orderFulfillment#" errorName="accountAddress" />
+															<sw:FormField type="select" name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID" valueObject="#orderFulfillment#" valueObjectProperty="accountAddress" valueOptions="#orderFulfillment.getAccountAddressOptions()#" class="span4" />
+															<sw:ErrorDisplay object="#orderFulfillment#" errorName="accountAddress" />
 															
 								    					</div>
 								  					</div>
@@ -440,7 +440,7 @@ Notes:
 												</cfif>
 												
 												<!--- New Shipping Address --->
-												<sw:addressForm id="newShippingAddress" address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#orderFulfillmentIndex#].shippingAddress." fieldClass="span4" />
+												<sw:AddressForm id="newShippingAddress" address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#orderFulfillmentIndex#].shippingAddress." fieldClass="span4" />
 												
 											</div>
 											
@@ -457,11 +457,11 @@ Notes:
 								    					<div class="controls">
 								    						
 															<!--- OPTIONAL: You can use this formField display to show options as a select box
-															<sw:formField type="select" name="orderFulfillments[#orderFulfillmentIndex#].shippingMethod.shippingMethodID" valueObject="#orderFulfillment#" valueObjectProperty="shippingMethod" valueOptions="#orderFulfillment.getShippingMethodOptions()#" class="span4" />
+															<sw:FormField type="select" name="orderFulfillments[#orderFulfillmentIndex#].shippingMethod.shippingMethodID" valueObject="#orderFulfillment#" valueObjectProperty="shippingMethod" valueOptions="#orderFulfillment.getShippingMethodOptions()#" class="span4" />
 															--->
 															
-															<sw:formField type="radiogroup" name="orderFulfillments[#orderFulfillmentIndex#].shippingMethod.shippingMethodID" valueObject="#orderFulfillment#" valueObjectProperty="shippingMethod" valueOptions="#orderFulfillment.getShippingMethodOptions()#" />
-															<sw:errorDisplay object="#orderFulfillment#" errorName="shippingMethod" />
+															<sw:FormField type="radiogroup" name="orderFulfillments[#orderFulfillmentIndex#].shippingMethod.shippingMethodID" valueObject="#orderFulfillment#" valueObjectProperty="shippingMethod" valueOptions="#orderFulfillment.getShippingMethodOptions()#" />
+															<sw:ErrorDisplay object="#orderFulfillment#" errorName="shippingMethod" />
 															
 								    					</div>
 								  					</div>
@@ -640,7 +640,7 @@ Notes:
 												<div class="span4">
 													<h5>Billing Address</h5>
 													
-													<sw:addressForm id="newBillingAddress" address="#addOrderPaymentObj.getNewOrderPayment().getBillingAddress()#" fieldNamePrefix="newOrderPayment.billingAddress." fieldClass="span4" />
+													<sw:AddressForm id="newBillingAddress" address="#addOrderPaymentObj.getNewOrderPayment().getBillingAddress()#" fieldNamePrefix="newOrderPayment.billingAddress." fieldClass="span4" />
 												</div>
 												<div class="span4">
 													<h5>Credit Card Info</h5>
@@ -650,8 +650,8 @@ Notes:
 								    					<label class="control-label" for="rating">Credit Card Number</label>
 								    					<div class="controls">
 								    						
-															<sw:formField type="text" name="newOrderPayment.creditCardNumber" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="creditCardNumber" class="span4" />
-															<sw:errorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="creditCardNumber" />
+															<sw:FormField type="text" name="newOrderPayment.creditCardNumber" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="creditCardNumber" class="span4" />
+															<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="creditCardNumber" />
 															
 								    					</div>
 								  					</div>
@@ -661,8 +661,8 @@ Notes:
 								    					<label class="control-label" for="rating">Name on Card</label>
 								    					<div class="controls">
 								    						
-															<sw:formField type="text" name="newOrderPayment.nameOnCreditCard" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="nameOnCreditCard" class="span4" />
-															<sw:errorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="nameOnCreditCard" />
+															<sw:FormField type="text" name="newOrderPayment.nameOnCreditCard" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="nameOnCreditCard" class="span4" />
+															<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="nameOnCreditCard" />
 															
 								    					</div>
 								  					</div>
@@ -677,8 +677,8 @@ Notes:
 										    					<label class="control-label" for="rating">Security Code</label>
 										    					<div class="controls">
 										    						
-																	<sw:formField type="text" name="newOrderPayment.securityCode" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="securityCode" class="span2" />
-																	<sw:errorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="securityCode" />
+																	<sw:FormField type="text" name="newOrderPayment.securityCode" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="securityCode" class="span2" />
+																	<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="securityCode" />
 																	
 										    					</div>
 										  					</div>
@@ -693,10 +693,10 @@ Notes:
 										    					<label class="control-label pull-right" for="rating">Expiration ( MM / YYYY )</label>
 										    					<div class="controls pull-right">
 										    						
-																	<sw:formField type="select" name="newOrderPayment.expirationMonth" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="expirationMonth" valueOptions="#addOrderPaymentObj.getNewOrderPayment().getExpirationMonthOptions()#" class="span1" />
-																	<sw:formField type="select" name="newOrderPayment.expirationYear" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="expirationYear" valueOptions="#addOrderPaymentObj.getNewOrderPayment().getExpirationYearOptions()#" class="span1" />
-																	<sw:errorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="expirationMonth" />
-																	<sw:errorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="expirationYear" />
+																	<sw:FormField type="select" name="newOrderPayment.expirationMonth" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="expirationMonth" valueOptions="#addOrderPaymentObj.getNewOrderPayment().getExpirationMonthOptions()#" class="span1" />
+																	<sw:FormField type="select" name="newOrderPayment.expirationYear" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="expirationYear" valueOptions="#addOrderPaymentObj.getNewOrderPayment().getExpirationYearOptions()#" class="span1" />
+																	<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="expirationMonth" />
+																	<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="expirationYear" />
 																	
 										    					</div>
 										  					</div>
@@ -995,11 +995,11 @@ Notes:
 							<!--- Fulfillment Details: Pickup --->
 							<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup" and not isNull(orderFulfillment.getPickupLocation())>
 								<strong>Pickup Location:</strong> #orderFulfillment.getPickupLocation().getLocationName()#<br />
-								<sw:addressDisplay address="#orderFulfillment.getPickupLocation().getPrimaryAddress().getAddress()#" />
+								<sw:AddressDisplay address="#orderFulfillment.getPickupLocation().getPrimaryAddress().getAddress()#" />
 								
 							<!--- Fulfillment Details: Shipping --->
 							<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
-								<sw:addressDisplay address="#orderFulfillment.getAddress()#" />
+								<sw:AddressDisplay address="#orderFulfillment.getAddress()#" />
 								<cfif not isNull(orderFulfillment.getShippingMethod())>
 									<strong>Shipping Method:</strong> #orderFulfillment.getShippingMethod().getShippingMethodName()#<br />
 								</cfif>
