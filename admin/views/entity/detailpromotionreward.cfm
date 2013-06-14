@@ -52,7 +52,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.promotionreward#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#"  pageTitle="#rc.rewardType# - #$.slatwall.rbKey('entity.promotionReward')#"
+		<cf_HibachiEntityActionBar type="detail" object="#rc.promotionreward#" edit="#rc.edit#" 
 							  cancelAction="admin:entity.detailpromotionreward"
 							  cancelQueryString="promotionRewardID=#rc.promotionReward.getPromotionRewardID()#" 
 							  backAction="admin:entity.detailpromotionperiod" 

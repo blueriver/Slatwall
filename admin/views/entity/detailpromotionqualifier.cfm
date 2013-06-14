@@ -51,7 +51,7 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.promotionQualifier#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.promotionQualifier#" edit="#rc.edit#" pageTitle="#rc.qualifierType# - #$.slatwall.rbKey('entity.promotionQualifier')#"
+		<cf_HibachiEntityActionBar type="detail" object="#rc.promotionQualifier#" edit="#rc.edit#" 
 							  cancelAction="admin:entity.detailpromotionqualifier"
 							  cancelQueryString="promotionQualifierID=#rc.promotionQualifier.getPromotionQualifierID()#" 
 							  backAction="admin:entity.detailpromotionperiod" 

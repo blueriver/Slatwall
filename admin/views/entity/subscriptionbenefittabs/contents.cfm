@@ -42,19 +42,28 @@ Notes:
 <cfset selectedContent = rc.subscriptionBenefit.getContents() />
 <cfset selectedContentIDs = "" />
 <cfloop array="#selectedContent#" index="i">
-	<cfset selectedContentIDs = listAppend(selectedContentIDs, i.getPrimaryIDValue()) />
+	<cfset selectedContentIDs = listAppend(selectedContentIDs, i.getContentIDValue()) />
+</cfloop>
+
+<cfset selectedExcludedContent = rc.subscriptionBenefit.getExcludedContents() />
+<cfset selectedExcludedContentIDs = "" />
+<cfloop array="#selectedExcludedContent#" index="i">
+	<cfset selectedExcludedContentIDs = listAppend(selectedExcludedContentIDs, i.getExcludedContentIDValue()) />
 </cfloop>
 
 <cfoutput>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.contents')#</h4>
-		<cf_HibachiListingDisplay smartList="#rc.subscriptionBenefit.getContentsOptionsSmartList()#" multiselectFieldName="contents" multiselectValues="#selectedContentIDs#" edit="#rc.edit#">
+		<cf_HibachiListingDisplay smartList="#rc.subscriptionBenefit.getContentsSmartList()#" multiselectFieldName="contents" multiselectValues="#selectedContentIDs#" edit="#rc.edit#">
 			<cf_HibachiListingColumn propertyIdentifier="title" tdclass="primary" />
 			<cf_HibachiListingColumn propertyIdentifier="site.siteName" />
 		</cf_HibachiListingDisplay>
 	</div>
 	<div class="span6">
 		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.excludedcontents')#</h4>
-		<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="excludedcontents" edit="#rc.edit#" displaytype="plain" />	
+		<cf_HibachiListingDisplay smartList="#rc.subscriptionBenefit.getExcludedContentsSmartList()#" multiselectFieldName="excludedContents" multiselectValues="#selectedExcludedContentIDs#" edit="#rc.edit#">
+			<cf_HibachiListingColumn propertyIdentifier="title" tdclass="primary" />
+			<cf_HibachiListingColumn propertyIdentifier="site.siteName" />
+		</cf_HibachiListingDisplay>	
 	</div>
 </cfoutput>
