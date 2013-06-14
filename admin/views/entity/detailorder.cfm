@@ -177,21 +177,21 @@ Notes:
 				<cf_HibachiTab view="admin:entity/ordertabs/referencingOrders" count="#rc.order.getReferencingOrdersCount()#" />
 			</cfif>
 			
+			<!--- Account Details --->
+			<cfif not isNull(rc.order.getAccount()) and not rc.order.getAccount().getNewFlag()>
+				<cf_HibachiTab view="admin:entity/ordertabs/accountdetails" />
+			</cfif>
+			
 			<!--- Custom Attributes --->
 			<cfloop array="#rc.order.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
 				<cf_SlatwallAdminTabCustomAttributes object="#rc.order#" attributeSet="#attributeSet#" />
 			</cfloop>
 			
-			<!--- Account Details --->
-			<cfif !isNull(rc.order.getAccount())>
-				<cf_HibachiTab view="admin:entity/ordertabs/accountdetails" />
-			</cfif>
-			
 			<!--- Comments --->
 			<cf_SlatwallAdminTabComments object="#rc.order#" />
 			
 		</cf_HibachiTabGroup>
-		
+
 	</cf_HibachiEntityDetailForm>
 
 </cfoutput>
