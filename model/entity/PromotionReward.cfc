@@ -49,12 +49,12 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormType="big_decimal" hb_formatType="custom";
-	property name="amountType" ormType="string" hb_formFieldType="select" hb_formatType="custom";
-	property name="rewardType" ormType="string" hb_formFieldType="select" hb_formatType="custom";
-	property name="applicableTerm" ormType="string" hb_formFieldType="select" hb_formatType="custom";
-	property name="maximumUsePerOrder" ormType="integer" hb_formatType="custom";
-	property name="maximumUsePerItem" ormtype="integer" hb_formatType="custom";
-	property name="maximumUsePerQualification" ormtype="integer" hb_formatType="custom";
+	property name="amountType" ormType="string" hb_formFieldType="rbKey";
+	property name="rewardType" ormType="string" hb_formFieldType="rbKey";
+	property name="applicableTerm" ormType="string" hb_formFieldType="rbKey";
+	property name="maximumUsePerOrder" ormType="integer" hb_nullRBKey="define.unlimited";
+	property name="maximumUsePerItem" ormtype="integer" hb_nullRBKey="define.unlimited";
+	property name="maximumUsePerQualification" ormtype="integer" hb_nullRBKey="define.unlimited";
 
 	// Related Object Properties (many-to-one)
 	property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";
@@ -394,39 +394,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		}
 		
 		return formatValue(getAmount(), "currency");
-	}
-	
-	public string function getAmountTypeFormatted() {
-		return rbKey('define.#getAmountType()#');
-	}
-	
-	public string function getRewardTypeFormatted() {
-		return rbKey('define.#getRewardType()#');
-	}
-	
-	public string function getApplicableTermFormatted() {
-		return rbKey('define.#getApplicableTerm()#');
-	}
-	
-	public any function getMaximumUsePerOrderFormatted() {
-		if(isNull(getMaximumUsePerOrder()) || !isNumeric(getMaximumUsePerOrder()) || getMaximumUsePerOrder() == 0) {
-			return rbKey('define.unlimited');
-		}
-		return getMaximumUsePerOrder();
-	}
-	
-	public any function getMaximumUsePerItemFormatted() {
-		if(isNull(getMaximumUsePerItem()) || !isNumeric(getMaximumUsePerItem()) || getMaximumUsePerItem() == 0) {
-			return rbKey('define.unlimited');
-		}
-		return getMaximumUsePerItem();
-	}
-	
-	public any function getMaximumUsePerQualificationFormatted() {
-		if(isNull(getMaximumUsePerQualification()) || !isNumeric(getMaximumUsePerQualification()) || getMaximumUsePerQualification() == 0) {
-			return rbKey('define.unlimited');
-		}
-		return getMaximumUsePerQualification();
 	}
 	
 	// ===============  END: Custom Formatting Methods =====================
