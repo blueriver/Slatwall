@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.currency#" edit="#rc.edit#">
+	<cf_HibachiEntityDetailForm object="#rc.currency#" edit="#rc.edit#" sRedirectAction="admin:entity.listcurrency">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.currency#" edit="#rc.edit#"></cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
