@@ -79,6 +79,7 @@ Notes:
 						<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" />
 						<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" />
 						<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" />
+						<cf_HibachiListingColumn propertyIdentifier="optionsDisplay" search="false" sort="false" range="false" filter="false" />
 						<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" />
 						<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
 						<cf_HibachiListingColumn processObjectProperty="price" fieldClass="span1" />
