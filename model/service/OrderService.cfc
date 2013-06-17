@@ -596,9 +596,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Create a new Order Item
 			var newOrderItem = this.newOrderItem();
 			
-			// Set any customizations
-			newOrderItem.populate( arguments.data );
-			
 			// Set Header Info
 			newOrderItem.setOrder( arguments.order );
 			if(arguments.processObject.getOrderItemTypeSystemCode() eq "oitSale") {
@@ -615,6 +612,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			newOrderItem.setQuantity( arguments.processObject.getQuantity() );
 			newOrderItem.setPrice( arguments.processObject.getPrice() );
 			newOrderItem.setSkuPrice( arguments.processObject.getSku().getPriceByCurrencyCode( newOrderItem.getCurrencyCode() ) );
+			
+			// Set any customizations
+			newOrderItem.populate( arguments.data );
 			
 			// Save the new order items
 			this.saveOrderItem( newOrderItem );
