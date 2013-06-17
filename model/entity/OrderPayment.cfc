@@ -104,6 +104,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="peerOrderPaymentNullAmountExistsFlag" persistent="false";
 	property name="orderAmountNeeded" persistent="false";
 	property name="creditCardOrProviderTokenExistsFlag" persistent="false";
+	property name="dynamicAmountFlag" persistent="false" hb_formatType="yesno";
 	
 	public string function getMostRecentChargeProviderTransactionID() {
 		for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
@@ -152,6 +153,13 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	}	
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public boolean function getDynamicAmountFlag() {
+		if(isNull(variables.amount) && !getPeerOrderPaymentNullAmountExistsFlag()) {
+			return true;
+		}
+		return false;
+	}
 	
 	public numeric function getAmountReceived() {
 		var amountReceived = 0;
