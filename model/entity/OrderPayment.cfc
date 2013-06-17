@@ -470,7 +470,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	
 	// ============== START: Overridden Implicet Getters ===================
 	
-	public numeric function getAmount() {
+	public any function getAmount() {
 		// If an amount has not been explicity set, then we can return another value if needed
 		if( !structKeyExists(variables, "amount") ) {
 			
@@ -482,11 +482,10 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 				} else if (orderAmountNeeded gt 0 && getOrderPaymentType().getSystemCode() eq "optCredit") {
 					return orderAmountNeeded * -1;
 				}
-				return 0;
 			}
 			
-			// If for some reson the above logic did not fire then just set the amount to 0
-			variables.amount = 0;
+			// If for some reson the above logic did not fire then just return 0
+			return ;
 			
 		}
 		
