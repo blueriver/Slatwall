@@ -83,6 +83,11 @@
 						$.content().setTitle( $.slatwall.getProduct().getTitle() );
 						$.content().setHTMLTitle( $.slatwall.getProduct().getTitle() );
 						
+						// DEPRECATED*** If LegacyInjectFlag is set to true then add the body
+						if($.slatwall.setting('integrationMuraLegacyInjectFlag')) {
+							$.content('body', $.content('body') & $.slatwall.doAction('frontend:product.detail'));
+						}
+						
 						// Setup CrumbList
 						if(productKeyLocation > 2) {
 							var listingPageFilename = left($.event('path'), find("/#$.slatwall.setting('globalURLKeyProduct')#/", $.event('path'))-1);

@@ -219,7 +219,13 @@ globalEncryptionKeySize
 					shippingMethodRateMinimumAmount = {fieldType="text", defaultValue=0},
 					shippingMethodRateMaximumAmount = {fieldType="text", defaultValue=1000},
 					
-					// DEPRECATED
+					// DEPRECATED***
+					globalPageShoppingCart = {fieldType="text", defaultValue="shopping-cart"},
+					globalPageOrderStatus = {fieldType="text", defaultValue="order-status"},
+					globalPageOrderConfirmation = {fieldType="text", defaultValue="order-confirmation"},
+					globalPageMyAccount = {fieldType="text", defaultValue="my-account"},
+					globalPageCreateAccount = {fieldType="text", defaultValue="create-account"},
+					globalPageCheckout = {fieldType="text", defaultValue="checkout"},
 					paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno", defaultValue=0},
 					paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno", defaultValue=0},
 					paymentMethodCheckoutTransactionType = {fieldType="select", defaultValue="none"},

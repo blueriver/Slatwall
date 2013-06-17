@@ -38,5 +38,10 @@ Notes:
 */
 component persistent="false" accessors="true" output="false" extends="Slatwall.org.Hibachi.HibachiController" {
 	
+	public void function before(required struct rc) {
+		if(structKeyExists(request, "muraScope")) {
+			rc.$ = request.muraScope;
+		}
+	}
 	
 }
