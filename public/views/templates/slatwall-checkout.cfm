@@ -537,7 +537,7 @@ Notes:
 									<tr>
 										<td>#orderPayment.getSimpleRepresentation()#</td>
 										<td>#orderPayment.getAmount()#</td>
-										<td><a href="?slatAction=public:cart.removeOrderPayment&orderPaymentID=#orderPayment.getOrderPaymentID#">Remove</a></td>
+										<td><a href="?slatAction=public:cart.removeOrderPayment&orderPaymentID=#orderPayment.getOrderPaymentID()#">Remove</a></td>
 									</tr>
 								</cfloop>
 							</table>
@@ -575,7 +575,10 @@ Notes:
 							<cfif arrayLen($.slatwall.account().getAccountPaymentMethods())>
 								<div class="tab-pane active" id="account-payment-methods">
 									<form action="?s=1" method="post">
-												
+										
+										<!--- Hidden value to setup the slatAction --->
+										<input id="slatActionApplyAccountPaymentMethod" type="hidden" name="slatAction" value="public:cart.addOrderPayment" />
+											
 										<cfset apmFirst = true />
 										
 										<!--- Loop over all of the account payment methods and display them as a radio button to select --->
@@ -604,13 +607,15 @@ Notes:
 												#accountPaymentMethod.getSimpleRepresentation()#
 												<hr />
 											</cfif>
+											
+											<cfset apmFirst = false />
 										</cfloop>
 										
 										<!--- This button will just add the order payment, but not actually process the order --->
-										<button type="submit" class="btn" name="slatAction" value="public:cart.addOrderPayment">Apply Payment Method & Review</button>
+										<button type="submit" class="btn" onClick="$('##slatActionApplyAccountPaymentMethod').val('public:cart.addOrderPayment');">Apply Payment Method & Review</button>
 										
 										<!--- Clicking this button will not only add the payment, but it will also attempt to place the order. --->
-										<button type="submit" class="btn btn-primary" name="slatAction" value="public:cart.placeOrder">Apply Payment Method & Place Order</button>
+										<button type="submit" class="btn btn-primary" onClick="$('##slatActionApplyAccountPaymentMethod').val('public:cart.placeOrder');">Apply Payment Method & Place Order</button>
 									</form>
 								</div>
 								<cfset first = false />
@@ -621,139 +626,145 @@ Notes:
 								
 								<div class="tab-pane#iif(first, de(' active'), de(''))#" id="tab#paymentDetails.paymentMethod.getPaymentMethodID()#">
 									
-									<form action="?s=1" method="post">
+									<!--- EXTERNAL --->
+									<cfif paymentDetails.paymentMethod.getPaymentMethodType() eq "external">
+										#paymentDetails.paymentMethod.getExternalPaymentHTML()#
 										
-										<!--- Hidden value to identify the type of payment method this is --->
-										<input type="hidden" name="newOrderPayment.orderPaymentID" value="" />
-										<input type="hidden" name="newOrderPayment.order.orderID" value="#$.slatwall.cart().getOrderID()#" />
-										<input type="hidden" name="newOrderPayment.paymentMethod.paymentMethodID" value="#paymentDetails.paymentMethod.getPaymentMethodID()#" />
-										
-										<!--- CASH --->
-										<cfif paymentDetails.paymentMethod.getPaymentMethodType() eq "cash">
+									<!--- CASH, CHECK, CREDIT CARD, GIFT CARD, TERM PAYMENT --->
+									<cfelse>
+										<form action="?s=1" method="post">
 											
-										<!--- CHECK --->
-										<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "check">
+											<!--- Hidden value to setup the slatAction --->
+											<input id="slatActionAddOrderPayment" type="hidden" name="slatAction" value="public:cart.addOrderPayment" />
 											
-										<!--- CREDIT CARD --->
-										<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "creditCard">
-											<div class="row">
-												<div class="span4">
-													<h5>Billing Address</h5>
-													
-													<sw:AddressForm id="newBillingAddress" address="#addOrderPaymentObj.getNewOrderPayment().getBillingAddress()#" fieldNamePrefix="newOrderPayment.billingAddress." fieldClass="span4" />
-												</div>
-												<div class="span4">
-													<h5>Credit Card Info</h5>
-													
-													<!--- Credit Card Number --->
-													<div class="control-group">
-								    					<label class="control-label" for="rating">Credit Card Number</label>
-								    					<div class="controls">
-								    						
-															<sw:FormField type="text" name="newOrderPayment.creditCardNumber" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="creditCardNumber" class="span4" />
-															<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="creditCardNumber" />
-															
-								    					</div>
-								  					</div>
-													
-													<!--- Name on Credit Card --->
-													<div class="control-group">
-								    					<label class="control-label" for="rating">Name on Card</label>
-								    					<div class="controls">
-								    						
-															<sw:FormField type="text" name="newOrderPayment.nameOnCreditCard" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="nameOnCreditCard" class="span4" />
-															<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="nameOnCreditCard" />
-															
-								    					</div>
-								  					</div>
-													
-													<!--- Security & Expiration Row --->
-													<div class="row">
+											<!--- Hidden value to identify the type of payment method this is --->
+											<input type="hidden" name="newOrderPayment.orderPaymentID" value="" />
+											<input type="hidden" name="newOrderPayment.order.orderID" value="#$.slatwall.cart().getOrderID()#" />
+											<input type="hidden" name="newOrderPayment.paymentMethod.paymentMethodID" value="#paymentDetails.paymentMethod.getPaymentMethodID()#" />
+											
+											<!--- CASH --->
+											<cfif paymentDetails.paymentMethod.getPaymentMethodType() eq "cash">
+												
+											<!--- CHECK --->
+											<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "check">
+												
+											<!--- CREDIT CARD --->
+											<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "creditCard">
+												<div class="row">
+													<div class="span4">
+														<h5>Billing Address</h5>
 														
-														<div class="span2">
-															
-															<!--- Security Code --->
-															<div class="control-group">
-										    					<label class="control-label" for="rating">Security Code</label>
-										    					<div class="controls">
-										    						
-																	<sw:FormField type="text" name="newOrderPayment.securityCode" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="securityCode" class="span2" />
-																	<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="securityCode" />
-																	
-										    					</div>
-										  					</div>
-															
-														</div>
-														
-														
-														<div class="span2">
-															
-															<!--- Expiration --->	
-															<div class="control-group">
-										    					<label class="control-label pull-right" for="rating">Expiration ( MM / YYYY )</label>
-										    					<div class="controls pull-right">
-										    						
-																	<sw:FormField type="select" name="newOrderPayment.expirationMonth" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="expirationMonth" valueOptions="#addOrderPaymentObj.getNewOrderPayment().getExpirationMonthOptions()#" class="span1" />
-																	<sw:FormField type="select" name="newOrderPayment.expirationYear" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="expirationYear" valueOptions="#addOrderPaymentObj.getNewOrderPayment().getExpirationYearOptions()#" class="span1" />
-																	<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="expirationMonth" />
-																	<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="expirationYear" />
-																	
-										    					</div>
-										  					</div>
-															
-														</div>
+														<sw:AddressForm id="newBillingAddress" address="#addOrderPaymentObj.getNewOrderPayment().getBillingAddress()#" fieldNamePrefix="newOrderPayment.billingAddress." fieldClass="span4" />
 													</div>
-													
-													<!--- SPLIT PAYMENTS (OPTIONAL) - Just delete this section if you don't want to allow for split payments --->
-													<cfset splitPaymentID = "sp" & lcase(createUUID()) />
-													<div class="control-group">
-								    					<label class="control-label" for="rating">Amount</label>
-								    					<div class="controls">
-								    						
-								    						#$.slatwall.formatValue(paymentDetails.maximumAmount, 'currency')#
-								    						<a href="##" id='#splitPaymentID#'>Split Payment</a>
-								    						
-								    					</div>
-								  					</div>
-													<script type="text/javascript">
-														(function($){
-															$(document).ready(function(e){
+													<div class="span4">
+														<h5>Credit Card Info</h5>
+														
+														<!--- Credit Card Number --->
+														<div class="control-group">
+									    					<label class="control-label" for="rating">Credit Card Number</label>
+									    					<div class="controls">
+									    						
+																<sw:FormField type="text" name="newOrderPayment.creditCardNumber" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="creditCardNumber" class="span4" />
+																<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="creditCardNumber" />
 																
-																// Bind to split button
-																$('body').on('click', '###splitPaymentID#', function(e){
-																	e.preventDefault();
-																	$(this).closest('div').html('<input type="text" name="newOrderPayment.amount" value="#paymentDetails.maximumAmount#" class="span4" />');
+									    					</div>
+									  					</div>
+														
+														<!--- Name on Credit Card --->
+														<div class="control-group">
+									    					<label class="control-label" for="rating">Name on Card</label>
+									    					<div class="controls">
+									    						
+																<sw:FormField type="text" name="newOrderPayment.nameOnCreditCard" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="nameOnCreditCard" class="span4" />
+																<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="nameOnCreditCard" />
+																
+									    					</div>
+									  					</div>
+														
+														<!--- Security & Expiration Row --->
+														<div class="row">
+															
+															<div class="span2">
+																
+																<!--- Security Code --->
+																<div class="control-group">
+											    					<label class="control-label" for="rating">Security Code</label>
+											    					<div class="controls">
+											    						
+																		<sw:FormField type="text" name="newOrderPayment.securityCode" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="securityCode" class="span2" />
+																		<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="securityCode" />
+																		
+											    					</div>
+											  					</div>
+																
+															</div>
+															
+															
+															<div class="span2">
+																
+																<!--- Expiration --->	
+																<div class="control-group">
+											    					<label class="control-label pull-right" for="rating">Expiration ( MM / YYYY )</label>
+											    					<div class="controls pull-right">
+											    						
+																		<sw:FormField type="select" name="newOrderPayment.expirationMonth" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="expirationMonth" valueOptions="#addOrderPaymentObj.getNewOrderPayment().getExpirationMonthOptions()#" class="span1" />
+																		<sw:FormField type="select" name="newOrderPayment.expirationYear" valueObject="#addOrderPaymentObj.getNewOrderPayment()#" valueObjectProperty="expirationYear" valueOptions="#addOrderPaymentObj.getNewOrderPayment().getExpirationYearOptions()#" class="span1" />
+																		<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="expirationMonth" />
+																		<sw:ErrorDisplay object="#addOrderPaymentObj.getNewOrderPayment()#" errorName="expirationYear" />
+																		
+											    					</div>
+											  					</div>
+																
+															</div>
+														</div>
+														
+														<!--- SPLIT PAYMENTS (OPTIONAL) - Just delete this section if you don't want to allow for split payments --->
+														<cfset splitPaymentID = "sp" & lcase(createUUID()) />
+														<div class="control-group">
+									    					<label class="control-label" for="rating">Amount</label>
+									    					<div class="controls">
+									    						
+									    						#$.slatwall.formatValue(paymentDetails.maximumAmount, 'currency')#
+									    						<a href="##" id='#splitPaymentID#'>Split Payment</a>
+									    						
+									    					</div>
+									  					</div>
+														<script type="text/javascript">
+															(function($){
+																$(document).ready(function(e){
+																	
+																	// Bind to split button
+																	$('body').on('click', '###splitPaymentID#', function(e){
+																		e.preventDefault();
+																		$(this).closest('div').html('<input type="text" name="newOrderPayment.amount" value="#paymentDetails.maximumAmount#" class="span4" />');
+																	});
+																	
 																});
-																
-															});
-														})( jQuery );
-													</script>
-													<!--- END: SPLIT PAYMENT --->
+															})( jQuery );
+														</script>
+														<!--- END: SPLIT PAYMENT --->
+													</div>
+												</div>
+												
+											<!--- GIFT CARD --->
+											<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "giftCard">
+												
+											<!--- TERM PAYMENT --->
+											<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "termPayment">
+													
+											</cfif>
+											
+											<div class="control-group pull-right">
+												<div class="controls">
+													<!--- This button will just add the order payment, but not actually process the order --->
+													<button type="submit" class="btn" name="slatAction" onClick="$('##slatActionAddOrderPayment').val('public:cart.addOrderPayment');">Add Payment & Review</button>
+													
+													<!--- Clicking this button will not only add the payment, but it will also attempt to place the order. --->
+													<button type="submit" class="btn btn-primary" name="slatAction" onClick="$('##slatActionAddOrderPayment').val('public:cart.placeOrder');">Add Payment & Place Order</button>
 												</div>
 											</div>
-										<!--- EXTERNAL --->
-										<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "external">
-											
-											#paymentDetails.paymentMethod.getExternalPaymentHTML()#
-											
-										<!--- GIFT CARD --->
-										<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "giftCard">
-											
-										<!--- TERM PAYMENT --->
-										<cfelseif paymentDetails.paymentMethod.getPaymentMethodType() eq "termPayment">
-												
-										</cfif>
-										
-										<div class="control-group pull-right">
-											<div class="controls">
-												<!--- This button will just add the order payment, but not actually process the order --->
-												<button type="submit" class="btn" name="slatAction" value="public:cart.addOrderPayment">Add Payment & Review</button>
-												
-												<!--- Clicking this button will not only add the payment, but it will also attempt to place the order. --->
-												<button type="submit" class="btn btn-primary" name="slatAction" value="public:cart.placeOrder">Add Payment & Place Order</button>
-											</div>
-										</div>
-									</form>
+										</form>
+									</cfif>
 								</div>
 								
 								<cfset first = false />
