@@ -818,8 +818,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 								arguments.order.addMessage('paymentProcessedMessage', rbKey('entity.order.process.placeOrder.paymentProcessedMessage'));
 							}
 							
-							// If this order is the same as the current cart, then set the current cart to a new order
-							if(!isNull(getSlatwallScope().getCurrentSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getCurrentSession().getOrder().getOrderID()) {
+							// Clear this order out of all sessions
+							getOrderDAO().removeOrderFromSessions(orderID=arguments.order.getOrderID());
+							
+							if(!isNull(getHibachiScope().getSession().getOrder()) && arguments.order.getOrderID() == getHibachiScope().getSession().getOrder().getOrderID()) {
 								getHibachiScope().getSession().setOrder(javaCast("null", ""));
 							}
 						

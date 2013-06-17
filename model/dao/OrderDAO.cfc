@@ -38,13 +38,14 @@ Notes:
 --->
 <cfcomponent extends="HibachiDAO">
 	
-	<cffunction name="getOrderItemExportQuery" access="public" returntype="Query">
+	<cffunction name="removeOrderFromSessions" access="public" returntype="void">
+		<cfargument name="orderID" type="string" required="true" />
+		
 		<cfset var rs = "" />
 		
 		<cfquery name="rs">
+			UPDATE SlatwallSession SET orderID = null WHERE orderID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.orderID#" />	
 		</cfquery>
-		
-		<cfreturn rs />
 	</cffunction>
 	
 	<cfscript>

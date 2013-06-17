@@ -200,16 +200,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			
 			setOrderOpenDateTime( now() );
 			setOrderOpenIPAddress( CGI.REMOTE_ADDR );
-		}
-		
-		// If the order is closed, and has no close dateTime
-		if(!isNull(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() == "ostClosed" && isNull(getOrderCloseDateTime())) {
-			setOrderCloseDateTime( now() );
 			
 			// Loop over the order payments to setAmount = getAmount so that any null payments get explicitly defined
 			for(var i = 1; i <= arrayLen(getOrderPayments()); i++) {
 				getOrderPayments()[i].setAmount( getOrderPayments()[i].getAmount() );
 			}
+		}
+		
+		// If the order is closed, and has no close dateTime
+		if(!isNull(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() == "ostClosed" && isNull(getOrderCloseDateTime())) {
+			setOrderCloseDateTime( now() );
 		}
 	}
 	
