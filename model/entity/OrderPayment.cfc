@@ -492,7 +492,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 				}
 			}
 			
-			// If for some reson the above logic did not fire then just return 0
+			// If for some reson the above logic did not fire then just return null
 			return ;
 			
 		}
