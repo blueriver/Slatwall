@@ -97,6 +97,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="guestAccountFlag" persistent="false" hb_formatType="yesno";
 	property name="ordersPlacedSmartList" persistent="false";
 	property name="ordersNotPlacedSmartList" persistent="false";
+	property name="passwordResetID" persistent="false";
 	property name="phoneNumber" persistent="false";
 	property name="slatwallAuthenticationExistsFlag" persistent="false";
 	property name="termAccountAvailableCredit" persistent="false" hb_formatType="currency";
@@ -177,6 +178,12 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return variables.ordersNotPlacedSmartList;	
 	}
 	
+	public string function getPasswordResetID() {
+		if(!structKeyExists(variables, "passwordResetID")) {
+			variables.passwordResetID = getService("accountService").getPasswordResetID(account=this);
+		}
+		return variables.passwordResetID;
+	}
 	
 	public string function getPhoneNumber() {
 		return getPrimaryPhoneNumber().getPhoneNumber();

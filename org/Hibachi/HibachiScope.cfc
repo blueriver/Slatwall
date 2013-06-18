@@ -11,6 +11,7 @@ component output="false" accessors="true" extends="HibachiTransient" {
 	property name="sucessfulActions" type="array";
 	property name="ormHasErrors" type="boolean" default="false";
 	property name="rbLocale";
+	property name="url" type="string";
 	
 	public any function init() {
 		setCalledActions( [] );
@@ -48,6 +49,16 @@ component output="false" accessors="true" extends="HibachiTransient" {
 			return true;
 		}
 		return false;
+	}
+	
+	public string function getURL() {
+		if(!structKeyExists(variables, "url")) {
+			variables.url = getPageContext().getRequest().GetRequestUrl().toString();
+			if( len( CGI.QUERY_STRING ) ) {
+				variables.url &= "?#QUERY_STRING#";
+			}
+		}
+		return variables.url;
 	}
 	
 	// ==================== GENERAL API METHODS ===============================

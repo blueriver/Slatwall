@@ -52,6 +52,21 @@ component extends="HibachiService" accessors="true" output="false" {
 		return hash(arguments.password & arguments.salt, 'SHA-512');
 	}
 	
+	public string function getPasswordResetID(required any account) {
+		var passwordResetID = "";
+		var accountAuthentication = getAccountDAO().getPasswordResetAccountAuthentication(accountID=arguments.account.getAccountID());
+		
+		if(isNull(accountAuthentication)) {
+			var accountAuthentication = this.newAccountAuthentication();
+			accountAuthentication.setExpirationDateTime(now() + 7);
+			accountAuthentication.setAccount( arguments.account );
+			
+			accountAuthentication = this.saveAccountAuthentication( accountAuthentication );
+		}
+		
+		return lcase("#arguments.account.getAccountID()##hash(accountAuthentication.getAccountAuthenticationID() & arguments.account.getAccountID())#");
+	}
+	
 	// ===================== START: Logical Methods ===========================
 	
 	// =====================  END: Logical Methods ============================
@@ -151,10 +166,12 @@ component extends="HibachiService" accessors="true" output="false" {
 	}
 	
 	public any function processAccount_changePassword(required any account, required any processObject) {
+		
 		var authArray = arguments.account.getAccountAuthentications();
 		for(var i=1; i<=arrayLen(authArray); i++) {
+			
 			// Find the non-integration authentication
-			if(isNull(authArray[i].getIntegration())) {
+			if(isNull(authArray[i].getIntegration()) && !isNull(authArray[i].getPassword())) {
 				// Set the password
 				authArray[i].setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), authArray[i].getAccountAuthenticationID()) );		
 			}
@@ -260,12 +277,40 @@ component extends="HibachiService" accessors="true" output="false" {
 				
 				email = getEmailService().processEmail(email, emailData, 'createFromTemplate');
 				
+				email.setEmailTo( arguments.processObject.getEmailAddress() );
+				
+				email = getEmailService().processEmail(email, {}, 'addToQueue');
+				
 			} else {
 				throw("No email template could be found.  Please update the site settings to define an 'Forgot Password Email Template'.");
 			}
 			
 		} else {
 			arguments.processObject.addError('emailAddress', rbKey('validate.account_forgotPassword.emailAddress.notfound'));
+		}
+		
+		return arguments.account;
+	}
+	
+	public any function processAccount_resetPassword( required any account, required any processObject ) {
+		var changeProcessData = {
+			password = arguments.processObject.getPassword(),
+			passwordConfirm = arguments.processObject.getPasswordConfirm()
+		};
+		
+		arguments.account = this.processAccount(arguments.account, changeProcessData, 'changePassword');
+		
+		// If there are no errors
+		if(!arguments.account.hasErrors()) {
+			// Get the temporary accountAuth
+			var tempAA = getAccountDAO().getPasswordResetAccountAuthentication(accountID=arguments.account.getAccountID());
+			
+			// Delete the temporary auth
+			tempAA.removeAccount();
+			this.deleteAccountAuthentication( tempAA );
+			
+			// Then flush the ORM session so that an account can be logged in right away
+			getHibachiDAO().flushORMSession();
 		}
 		
 		return arguments.account;

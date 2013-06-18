@@ -41,6 +41,7 @@ component displayname="Account Authentication" entityname="SlatwallAccountAuthen
 	// Persistent Properties
 	property name="accountAuthenticationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="password" ormtype="string";
+	property name="expirationDateTime" ormtype="timestamp";
 	property name="integrationAccountID" ormtype="string";
 	property name="integrationAccessToken" ormtype="string";
 	property name="integrationAccessTokenExpiration" ormtype="string";

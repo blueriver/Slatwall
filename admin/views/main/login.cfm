@@ -37,18 +37,44 @@ Notes:
 
 --->
 <cfparam name="rc.accountAuthenticationExists" type="boolean" />
+<cfparam name="rc.swprid" type="string" default="" />
 <cfparam name="rc.integrationLoginHTMLArray" type="array" />
 		
 <cfoutput>
 	<div style="width:100%;">
 		<cf_HibachiMessageDisplay />
-		<cfif rc.accountAuthenticationExists>
+		
+		<cfif len(rc.swprid) eq 64>
+			<div class="well" style="width:400px;margin: 0px auto;">
+				<h3>Reset Password</h3>
+				<br />
+				<form action="?s=1" class="form-horizontal" method="post">
+					<input type="hidden" name="slatAction" value="admin:main.resetPassword" />
+					<input type="hidden" name="swprid" value="#rc.swprid#" />
+					<input type="hidden" name="accountID" value="#left(rc.swprid, 32)#" />
+
+					<cfset processObject = rc.fw.getHibachiScope().getAccount().getProcessObject("resetPassword") />
+										
+					<cf_HibachiErrorDisplay object="#processObject#" errorName="swprid" />
+					
+					<fieldset class="dl-horizontal">
+						
+						<cf_HibachiPropertyDisplay object="#processObject#" property="password" edit="true" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="passwordConfirm" edit="true" />
+						<button type="submit" class="btn btn-primary pull-right">Reset & Login</button>
+					</fieldset>
+				</form>
+			</div>
+		<cfelseif rc.accountAuthenticationExists>
 			<div class="well tabable" style="width:400px;margin: 0px auto;">
 				<h3>#$.slatwall.rbKey('define.login')#</h3>
 				<br />
 				<cfset authorizeProcessObject = rc.fw.getHibachiScope().getAccount().getProcessObject("login") />
 				<form action="?s=1" class="form-horizontal" method="post">
 					<input type="hidden" name="slatAction" value="admin:main.authorizelogin" />
+					<cfif structKeyExists(rc, "sRedirectURL")>
+						<input type="hidden" name="sRedirectURL" value="#rc.sRedirectURL#" />
+					</cfif>
 					<fieldset class="dl-horizontal">
 						<fieldset class="dl-horizontal">
 							<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="emailAddress" edit="true" title="#rc.fw.getHibachiScope().rbKey('entity.account.emailAddress')#" />

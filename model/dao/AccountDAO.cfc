@@ -64,6 +64,16 @@ Notes:
 		</cfif>
 	</cffunction>
 	
+	<cffunction name="getPasswordResetAccountAuthentication">
+		<cfargument name="accountID" type="string" required="true" />
+		
+		<cfset var aaArray = ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa LEFT JOIN aa.integration i WHERE aa.account.accountID = :accountID and aa.expirationDateTime >= :now and aa.password is null and i.integrationID is null", {accountID=arguments.accountID, now=now()}) />
+		
+		<cfif arrayLen(aaArray)>
+			<cfreturn aaArray[1] />
+		</cfif>
+	</cffunction>
+	
 	<cffunction name="removeAccountFromAllSessions" returntype="void" access="public">
 		<cfargument name="accountID" required="true"  />
 		<cfset var rs = "" />
