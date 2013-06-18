@@ -36,28 +36,9 @@
 Notes:
 
 --->
-<cfset sites = $.slatwall.getService('siteService').getSiteSmartList() />
-<cfset sites.addFilter('activeFlag', 1) />
-
-<cfset rc.sitesArray = sites.getRecords() />
 
 <cfoutput>
-	<cf_HibachiEntityActionBar type="static"></cf_HibachiEntityActionBar>
-	
-	<cf_HibachiTabGroup>
-		<cf_HibachiTab view="admin:entity/settingstabs/global" />
-		<cf_HibachiTab view="admin:entity/settingstabs/globaladvanced" />
-		<cf_HibachiTab view="admin:entity/settingstabs/account" />
-		<cf_HibachiTab view="admin:entity/settingstabs/brand" />
-		<cf_HibachiTab view="admin:entity/settingstabs/email" />
-		<cf_HibachiTab view="admin:entity/settingstabs/fulfillmentmethod" />
-		<cf_HibachiTab view="admin:entity/settingstabs/image" />
-		<cf_HibachiTab view="admin:entity/settingstabs/paymentmethod" />
-		<cf_HibachiTab view="admin:entity/settingstabs/producttype" />
-		<cf_HibachiTab view="admin:entity/settingstabs/product" />
-		<cf_HibachiTab view="admin:entity/settingstabs/site" />
-		<cf_HibachiTab view="admin:entity/settingstabs/shippingmethod" />
-		<cf_HibachiTab view="admin:entity/settingstabs/shippingmethodrate" />
-		<cf_HibachiTab view="admin:entity/settingstabs/sku" />
-	</cf_HibachiTabGroup>
+	<cf_SlatwallSettingTable showInheritance="false">
+		<cf_SlatwallSetting settingName="siteForgotPasswordEmailTemplate" />
+	</cf_SlatwallSettingTable>
 </cfoutput>

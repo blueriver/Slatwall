@@ -46,6 +46,7 @@ globalEncryptionKeySize
 	
 	<cfproperty name="contentService" type="any" />
 	<cfproperty name="currencyService" type="any" />
+	<cfproperty name="emailService" type="any" />
 	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="locationService" type="any" />
 	<cfproperty name="measurementService" type="any" />
@@ -80,6 +81,7 @@ globalEncryptionKeySize
 			"brand",
 			"email",
 			"stock",
+			"site",
 			"sku"
 		];
 		
@@ -191,6 +193,18 @@ globalEncryptionKeySize
 					productTypeMetaDescriptionString = {fieldType="textarea"},
 					productTypeMetaKeywordsString = {fieldType="textarea"},
 					
+					// Site
+					siteForgotPasswordEmailTemplate = {fieldType="select"},
+					
+					// Shipping Method
+					shippingMethodQualifiedRateSelection = {fieldType="select", defaultValue="lowest"},
+					
+					// Shipping Method Rate
+					shippingMethodRateAdjustmentType = {fieldType="select", defaultValue="increasePercentage"},
+					shippingMethodRateAdjustmentAmount = {fieldType="text", defaultValue=0},
+					shippingMethodRateMinimumAmount = {fieldType="text", defaultValue=0},
+					shippingMethodRateMaximumAmount = {fieldType="text", defaultValue=1000},
+					
 					// Sku
 					skuAllowBackorderFlag = {fieldType="yesno", defaultValue=0},
 					skuAllowPreorderFlag = {fieldType="yesno", defaultValue=0},
@@ -209,15 +223,6 @@ globalEncryptionKeySize
 					skuShippingWeightUnitCode = {fieldType="select", defaultValue="lb"},
 					skuTaxCategory = {fieldType="select", defaultValue="444df2c8cce9f1417627bd164a65f133"},
 					skuTrackInventoryFlag = {fieldType="yesno", defaultValue=0},
-					
-					// Shipping Method
-					shippingMethodQualifiedRateSelection = {fieldType="select", defaultValue="lowest"},
-					
-					// Shipping Method Rate
-					shippingMethodRateAdjustmentType = {fieldType="select", defaultValue="increasePercentage"},
-					shippingMethodRateAdjustmentAmount = {fieldType="text", defaultValue=0},
-					shippingMethodRateMinimumAmount = {fieldType="text", defaultValue=0},
-					shippingMethodRateMaximumAmount = {fieldType="text", defaultValue=1000},
 					
 					// DEPRECATED***
 					globalPageShoppingCart = {fieldType="text", defaultValue="shopping-cart"},
@@ -312,6 +317,8 @@ globalEncryptionKeySize
 					optionSL.addSelect('unitName', 'name');
 					optionSL.addSelect('unitCode', 'value');
 					return optionSL.getRecords();
+				case "siteForgotPasswordEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "account" );
 				case "shippingMethodQualifiedRateSelection" :
 					return [{name='Sort Order', value='sortOrder'}, {name='Lowest Rate', value='lowest'}, {name='Highest Rate', value='highest'}];
 				case "shippingMethodRateAdjustmentType" :

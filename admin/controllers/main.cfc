@@ -57,6 +57,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	this.publicMethods=listAppend(this.publicMethods, 'logout');
 	this.publicMethods=listAppend(this.publicMethods, 'noaccess');
 	this.publicMethods=listAppend(this.publicMethods, 'error');
+	this.publicMethods=listAppend(this.publicMethods, 'forgotPassword');
 	this.publicMethods=listAppend(this.publicMethods, 'setupInitialAdmin');
 	
 	this.anyAdminMethods='';
@@ -156,6 +157,19 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 	}
 	
+	public void function logout(required struct rc) {
+		getAccountService().processAccount(getHibachiScope().getAccount(), rc, "logout");
+		
+		getFW().redirect('admin:main.login');
+	}
+	
+	public void function login(required struct rc) {
+		getFW().setView("admin:main.login");
+		rc.pageTitle = getHibachiScope().rbKey('define.login');
+		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
+		rc.integrationLoginHTMLArray = getIntegrationService().getAdminLoginHTMLArray();
+	}
+	
 	public void function setupInitialAdmin( required struct rc) {
 		param name="rc.password" default="";
 		param name="rc.passwordConfirm" default="";
@@ -166,14 +180,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 			getFW().redirect(action='admin:main.default', queryString="s=1");
 		}
 		
-		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
-		rc.integrationLoginHTMLArray = getIntegrationService().getAdminLoginHTMLArray();
-		getFW().setView("admin:main.login");
-	}
-	
-	public void function login(required struct rc) {
-		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
-		rc.integrationLoginHTMLArray = getIntegrationService().getAdminLoginHTMLArray();
+		login( rc );
 	}
 	
 	public void function authorizeLogin(required struct rc) {
@@ -183,14 +190,18 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 			getFW().redirect(action="admin:main.default", queryString="s=1");
 		}
 		
-		getFW().setView("admin:main.login");
-		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
-		rc.integrationLoginHTMLArray = getIntegrationService().getAdminLoginHTMLArray();
+		login( rc );
 	}
 	
-	public void function logout(required struct rc) {
-		getAccountService().processAccount(getHibachiScope().getAccount(), rc, "logout");
+	
+	public void function forgotPassword(required struct rc) {
+		var account = getAccountService().processAccount(getHibachiScope().getAccount(), rc, "forgotPassword");
 		
-		getFW().redirect('admin:main.login');
+		if(!account.hasErrors()) {
+			account.clearProcessObject('forgotPassword');
+			rc.$.slatwall.showMessageKey('entity.account.process.forgotPassword_success');	
+		}
+		
+		login( rc );
 	}
 }

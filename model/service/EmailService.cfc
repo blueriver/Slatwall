@@ -106,6 +106,17 @@ Notes:
 		<cfreturn fileOptions />
 	</cffunction>
 	
+	<cffunction name="getEmailTemplateOptions" access="public" returntype="array">
+		<cfargument name="emailTemplateObject" type="string" required="true">
+		
+		<cfset var sl = this.getEmailTemplateSmartList() />
+		<cfset sl.addFilter('emailTemplateObject', arguments.emailTemplateObject) />
+		<cfset sl.addSelect('emailTemplateName', 'name') />
+		<cfset sl.addSelect('emailTemplateID', 'value') />
+		
+		<cfreturn sl.getRecords() />
+	</cffunction>
+	
 	<!--- =====================  END: Logical Methods ============================ --->
 	
 	<!--- ===================== START: DAO Passthrough =========================== --->

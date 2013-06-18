@@ -55,6 +55,15 @@ Notes:
 		<cfreturn aaCount[1] gt 0 />
 	</cffunction>
 	
+	<cffunction name="getAccountWithAuthenticationByEmailAddress" returntype="any" access="public">
+		<cfargument name="emailAddress" required="true" type="string" />
+		
+		<cfset var accounts = ormExecuteQuery("SELECT a FROM SlatwallAccount a WHERE EXISTS(SELECT aa.accountAuthenticationID FROM SlatwallAccountAuthentication aa WHERE aa.account.accountID = a.accountID) AND EXISTS(SELECT aea.emailAddress FROM SlatwallAccountEmailAddress aea WHERE aea.account.accountID = a.accountID AND aea.emailAddress = :emailAddress)", {emailAddress=arguments.emailAddress}) />
+		<cfif arrayLen(accounts)>
+			<cfreturn accounts[1] />
+		</cfif>
+	</cffunction>
+	
 	<cffunction name="removeAccountFromAllSessions" returntype="void" access="public">
 		<cfargument name="accountID" required="true"  />
 		<cfset var rs = "" />
