@@ -158,13 +158,13 @@
 					</cfloop>
 					<cfset attributes.value = trim(thisValueList) />
 				<cfelse>
-					<cfif not attributes.edit or attributes.object.getPropertyFormatType( attributes.property ) eq "datetime">
+					<cfif not attributes.edit or (attributes.edit and attributes.object.getPropertyFormatType( attributes.property ) eq "datetime" and not isNull(attributes.object.invokeMethod( "get#attributes.property#" )))>
 						<cfif isNumeric(attributes.value) and attributes.value lt 0>
 							<cfset attributes.valueClass &= " negative" />
 						</cfif>
-						<cfif not isNull(attributes.object.invokeMethod( "get#attributes.property#" ))>
-							<cfset attributes.value = attributes.object.getFormattedValue(attributes.property) />
-						</cfif>
+						
+						<cfset attributes.value = attributes.object.getFormattedValue(attributes.property) />
+						
 					</cfif>
 				</cfif>
 				
