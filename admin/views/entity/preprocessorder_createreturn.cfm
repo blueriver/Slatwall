@@ -36,31 +36,48 @@
 Notes:
 
 --->
-<cfparam name="rc.redirectAction" type="string" default="admin:entity.listorderfulfillment" />
-<cfparam name="rc.processOrderReturnSmartList" type="any" />
-<cfparam name="rc.multiProcess" type="boolean" />
+<cfparam name="rc.order" type="any" />
+<cfparam name="rc.processObject" type="any" />
 
 <cfoutput>
-	<cf_SlatwallProcessForm>
-		<cf_HibachiEntityActionBar type="process" />
+	<cf_HibachiEntityProcessForm entity="#rc.order#" edit="#rc.edit#">
 		
-		<cf_SlatwallProcessOptionBar>
-			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
-			<cf_SlatwallProcessOption data="boxCount" fieldType="text" fieldClass="number" value=0 />
-			<cf_SlatwallProcessOption data="packingSlipNumber" fieldType="text" />
-			<cf_SlatwallProcessOption data="autoProcessReturnPaymentFlag" fieldType="yesno" value=1 />
-		</cf_SlatwallProcessOptionBar>
+		<cf_HibachiEntityActionBar type="preprocess" object="#rc.order#">
+		</cf_HibachiEntityActionBar>
 		
-		<div style="width:700px;">
-			<cf_SlatwallProcessListing processSmartList="#rc.processOrderReturnSmartList#" processRecordsProperty="orderReturnItems" processHeaderString="Order: ${order.orderNumber}, Order Return - ${returnLocation.locationName}">
-				<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" />
-				<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" />
-				<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" />
-				<cf_SlatwallProcessColumn propertyIdentifier="quantity" />
-				<cf_SlatwallProcessColumn propertyIdentifier="quantityUnreceived" />
-				<cf_SlatwallProcessColumn data="receiveQuantity" fieldType="text" fieldClass="span1 number" />
-			</cf_SlatwallProcessListing>
-		</div>
+		<cf_HibachiPropertyRow>
+			<cf_HibachiPropertyList>
+				
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="location" edit="true" />
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="fulfillmentRefundAmount" edit="true" />
+				
+				<hr />
+				
+				<!--- Items Selector --->
+				<table class="table table-striped table-bordered table-condensed">
+					<tr>
+						<th>Sku Code</th>
+						<th class="primary">Product Title</th>
+						<th>Options</th>
+						<th>Quantity</th>
+					</tr>
+					<cfset orderItemIndex = 0 />
+					<cfloop array="#rc.order.getOrderItems()#" index="orderItem">
+						<tr>
+							<cfset orderItemIndex++ />
+							
+							<input type="hidden" name="orderItems[#orderItemIndex#].orderItemID" value="" />
+							<input type="hidden" name="orderItems[#orderItemIndex#].referencedOrderItem.orderItemID" value="#orderItem.getOrderItemID()#" />
+							
+							<td>#orderItem.getSku().getSkuCode()#</td>
+							<td>#orderItem.getSku().getProduct().getTitle()#</td>
+							<td>#orderItem.getSku().displayOptions()#</td>
+							<td><input type="text" name="orderItems[#orderItemIndex#].quantity" value="" class="span1 number" /></td>
+						</tr>
+					</cfloop>
+				</table>
+			</cf_HibachiPropertyList>
+		</cf_HibachiPropertyRow>
 		
-	</cf_SlatwallProcessForm>
+	</cf_HibachiEntityProcessForm>
 </cfoutput>
