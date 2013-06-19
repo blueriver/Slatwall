@@ -241,14 +241,23 @@ Notes:
 
 <!--- Remove old email templates --->
 <cftry>
-	<cfquery name="local.deleteEmail">
-		DELETE FROM SlatwallEmail WHERE emailTemplateID = 'dbb327e694534908c60ea354766bf0a8' OR emailTemplateID = 'dbb327e506090fde08cc4855fa14448d'
+	<cfquery name="local.updateTemplate">
+		UPDATE
+			SlatwallEmailTemplate
+		SET
+			emailTemplateObject = 'Order',
+			emailTemplateFile = 'confirmation.cfm'
+		WHERE
+			emailTemplateID = 'dbb327e506090fde08cc4855fa14448d'
 	</cfquery>
-	<cfquery name="local.deleteEmailSetting">
-		DELETE FROM SlatwallSetting WHERE emailTemplateID = 'dbb327e694534908c60ea354766bf0a8' OR emailTemplateID = 'dbb327e506090fde08cc4855fa14448d'
-	</cfquery>
-	<cfquery name="local.deleteTemplate">
-		DELETE FROM SlatwallEmailTemplate WHERE emailTemplateID = 'dbb327e694534908c60ea354766bf0a8' OR emailTemplateID = 'dbb327e506090fde08cc4855fa14448d'
+	<cfquery name="local.updateTemplate">
+		UPDATE
+			SlatwallEmailTemplate
+		SET
+			emailTemplateObject = 'OrderDelivery',
+			emailTemplateFile = 'confirmation.cfm'
+		WHERE
+			emailTemplateID = 'dbb327e694534908c60ea354766bf0a8'
 	</cfquery>
 	<cfcatch>
 		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Deleting old emails and email templates">
