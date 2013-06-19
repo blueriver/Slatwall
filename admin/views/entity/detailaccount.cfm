@@ -60,14 +60,26 @@ Notes:
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="firstName" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="lastName" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="company" edit="#rc.edit#">
-			
-		</cf_HibachiPropertyList>
-		<cf_HibachiPropertyList divclass="span6">
-			<cf_HibachiPropertyDisplay object="#rc.account#" property="guestAccountFlag" edit="false">
 			<cf_HibachiPropertyDisplay object="#rc.account#" property="superUserFlag" edit="#rc.edit and $.slatwall.getAccount().getSuperUserFlag()#">
-			<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
-			<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false">
 		</cf_HibachiPropertyList>
+		
+		<!--- Totals --->
+		<cf_HibachiPropertyList divclass="span6">
+			<cf_HibachiPropertyTable>
+				<cf_HibachiPropertyTableBreak header="#$.slatwall.rbKey('admin.entity.detailaccount.termPaymentDetails')#" />
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false" displayType="table">
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false" displayType="table">
+				<cf_HibachiPropertyTableBreak header="#$.slatwall.rbKey('admin.entity.detailaccount.authenticationDetails')#" />
+				<cf_HibachiPropertyDisplay object="#rc.account#" property="guestAccountFlag" edit="false" displayType="table">
+				<cfloop array="#rc.account.getAccountAuthentications()#" index="accountAuthentication">
+					<cfsavecontent variable="thisValue">
+						<cf_HibachiActionCaller text="#$.slatwall.rbKey('define.remove')#" action="admin:entity.deleteAccountAuthentication" queryString="accountAuthenticationID=#accountAuthentication.getAccountAuthenticationID()#&redirectAction=admin:entity.detailAccount&accountID=#rc.account.getAccountID()#" />
+					</cfsavecontent>
+					<cf_HibachiFieldDisplay title="#accountAuthentication.getSimpleRepresentation()#" value="#thisValue#" edit="false" displayType="table">	
+				</cfloop>
+			</cf_HibachiPropertyTable>
+		</cf_HibachiPropertyList>
+				
 	</cf_HibachiPropertyRow>
 	
 	<cf_HibachiTabGroup object="#rc.account#">

@@ -124,6 +124,19 @@ component displayname="Account Authentication" entityname="SlatwallAccountAuthen
 
 	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentation() {
+		var rep = "";
+		if(isNull(getIntegration())) {
+			rep &= "Slatwall";
+			if(isNull(getPassword())) {
+				rep &= " - #rbKey('define.temporary')# #rbKey('define.reset')#";	
+			}
+		} else {
+			rep &= getIntegration().getIntegrationName();
+		}
+		return rep;
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
