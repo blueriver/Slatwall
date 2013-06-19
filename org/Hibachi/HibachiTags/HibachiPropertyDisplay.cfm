@@ -162,7 +162,9 @@
 						<cfif isNumeric(attributes.value) and attributes.value lt 0>
 							<cfset attributes.valueClass &= " negative" />
 						</cfif>
-						<cfset attributes.value = attributes.object.getFormattedValue(attributes.property) />
+						<cfif not isNull(attributes.object.invokeMethod( "get#attributes.property#" ))>
+							<cfset attributes.value = attributes.object.getFormattedValue(attributes.property) />
+						</cfif>
 					</cfif>
 				</cfif>
 				
@@ -196,8 +198,12 @@
 			<cfif structKeyExists(attributes.object.getPropertyMetaData(attributes.property), "hb_fileAcceptExtension")>
 				<cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'accept="#attributes.object.getPropertyMetaData(attributes.property).hb_fileAcceptExtension#"', " ") />
 			</cfif>
+			
+			<!--- Setup null value --->
+			<cfif structKeyExists(attributes.object.getPropertyMetaData(attributes.property), "hb_nullRBKey")>
+				 <cfset attributes["data-emptyvalue"] = attributes.hibachiScope.rbKey( attributes.object.getPropertyMetaData(attributes.property).hb_nullRBKey ) />
+			</cfif>
 		</cfsilent>
-		
 		
 		<cf_HibachiFieldDisplay attributecollection="#attributes#" />
 	</cfif>

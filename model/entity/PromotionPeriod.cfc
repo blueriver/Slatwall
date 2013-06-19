@@ -46,7 +46,7 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	property name="maximumAccountUseCount" ormtype="integer" notnull="false"  hb_nullRBKey="define.unlimited";
 	
 	// Related Object Properties (many-to-one)
-	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID" fetch="join";
 	
 	// Related Object Properties (one-to-many)   
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionPeriodID" cascade="all-delete-orphan" inverse="true";

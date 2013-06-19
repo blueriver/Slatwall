@@ -73,9 +73,9 @@ Notes:
 					<cfif rc.rewardType eq "subscription">
 						<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="applicableTerm" edit="#rc.edit#" />
 					</cfif>
-					<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerOrder" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
-					<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerItem" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
-					<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerQualification" edit="#rc.edit#" data-emptyvalue="#$.slatwall.rbKey('define.unlimited')#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerOrder" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerItem" edit="#rc.edit#" />
+					<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="maximumUsePerQualification" edit="#rc.edit#" />
 				</cfif>
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
