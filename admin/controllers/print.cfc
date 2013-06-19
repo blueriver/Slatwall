@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,5 +35,10 @@
 
 Notes:
 
---->
-<cfoutput>#body#</cfoutput>
+*/
+component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiController" {
+
+	public void function default(required struct rc) {
+		request.layout = false;
+	}
+}

@@ -56,6 +56,9 @@ Notes:
 			<script type="text/javascript">
 				var printWindow = window.open('#request.slatwallScope.getBaseURL()#?slatAction=admin:print.default', '_blank');
 				printWindow.print();
+				printWindow.onmousemove = function() {
+					printWindow.close();
+				}
 			</script>
 		</cfif>
 	</head>
