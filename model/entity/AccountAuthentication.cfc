@@ -134,6 +134,9 @@ component displayname="Account Authentication" entityname="SlatwallAccountAuthen
 		} else {
 			rep &= getIntegration().getIntegrationName();
 		}
+		if(!isNull(getExpirationDateTime())) {
+			rep &= " - #rbKey('define.expires')#: #getFormattedValue('expirationDateTime')#";
+		}
 		return rep;
 	}
 	
