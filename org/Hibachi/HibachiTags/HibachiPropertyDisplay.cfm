@@ -201,7 +201,7 @@
 			
 			<!--- Setup null value --->
 			<cfif structKeyExists(attributes.object.getPropertyMetaData(attributes.property), "hb_nullRBKey")>
-				 <cfset attributes["data-emptyvalue"] = attributes.hibachiScope.rbKey( attributes.object.getPropertyMetaData(attributes.property).hb_nullRBKey ) />
+				 <cfset attributes.fieldAttributes = listAppend(attributes.fieldAttributes, 'placeholder="#attributes.hibachiScope.rbKey( attributes.object.getPropertyMetaData(attributes.property).hb_nullRBKey )#"', " ") />
 			</cfif>
 		</cfsilent>
 		

@@ -75,13 +75,12 @@ Notes:
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cfif not rc.setting.isNew() and structKeyExists(rc.setting.getSettingMetaData(), "encryptValue")>
-					<cf_HibachiPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#" data-emptyvalue="********" displayType="plain">
+					<cf_HibachiPropertyDisplay object="#rc.setting#" property="settingValue" edit="#rc.edit#" fieldAttributes='placeholder="********"' displayType="plain">
 				<cfelse>
 					<cf_HibachiPropertyDisplay object="#rc.setting#" property="settingValue" value="#rc.currentValue#" edit="#rc.edit#" displayType="plain">
 				</cfif>
 			</cf_HibachiPropertyList>
 			<cfif !rc.setting.isNew() and local.hasRelationshipKey>
-				<!--- &fRedirectQS=#local.redirectQS#&sRedirectAction=#rc.entityActionDetails.sRedirectAction#&fRedirectAction=#rc.entityActionDetails.fRedirectAction# --->
 				<cf_HibachiActionCaller action="admin:entity.deletesetting" queryString="settingID=#rc.setting.getSettingID()#&#local.redirectQS#&redirectAction=#rc.entityActionDetails.sRedirectAction#" class="btn btn-danger" />
 			</cfif>
 		</cf_HibachiPropertyRow>
