@@ -1,8 +1,8 @@
 {
 	"conditions":{
 	    "needsEndAfterStart":{
-	        "startDateTime":{"minLength":1},
-	        "endDateTime":{"minLength":1}
+	        "startDateTime":{"required":true},
+	        "endDateTime":{"required":true}
 	    }
 	},
 	"properties":{
