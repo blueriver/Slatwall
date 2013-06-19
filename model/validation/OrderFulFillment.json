@@ -17,6 +17,11 @@
 			{"contexts":"edit,manualFulfillmentCharge","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"},
 			{"contexts":"fulfillItems","inList":"ostNew,ostProcessing"}
 		]
+	},
+	"populatedPropertyValidation":{
+		"shippingAddress":[
+			{"conditions":"fulfillmentTypeShipping","validate":"full"}
+	    ]
 	}
 }
 
