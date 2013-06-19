@@ -74,6 +74,32 @@ Notes:
 		</cfif>
 	</cffunction>
 	
+	<cffunction name="removeAccountFromAuditProperties" returntype="void" access="public">
+		<cfargument name="accountID" type="string" required="true" />
+		
+		<cfset var allTables = "" />
+		<cfset var auditColumns = "" />
+		<cfset var rs = "" />
+		
+		<cfdbinfo type="Tables" name="allTables" pattern="Slatwall%" />
+		
+		<cfloop query="allTables">
+			<cfdbinfo type="Columns" table="#allTables.TABLE_NAME#" name="auditColumns" pattern="%ByAccountID" />
+			
+			<cfloop query="auditColumns">
+				<cfquery name="rs">
+					UPDATE
+						#allTables.TABLE_NAME#
+					SET
+						#auditColumns.COLUMN_NAME# = null 
+					WHERE
+						#auditColumns.COLUMN_NAME# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.accountID#" /> 
+				</cfquery>
+			</cfloop>
+		</cfloop>
+		
+	</cffunction>
+	
 	<cffunction name="removeAccountFromAllSessions" returntype="void" access="public">
 		<cfargument name="accountID" required="true"  />
 		<cfset var rs = "" />

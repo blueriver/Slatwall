@@ -510,6 +510,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			arguments.account.setPrimaryAddress(javaCast("null", ""));
 			
 			getAccountDAO().removeAccountFromAllSessions( accountID );
+			getAccountDAO().removeAccountFromAuditProperties( accountID );
 			
 			return delete( arguments.account );
 		}
