@@ -60,9 +60,9 @@ Notes:
 			WHERE
 				spr.rewardType IN (:rewardTypeList)
 			  and
-				spp.startDateTime < :now
+				(spp.startDateTime is null or spp.startDateTime < :now) 
 			  and
-				spp.endDateTime > :now
+				(spp.endDateTime is null or spp.endDateTime > :now)
 			  and
 				sp.activeFlag = :activeFlag" />
 		
@@ -124,7 +124,11 @@ Notes:
 	<cffunction name="getPromotionPeriodUseCount" returntype="numeric" access="public">
 		<cfargument name="promotionPeriod" required="true" type="any" />
 		
-		<cfset var results = ormExecuteQuery("SELECT count(pa.promotionAppliedID) as count 
+		<cfset var hqlParams = {} />
+		<cfset hqlParams.promotionID = arguments.promotionPeriod.getPromotion().getPromotionID() />
+		<cfset hqlParams.ostNotPlaced = "ostNotPlaced" />
+		
+		<cfset var hql = "SELECT count(pa.promotionAppliedID) as count 
 				FROM
 					SlatwallPromotionApplied pa
 				  LEFT JOIN
@@ -154,17 +158,18 @@ Notes:
 				  and
 				  	(ofoost.systemCode is null or ofoost.systemCode != :ostNotPlaced)
 				  and
-					pap.promotionID = :promotionID
-				  and
-					pa.createdDateTime > :promotionPeriodStartDateTime
-				  and
-				  	pa.createdDateTime < :promotionPeriodEndDateTime", {
-					  
-				promotionID = arguments.promotionPeriod.getPromotion().getPromotionID(),
-				promotionPeriodStartDateTime = arguments.promotionPeriod.getStartDateTime(),
-				promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime(),
-				ostNotPlaced = "ostNotPlaced"
-				}) />
+					pap.promotionID = :promotionID" />
+					
+		<cfif not isNull(arguments.promotionPeriod.getStartDateTime())>
+			<cfset hqlParams.promotionPeriodStartDateTime = arguments.promotionPeriod.getStartDateTime() />
+			<cfset hql &= " and pa.createdDateTime > :promotionPeriodStartDateTime" />
+		</cfif>
+		<cfif not isNull(arguments.promotionPeriod.getStartDateTime())>
+			<cfset hqlParams.promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime() />
+			<cfset hql &= " and pa.createdDateTime < :promotionPeriodEndDateTime" />
+		</cfif>
+		
+		<cfset var results = ormExecuteQuery(hql, hqlParams) />
 		
 		<cfreturn results[1] />
 	</cffunction>
@@ -173,7 +178,12 @@ Notes:
 		<cfargument name="promotionPeriod" required="true" type="any" />
 		<cfargument name="account" required="true" type="any" />
 		
-		<cfset var results = ormExecuteQuery("SELECT count(pa.promotionAppliedID) as count
+		<cfset var hqlParams = {} />
+		<cfset hqlParams.promotionID = arguments.promotionPeriod.getPromotion().getPromotionID() />
+		<cfset hqlParams.accountID = arguments.account.getAccountID() />
+		<cfset hqlParams.ostNotPlaced = "ostNotPlaced" />
+		
+		<cfset var hql = "SELECT count(pa.promotionAppliedID) as count
 				FROM
 					SlatwallPromotionApplied pa
 				  LEFT JOIN
@@ -215,17 +225,18 @@ Notes:
 				  and
 				  	(ofoost.systemCode is null or ofoost.systemCode != :ostNotPlaced)
 				  and
-					pa.promotion.promotionID = :promotionID
-				  and
-				  	pa.createdDateTime > :promotionPeriodStartDateTime
-				  and
-				  	pa.createdDateTime < :promotionPeriodEndDateTime", {
-					  	accountID = arguments.account.getAccountID(),
-						promotionID = arguments.promotionPeriod.getPromotion().getPromotionID(),
-						promotionPeriodStartDateTime = arguments.promotionPeriod.getStartDateTime(),
-						promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime(),
-						ostNotPlaced = "ostNotPlaced"
-				}) />
+					pa.promotion.promotionID = :promotionID" />
+					
+		<cfif not isNull(arguments.promotionPeriod.getStartDateTime())>
+			<cfset hqlParams.promotionPeriodStartDateTime = arguments.promotionPeriod.getStartDateTime() />
+			<cfset hql &= " and pa.createdDateTime > :promotionPeriodStartDateTime" />
+		</cfif>
+		<cfif not isNull(arguments.promotionPeriod.getStartDateTime())>
+			<cfset hqlParams.promotionPeriodEndDateTime = arguments.promotionPeriod.getEndDateTime() />
+			<cfset hql &= " and pa.createdDateTime < :promotionPeriodEndDateTime" />
+		</cfif>			
+		
+		<cfset var results = ormExecuteQuery(hql, hqlParams) />
 		
 		<cfreturn results[1] />
 	</cffunction>
@@ -293,9 +304,9 @@ Notes:
 			  INNER JOIN
 			  	SlatwallPromotion on SlatwallPromotionPeriod.promotionID = SlatwallPromotion.promotionID
 			WHERE
-				SlatwallPromotionPeriod.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+				(SlatwallPromotionPeriod.startDateTime is null or SlatwallPromotionPeriod.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			  AND
-			  	SlatwallPromotionPeriod.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  	(SlatwallPromotionPeriod.endDateTime is null or SlatwallPromotionPeriod.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			  AND
 			  	SlatwallPromotion.activeFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 			  AND
@@ -332,9 +343,9 @@ Notes:
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppSku on ppSku.promotionPeriodID = prSku.promotionPeriodID
 			WHERE
-				ppSku.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+				(ppSku.startDateTime is null or ppSku.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			  AND
-			  	ppSku.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  	(ppSku.endDateTime is null or ppSku.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
 				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
@@ -363,9 +374,9 @@ Notes:
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppProduct on ppProduct.promotionPeriodID = prProduct.promotionPeriodID
 			WHERE
-				ppProduct.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+				(ppProduct.startDateTime is null or ppProduct.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			  AND
-			  	ppProduct.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  	(ppProduct.endDateTime is null or ppProduct.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
 				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
@@ -396,9 +407,9 @@ Notes:
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppBrand on ppBrand.promotionPeriodID = prBrand.promotionPeriodID
 			WHERE
-				ppBrand.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+				(ppBrand.startDateTime is null or ppBrand.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			  AND
-			  	ppBrand.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  	(ppBrand.endDateTime is null or ppBrand.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
 			  	SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
@@ -429,9 +440,9 @@ Notes:
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppOption on ppOption.promotionPeriodID = prOption.promotionPeriodID
 			WHERE
-				ppOption.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+				(ppOption.startDateTime is null or ppOption.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			  AND
-			  	ppOption.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  	(ppOption.endDateTime is null or ppOption.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
 			  	SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
@@ -468,9 +479,9 @@ Notes:
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppProductType on ppProductType.promotionPeriodID = prProductType.promotionPeriodID
 			WHERE
-				ppProductType.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+				(ppProductType.startDateTime is null or ppProductType.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			  AND
-			  	ppProductType.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  	(ppProductType.endDateTime is null or ppProductType.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
 			  	SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
@@ -509,9 +520,9 @@ Notes:
 			  AND
 			  	NOT EXISTS(SELECT promotionRewardID FROM SlatwallPromotionRewardProductType WHERE SlatwallPromotionRewardProductType.promotionRewardID = prGlobal.promotionRewardID)
 			  AND
-				ppGlobal.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+				(ppGlobal.startDateTime is null or ppGlobal.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			  AND
-			  	ppGlobal.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  	(ppGlobal.endDateTime is null or ppGlobal.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			<cfif structKeyExists(arguments, "productID")>
 			  AND
 				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
