@@ -327,7 +327,7 @@
 	
 	public boolean function validate_lte(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		if(!isNull(propertyValue) && !isNull(propertyValue) && propertyValue <= arguments.constraintValue) {
+		if(!isNull(propertyValue) && propertyValue <= arguments.constraintValue) {
 			return true;
 		}
 		return false;
@@ -335,7 +335,7 @@
 	
 	public boolean function validate_lt(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		if(!isNull(propertyValue) && !isNull(propertyValue) && propertyValue < arguments.constraintValue) {
+		if(!isNull(propertyValue) && propertyValue < arguments.constraintValue) {
 			return true;
 		}
 		return false;
@@ -343,7 +343,7 @@
 	
 	public boolean function validate_gte(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		if(!isNull(propertyValue) && !isNull(propertyValue) && propertyValue >= arguments.constraintValue) {
+		if(!isNull(propertyValue) && propertyValue >= arguments.constraintValue) {
 			return true;
 		}
 		return false;
@@ -351,7 +351,23 @@
 	
 	public boolean function validate_gt(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		if(!isNull(propertyValue) && !isNull(propertyValue) && propertyValue > arguments.constraintValue) {
+		if(!isNull(propertyValue) && propertyValue > arguments.constraintValue) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function validate_gtNow(required any object, required string propertyIdentifier, required string constraintValue) {
+		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
+		if(!isNull(propertyValue) && dateCompare(propertyValue, now())) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function validate_ltNow(required any object, required string propertyIdentifier, required string constraintValue) {
+		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
+		if(!isNull(propertyValue) && dateCompare(propertyValue, now()) eq -1) {
 			return true;
 		}
 		return false;
@@ -371,7 +387,7 @@
 	
 	public boolean function validate_neq(required any object, required string propertyIdentifier, required string constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		if(!isNull(propertyValue) && !isNull(propertyValue) && propertyValue != arguments.constraintValue) {
+		if(!isNull(propertyValue) && propertyValue != arguments.constraintValue) {
 			return true;
 		}
 		return false;
