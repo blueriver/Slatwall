@@ -70,4 +70,8 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 		return ["Slatwall.integrationServices.mura.model.handler.SlatwallEventHandler"];
 	}
 	
+	public string function getAdminNavbarHTML() {
+		return '<a href="/admin" class="brand" style="margin-left:-10px;"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/mura.logo.png" style="width:25px;heigh:26px;" title="Mura" /></a>';
+	}
+	
 }
