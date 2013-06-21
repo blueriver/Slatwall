@@ -38,27 +38,6 @@ Notes:
 --->
 <cfcomponent extends="HibachiDAO">
 	
-	<cffunction name="getTableTopSortOrder">
-		<cfargument name="tableName" type="string" required="true" />
-		<cfargument name="contextIDColumn" type="string" />
-		<cfargument name="contextIDValue" type="string" />
-		
-		<cfset var rs = "" />
-		
-		<cfquery name="rs">
-			SELECT
-				COALESCE(max(sortOrder), 0) as topSortOrder
-			FROM
-				#tableName#
-			<cfif structKeyExists(arguments, "contextIDColumn") && structKeyExists(arguments, "contextIDValue")>
-				WHERE
-					#contextIDColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contextIDValue#" />		
-			</cfif>
-		</cfquery>
-		
-		<cfreturn rs.topSortOrder />
-	</cffunction>
-
 	<cffunction name="eval" >
 		<cfargument name="recordIDCol" >
 	</cffunction>
