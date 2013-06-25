@@ -544,6 +544,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public any function getPrice() {
+		if( structKeyExists(variables, "price") ) {
+			return variables.price;
+		}
 		if( structKeyExists(variables, "defaultSku") ) {
 			return getDefaultSku().getPrice();
 		}
