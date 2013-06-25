@@ -732,10 +732,10 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			
 			if(structKeyExists(baseEntityObject.getThisMetaData(), "hb_defaultOrderProperty")) {
 				var obProperty = getAliasedProperty( baseEntityObject.getThisMetaData().hb_defaultOrderProperty );
-			} else if (baseEntityObject.hasProperty("createdDateTime")) {
+			} else if ( baseEntityObject.hasProperty( "createdDateTime" ) ) {
 				var obProperty = getAliasedProperty( "createdDateTime" );
 			} else {
-				var obProperty = getService("hibachiService").getPrimaryIDPropertyNameByEntityName( getBaseEntityName() );
+				var obProperty = getAliasedProperty( getService("hibachiService").getPrimaryIDPropertyNameByEntityName( getBaseEntityName() ) );
 			}
 			
 			hqlOrder &= " ORDER BY #obProperty# ASC";
