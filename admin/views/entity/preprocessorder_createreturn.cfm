@@ -59,6 +59,7 @@ Notes:
 						<th>Sku Code</th>
 						<th class="primary">Product Title</th>
 						<th>Options</th>
+						<th>Price</th>
 						<th>Quantity</th>
 					</tr>
 					<cfset orderItemIndex = 0 />
@@ -72,6 +73,7 @@ Notes:
 							<td>#orderItem.getSku().getSkuCode()#</td>
 							<td>#orderItem.getSku().getProduct().getTitle()#</td>
 							<td>#orderItem.getSku().displayOptions()#</td>
+							<td><input type="text" name="orderItems[#orderItemIndex#].price" value="#orderItem.getExtendedPriceAfterDiscount()#" class="span1 number" /></td>
 							<td><input type="text" name="orderItems[#orderItemIndex#].quantity" value="" class="span1 number" /></td>
 						</tr>
 					</cfloop>

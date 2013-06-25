@@ -1026,29 +1026,31 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Look for that orderItem in the data records
 		for(var orderItemStruct in arguments.processObject.getOrderItems()) {
 			
+			// Verify that there was a quantity and that it was GT 0
 			if(isNumeric(orderItemStruct.quantity) && orderItemStruct.quantity gt 0) {
 				
 				var originalOrderItem = this.getOrderItem( orderItemStruct.referencedOrderItem.orderItemID );
 				
 				// Create a new return orderItem
-				if(!isNull(orignalOrderItem)) {
+				if(!isNull(originalOrderItem)) {
+					
+					// Create a new order item
 					var orderItem = this.newOrderItem();
+					
+					// Setup the details
 					orderItem.setOrderItemType( getSettingService().getTypeBySystemCode('oitReturn') );
 					orderItem.setOrderItemStatusType( getSettingService().getTypeBySystemCode('oistNew') );
-					
-					orderItem.setReferencedOrderItem( originalOrderItem );
-					orderItem.setOrder( returnOrder );
-					
-					// TODO: YOU STOPPED HERE!!!
 					orderItem.setPrice( orderItemStruct.price );
-					
 					orderItem.setSkuPrice( originalOrderItem.getSku().getPrice() );
 					orderItem.setCurrencyCode( originalOrderItem.getSku().getCurrencyCode() );
 					orderItem.setQuantity( orderItemStruct.quantity );
 					orderItem.setSku( originalOrderItem.getSku() );
 					
-					// Add this order item to the OrderReturns entity
+					// Add needed references
+					orderItem.setReferencedOrderItem( originalOrderItem );
 					orderItem.setOrderReturn( orderReturn );
+					orderItem.setOrder( returnOrder );
+					
 				}
 				
 			}
@@ -1059,7 +1061,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// Persit the new order
 		getHibachiDAO().save( returnOrder );
-		
 		
 		return arguments.order;
 	}
