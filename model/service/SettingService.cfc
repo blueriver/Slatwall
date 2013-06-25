@@ -154,7 +154,6 @@ globalEncryptionKeySize
 					globalEncryptionKeyLocation = {fieldType="text"},
 					globalEncryptionKeySize = {fieldType="select",defaultValue="128"},
 					globalEncryptionService = {fieldType="select",defaultValue="internal"},
-					globalImageExtension = {fieldType="text",defaultValue="jpg"},
 					globalLogMessages = {fieldType="select",defaultValue="General"},
 					globalMissingImagePath = {fieldType="text", defaultValue=getURLFromPath(getApplicationValue('applicationRootMappingPath')) & '/custom/assets/images/missingimage.jpg'},
 					globalOrderPlacedEmailFrom = {fieldType="text",defaultValue="info@mySlatwallStore.com"},
@@ -179,6 +178,7 @@ globalEncryptionKeySize
 					
 					// Product
 					productDisplayTemplate = {fieldType="select"},
+					productImageDefaultExtension = {fieldType="text",defaultValue="jpg"},
 					productImageOptionCodeDelimiter = {fieldType="select", defaultValue="-"},
 					productTitleString = {fieldType="text", defaultValue="${brand.brandName} ${productName}"},
 					productHTMLTitleString = {fieldType="text"},
@@ -225,6 +225,7 @@ globalEncryptionKeySize
 					skuTrackInventoryFlag = {fieldType="yesno", defaultValue=0},
 					
 					// DEPRECATED***
+					globalImageExtension = {fieldType="text",defaultValue="jpg"},
 					globalPageShoppingCart = {fieldType="text", defaultValue="shopping-cart"},
 					globalPageOrderStatus = {fieldType="text", defaultValue="order-status"},
 					globalPageOrderConfirmation = {fieldType="text", defaultValue="order-confirmation"},

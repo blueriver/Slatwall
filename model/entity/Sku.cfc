@@ -174,7 +174,7 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 				optionString &= getProduct().setting('productImageOptionCodeDelimiter') & reReplaceNoCase(option.getOptionCode(), "[^a-z0-9\-\_]","","all");
 			}
 		}
-		return reReplaceNoCase(getProduct().getProductCode(), "[^a-z0-9\-\_]","","all") & optionString & ".#setting('globalImageExtension')#";
+		return reReplaceNoCase(getProduct().getProductCode(), "[^a-z0-9\-\_]","","all") & optionString & ".#getProduct().setting('productImageDefaultExtension')#";
 	}
 	
 	public string function getOptionsDisplay(delimiter=" ") {
