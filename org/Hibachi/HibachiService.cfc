@@ -761,6 +761,10 @@
 		}
 		
 			
+		public any function getTableTopSortOrder(required string tableName, string contextIDColumn, string contextIDValue) {
+			return getHibachiDAO().getTableTopSortOrder(argumentcollection=arguments);
+		}
+	
 		public any function updateRecordSortOrder(required string recordIDColumn, required string recordID, required string tableName, required numeric newSortOrder) {
 			getHibachiDAO().updateRecordSortOrder(argumentcollection=arguments);
 		}

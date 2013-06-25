@@ -154,10 +154,6 @@ component output="false" accessors="true" extends="HibachiService" {
 		getDataDAO().toBundle(argumentcollection=arguments);
 	}
 	
-	public any function getTableTopSortOrder(required string tableName, string contextIDColumn, string contextIDValue) {
-		return getDataDAO().getTableTopSortOrder(argumentcollection=arguments);
-	}
-	
 	
 	// ===================== START: Logical Methods ===========================
 	

@@ -611,9 +611,9 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 				var metaData = getPropertyMetaData("sortOrder");
 				var topSortOrder = 0;
 				if(structKeyExists(metaData, "sortContext") && structKeyExists(variables, metaData.sortContext)) {
-					topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).table, contextIDColumn=variables[ metaData.sortContext ].getPrimaryIDPropertyName(), contextIDValue=variables[ metaData.sortContext ].getPrimaryIDValue() );
+					topSortOrder =  getService("hibachiService").getTableTopSortOrder( tableName=getMetaData(this).table, contextIDColumn=variables[ metaData.sortContext ].getPrimaryIDPropertyName(), contextIDValue=variables[ metaData.sortContext ].getPrimaryIDValue() );
 				} else {
-					topSortOrder =  getService("dataService").getTableTopSortOrder( tableName=getMetaData(this).table );
+					topSortOrder =  getService("hibachiService").getTableTopSortOrder( tableName=getMetaData(this).table );
 				}
 				setSortOrder( topSortOrder + 1 );
 			}
