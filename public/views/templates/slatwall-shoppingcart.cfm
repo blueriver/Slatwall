@@ -198,20 +198,58 @@ Notes:
 							<td>Subtotal</td>
 							<td>#$.slatwall.cart().getFormattedValue('subtotal')#</td>
 						</tr>
+						
+						<!--- Item Discounts --->
+						<cfif $.slatwall.cart().getItemDiscountAmountTotal() gt 0>
+							<tr>
+								<td>Item Discounts</td>
+								<td>#$.slatwall.cart().getFormattedValue('itemDiscountAmountTotal')#</td>
+							</tr>
+							<!--- Subtotal After Discounts --->
+							<tr>
+								<td>Subtotal After Discounts</td>
+								<td>#$.slatwall.cart().getFormattedValue('subTotalAfterItemDiscounts')#</td>
+							</tr>
+						</cfif>
+						
 						<!--- This displays a delivery cost, some times it might make sense to do a conditional here and check if the amount is > 0, then display otherwise show something like TBD --->
 						<tr>
-							<td>Delivery</td>
+							<td>Delivery Costs</td>
 							<td>#$.slatwall.cart().getFormattedValue('fulfillmentTotal')#</td>
 						</tr>
+						
+						<!--- Delivery Discounts --->
+						<cfif $.slatwall.cart().getFulfillmentDiscountAmountTotal() gt 0>
+							
+							<tr>
+								<td>Delivery Discounts</td>
+								<td>#$.slatwall.cart().getFormattedValue('fulfillmentDiscountAmountTotal')#</td>
+							</tr>
+							<!--- Delivery after Discounts --->
+							<tr>
+								<td>Delivery After Discounts</td>
+								<td>#$.slatwall.cart().getFormattedValue('fulfillmentChargeAfterDiscountTotal')#</td>
+							</tr>
+						</cfif>
+						
 						<!--- Displays the total tax that was calculated for this order --->
 						<tr>
 							<td>Tax</td>
 							<td>#$.slatwall.cart().getFormattedValue('taxTotal')#</td>
 						</tr>
+						
+						<!--- Displays any order discounts --->
+						<cfif $.slatwall.cart().getOrderDiscountAmountTotal() gt 0>
+							<tr>
+								<td>Additional Order Discounts</td>
+								<td>#$.slatwall.cart().getFormattedValue('orderDiscountAmountTotal')#</td>
+							</tr>
+						</cfif>
+						
 						<!--- If there were discounts they would be displayed here --->
 						<cfif $.slatwall.cart().getDiscountTotal() gt 0>
 							<tr>
-								<td>Discounts</td>
+								<td>Total Discounts</td>
 								<td>#$.slatwall.cart().getFormattedValue('discountTotal')#</td>
 							</tr>
 						</cfif>
