@@ -126,7 +126,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function saveOrderAccount(required struct rc) {
 		rc.guestAccountOK = true;
 		
-		getOrderService().updateAndVerifyOrderAccount(order=$.slatwall.cart(), data=rc);
+		getOrderService().updateAndVerifyOrderAccount(order=rc.$.slatwall.cart(), data=rc);
 		
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");
@@ -135,7 +135,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function saveOrderFulfillments(required struct rc) {
 		rc.guestAccountOK = true;
 		
-		getOrderService().updateAndVerifyOrderFulfillments(order=$.slatwall.cart(), data=rc);
+		getOrderService().updateAndVerifyOrderFulfillments(order=rc.$.slatwall.cart(), data=rc);
 		
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");
@@ -144,7 +144,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function saveOrderPayments(required struct rc) {
 		rc.guestAccountOK = true;
 		
-		getOrderService().updateAndVerifyOrderPayments(order=$.slatwall.cart(), data=rc);
+		getOrderService().updateAndVerifyOrderPayments(order=rc.$.slatwall.cart(), data=rc);
 		
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");
@@ -172,7 +172,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.$.slatwall.setSessionValue("orderConfirmationID", rc.orderID);
 			
 			// Redirect to order Confirmation
-			getFW().redirectExact($.createHREF(filename='order-confirmation'), false);
+			getFW().redirectExact(rc.$.createHREF(filename='order-confirmation'), false);
 			
 		}
 			
