@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<input type="hidden" name="commentRelationships[1].commentRelationshipID" value="">
 	<input type="hidden" name="commentRelationships[1].order.orderID" value="#rc.order.getOrderID()#">
-	<h4>#$.slatwall.rbKey('admin.entity.preprocessorder_include.changestatuscomment')#</h4>
+	<h5>#$.slatwall.rbKey('admin.entity.preprocessorder_include.changestatuscomment')#</h5>
 	<hr />
 	<cf_HibachiPropertyDisplay object="#rc.comment#" property="publicFlag" edit="true">
 	<cf_HibachiPropertyDisplay object="#rc.comment#" property="comment" displaytype="plain" edit="true">			

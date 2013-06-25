@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -36,19 +36,8 @@
 Notes:
 
 --->
-<cfparam name="rc.account" type="any" />
-<cfparam name="rc.accountAddress" type="any" />
+<cfparam name="rc.product" type="any" />
+
 <cfoutput>
-<div class="accountAddressDetails">
-	<form name="accountAddress" method="post">
-		<h5>Address Details</h5>
-
-		<cf_SlatwallPropertyDisplay object="#rc.accountAddress#" fieldname="accountAddressName" property="accountAddressName" edit="true">
-		<cf_SlatwallAddressDisplay address="#rc.accountAddress.getAddress()#" fieldNamePrefix="address." edit="true">
-		
-		<input type="hidden" name="slatAction" value="frontend:account.saveAddress" />
-		<button type="submit">Save</button>
-	</form>
-</div>
+	<cf_SlatwallAdminImagesDisplay object="#rc.product#" />
 </cfoutput>
-

@@ -327,7 +327,7 @@
 							<cfelse>
 								<div class="dropdown">
 									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.title# <span class="caret"></span> </a>
-									<ul class="dropdown-menu nav">
+									<ul class="dropdown-menu nav scrollable">
 										<cf_HibachiDividerHider>
 											<cfif column.sort and not thistag.expandable>
 												<li class="nav-header">#attributes.hibachiScope.rbKey('define.sort')#</li>
@@ -337,7 +337,7 @@
 											</cfif>
 											<cfif column.search and not thistag.expandable>
 												<li class="nav-header">#attributes.hibachiScope.rbKey('define.search')#</li>
-												<li class="search-filter"><input type="text" class="listing-search span2" name="FK:#column.propertyIdentifier#" value="" /> <i class="icon-search"></i></li>
+												<li class="search-filter"><input type="text" class="listing-search" name="FK:#column.propertyIdentifier#" value="" /> <i class="icon-search"></i></li>
 												<li class="divider"></li>
 											</cfif>
 											<cfif column.range and not thistag.expandable>
@@ -349,19 +349,17 @@
 													</cfif>
 												</cfsilent>
 												<li class="nav-header">#attributes.hibachiScope.rbKey('define.range')#</li>
-												<li class="range-filter"><label for="">From</label><input type="text" class="#local.rangeClass# range-filter-lower span2" name="R:#column.propertyIdentifier#" value="" /></li>
-												<li class="range-filter"><label for="">To</label><input type="text" class="#local.rangeClass# range-filter-upper span2" name="R:#column.propertyIdentifier#" value="" /></li>
+												<li class="range-filter"><label for="">From</label><input type="text" class="#local.rangeClass# range-filter-lower" name="R:#column.propertyIdentifier#" value="" /></li>
+												<li class="range-filter"><label for="">To</label><input type="text" class="#local.rangeClass# range-filter-upper" name="R:#column.propertyIdentifier#" value="" /></li>
 												<li class="divider"></li>
 											</cfif>
 											<cfif column.filter and not thistag.expandable>
 												<li class="nav-header">#attributes.hibachiScope.rbKey('define.filter')#</li>
 												<cfset filterOptions = attributes.smartList.getFilterOptions(valuePropertyIdentifier=column.propertyIdentifier, namePropertyIdentifier=column.propertyIdentifier) />
-												<div class="filter-scroll">
-													<input type="hidden" name="F:#column.propertyIdentifier#" value="#attributes.smartList.getFilters(column.propertyIdentifier)#" />
-													<cfloop array="#filterOptions#" index="filter">
-														<li><a href="##" class="listing-filter" data-filtervalue="#filter['value']#"><i class="hibachi-ui-checkbox"></i> #filter['name']#</a></li>
-													</cfloop>
-												</div>
+												<input type="hidden" name="F:#column.propertyIdentifier#" value="#attributes.smartList.getFilters(column.propertyIdentifier)#" />
+												<cfloop array="#filterOptions#" index="filter">
+													<li><a href="##" class="listing-filter" data-filtervalue="#filter['value']#"><i class="hibachi-ui-checkbox"></i> #filter['name']#</a></li>
+												</cfloop>
 											</cfif>
 										</cf_HibachiDividerHider>
 									</ul>

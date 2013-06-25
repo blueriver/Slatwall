@@ -41,7 +41,7 @@ Notes:
 		#view("frontend:account/account_nav")#
 		<div class="svoaccountdetail">
 			<p>Welcome, #$.slatwall.account('fullName')#</p>
-			<h4>#$.slatwall.rbKey("frontend.account.detail.header")#</h4>
+			<h5>#$.slatwall.rbKey("frontend.account.detail.header")#</h5>
 			<dl>
 				<dt>Primary Email Address</dt>
 				<dd>#$.slatwall.account("primaryEmailAddress").getEmailAddress()#</dd>

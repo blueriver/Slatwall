@@ -169,7 +169,7 @@ Notes:
 			
 			<!--- Filter Brand --->
 			<cfset brandFilterOptions = $.slatwall.getProductSmartList().getFilterOptions('brand.brandID', 'brand.brandName') />
-			<h4>Filter By Brand</h4>
+			<h5>Filter By Brand</h5>
 			<ul class="nav">
 				<cfloop array="#brandFilterOptions#" index="brandOption">
 					<li><a href="#$.slatwall.getProductSmartList().buildURL( 'f:brand.brandID=#brandOption["value"]#' )#">#brandOption["name"]#</a></li>
@@ -177,7 +177,7 @@ Notes:
 			</ul>
 			
 			<!--- Price Range Filter --->
-			<h4>Price Range Filter</h4>
+			<h5>Price Range Filter</h5>
 			<ul class="nav">
 				<li><a href="#$.slatwall.getProductSmartList().buildURL( 'r:calculatedSalePrice=^20' )#">less than $20.00</a></li>
 				<li><a href="#$.slatwall.getProductSmartList().buildURL( 'r:calculatedSalePrice=20^50' )#">$20.00 - $50.00</a></li>
@@ -187,7 +187,7 @@ Notes:
 			</ul>
 			
 			<!--- Sorting --->
-			<h4>Sorting</h4>
+			<h5>Sorting</h5>
 			<ul class="nav">
 				<li><a href="#$.slatwall.getProductSmartList().buildURL( 'orderBy=calculatedSalePrice|ASC' )#">Price Low To High</a></li>
 				<li><a href="#$.slatwall.getProductSmartList().buildURL( 'orderBy=calculatedSalePrice|DESC' )#">Price High To Low</a></li>

@@ -64,7 +64,7 @@ Notes:
 				<!--- Credit Card Details --->
 				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard">
 					<hr />
-					<h4>#$.slatwall.rbKey('admin.define.creditCardDetials')#</h4>
+					<h5>#$.slatwall.rbKey('admin.define.creditCardDetials')#</h5>
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="nameOnCreditCard" edit="#rc.edit#" />
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="creditCardNumber" edit="#rc.edit#" />
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="expirationMonth" edit="#rc.edit#" />
@@ -74,7 +74,7 @@ Notes:
 				<!--- Gift Card Details --->
 				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="giftCard">
 					<hr />
-					<h4>#$.slatwall.rbKey('admin.define.giftCardDetails')#</h4>
+					<h5>#$.slatwall.rbKey('admin.define.giftCardDetails')#</h5>
 					<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="giftCardNumber" edit="#rc.edit#" />
 				</cf_HibachiDisplayToggle>
 				
@@ -84,7 +84,7 @@ Notes:
 				<!--- Billing Address Details --->
 				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard,termPayment">
 					<hr />
-					<h4>#$.slatwall.rbKey('entity.accountpaymentmethod.billingaddress')#</h4>
+					<h5>#$.slatwall.rbKey('entity.accountpaymentmethod.billingaddress')#</h5>
 					<cf_SlatwallAdminAddressDisplay address="#rc.accountPaymentMethod.getBillingAddress()#" fieldNamePrefix="billingaddress." edit="#rc.edit#">
 				</cf_HibachiDisplayToggle>
 			</cf_HibachiPropertyList>

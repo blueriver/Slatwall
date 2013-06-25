@@ -122,7 +122,7 @@ Notes:
 					<cfif listFindNoCase(orderRequirementsList, "account")>
 						
 						<!--- START: ACCOUNT --->
-						<h4>Step 1 - Account Details</h4>
+						<h5>Step 1 - Account Details</h5>
 						
 						<div class="row">
 							
@@ -357,7 +357,7 @@ Notes:
 					<cfelseif listFindNoCase(orderRequirementsList, "fulfillment")>
 						
 						<!--- START: FULFILLMENT --->
-						<h4>Step 2 - Fulfillment Details</h4>
+						<h5>Step 2 - Fulfillment Details</h5>
 						
 						<form action="?s=1" method="post">
 											
@@ -521,7 +521,7 @@ Notes:
 						<cfset eligiblePaymentMethods = $.slatwall.cart().getEligiblePaymentMethodDetails() />
 						
 						<!--- START: PAYMENT --->
-						<h4>Step 3 - Payment Details</h4>
+						<h5>Step 3 - Payment Details</h5>
 						
 						<br />
 						<!--- Display existing order payments, we are using the smart list here so that any non-persisted order payments don't show up --->
@@ -775,7 +775,7 @@ Notes:
 							
 <!--- ============= CONFIRMATION ============================================== --->
 					<cfelseif not len(orderRequirementsList)>
-						<h4>Step 4 - Confirmation</h4>
+						<h5>Step 4 - Confirmation</h5>
 						
 						ADD Account Details Here
 						<hr />
@@ -803,7 +803,7 @@ Notes:
 				<!--- START: ORDER SUMMARY --->
 				<div class="span4">
 					
-					<h4>Order Summary</h4>
+					<h5>Order Summary</h5>
 					<hr />
 					
 					<!--- Account Details --->

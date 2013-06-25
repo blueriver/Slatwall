@@ -83,7 +83,7 @@ Notes:
 				<div class="row">
 					<div class="span5">
 						<!--- START: PRODUCT DETAILS EXAMPLE --->
-						<h4>Product Details Example</h4>
+						<h5>Product Details Example</h5>
 						<dl class="dl-horizontal">
 							<!--- Product Code --->
 							<dt>Product Code</dt>
@@ -123,7 +123,7 @@ Notes:
 					</div>
 					<div class="span3">
 						<!--- Start: PRICE DISPLAY EXAMPLE --->
-						<h4>Price Display Example</h4>
+						<h5>Price Display Example</h5>
 						<br />
 						<cfif $.slatwall.product('price') gt $.slatwall.product('livePrice')>
 							<span style="text-decoration:line-through;color:##cc0000;">#$.slatwall.product().getFormattedValue('price')#</span><br />
@@ -149,7 +149,7 @@ Notes:
 				<hr />
 				
 				<!--- START: ADD TO CART EXAMPLE 1 --->
-				<h4>Add To Cart Form Example 1</h4>
+				<h5>Add To Cart Form Example 1</h5>
 				
 				<!--- If this item was just added show the success message --->
 				<cfif $.slatwall.hasSuccessfulAction( "public:cart.addOrderItem" )>
@@ -217,7 +217,7 @@ Notes:
 			
 			<div class="span12">
 				
-				<h4>Product Review Example</h4>
+				<h5>Product Review Example</h5>
 				
 				<div class="row">
 					
@@ -404,7 +404,7 @@ Notes:
 		<div class="row">
 			<div class="span12">
 				
-				<h4>Related Products Example</h4>
+				<h5>Related Products Example</h5>
 				
 				<div class="well">
 						
@@ -463,7 +463,7 @@ Notes:
 		<!--- Start: Image Gallery Example --->
 		<div class="row">
 			<div class="span12">
-				<h4>Image Gallery Example</h4>
+				<h5>Image Gallery Example</h5>
 				
 				<cfset local.galleryDetails = $.slatwall.product().getImageGalleryArray() />
 				

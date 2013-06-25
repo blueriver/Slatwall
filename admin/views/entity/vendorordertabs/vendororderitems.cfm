@@ -64,7 +64,7 @@ Notes:
 		</cf_HibachiListingDisplay>
 		
 		<cfif rc.edit and listFindNoCase("vostNew", rc.vendorOrder.getVendorOrderStatusType().getSystemCode())>
-			<h4>#$.slatwall.rbKey('define.add')#</h4>
+			<h5>#$.slatwall.rbKey('define.add')#</h5>
 			<cf_HibachiListingDisplay smartList="#rc.vendorOrder.getAddVendorOrderItemSkuOptionsSmartList()#"
 									  recordProcessAction="admin:entity.processVendorOrder"
 									  recordProcessContext="addVendorOrderItem"
@@ -106,7 +106,7 @@ Notes:
 		</cf_HibachiListingDisplay>
 		
 		<cfif rc.edit and listFindNoCase("vostNew", rc.vendorOrder.getVendorOrderStatusType().getSystemCode())>
-			<h4>#$.slatwall.rbKey('define.add')#</h4>
+			<h5>#$.slatwall.rbKey('define.add')#</h5>
 			
 			<cf_HibachiListingDisplay smartList="#rc.vendorOrder.getAddVendorOrderItemSkuOptionsSmartList()#"
 									  recordProcessAction="admin:entity.processVendorOrder"

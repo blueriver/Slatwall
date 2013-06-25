@@ -104,7 +104,7 @@ Notes:
 			<cfset customAttributeSetTypeArray = ['astProductCustomization','astOrderItem'] />
 			<cfloop array="#$.slatwall.product().getAttributeSets(customAttributeSetTypeArray)#" index="local.customizationAttributeSet">
 				<div class="productCustomizationSet #lcase(replace(local.customizationAttributeSet.getAttributeSetName(), ' ', '', 'all'))#">
-					<h4>#local.customizationAttributeSet.getAttributeSetName()#</h4>
+					<h5>#local.customizationAttributeSet.getAttributeSetName()#</h5>
 					<dl>
 						<cf_SlatwallAttributeSetDisplay attributeSet="#local.customizationAttributeSet#" entity="#$.slatwall.product()#" edit="true" />
 					</dl>

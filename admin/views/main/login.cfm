@@ -84,7 +84,7 @@ Notes:
 					</fieldset>
 				</form>
 				<hr />
-				<h4>#$.slatwall.rbKey('admin.main.forgotPassword')#</h4>
+				<h5>#$.slatwall.rbKey('admin.main.forgotPassword')#</h5>
 				<cfset forgotPasswordProcessObject = rc.fw.getHibachiScope().getAccount().getProcessObject("forgotPassword") />
 				<form action="?s=1" class="form-horizontal" method="post">
 					<input type="hidden" name="slatAction" value="admin:main.forgotpassword" />

@@ -39,7 +39,7 @@ Notes:
 <cfoutput>
 <div class="accountDetails">
 	<form name="account" method="post">
-		<h4>Login Details</h4>
+		<h5>Login Details</h5>
 		<dl>
 			<cf_SlatwallErrorDisplay object="#rc.account#" errorName="cmsError" />
 			<!--- login info --->

@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+	
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -36,19 +36,26 @@
 Notes:
 
 --->
-<cfparam name="rc.account" type="any" />
-<cfparam name="rc.accountAddress" type="any" />
+<cfparam name="rc.order" type="any" />
+<cfparam name="rc.edit" type="boolean" />
+
 <cfoutput>
-<div class="accountAddressDetails">
-	<form name="accountAddress" method="post">
-		<h5>Address Details</h5>
-
-		<cf_SlatwallPropertyDisplay object="#rc.accountAddress#" fieldname="accountAddressName" property="accountAddressName" edit="true">
-		<cf_SlatwallAddressDisplay address="#rc.accountAddress.getAddress()#" fieldNamePrefix="address." edit="true">
+	<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemStockOptionsSmartList()#"
+							  recordProcessAction="admin:entity.processOrder"
+							  recordProcessQueryString="orderItemTypeSystemCode=oitSale"
+							  recordProcessContext="addOrderItem"
+							  recordProcessEntity="#rc.order#"
+							  recordProcessUpdateTableID="LD#replace(rc.order.getSaleItemSmartList().getSavedStateID(),'-','','all')#">
 		
-		<input type="hidden" name="slatAction" value="frontend:account.saveAddress" />
-		<button type="submit">Save</button>
-	</form>
-</div>
+		<cf_HibachiListingColumn propertyIdentifier="location.locationName" />					    
+		<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
+		<cf_HibachiListingColumn propertyIdentifier="sku.product.productCode" />
+		<cf_HibachiListingColumn propertyIdentifier="sku.product.brand.brandName" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.productName" />
+		<cf_HibachiListingColumn propertyIdentifier="sku.product.productType.productTypeName" />
+		<cf_HibachiListingColumn propertyIdentifier="sku.calculatedQATS" />
+		<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
+		<cf_HibachiListingColumn processObjectProperty="price" fieldClass="span1" />
+		<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
+	</cf_HibachiListingDisplay>
 </cfoutput>
-

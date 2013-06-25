@@ -57,7 +57,7 @@ Notes:
 <cfoutput>
 	<div class="svocheckoutpaymentcreditcard">
 		<div class="paymentAddress">
-			<h4>Billing Address</h4>
+			<h5>Billing Address</h5>
 			<cfif local.sameAsShipping>
 				<dl>
 					<dt>Same As Shipping</dt>
@@ -69,7 +69,7 @@ Notes:
 			</cfif>
 		</div>
 		<div class="paymentMethod">
-			<h4>Credit Card Details</h4>
+			<h5>Credit Card Details</h5>
 			<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethod.paymentMethodID" value="#params.paymentMethod.getPaymentMethodID()#" />
 			<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].orderPaymentID" value="#params.orderPayment.getOrderPaymentID()#" />
 			<cf_SlatwallErrorDisplay object="#params.orderPayment#" errorName="processing" displayType="div" />

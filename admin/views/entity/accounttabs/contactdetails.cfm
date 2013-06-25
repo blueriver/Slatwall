@@ -42,7 +42,7 @@ Notes:
 	<cf_HibachiPropertyRow>
 		<!--- Email Addresses --->
 		<cf_HibachiPropertyList divClass="span6">
-			<h4>#$.slatwall.rbKey('entity.accountEmailAddress_plural')#</h4>
+			<h5>#$.slatwall.rbKey('entity.accountEmailAddress_plural')#</h5>
 			<cf_HibachiListingDisplay smartList="#rc.account.getAccountEmailAddressesSmartList()#"
 									  recordEditAction="admin:entity.editaccountemailaddress"
 									  recordEditQueryString="accountID=#rc.account.getAccountID()#"
@@ -64,7 +64,7 @@ Notes:
 		
 		<!--- Phone Numbers --->
 		<cf_HibachiPropertyList divClass="span6">
-			<h4>#$.slatwall.rbKey('entity.accountPhoneNumber_plural')#</h4>
+			<h5>#$.slatwall.rbKey('entity.accountPhoneNumber_plural')#</h5>
 			<cf_HibachiListingDisplay smartList="#rc.account.getAccountPhoneNumbersSmartList()#"
 									  recordEditAction="admin:entity.editaccountphonenumber"
 									  recordEditQueryString="accountID=#rc.account.getAccountID()#"
@@ -88,7 +88,7 @@ Notes:
 	<cf_HibachiPropertyRow>
 		<!--- Addresses --->
 		<cf_HibachiPropertyList divClass="span12">
-			<h4>#$.slatwall.rbKey('entity.accountAddress_plural')#</h4>
+			<h5>#$.slatwall.rbKey('entity.accountAddress_plural')#</h5>
 			<cf_HibachiListingDisplay smartList="#rc.account.getAccountAddressesSmartList()#"
 									  recordEditAction="admin:entity.editaccountaddress"
 									  recordEditQueryString="accountID=#rc.account.getAccountID()#"
