@@ -167,18 +167,5 @@ component extends="SlatwallUnitTestBase" {
 		assert(account2HasErrors);
 	}
 	
-	public void function issue_1386() {
-		var promotion = entityNew("SlatwallPromotion");
-
-		promotion.setPromotionName( "only two" );
-		
-		promotion.validate(context="save");
-		
-		//debug( promotion.hasError('promotionName') );
-		
-		assert( promotion.hasError('promotionName') );
-		//assert( right( promotion.getError('promotionName')[1], 8) neq "_missing");
-	}	
-	
 }
 
