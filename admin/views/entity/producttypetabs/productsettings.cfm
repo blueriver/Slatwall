@@ -42,6 +42,7 @@ Notes:
 <cfoutput>
 	<cf_SlatwallSettingTable showFilterEntities="#arrayLen(rc.sitesArray)#">
 		<cf_SlatwallSetting settingName="productShowDetailWhenNotPublishedFlag" settingObject="#rc.productType#" />
+		<cf_SlatwallSetting settingName="productImageDefaultExtension" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productImageOptionCodeDelimiter" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productTitleString" settingObject="#rc.productType#" />
 		<cf_SlatwallSetting settingName="productHTMLTitleString" settingObject="#rc.productType#" />

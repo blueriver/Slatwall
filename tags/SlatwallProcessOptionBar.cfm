@@ -86,7 +86,7 @@ Notes:
 			<cfif arrayLen(dataOptions)>
 				<cf_SlatwallPropertyList divclass="#divclass#">
 					<cfif sections gt 1>
-						<h4>Process Options</h4>
+						<h5>Process Options</h5>
 						<br />
 					</cfif>
 					<cfloop array="#dataOptions#" index="option">
@@ -101,7 +101,7 @@ Notes:
 			<cfif arrayLen(printEmailOptions)>
 				<cf_SlatwallPropertyList divclass="#divclass#">
 					<cfif sections gt 1>
-						<h4>Email / Print Options</h4>
+						<h5>Email / Print Options</h5>
 						<br />
 					</cfif>
 					<cfloop array="#printEmailOptions#" index="option">
@@ -117,7 +117,7 @@ Notes:
 			<cfif len(attributes.dataCollectionPropertyIdentifier)>
 				<cf_SlatwallPropertyList divclass="#divclass#">
 					<cfif sections gt 1>
-						<h4>Data Collection</h4>
+						<h5>Data Collection</h5>
 						<br />
 					</cfif>
 					<cf_SlatwallFieldDisplay edit="true" fieldname="dataCollector" fieldtype="text" title="Scan" fieldclass="firstfocus">
@@ -127,7 +127,7 @@ Notes:
 			<cfif attributes.allowComment>
 				<cf_SlatwallPropertyList divclass="#divclass#">
 					<cfif sections gt 1>
-						<h4>Optional Comment</h4>
+						<h5>Optional Comment</h5>
 						<br />
 					</cfif>
 					<cf_SlatwallFieldDisplay edit="true" fieldname="processComment.publicFlag" fieldtype="yesno" value="0" title="#request.slatwallScope.rbKey('entity.comment.publicFlag')#">

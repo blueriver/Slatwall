@@ -60,7 +60,7 @@ Notes:
 						<cfset thisErrorBean = $.slatwall.getService("HibachiValidationService").validate(object=orderFulfillment, context='placeOrder', setErrors=false) />
 						<cfif thisErrorBean.hasErrors()>
 							<cfset ofIndex++ />
-							<h4>#orderFulfillment.getSimpleRepresentation()#</h4>
+							<h5>#orderFulfillment.getSimpleRepresentation()#</h5>
 							<input type="hidden" name="orderFulfillments[#ofIndex#].orderFulfillmentID" value="#orderFulfillment.getOrderFulfillmentID()#" />						
 							<cfif orderFulfillment.getFulfillmentMethodType() eq "shipping">
 								<cfif structKeyExists(thisErrorBean.getErrors(), "shippingMethod")>
@@ -83,7 +83,7 @@ Notes:
 					
 					<!--- Add an order payment for the remaining amount if needed --->
 					<cfif rc.order.getPaymentAmountTotal() neq rc.order.getTotal()>
-						<h4>Add Order Payment</h4>
+						<h5>Add Order Payment</h5>
 						
 						<!--- Add a hidden field for the orderID --->
 						<input type="hidden" name="newOrderPayment.order.orderID" value="#rc.order.getOrderID()#" />

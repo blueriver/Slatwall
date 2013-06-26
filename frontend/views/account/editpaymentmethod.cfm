@@ -41,7 +41,7 @@ Notes:
 <cfoutput>
 <div class="accountPaymentMethodDetails">
 	<form name="accountPaymentMethod" method="post">
-		<h4>Payment Method Details</h4>
+		<h5>Payment Method Details</h5>
 
 		<input type="hidden" name="accountPaymentMethodID" value="#rc.accountPaymentMethodID#" />
 		<input type="hidden" name="paymentMethod.paymentMethodID" value="#rc.accountPaymentMethod.getPaymentMethod().getPaymentMethodID()#" />

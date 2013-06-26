@@ -499,7 +499,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	private void function autoRenewalReminderSubscriptionUsage(required any subscriptionUsage, struct data={}) {
 		param name="arguments.data.eventName" type="string" default="subscriptionUsageRenewalReminder";
 		var emails = getEmailService().listEmail({eventName = arguments.data.eventName});
-		if(arrayLen(emails)) {
+		if(arrayLen(emails) && !isNull(arguments.subscriptionUsage.getExpirationDate())) {
 			var reminderEmail = emails[1];
 			// check if its time to send reminder email
 			var renewalReminderDays = arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku().getSubscriptionTerm().getRenewalReminderDays();

@@ -78,7 +78,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		return variables.allSettings;
 	}
-
+	
 	public any function getIntegrationCFC(required any integration) {
 		if(!structKeyExists(variables.integrationCFCs, arguments.integration.getIntegrationPackage())) {
 			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Integration").init();
@@ -252,11 +252,32 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 	}
 	
+	
+	public array function getAdminNavbarHTMLArray() {
+		var returnArr = [];
+		
+		var isl = this.getIntegrationSmartList();
+		isl.addFilter('fw1ActiveFlag', 1);
+		isl.addFilter('installedFlag', 1);
+		
+		var authInts = isl.getRecords();
+		for(var i=1; i<=arrayLen(authInts); i++) {
+			var intCFC = getIntegrationCFC(authInts[i]);
+			var adminNavbarHTML = intCFC.getAdminNavbarHTML();
+			if(len(trim(adminNavbarHTML))) {
+				arrayAppend(returnArr, adminNavbarHTML);
+			}
+		}
+		
+		return returnArr;
+	}
+	
 	public array function getAdminLoginHTMLArray() {
 		var returnArr = [];
 		
 		var isl = this.getIntegrationSmartList();
 		isl.addFilter('authenticationActiveFlag', 1);
+		isl.addFilter('installedFlag', 1);
 		
 		var authInts = isl.getRecords();
 		for(var i=1; i<=arrayLen(authInts); i++) {

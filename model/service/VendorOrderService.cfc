@@ -123,14 +123,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		var location = getLocationService().getLocation( arguments.processObject.getLocationID() );
 		
-		for(var i=1; i<=arrayLen(arguments.data.vendorOrderItems); i++) {
-			
-			var thisRecord = arguments.data.vendorOrderItems[i];
+		for(var thisRecord in arguments.data.vendorOrderItems) {
 			
 			if(val(thisRecord.quantity) gt 0) {
 				
 				var foundItem = false;
-				var vendorOrderItem = this.getVendorOrderItem( thisRecord.vendorOrderItemID );
+				var vendorOrderItem = this.getVendorOrderItem( thisRecord.vendorOrderItem.vendorOrderItemID );
 				var stock = getStockService().getStockBySkuAndLocation( vendorOrderItem.getStock().getSku(), location );
 				
 				var stockreceiverItem = getStockService().newStockReceiverItem();

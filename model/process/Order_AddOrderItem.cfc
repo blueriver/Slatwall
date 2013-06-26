@@ -236,7 +236,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			
 			var sl = getService("fulfillmentService").getFulfillmentMethodSmartList();
 			sl.addFilter('activeFlag', 1);
-			if(!isNull(getSku())) {
+			if(!isNull(getSku()) and len(getSku().setting('skuEligibleFulfillmentMethods'))) {
 				sl.addInFilter('fulfillmentMethodID', getSku().setting('skuEligibleFulfillmentMethods'));
 			}
 			sl.addSelect('fulfillmentMethodName', 'name');

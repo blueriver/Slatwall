@@ -55,6 +55,51 @@ Notes:
 		<cfreturn aaCount[1] gt 0 />
 	</cffunction>
 	
+	<cffunction name="getAccountWithAuthenticationByEmailAddress" returntype="any" access="public">
+		<cfargument name="emailAddress" required="true" type="string" />
+		
+		<cfset var accounts = ormExecuteQuery("SELECT a FROM SlatwallAccount a WHERE EXISTS(SELECT aa.accountAuthenticationID FROM SlatwallAccountAuthentication aa WHERE aa.account.accountID = a.accountID) AND EXISTS(SELECT aea.emailAddress FROM SlatwallAccountEmailAddress aea WHERE aea.account.accountID = a.accountID AND aea.emailAddress = :emailAddress)", {emailAddress=arguments.emailAddress}) />
+		<cfif arrayLen(accounts)>
+			<cfreturn accounts[1] />
+		</cfif>
+	</cffunction>
+	
+	<cffunction name="getPasswordResetAccountAuthentication">
+		<cfargument name="accountID" type="string" required="true" />
+		
+		<cfset var aaArray = ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa LEFT JOIN aa.integration i WHERE aa.account.accountID = :accountID and aa.expirationDateTime >= :now and aa.password is null and i.integrationID is null", {accountID=arguments.accountID, now=now()}) />
+		
+		<cfif arrayLen(aaArray)>
+			<cfreturn aaArray[1] />
+		</cfif>
+	</cffunction>
+	
+	<cffunction name="removeAccountFromAuditProperties" returntype="void" access="public">
+		<cfargument name="accountID" type="string" required="true" />
+		
+		<cfset var allTables = "" />
+		<cfset var auditColumns = "" />
+		<cfset var rs = "" />
+		
+		<cfdbinfo type="Tables" name="allTables" pattern="Slatwall%" />
+		
+		<cfloop query="allTables">
+			<cfdbinfo type="Columns" table="#allTables.TABLE_NAME#" name="auditColumns" pattern="%ByAccountID" />
+			
+			<cfloop query="auditColumns">
+				<cfquery name="rs">
+					UPDATE
+						#allTables.TABLE_NAME#
+					SET
+						#auditColumns.COLUMN_NAME# = null 
+					WHERE
+						#auditColumns.COLUMN_NAME# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.accountID#" /> 
+				</cfquery>
+			</cfloop>
+		</cfloop>
+		
+	</cffunction>
+	
 	<cffunction name="removeAccountFromAllSessions" returntype="void" access="public">
 		<cfargument name="accountID" required="true"  />
 		<cfset var rs = "" />

@@ -46,6 +46,7 @@ globalEncryptionKeySize
 	
 	<cfproperty name="contentService" type="any" />
 	<cfproperty name="currencyService" type="any" />
+	<cfproperty name="emailService" type="any" />
 	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="locationService" type="any" />
 	<cfproperty name="measurementService" type="any" />
@@ -80,6 +81,7 @@ globalEncryptionKeySize
 			"brand",
 			"email",
 			"stock",
+			"site",
 			"sku"
 		];
 		
@@ -152,7 +154,6 @@ globalEncryptionKeySize
 					globalEncryptionKeyLocation = {fieldType="text"},
 					globalEncryptionKeySize = {fieldType="select",defaultValue="128"},
 					globalEncryptionService = {fieldType="select",defaultValue="internal"},
-					globalImageExtension = {fieldType="text",defaultValue="jpg"},
 					globalLogMessages = {fieldType="select",defaultValue="General"},
 					globalMissingImagePath = {fieldType="text", defaultValue=getURLFromPath(getApplicationValue('applicationRootMappingPath')) & '/custom/assets/images/missingimage.jpg'},
 					globalOrderPlacedEmailFrom = {fieldType="text",defaultValue="info@mySlatwallStore.com"},
@@ -177,6 +178,7 @@ globalEncryptionKeySize
 					
 					// Product
 					productDisplayTemplate = {fieldType="select"},
+					productImageDefaultExtension = {fieldType="text",defaultValue="jpg"},
 					productImageOptionCodeDelimiter = {fieldType="select", defaultValue="-"},
 					productTitleString = {fieldType="text", defaultValue="${brand.brandName} ${productName}"},
 					productHTMLTitleString = {fieldType="text"},
@@ -190,6 +192,18 @@ globalEncryptionKeySize
 					productTypeHTMLTitleString = {fieldType="text"},
 					productTypeMetaDescriptionString = {fieldType="textarea"},
 					productTypeMetaKeywordsString = {fieldType="textarea"},
+					
+					// Site
+					siteForgotPasswordEmailTemplate = {fieldType="select"},
+					
+					// Shipping Method
+					shippingMethodQualifiedRateSelection = {fieldType="select", defaultValue="lowest"},
+					
+					// Shipping Method Rate
+					shippingMethodRateAdjustmentType = {fieldType="select", defaultValue="increasePercentage"},
+					shippingMethodRateAdjustmentAmount = {fieldType="text", defaultValue=0},
+					shippingMethodRateMinimumAmount = {fieldType="text", defaultValue=0},
+					shippingMethodRateMaximumAmount = {fieldType="text", defaultValue=1000},
 					
 					// Sku
 					skuAllowBackorderFlag = {fieldType="yesno", defaultValue=0},
@@ -210,16 +224,8 @@ globalEncryptionKeySize
 					skuTaxCategory = {fieldType="select", defaultValue="444df2c8cce9f1417627bd164a65f133"},
 					skuTrackInventoryFlag = {fieldType="yesno", defaultValue=0},
 					
-					// Shipping Method
-					shippingMethodQualifiedRateSelection = {fieldType="select", defaultValue="lowest"},
-					
-					// Shipping Method Rate
-					shippingMethodRateAdjustmentType = {fieldType="select", defaultValue="increasePercentage"},
-					shippingMethodRateAdjustmentAmount = {fieldType="text", defaultValue=0},
-					shippingMethodRateMinimumAmount = {fieldType="text", defaultValue=0},
-					shippingMethodRateMaximumAmount = {fieldType="text", defaultValue=1000},
-					
 					// DEPRECATED***
+					globalImageExtension = {fieldType="text",defaultValue="jpg"},
 					globalPageShoppingCart = {fieldType="text", defaultValue="shopping-cart"},
 					globalPageOrderStatus = {fieldType="text", defaultValue="order-status"},
 					globalPageOrderConfirmation = {fieldType="text", defaultValue="order-confirmation"},
@@ -312,6 +318,8 @@ globalEncryptionKeySize
 					optionSL.addSelect('unitName', 'name');
 					optionSL.addSelect('unitCode', 'value');
 					return optionSL.getRecords();
+				case "siteForgotPasswordEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "account" );
 				case "shippingMethodQualifiedRateSelection" :
 					return [{name='Sort Order', value='sortOrder'}, {name='Lowest Rate', value='lowest'}, {name='Highest Rate', value='highest'}];
 				case "shippingMethodRateAdjustmentType" :

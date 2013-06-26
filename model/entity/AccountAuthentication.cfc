@@ -41,6 +41,7 @@ component displayname="Account Authentication" entityname="SlatwallAccountAuthen
 	// Persistent Properties
 	property name="accountAuthenticationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="password" ormtype="string";
+	property name="expirationDateTime" ormtype="timestamp";
 	property name="integrationAccountID" ormtype="string";
 	property name="integrationAccessToken" ormtype="string";
 	property name="integrationAccessTokenExpiration" ormtype="string";
@@ -122,6 +123,22 @@ component displayname="Account Authentication" entityname="SlatwallAccountAuthen
 	// ===============  END: Custom Formatting Methods =====================
 
 	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentation() {
+		var rep = "";
+		if(isNull(getIntegration())) {
+			rep &= "Slatwall";
+			if(isNull(getPassword())) {
+				rep &= " - #rbKey('define.temporary')# #rbKey('define.reset')#";	
+			}
+		} else {
+			rep &= getIntegration().getIntegrationName();
+		}
+		if(!isNull(getExpirationDateTime())) {
+			rep &= " - #rbKey('define.expires')#: #getFormattedValue('expirationDateTime')#";
+		}
+		return rep;
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

@@ -44,11 +44,27 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="paymentService" type="any";
 	property name="permissionService" type="any";
 	property name="priceGroupService" type="any";
+	property name="siteService" type="any";
 	property name="validationService" type="any";
 	
 	
 	public string function getHashedAndSaltedPassword(required string password, required string salt) {
 		return hash(arguments.password & arguments.salt, 'SHA-512');
+	}
+	
+	public string function getPasswordResetID(required any account) {
+		var passwordResetID = "";
+		var accountAuthentication = getAccountDAO().getPasswordResetAccountAuthentication(accountID=arguments.account.getAccountID());
+		
+		if(isNull(accountAuthentication)) {
+			var accountAuthentication = this.newAccountAuthentication();
+			accountAuthentication.setExpirationDateTime(now() + 7);
+			accountAuthentication.setAccount( arguments.account );
+			
+			accountAuthentication = this.saveAccountAuthentication( accountAuthentication );
+		}
+		
+		return lcase("#arguments.account.getAccountID()##hash(accountAuthentication.getAccountAuthenticationID() & arguments.account.getAccountID())#");
 	}
 	
 	// ===================== START: Logical Methods ===========================
@@ -69,16 +85,93 @@ component extends="HibachiService" accessors="true" output="false" {
 		return getAccountDAO().getAccountAuthenticationExists();
 	}
 	
+	public any function getAccountWithAuthenticationByEmailAddress( required string emailAddress ) {
+		return getAccountDAO().getAccountWithAuthenticationByEmailAddress( argumentcollection=arguments );
+	}
+	
 	// =====================  END: DAO Passthrough ============================
 	
 	// ===================== START: Process Methods ===========================
 	
 	// Account
+	public any function processAccount_addAccountPayment(required any account, required any processObject) {
+		
+		// Get the populated newAccountPayment out of the processObject
+		var newAccountPayment = processObject.getNewAccountPayment();
+		
+		// Make sure that this new accountPayment gets attached to the order
+		if(isNull(newAccountPayment.getAccount())) {
+			newAccountPayment.setAccount( arguments.account );
+		}
+		
+		// If this is an existing account payment method, then we can pull the data from there
+		if( len(arguments.processObject.getAccountPaymentMethodID()) ) {
+			
+			// Setup the newAccountPayment from the existing payment method
+			var accountPaymentMethod = this.getAccountPaymentMethod( arguments.processObject.getAccountPaymentMethodID() );
+			newAccountPayment.copyFromAccountPaymentMethod( accountPaymentMethod );
+			
+		// This is a new payment, so we need to setup the billing address and see if there is a need to save it against the account
+		} else {
+			
+			// Setup the billing address as an accountAddress if it existed, otherwise the billing address will have most likely just been populated already
+			if(!isNull(arguments.processObject.getAccountAddressID()) && len(arguments.processObject.getAccountAddressID())) {
+				var accountAddress = this.getAccountAddress( arguments.processObject.getAccountAddressID() );
+				
+				if(!isNull(accountAddress)) {
+					newAccountPayment.setBillingAddress( accountAddress.getAddress().copyAddress( true ) );
+				}
+			}
+			
+			// If saveAccountPaymentMethodFlag is set to true, then we need to save this object
+			if(arguments.processObject.getSaveAccountPaymentMethodFlag()) {
+				var newAccountPaymentMethod = this.newAccountPaymentMethod();
+				newAccountPaymentMethod.copyFromAccountPayment( newAccountPayment );
+				newAccountPaymentMethod.setAccount( arguments.account );
+				
+				newAccountPaymentMethod = this.saveAccountPaymentMethod();
+			}
+
+		}
+		
+		// Save the newAccountPayment
+		newAccountPayment = this.saveAccountPayment( newAccountPayment );
+		
+		// If there are errors in the newAccountPayment after save, then add them to the account
+		if(newAccountPayment.hasErrors()) {
+			arguments.account.addError('accountPayment', rbKey('admin.entity.order.addAccountPayment_error'));
+			
+		// If no errors, then we can process a transaction
+		} else {
+			
+			var transactionData = {
+				amount = newAccountPayment.getAmount()
+			};
+			
+			if(newAccountPayment.getAccountPaymentType().getSystemCode() eq "aptCharge") {
+				if(newAccountPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
+					transactionData.transactionType = 'authorizeAndCharge';
+				} else {
+					transactionData.transactionType = 'receive';	
+				}
+			} else {
+				transactionData.transactionType = 'credit';
+			}
+			
+			newAccountPayment = this.processAccountPayment(newAccountPayment, transactionData, 'createTransaction');
+				
+		}
+		
+		return arguments.account;
+	}
+	
 	public any function processAccount_changePassword(required any account, required any processObject) {
+		
 		var authArray = arguments.account.getAccountAuthentications();
 		for(var i=1; i<=arrayLen(authArray); i++) {
+			
 			// Find the non-integration authentication
-			if(isNull(authArray[i].getIntegration())) {
+			if(isNull(authArray[i].getIntegration()) && !isNull(authArray[i].getPassword())) {
 				// Set the password
 				authArray[i].setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), authArray[i].getAccountAuthenticationID()) );		
 			}
@@ -152,9 +245,9 @@ component extends="HibachiService" accessors="true" output="false" {
 					return arguments.account;
 				}
 			}
-			arguments.processObject.addError('password', rbKey('validate.session_authorizeAccount.password.incorrect'));
+			arguments.processObject.addError('password', rbKey('validate.account_authorizeAccount.password.incorrect'));
 		} else {
-			arguments.processObject.addError('emailAddress', rbKey('validate.session_authorizeAccount.emailAddress.notfound'));
+			arguments.processObject.addError('emailAddress', rbKey('validate.account_authorizeAccount.emailAddress.notfound'));
 		}
 		
 		return arguments.account;
@@ -162,6 +255,63 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public any function processAccount_logout( required any account ) {
 		getHibachiSessionService().logoutAccount();
+		
+		return arguments.account;
+	}
+	
+	public any function processAccount_forgotPassword( required any account, required any processObject ) {
+		var forgotPasswordAccount = getAccountWithAuthenticationByEmailAddress( processObject.getEmailAddress() );
+		
+		if(!isNull(forgotPasswordAccount)) {
+			
+			// Get the site (this will return as a new site if no siteID)
+			var site = getSiteService().getSite(arguments.processObject.getSiteID(), true);
+			
+			if(len(site.setting('siteForgotPasswordEmailTemplate'))) {
+				
+				var email = getEmailService().newEmail();
+				var emailData = {
+					accountID = forgotPasswordAccount.getAccountID(),
+					emailTemplateID = site.setting('siteForgotPasswordEmailTemplate')
+				};
+				
+				email = getEmailService().processEmail(email, emailData, 'createFromTemplate');
+				
+				email.setEmailTo( arguments.processObject.getEmailAddress() );
+				
+				email = getEmailService().processEmail(email, {}, 'addToQueue');
+				
+			} else {
+				throw("No email template could be found.  Please update the site settings to define an 'Forgot Password Email Template'.");
+			}
+			
+		} else {
+			arguments.processObject.addError('emailAddress', rbKey('validate.account_forgotPassword.emailAddress.notfound'));
+		}
+		
+		return arguments.account;
+	}
+	
+	public any function processAccount_resetPassword( required any account, required any processObject ) {
+		var changeProcessData = {
+			password = arguments.processObject.getPassword(),
+			passwordConfirm = arguments.processObject.getPasswordConfirm()
+		};
+		
+		arguments.account = this.processAccount(arguments.account, changeProcessData, 'changePassword');
+		
+		// If there are no errors
+		if(!arguments.account.hasErrors()) {
+			// Get the temporary accountAuth
+			var tempAA = getAccountDAO().getPasswordResetAccountAuthentication(accountID=arguments.account.getAccountID());
+			
+			// Delete the temporary auth
+			tempAA.removeAccount();
+			this.deleteAccountAuthentication( tempAA );
+			
+			// Then flush the ORM session so that an account can be logged in right away
+			getHibachiDAO().flushORMSession();
+		}
 		
 		return arguments.account;
 	}
@@ -202,76 +352,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.account;
 	}
 	
-	public any function processAccount_addAccountPayment(required any account, required any processObject) {
-		
-		// Get the populated newAccountPayment out of the processObject
-		var newAccountPayment = processObject.getNewAccountPayment();
-		
-		// Make sure that this new accountPayment gets attached to the order
-		if(isNull(newAccountPayment.getAccount())) {
-			newAccountPayment.setAccount( arguments.account );
-		}
-		
-		// If this is an existing account payment method, then we can pull the data from there
-		if( len(arguments.processObject.getAccountPaymentMethodID()) ) {
-			
-			// Setup the newAccountPayment from the existing payment method
-			var accountPaymentMethod = this.getAccountPaymentMethod( arguments.processObject.getAccountPaymentMethodID() );
-			newAccountPayment.copyFromAccountPaymentMethod( accountPaymentMethod );
-			
-		// This is a new payment, so we need to setup the billing address and see if there is a need to save it against the account
-		} else {
-			
-			// Setup the billing address as an accountAddress if it existed, otherwise the billing address will have most likely just been populated already
-			if(!isNull(arguments.processObject.getAccountAddressID()) && len(arguments.processObject.getAccountAddressID())) {
-				var accountAddress = this.getAccountAddress( arguments.processObject.getAccountAddressID() );
-				
-				if(!isNull(accountAddress)) {
-					newAccountPayment.setBillingAddress( accountAddress.getAddress().copyAddress( true ) );
-				}
-			}
-			
-			// If saveAccountPaymentMethodFlag is set to true, then we need to save this object
-			if(arguments.processObject.getSaveAccountPaymentMethodFlag()) {
-				var newAccountPaymentMethod = this.newAccountPaymentMethod();
-				newAccountPaymentMethod.copyFromAccountPayment( newAccountPayment );
-				newAccountPaymentMethod.setAccount( arguments.account );
-				
-				newAccountPaymentMethod = this.saveAccountPaymentMethod();
-			}
-
-		}
-		
-		// Save the newAccountPayment
-		newAccountPayment = this.saveAccountPayment( newAccountPayment );
-		
-		// If there are errors in the newAccountPayment after save, then add them to the account
-		if(newAccountPayment.hasErrors()) {
-			arguments.account.addError('accountPayment', rbKey('admin.entity.order.addAccountPayment_error'));
-			
-		// If no errors, then we can process a transaction
-		} else {
-			
-			var transactionData = {
-				amount = newAccountPayment.getAmount()
-			};
-			
-			if(newAccountPayment.getAccountPaymentType().getSystemCode() eq "aptCharge") {
-				if(newAccountPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard") {
-					transactionData.transactionType = 'authorizeAndCharge';
-				} else {
-					transactionData.transactionType = 'receive';	
-				}
-			} else {
-				transactionData.transactionType = 'credit';
-			}
-			
-			newAccountPayment = this.processAccountPayment(newAccountPayment, transactionData, 'createTransaction');
-				
-		}
-		
-		return arguments.account;
-	}
+	
 	
 	// Account Payment
 	public any function processAccountPayment_createTransaction(required any accountPayment, required any processObject) {
@@ -429,6 +510,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			arguments.account.setPrimaryAddress(javaCast("null", ""));
 			
 			getAccountDAO().removeAccountFromAllSessions( accountID );
+			getAccountDAO().removeAccountFromAuditProperties( accountID );
 			
 			return delete( arguments.account );
 		}

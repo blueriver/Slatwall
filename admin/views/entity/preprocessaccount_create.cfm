@@ -66,7 +66,7 @@ Notes:
 				<!--- Account Custom Attributes --->
 				<cfloop array="#rc.account.getAttributeSets()#" index="attributeSet">
 					<hr />
-					<h4>#attributeSet.getAttributeSetName()#</h4>
+					<h5>#attributeSet.getAttributeSetName()#</h5>
 					<cf_SlatwallAdminAttributeSetDisplay attributeSet="#attributeSet#" edit="#rc.edit#" />
 				</cfloop>
 			</cf_HibachiPropertyList>

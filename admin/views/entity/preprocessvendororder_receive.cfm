@@ -48,26 +48,45 @@ Notes:
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="packingSlipNumber" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="boxCount" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="locationID" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
+		
 		<hr />
-		<cfset rc.vendorOrder.getVendorOrderItemsSmartList().setPageRecordsShow(10000) />
-		<cf_HibachiListingDisplay smartlist="#rc.vendorOrder.getVendorOrderItemsSmartList()#"
-								  recordProcessAction="admin:entity.processVendorOrder"
-								  recordProcessContext="receiveVendorOrderItem"
-								  recordProcessEntity="#rc.vendorOrder#"
-								  recordProcessButtonDisplayFlag="false">
-								    
-			<cf_HibachiListingColumn propertyidentifier="stock.sku.product.brand.brandName" />
-			<cf_HibachiListingColumn tdclass="primary" propertyidentifier="stock.sku.product.productName" />
-			<cf_HibachiListingColumn propertyidentifier="stock.sku.skucode" />
-			<cf_HibachiListingColumn propertyidentifier="stock.location.locationName" />
-			<cf_HibachiListingColumn propertyidentifier="quantity" />
-			<cf_HibachiListingColumn propertyidentifier="quantityReceived" />
-			<cf_HibachiListingColumn propertyidentifier="quantityUnreceived" />
-			<cf_HibachiListingColumn processObjectProperty="quantity" recordFieldNamePrefix="vendorOrderItems" fieldName="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
-		</cf_HibachiListingDisplay>
+				
+		<!--- Items Selector --->
+		<table class="table table-striped table-bordered table-condensed">
+			<tr>
+				<th>#$.slatwall.rbKey('entity.brand')#</th>
+				<th class="primary">#$.slatwall.rbKey('entity.product.productName')#</th>
+				<th>#$.slatwall.rbKey('entity.sku.skuCode')#</th>
+				<th>#$.slatwall.rbKey('entity.location.locationName')#</th>
+				<th>#$.slatwall.rbKey('entity.vendorOrderItem.quantity')#</th>
+				<th>#$.slatwall.rbKey('entity.vendorOrderItem.quantityReceived')#</th>
+				<th>#$.slatwall.rbKey('entity.vendorOrderItem.quantityUnreceived')#</th>
+				<th>#$.slatwall.rbKey('define.qty')#</th>
+			</tr>
+			
+			<cfset vendorOrderItemIndex = 0 />
+			<cfloop array="#rc.vendorOrder.getVendorOrderItems()#" index="vendorOrderItem">
+				<tr>
+					<cfset vendorOrderItemIndex++ />
+					
+					<input type="hidden" name="vendorOrderItems[#vendorOrderItemIndex#].vendorOrderItem.vendorOrderItemID" value="#vendorOrderItem.getVendorOrderItemID()#" />
+					
+					<td><cfif not isNull(vendorOrderItem.getStock().getSku().getProduct().getBrand())>#vendorOrderItem.getStock().getSku().getProduct().getBrand().getBrandName()#</cfif> </td>
+					<td>#vendorOrderItem.getStock().getSku().getProduct().getProductName()#</td>
+					<td>#vendorOrderItem.getStock().getSku().getSkuCode()#</td>
+					<td>#vendorOrderItem.getStock().getLocation().getLocationName()#</td>
+					<td>#vendorOrderItem.getQuantity()#</td>
+					<td>#vendorOrderItem.getQuantityReceived()#</td>
+					<td>#vendorOrderItem.getQuantityUnreceived()#</td>
+					<td><input type="text" name="vendorOrderItems[#vendorOrderItemIndex#].quantity" value="" class="span1" /></td>
+				</tr>
+			</cfloop>
+		</table>
 		
 	</cf_HibachiEntityProcessForm>
 </cfoutput>

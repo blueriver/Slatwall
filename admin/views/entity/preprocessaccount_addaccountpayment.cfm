@@ -78,7 +78,7 @@ Notes:
 					
 					<!--- Credit Card Payment Details --->
 					<cf_HibachiDisplayToggle selector="select[name='newAccountPayment.paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard">
-						<h4>#$.slatwall.rbKey('admin.define.creditCardDetails')#</h4>
+						<h5>#$.slatwall.rbKey('admin.define.creditCardDetails')#</h5>
 						<cf_HibachiPropertyDisplay object="#rc.processObject.getNewAccountPayment()#" fieldName="newAccountPayment.creditCardNumber" property="creditCardNumber" edit="#rc.edit#">
 						<cf_HibachiPropertyDisplay object="#rc.processObject.getNewAccountPayment()#" fieldName="newAccountPayment.nameOnCreditCard" property="nameOnCreditCard" edit="#rc.edit#">
 						<cf_HibachiPropertyDisplay object="#rc.processObject.getNewAccountPayment()#" fieldName="newAccountPayment.expirationMonth" property="expirationMonth" edit="#rc.edit#">
@@ -88,20 +88,20 @@ Notes:
 					
 					<!--- Term Payment Details --->
 					<cf_HibachiDisplayToggle selector="select[name='newAccountPayment.paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="termPayment">
-						<h4>#$.slatwall.rbKey('admin.define.termPaymentDetails')#</h4>
+						<h5>#$.slatwall.rbKey('admin.define.termPaymentDetails')#</h5>
 						<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false">
 						<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false">
 					</cf_HibachiDisplayToggle>
 					
 					<!--- Gift Card Details --->
 					<cf_HibachiDisplayToggle selector="select[name='newAccountPayment.paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="giftCard">
-						<h4>#$.slatwall.rbKey('admin.define.giftCardDetails')#</h4>
+						<h5>#$.slatwall.rbKey('admin.define.giftCardDetails')#</h5>
 						<cf_HibachiPropertyDisplay object="#rc.processObject.getNewAccountPayment()#" fieldName="newAccountPayment.giftCardNumber" property="giftCardNumber" edit="#rc.edit#">
 					</cf_HibachiDisplayToggle>
 					
 					<!--- Check Details --->
 					<cf_HibachiDisplayToggle selector="select[name='newAccountPayment.paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="check">
-						<h4>#$.slatwall.rbKey('admin.define.checkDetails')#</h4>
+						<h5>#$.slatwall.rbKey('admin.define.checkDetails')#</h5>
 						<cf_HibachiPropertyDisplay object="#rc.processObject.getNewAccountPayment()#" fieldName="newAccountPayment.checkNumber" property="checkNumber" edit="#rc.edit#">
 						<cf_HibachiPropertyDisplay object="#rc.processObject.getNewAccountPayment()#" fieldName="newAccountPayment.bankRoutingNumber" property="bankRoutingNumber" edit="#rc.edit#">
 						<cf_HibachiPropertyDisplay object="#rc.processObject.getNewAccountPayment()#" fieldName="newAccountPayment.bankAccountNumber" property="bankAccountNumber" edit="#rc.edit#">
@@ -109,7 +109,7 @@ Notes:
 					
 					<!--- Billing Address --->
 					<cf_HibachiDisplayToggle selector="select[name='newAccountPayment.paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard,check,termPayment">
-						<h4>#$.slatwall.rbKey('entity.accountPayment.billingAddress')#</h4>
+						<h5>#$.slatwall.rbKey('entity.accountPayment.billingAddress')#</h5>
 						<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accountAddressID" edit="#rc.edit#">
 						<cf_HibachiDisplayToggle selector="select[name='accountAddressID']" showValues="">
 							<cf_SlatwallAdminAddressDisplay address="#rc.processObject.getNewAccountPayment().getBillingAddress()#" filedNamePrefix="newAccountPayment.billingAddresss." edit="#rc.edit#" />

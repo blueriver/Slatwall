@@ -53,7 +53,7 @@ Notes:
 					<input type="hidden" name="skuID" value="#rc.processObject.getSkuID()#" />
 					<input type="hidden" name="orderItemTypeSystemCode" value="#rc.processObject.getOrderItemTypeSystemCode()#" />
 					
-					<h4>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.itemDetails')#</h4>
+					<h5>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.itemDetails')#</h5>
 					<!--- Sku Properties --->
 					<cf_HibachiPropertyDisplay object="#rc.processObject.getSku()#" property="skuCode" edit="false">
 					<cf_HibachiPropertyDisplay object="#rc.processObject.getSku().getProduct()#" property="productName" edit="false">
@@ -66,14 +66,14 @@ Notes:
 					<!--- Order Item Custom Attributes --->
 					<cfloop array="#rc.processObject.getAssignedOrderItemAttributeSets()#" index="attributeSet">
 						<hr />
-						<h4>#attributeSet.getAttributeSetName()#</h4>
+						<h5>#attributeSet.getAttributeSetName()#</h5>
 						<cf_SlatwallAdminAttributeSetDisplay attributeSet="#attributeSet#" edit="#rc.edit#" />
 					</cfloop>
 					
 					<!--- Order Fulfillment --->
 					<cfif rc.processObject.getOrderItemTypeSystemCode() eq "oitSale">
 						<hr />
-						<h4>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.fulfillmentDetails')#</h4>
+						<h5>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.fulfillmentDetails')#</h5>
 						<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderFulfillmentID" edit="#rc.edit#">
 						
 						<!--- New Order Fulfillment --->
@@ -118,7 +118,7 @@ Notes:
 					<cfelse>
 						<!--- Order Return --->
 						<hr />
-						<h4>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.returnDetails')#</h4>
+						<h5>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.returnDetails')#</h5>
 						<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderReturnID" edit="#rc.edit#">
 						
 						<!--- New Order Return --->

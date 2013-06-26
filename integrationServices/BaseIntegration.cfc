@@ -58,4 +58,7 @@ component extends="Slatwall.org.Hibachi.HibachiObject" {
 		return [];
 	} 
 	
+	public string function getAdminNavbarHTML() {
+		return '';
+	}
 }

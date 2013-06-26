@@ -1007,120 +1007,60 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
-	// (needs refactor)
-	public any function processOrder_createReturn(required any order, struct data={}, string processContext="process") {
+	public any function processOrder_createReturn(required any order, required any processObject) {
+		
+		// Create a new return order
+		var returnOrder = this.newOrder();
+		returnOrder.setAccount( arguments.order.getAccount() );
+		returnOrder.setOrderType( getSettingService().getTypeBySystemCode("otReturnOrder") );
+		returnOrder.setOrderStatusType( getSettingService().getTypeBySystemCode("ostNew") );
+		returnOrder.setCurrencyCode( arguments.order.getCurrencyCode() );
+		returnOrder.setReferencedOrder( arguments.order );
+		
+		// Create OrderReturn entity (to save the fulfillment amount)
+		var orderReturn = this.newOrderReturn();
+		orderReturn.setOrder( returnOrder );
+		orderReturn.setFulfillmentRefundAmount( arguments.processObject.getFulfillmentRefundAmount() );
+		orderReturn.setReturnLocation( arguments.processObject.getLocation() );
+	
+		// Look for that orderItem in the data records
+		for(var orderItemStruct in arguments.processObject.getOrderItems()) {
 			
-		var hasAtLeastOneItemToReturn = false;
-		for(var i=1; i<=arrayLen(arguments.data.records); i++) {
-			if(isNumeric(arguments.data.records[i].returnQuantity) && arguments.data.records[i].returnQuantity gt 0) {
-				var hasAtLeastOneItemToReturn = true;		
+			// Verify that there was a quantity and that it was GT 0
+			if(isNumeric(orderItemStruct.quantity) && orderItemStruct.quantity gt 0) {
+				
+				var originalOrderItem = this.getOrderItem( orderItemStruct.referencedOrderItem.orderItemID );
+				
+				// Create a new return orderItem
+				if(!isNull(originalOrderItem)) {
+					
+					// Create a new order item
+					var orderItem = this.newOrderItem();
+					
+					// Setup the details
+					orderItem.setOrderItemType( getSettingService().getTypeBySystemCode('oitReturn') );
+					orderItem.setOrderItemStatusType( getSettingService().getTypeBySystemCode('oistNew') );
+					orderItem.setPrice( orderItemStruct.price );
+					orderItem.setSkuPrice( originalOrderItem.getSku().getPrice() );
+					orderItem.setCurrencyCode( originalOrderItem.getSku().getCurrencyCode() );
+					orderItem.setQuantity( orderItemStruct.quantity );
+					orderItem.setSku( originalOrderItem.getSku() );
+					
+					// Add needed references
+					orderItem.setReferencedOrderItem( originalOrderItem );
+					orderItem.setOrderReturn( orderReturn );
+					orderItem.setOrder( returnOrder );
+					
+				}
+				
 			}
 		}
 		
-		if(!hasAtLeastOneItemToReturn) {
-			arguments.order.addError('processing', 'You need to specify at least 1 item to be returned');
-		} else {
-			
-			// Create a new return order
-			var returnOrder = this.newOrder();
-			returnOrder.setAccount( arguments.order.getAccount() );
-			returnOrder.setOrderType( getSettingService().getTypeBySystemCode("otReturnOrder") );
-			returnOrder.setOrderStatusType( getSettingService().getTypeBySystemCode("ostNew") );
-			returnOrder.setReferencedOrder( arguments.order );
-			
-			var returnLocation = getLocationService().getLocation( arguments.data.returnLocationID );
-			
-			// Create OrderReturn entity (to save the fulfillment amount)
-			var orderReturn = this.newOrderReturn();
-			orderReturn.setOrder( returnOrder );
-			if(isNumeric(arguments.data.fulfillmentChargeRefundAmount) && arguments.data.fulfillmentChargeRefundAmount gt 0) {
-				orderReturn.setFulfillmentRefundAmount( arguments.data.fulfillmentChargeRefundAmount );	
-			} else {
-				orderReturn.setFulfillmentRefundAmount( 0 );
-			}
-			orderReturn.setReturnLocation( returnLocation );
-			
-			// Loop over delivery items in each delivery
-			for(var i = 1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
-				
-				var originalOrderItem = arguments.order.getOrderItems()[i];
-				
-				// Look for that orderItem in the data records
-				for(var r=1; r <= arrayLen(arguments.data.records); r++) {
-					if(originalOrderItem.getOrderItemID() == arguments.data.records[r].orderItemID && isNumeric(arguments.data.records[r].returnQuantity) && arguments.data.records[r].returnQuantity > 0 && isNumeric(arguments.data.records[r].returnPrice) && arguments.data.records[r].returnPrice >= 0) {
-						
-						// Create a new return orderItem
-						var orderItem = this.newOrderItem();
-						orderItem.setOrderItemType( getSettingService().getTypeBySystemCode('oitReturn') );
-						orderItem.setOrderItemStatusType( getSettingService().getTypeBySystemCode('oistNew') );
-						
-						orderItem.setReferencedOrderItem( originalOrderItem );
-						orderItem.setOrder( returnOrder );
-						orderItem.setPrice( arguments.data.records[r].returnPrice );
-						orderItem.setSkuPrice( originalOrderItem.getSku().getPrice() );
-						orderItem.setCurrencyCode( originalOrderItem.getSku().getCurrencyCode() );
-						orderItem.setQuantity( arguments.data.records[r].returnQuantity );
-						orderItem.setSku( originalOrderItem.getSku() );
-						
-						// Add this order item to the OrderReturns entity
-						orderItem.setOrderReturn( orderReturn );
-						
-					}
-				}
-			}
-			
-			// Recalculate the order amounts for tax and promotions
-			recalculateOrderAmounts( returnOrder );
-			
-			// Setup a payment to refund
-			var referencedOrderPayment = this.getOrderPayment(arguments.data.referencedOrderPaymentID);
-			if(!isNull(referencedOrderPayment)) {
-				var newOrderPayment = referencedOrderPayment.duplicate();
-				newOrderPayment.setOrderPaymentType( getSettingService().getTypeBySystemCode('optCredit') );
-				newOrderPayment.setReferencedOrderPayment( referencedOrderPayment );
-				newOrderPayment.setAmount( returnOrder.getTotal()*-1 );
-				newOrderPayment.setOrder( returnOrder );
-			}
-			
-			// Persit the new order
-			getHibachiDAO().save( returnOrder );
-			
-			// If the end-user has choosen to auto-receive the return order && potentially
-			if(arguments.data.autoProcessReceiveReturnFlag) {
-				
-				var autoProcessReceiveReturnData = {
-					locationID = arguments.data.returnLocationID,
-					boxCount = 1,
-					packingSlipNumber = 'auto',
-					autoProcessReturnPaymentFlag = arguments.data.autoProcessReturnPaymentFlag,
-					records = arguments.data.records
-				};
-				
-				for(var r=1; r <= arrayLen(autoProcessReceiveReturnData.records); r++) {
-					for(var n=1; n<=arrayLen(returnOrder.getOrderItems()); n++) {
-						if(autoProcessReceiveReturnData.records[r].orderItemID == returnOrder.getOrderItems()[n].getReferencedOrderItem().getOrderItemID()) {
-							autoProcessReceiveReturnData.records[r].orderItemID = returnOrder.getOrderItems()[n].getOrderItemID();
-						}
-					}
-					autoProcessReceiveReturnData.records[r].receiveQuantity = autoProcessReceiveReturnData.records[r].returnQuantity; 
-				}
-				
-				processOrderReturn(orderReturn, autoProcessReceiveReturnData, "receiveReturn");
-				
-			// If we are only auto-processing the payment, but not receiving then we need to call the processPayment from here
-			} else if (arguments.data.autoProcessReturnPaymentFlag && arrayLen(returnOrder.getOrderPayments())) {
-				
-				// Setup basic processing data
-				var processData = {
-					amount = returnOrder.getOrderPayments()[1].getAmount(),
-					providerTransactionID = returnOrder.getOrderPayments()[1].getMostRecentChargeProviderTransactionID()
-				};
-				
-				processOrderPayment(returnOrder.getOrderPayments()[1], processData, 'credit');
-			
-			}
-			
-		}
+		// Recalculate the order amounts for tax and promotions
+		recalculateOrderAmounts( returnOrder );
+		
+		// Persit the new order
+		getHibachiDAO().save( returnOrder );
 		
 		return arguments.order;
 	}

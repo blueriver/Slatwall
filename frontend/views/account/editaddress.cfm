@@ -41,7 +41,7 @@ Notes:
 <cfoutput>
 <div class="accountAddressDetails">
 	<form name="accountAddress" method="post">
-		<h4>Address Details</h4>
+		<h5>Address Details</h5>
 
 		<cf_SlatwallPropertyDisplay object="#rc.accountAddress#" fieldname="accountAddressName" property="accountAddressName" edit="true">
 		<cf_SlatwallAddressDisplay address="#rc.accountAddress.getAddress()#" fieldNamePrefix="address." edit="true">

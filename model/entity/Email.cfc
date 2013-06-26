@@ -40,13 +40,13 @@ component entityname="SlatwallEmail" table="SlatwallEmail" persistent="true" acc
 	
 	// Persistent Properties
 	property name="emailID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="emailTo" ormtype="string";
-	property name="emailFrom" ormtype="string";
-	property name="emailCC" ormtype="string";
-	property name="emailBCC" ormtype="string";
-	property name="emailSubject" ormtype="string";
-	property name="emailBodyHTML" ormtype="string" length="4000";
-	property name="emailBodyText" ormtype="string" length="4000";
+	property name="emailTo" hb_populateEnabled="public" ormtype="string";
+	property name="emailFrom" hb_populateEnabled="public" ormtype="string";
+	property name="emailCC" hb_populateEnabled="public" ormtype="string";
+	property name="emailBCC" hb_populateEnabled="public" ormtype="string";
+	property name="emailSubject" hb_populateEnabled="public" ormtype="string";
+	property name="emailBodyHTML" hb_populateEnabled="public" ormtype="string" length="4000";
+	property name="emailBodyText" hb_populateEnabled="public" ormtype="string" length="4000";
 	
 	// Related Object Properties (many-to-one)
 	

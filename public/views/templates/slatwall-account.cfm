@@ -99,7 +99,7 @@ Notes:
 									<!--- Left Side General Details --->
 									<div class="span4">
 										
-										<h4>Profile Details</h4>
+										<h5>Profile Details</h5>
 										<hr style="margin-top:10px;border-top-color:##ddd;" />
 										
 										<!--- Start: Update Account Form --->
@@ -178,7 +178,7 @@ Notes:
 										
 										<br />
 										
-										<h4>Change Password</h4>
+										<h5>Change Password</h5>
 										<hr style="margin-top:10px;border-top-color:##ddd;" />
 										
 										<!--- Start: Change Password Form --->
@@ -234,7 +234,7 @@ Notes:
 											
 											<!--- START: PHONE NUMBERS --->
 											<div class="span4">
-												<h4>Phone Numbers</h4>
+												<h5>Phone Numbers</h5>
 												
 												<!--- Start: Existing Phone Numbers --->
 												<table class="table table-condensed">
@@ -284,7 +284,7 @@ Notes:
 											
 											<!--- START: EMAIL ADDRESSES --->
 											<div class="span4">
-												<h4>Email Addresses</h4>
+												<h5>Email Addresses</h5>
 												
 												<!--- Existing Email Addresses --->
 												<table class="table table-condensed">
@@ -352,7 +352,7 @@ Notes:
 										
 										
 										<!--- START: ADDRESS BOOK --->
-										<h4>Address Book</h4>
+										<h5>Address Book</h5>
 										<hr style="margin-top:10px;border-top-color:##ddd;" />
 											
 										<ul class="thumbnails">
@@ -459,7 +459,7 @@ Notes:
 										<br />
 										
 										<!--- START: PAYMENT METHODS --->
-										<h4>Payment Methods</h4>
+										<h5>Payment Methods</h5>
 										<hr style="margin-top:10px;border-top-color:##ddd;" />
 										
 										<ul class="thumbnails">
@@ -688,7 +688,7 @@ Notes:
 							
 							<!--- ================== ORDER HISTORY TAB ================== --->
 							<div class="tab-pane" id="orders">
-								<h4>Order History</h4>
+								<h5>Order History</h5>
 								
 								<!--- Setup an accordian view for existing orders --->
 								<div class="accordion" id="order-history-acc">
@@ -937,7 +937,7 @@ Notes:
 							
 							<!--- =================== CARTS & QUOTES ===================== --->
 							<div class="tab-pane" id="carts-and-quotes">
-								<h4>Shopping Carts & Quotes</h4>
+								<h5>Shopping Carts & Quotes</h5>
 								
 								<div class="accordion" id="cart-and-quotes-acc">
 									
@@ -1111,13 +1111,13 @@ Notes:
 							
 							<!--- ==================== SUBSCRIPTIONS ==================== --->
 							<div class="tab-pane" id="subscriptions">
-								<h4>Subscription Management</h4>
+								<h5>Subscription Management</h5>
 								Show Subscriptions Here
 							</div>
 							
 							<!--- ==================== PURCHASED CONTENT ==================== --->
 							<div class="tab-pane" id="purchased-content">
-								<h4>Purchased Content Access</h4>
+								<h5>Purchased Content Access</h5>
 								
 								<table class="table">
 									<tr>
@@ -1156,7 +1156,7 @@ Notes:
 				<!--- LOGIN --->
 				<div class="span6">
 					
-					<h4>Login with Existing Account</h4>
+					<h5>Login with Existing Account</h5>
 					
 					<!--- Sets up the account login processObject --->
 					<cfset accountLoginObj = $.slatwall.getAccount().getProcessObject('login') />
@@ -1237,7 +1237,7 @@ Notes:
 				
 				<!--- CREATE ACCOUNT --->
 				<div class="span6">
-					<h4>Create New Account</h4>
+					<h5>Create New Account</h5>
 					
 					<!--- Sets up the create account processObject --->
 					<cfset createAccountObj = $.slatwall.account().getProcessObject('create') />

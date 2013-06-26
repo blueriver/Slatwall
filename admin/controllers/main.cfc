@@ -57,6 +57,8 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	this.publicMethods=listAppend(this.publicMethods, 'logout');
 	this.publicMethods=listAppend(this.publicMethods, 'noaccess');
 	this.publicMethods=listAppend(this.publicMethods, 'error');
+	this.publicMethods=listAppend(this.publicMethods, 'forgotPassword');
+	this.publicMethods=listAppend(this.publicMethods, 'resetPassword');
 	this.publicMethods=listAppend(this.publicMethods, 'setupInitialAdmin');
 	
 	this.anyAdminMethods='';
@@ -156,41 +158,74 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 	}
 	
+	public void function logout(required struct rc) {
+		getAccountService().processAccount(rc.$.slatwall.getAccount(), rc, "logout");
+		
+		getFW().redirect('admin:main.login');
+	}
+	
+	public void function login(required struct rc) {
+		getFW().setView("admin:main.login");
+		rc.pageTitle = rc.$.slatwall.rbKey('define.login');
+		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
+		rc.integrationLoginHTMLArray = getIntegrationService().getAdminLoginHTMLArray();
+	}
+	
 	public void function setupInitialAdmin( required struct rc) {
 		param name="rc.password" default="";
 		param name="rc.passwordConfirm" default="";
 		
-		rc.account = getAccountService().processAccount(getHibachiScope().getAccount(), rc, "setupInitialAdmin");
+		rc.account = getAccountService().processAccount(rc.$.slatwall.getAccount(), rc, "setupInitialAdmin");
 		
 		if(!rc.account.getProcessObject("setupInitialAdmin").hasErrors() && !rc.account.hasErrors()) {
 			getFW().redirect(action='admin:main.default', queryString="s=1");
 		}
 		
-		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
-		rc.integrationLoginHTMLArray = getIntegrationService().getAdminLoginHTMLArray();
-		getFW().setView("admin:main.login");
-	}
-	
-	public void function login(required struct rc) {
-		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
-		rc.integrationLoginHTMLArray = getIntegrationService().getAdminLoginHTMLArray();
+		login( rc );
 	}
 	
 	public void function authorizeLogin(required struct rc) {
-		getAccountService().processAccount(getHibachiScope().getAccount(), rc, "login");
+		getAccountService().processAccount(rc.$.slatwall.getAccount(), rc, "login");
 		
 		if(getHibachiScope().getLoggedInFlag()) {
-			getFW().redirect(action="admin:main.default", queryString="s=1");
+			if(structKeyExists(rc, "sRedirectURL")) {
+				getFW().redirectExact(rc.sRedirectURL);
+			} else {
+				getFW().redirect(action="admin:main.default", queryString="s=1");	
+			}
 		}
 		
-		getFW().setView("admin:main.login");
-		rc.accountAuthenticationExists = getAccountService().getAccountAuthenticationExists();
-		rc.integrationLoginHTMLArray = getIntegrationService().getAdminLoginHTMLArray();
+		login( rc );
 	}
 	
-	public void function logout(required struct rc) {
-		getAccountService().processAccount(getHibachiScope().getAccount(), rc, "logout");
+	
+	public void function forgotPassword(required struct rc) {
+		rc.$.slatwall.setPublicPopulateFlag( true );
 		
-		getFW().redirect('admin:main.login');
+		var account = getAccountService().processAccount(rc.$.slatwall.getAccount(), rc, "forgotPassword");
+		
+		if(!account.hasErrors()) {
+			account.clearProcessObject('forgotPassword');
+			rc.$.slatwall.showMessageKey('entity.account.process.forgotPassword_success');	
+		}
+		
+		login( rc );
+	}
+	
+	public void function resetPassword(required struct rc) {
+		param name="rc.accountID" default="";
+		
+		var account = getAccountService().getAccount( rc.accountID );
+		
+		if(!isNull(account)) {
+			var account = getAccountService().processAccount(account, rc, "resetPassword");
+			
+			if(!account.hasErrors()) {
+				rc.emailAddress = account.getEmailAddress();
+				authorizeLogin( rc );
+			}
+		}
+		
+		login( rc );
 	}
 }

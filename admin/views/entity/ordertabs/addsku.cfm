@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+	
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -36,31 +36,26 @@
 Notes:
 
 --->
-<cfparam name="rc.redirectAction" type="string" default="admin:entity.listorderfulfillment" />
-<cfparam name="rc.processOrderReturnSmartList" type="any" />
-<cfparam name="rc.multiProcess" type="boolean" />
+<cfparam name="rc.order" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<cf_SlatwallProcessForm>
-		<cf_HibachiEntityActionBar type="process" />
-		
-		<cf_SlatwallProcessOptionBar>
-			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
-			<cf_SlatwallProcessOption data="boxCount" fieldType="text" fieldClass="number" value=0 />
-			<cf_SlatwallProcessOption data="packingSlipNumber" fieldType="text" />
-			<cf_SlatwallProcessOption data="autoProcessReturnPaymentFlag" fieldType="yesno" value=1 />
-		</cf_SlatwallProcessOptionBar>
-		
-		<div style="width:700px;">
-			<cf_SlatwallProcessListing processSmartList="#rc.processOrderReturnSmartList#" processRecordsProperty="orderReturnItems" processHeaderString="Order: ${order.orderNumber}, Order Return - ${returnLocation.locationName}">
-				<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" />
-				<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" />
-				<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" />
-				<cf_SlatwallProcessColumn propertyIdentifier="quantity" />
-				<cf_SlatwallProcessColumn propertyIdentifier="quantityUnreceived" />
-				<cf_SlatwallProcessColumn data="receiveQuantity" fieldType="text" fieldClass="span1 number" />
-			</cf_SlatwallProcessListing>
-		</div>
-		
-	</cf_SlatwallProcessForm>
+	<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemSkuOptionsSmartList()#"
+							  recordProcessAction="admin:entity.processOrder"
+							  recordProcessQueryString="orderItemTypeSystemCode=oitSale"
+							  recordProcessContext="addOrderItem"
+							  recordProcessEntity="#rc.order#"
+							  recordProcessUpdateTableID="LD#replace(rc.order.getSaleItemSmartList().getSavedStateID(),'-','','all')#">
+							    
+		<cf_HibachiListingColumn propertyIdentifier="skuCode" />
+		<cf_HibachiListingColumn propertyIdentifier="product.productCode" />
+		<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" />
+		<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" />
+		<cf_HibachiListingColumn propertyIdentifier="optionsDisplay" search="false" sort="false" range="false" filter="false" />
+		<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" />
+		<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
+		<cf_HibachiListingColumn processObjectProperty="price" fieldClass="span1" />
+		<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

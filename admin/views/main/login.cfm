@@ -37,27 +37,64 @@ Notes:
 
 --->
 <cfparam name="rc.accountAuthenticationExists" type="boolean" />
+<cfparam name="rc.swprid" type="string" default="" />
 <cfparam name="rc.integrationLoginHTMLArray" type="array" />
 		
 <cfoutput>
 	<div style="width:100%;">
-		<cfif rc.accountAuthenticationExists>
-			<div class="well tabable" style="width:400px;margin: 0px auto;">
-				<h3>Login</h3>
+		<cf_HibachiMessageDisplay />
+		
+		<cfif len(rc.swprid) eq 64>
+			<div class="well" style="width:400px;margin: 0px auto;">
+				<h3>Reset Password</h3>
 				<br />
-				<cfset authorizeProcessObject = rc.fw.getHibachiScope().getSession().getProcessObject("authorizeAccount") />
 				<form action="?s=1" class="form-horizontal" method="post">
-					<input type="hidden" name="#rc.fw.getAction()#" value="admin:main.authorizelogin" />
+					<input type="hidden" name="slatAction" value="admin:main.resetPassword" />
+					<input type="hidden" name="swprid" value="#rc.swprid#" />
+					<input type="hidden" name="accountID" value="#left(rc.swprid, 32)#" />
+
+					<cfset processObject = rc.fw.getHibachiScope().getAccount().getProcessObject("resetPassword") />
+										
+					<cf_HibachiErrorDisplay object="#processObject#" errorName="swprid" />
+					
+					<fieldset class="dl-horizontal">
+						
+						<cf_HibachiPropertyDisplay object="#processObject#" property="password" edit="true" />
+						<cf_HibachiPropertyDisplay object="#processObject#" property="passwordConfirm" edit="true" />
+						<button type="submit" class="btn btn-primary pull-right">Reset & Login</button>
+					</fieldset>
+				</form>
+			</div>
+		<cfelseif rc.accountAuthenticationExists>
+			<div class="well tabable" style="width:400px;margin: 0px auto;">
+				<h3>#$.slatwall.rbKey('define.login')#</h3>
+				<br />
+				<cfset authorizeProcessObject = rc.fw.getHibachiScope().getAccount().getProcessObject("login") />
+				<form action="?s=1" class="form-horizontal" method="post">
+					<input type="hidden" name="slatAction" value="admin:main.authorizelogin" />
+					<cfif structKeyExists(rc, "sRedirectURL")>
+						<input type="hidden" name="sRedirectURL" value="#rc.sRedirectURL#" />
+					</cfif>
 					<fieldset class="dl-horizontal">
 						<fieldset class="dl-horizontal">
 							<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="emailAddress" edit="true" title="#rc.fw.getHibachiScope().rbKey('entity.account.emailAddress')#" />
 							<cf_HibachiPropertyDisplay object="#authorizeProcessObject#" property="password" edit="true" title="#rc.fw.getHibachiScope().rbKey('entity.account.password')#" />
 						</fieldset>
-						<button type="submit" class="btn btn-primary pull-right">Login</button>
+						<button type="submit" class="btn btn-primary pull-right">#$.slatwall.rbKey('define.login')#</button>
 					</fieldset>
 				</form>
-				<br />
-				
+				<hr />
+				<h5>#$.slatwall.rbKey('admin.main.forgotPassword')#</h5>
+				<cfset forgotPasswordProcessObject = rc.fw.getHibachiScope().getAccount().getProcessObject("forgotPassword") />
+				<form action="?s=1" class="form-horizontal" method="post">
+					<input type="hidden" name="slatAction" value="admin:main.forgotpassword" />
+					<fieldset class="dl-horizontal">
+						<fieldset class="dl-horizontal">
+							<cf_HibachiPropertyDisplay object="#forgotPasswordProcessObject#" property="emailAddress" edit="true" />
+						</fieldset>
+						<button type="submit" class="btn btn-primary pull-right">#$.slatwall.rbKey('admin.main.sendPasswordReset')#</button>
+					</fieldset>
+				</form>
 				<!--- Integration Logins --->
 				<cfloop array="#rc.integrationLoginHTMLArray#" index="loginHTML">
 					<hr />
@@ -69,7 +106,7 @@ Notes:
 				<h3>Create Super Administrator Account</h3>
 				<br />
 				<form action="?s=1" class="form-horizontal" method="post">
-					<input type="hidden" name="#rc.fw.getAction()#" value="admin:main.setupinitialadmin" />
+					<input type="hidden" name="slatAction" value="admin:main.setupinitialadmin" />
 					
 					<cfset processObject = rc.fw.getHibachiScope().getAccount().getProcessObject("setupInitialAdmin") />
 							
