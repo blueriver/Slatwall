@@ -322,9 +322,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public void function recalculateOrderAmounts(required any order) {
 		
-		if(arguments.order.getOrderStatusType().getSystemCode() == "ostClosed") {
-			throw("A recalculateOrderAmounts was called for an order that was already closed");
-		} else {
+		if(!listFindNoCase("ostCanceled,ostClosed", arguments.order.getOrderStatusType().getSystemCode())) {
 			
 			// Loop over the orderItems to see if the skuPrice Changed
 			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
@@ -1652,13 +1650,19 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if(arguments.orderItem.isDeletable()) {
 			
 			// Remove the primary fields so that we can delete this entity
-			arguments.orderItem.removeOrder();
+			var order = arguments.orderItem.getOrder();
+			
+			order.removeOrderItem( arguments.orderItem );
+			
 			if(!isNull(arguments.orderItem.getOrderFulfillment())) {
 				arguments.orderItem.removeOrderFulfillment();
 			}
 			if(!isNull(arguments.orderItem.getOrderReturn())) {
 				arguments.orderItem.removeOrderReturn();	
 			}
+			
+			// Recalculate the order amounts
+			recalculateOrderAmounts( order );
 			
 			return delete( arguments.orderItem );
 		}
