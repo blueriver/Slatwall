@@ -291,6 +291,9 @@ component extends="FW1.framework" {
 					if(!coreBF.containsBean("hibachiRBService")) {
 						coreBF.declareBean("hibachiRBService", "#variables.framework.applicationKey#.org.Hibachi.HibachiRBService", true);	
 					}
+					if(!coreBF.containsBean("hibachiReport")) {
+						coreBF.declareBean("hibachiReport", "#variables.framework.applicationKey#.org.Hibachi.HibachiReport", true);	
+					}
 					if(!coreBF.containsBean("hibachiSessionService")) {
 						coreBF.declareBean("hibachiSessionService", "#variables.framework.applicationKey#.org.Hibachi.HibachiSessionService", true);	
 					}
