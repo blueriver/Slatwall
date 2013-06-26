@@ -720,6 +720,13 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	
 	// ================== START: Overridden Methods ========================
 	
+	public string function getImageName() {
+		if(!structKeyExists(variables, "imageName")) {
+			variables.imageName = generateImageFileName();
+		}
+		return variables.imageName;
+	}
+	
 	public string function getSimpleRepresentationPropertyName() {
     	return "skuCode";
     }
