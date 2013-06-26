@@ -490,10 +490,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			sl.addSelect('imageFile', 'imageFile');
 			sl.setSelectDistinctFlag( true );
 			
-			var r = sl.getRecords();
+			var records = sl.getRecords();
 			
-			for(var i=1; i<=arrayLen(r); i++) {
-				arrayAppend(variables.defaultProductImageFiles, r[i]['imageFile']);
+			for(var record in records) {
+				if(!isNull(record.imageFile)) {
+					arrayAppend(variables.defaultProductImageFiles, record.imageFile);	
+				}
 			} 
 		}
 		return variables.defaultProductImageFiles;

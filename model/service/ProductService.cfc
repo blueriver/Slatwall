@@ -262,6 +262,8 @@ component extends="HibachiService" accessors="true" {
 			// Create Skus
 			getSkuService().createSkus(arguments.product, arguments.data);
 			
+			// Generate Image Files
+			arguments.product = this.processProduct(arguments.product, {}, 'updateDefaultImageFileNames');
 		}
 		
 		// validate the product
