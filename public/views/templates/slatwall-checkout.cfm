@@ -485,7 +485,7 @@ Notes:
 													<!--- If they have already provided an address, and there are still no shipping method options, then the address they entered is not one that can be shipped to --->
 													<cfelse>
 														
-														<p>Unfortunatly the shipping address that you have provided is not one that we ship to.  Please update your shipping address and try again, or contact customer service for more information.</p>
+														<p>Unfortunately the shipping address that you have provided is not one that we ship to.  Please update your shipping address and try again, or contact customer service for more information.</p>
 														
 													</cfif>
 													
