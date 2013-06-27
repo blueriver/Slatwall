@@ -104,6 +104,12 @@ component output="false" accessors="true" extends="HibachiTransient" {
 		return entityService.invokeMethod("save#arguments.entity.getClassName()#", {1=arguments.entity, 2=arguments.data});
 	}
 	
+	public any function deleteEntity(required any entity) {
+		var entityService = getService( "hibachiService" ).getServiceByEntityName( arguments.entity.getClassName() );
+		
+		return entityService.invokeMethod("delete#arguments.entity.getClassName()#", {1=arguments.entity});
+	}
+	
 	public any function getSmartList(required string entityName, struct data={}) {
 		var entityService = getService( "hibachiService" ).getServiceNameByEntityName( arguments.entityName );
 		
