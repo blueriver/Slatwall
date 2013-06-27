@@ -540,7 +540,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var qualificationDetails = {
 			qualificationsMeet = true,
 			qualifiedFulfillmentIDs = [],
-			qualifierDetails = []
+			qualifierDetails = [],
+			orderItems = {}
 		};
 		
 		for(var orderFulfillment in arguments.order.getOrderFulfillments()) {

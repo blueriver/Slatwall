@@ -55,7 +55,7 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	property name="accounts" singularname="account" cfc="Account" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionCodeAccount" fkcolumn="promotionCodeID" inversejoincolumn="accountID";
 	
 	// Related Object Properties (many-to-many - inverse)
-	property name="orders" singularname="order" cfc="Order" type="array" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="promotionCodeID" inversejoincolumn="orderID" inverse="true";
+	property name="orders" singularname="order" cfc="Order" type="array" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="promotionCodeID" inversejoincolumn="orderID" inverse="true" lazy="extra";
 
 	// Remote Properties
 	property name="remoteID" ormtype="string";
