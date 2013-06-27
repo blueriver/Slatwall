@@ -117,6 +117,10 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public any function saveCountry(required any country, struct data={}, string context="save") {
 	
+		if(structKeyExists(arguments.data, "countryCode") && arguments.country.getNewFlag()) {
+			arguments.country.setCountryCode( arguments.data.countryCode );
+		}
+	
 		// Call the generic save method to populate and validate
 		arguments.country = save(entity=arguments.country, data=arguments.data, context=arguments.context);
 	
