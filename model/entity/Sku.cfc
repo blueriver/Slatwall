@@ -95,6 +95,7 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	property name="imageExistsFlag" type="boolean" persistent="false";
 	property name="livePrice" type="numeric" hb_formatType="currency" persistent="false";
 	property name="nextEstimatedAvailableDate" type="string" persistent="false";
+	property name="optionsIDList" persistent="false";
 	property name="optionsDisplay" persistent="false";
 	property name="qats" type="numeric" persistent="false";
 	property name="salePriceDetails" type="struct" persistent="false";
@@ -176,6 +177,17 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 		}
 		return reReplaceNoCase(getProduct().getProductCode(), "[^a-z0-9\-\_]","","all") & optionString & ".#getProduct().setting('productImageDefaultExtension')#";
 	}
+	
+	public string function getOptionsIDList() {
+    	if(!structKeyExists(variables, "optionsIDList")) {
+    		variables.optionsIDList = "";
+    		for(var option in getOptions()) {
+	    		variables.optionsIDList = listAppend(variables.optionsIDList, option.getOptionID());
+	    	}	
+    	}
+    	
+		return variables.optionsIDList;
+    }
 	
 	public string function getOptionsDisplay(delimiter=" ") {
     	var dspOptions = "";

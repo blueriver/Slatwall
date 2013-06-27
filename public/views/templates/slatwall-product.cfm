@@ -148,9 +148,6 @@ Notes:
 				
 				<hr />
 				
-				<!--- START: ADD TO CART EXAMPLE 1 --->
-				<h5>Add To Cart Form Example 1</h5>
-				
 				<!--- If this item was just added show the success message --->
 				<cfif $.slatwall.hasSuccessfulAction( "public:cart.addOrderItem" )>
 					<div class="alert alert-success">
@@ -163,49 +160,93 @@ Notes:
 					</div>
 				</cfif>
 				
-				<!--- Start of form, note that the action can be set to whatever URL you would like the user to end up on. ---> 
-				<form action="?s=1" method="post">
-					<input type="hidden" name="slatAction" value="public:cart.addOrderItem" />
+				<div class="row">
+					<div class="span4">
+						<!--- START: ADD TO CART EXAMPLE 1 --->
+						<h5>Add To Cart Form Example 1</h5>
+						
+						<!--- Start of form, note that the action can be set to whatever URL you would like the user to end up on. ---> 
+						<form action="?s=1" method="post">
+							<input type="hidden" name="slatAction" value="public:cart.addOrderItem" />
+							
+							<!---[ DEVELOPER NOTES ]																				
+																																	
+								$.slatwall.product().getSkus() returns all of the skus for a product								
+							 																										
+							 	sorted = true | allows for the list to be sorted based on the optionGroup and option sort order		
+								fetchOptions = true | optimizes the query to pull down the option details to be displayed			
+																																	
+							--->
+							<cfset local.skus = $.slatwall.product().getSkus(sorted=true, fetchOptions=true) />
+								
+							<!--- Check to see if there are more than 1 skus, if so then display the options dropdown --->
+							<cfif arrayLen(local.skus) gt 1>
+								
+								<!--- Sku Selector --->
+								<select name="skuID" class="required">
+									
+									<!--- Blank option to force user to select (this is optional) --->	
+									<option value="">Select Option</option>
+									
+									<!--- Loop over the skus to display options --->
+									<cfloop array="#local.skus#" index="local.sku">
+										<!--- This provides an option for each sku, with the 'displayOptions' method to show the optionGroup / option names --->
+										<option value="#local.sku.getSkuID()#">#local.sku.displayOptions()#</option>
+									</cfloop>
+									
+								</select>
+								
+								<br />
+								
+							<!--- If there are only 1 skus, then add a hidden field --->
+							<cfelse> 
+								<input type="hidden" name="skuID" value="#$.slatwall.product().getDefaultSku().getSkuID()#" />
+							</cfif>
+							
+							<!--- Add to Cart Button --->
+							<button type="submit" class="btn">Add To Cart</button>
+						</form>
+						<!--- END: ADD TO CART EXAMPLE 1 --->
+					</div>
 					
-					<!---[ DEVELOPER NOTES ]																				
-																															
-						$.slatwall.product().getSkus() returns all of the skus for a product								
-					 																										
-					 	sorted = true | allows for the list to be sorted based on the optionGroup and option sort order		
-						fetchOptions = true | optimizes the query to pull down the option details to be displayed			
-																															
-					--->
-					<cfset local.skus = $.slatwall.product().getSkus(sorted=true, fetchOptions=true) />
+					<div class="span4">
+						<!--- START: ADD TO CART EXAMPLE 2 --->
+						<h5>Add To Cart Form Example 2</h5>
 						
-					<!--- Check to see if there are more than 1 skus, if so then display the options dropdown --->
-					<cfif arrayLen(local.skus) gt 1>
-						
-						<!--- Sku Selector --->
-						<select name="skuID" class="required">
+						<!--- Start of form, note that the action can be set to whatever URL you would like the user to end up on. ---> 
+						<form action="?s=1" method="post">
+							<input type="hidden" name="slatAction" value="public:cart.addOrderItem" />
 							
-							<!--- Blank option to force user to select (this is optional) --->	
-							<option value="">Select Option</option>
+							<!--- First we get all the option groups this product uses --->
+							<cfset optionGroupsArr = $.slatwall.product().getOptionGroups() />
+							<cfset defaultSelectedOptions = $.slatwall.product().getDefaultSku().getOptionsIDList() />
 							
-							<!--- Loop over the skus to display options --->
-							<cfloop array="#local.skus#" index="local.sku">
-								<!--- This provides an option for each sku, with the 'displayOptions' method to show the optionGroup / option names --->
-								<option value="#local.sku.getSkuID()#">#local.sku.displayOptions()#</option>
+							<!--- Loop over all options groups --->
+							<cfloop array="#optionGroupsArr#" index="optionGroup">
+								
+								<!--- Then we get the options for used by each option group for this product --->
+								<cfset optionsArr = $.slatwall.product().getOptionsByOptionGroup( optionGroup.getOptionGroupID() ) />
+								
+								<label>#optionGroup.getOptionGroupName()#</label>
+								
+								<select name="selectedOptions">
+									
+									<cfloop array="#optionsArr#" index="option">
+										<option value="#option.getOptionID()#" <cfif listFindNoCase(defaultSelectedOptions, option.getOptionID())> selected="selected"</cfif>>#option.getOptionName()#</option>
+									</cfloop>
+									
+								</select>
+								
+								<br />
 							</cfloop>
 							
-						</select>
-						
-						<br />
-						
-					<!--- If there are only 1 skus, then add a hidden field --->
-					<cfelse> 
-						<input type="hidden" name="skuID" value="#$.slatwall.product().getDefaultSku().getSkuID()#" />
-					</cfif>
-					
-					<!--- Add to Cart Button --->
-					<button type="submit" class="btn">Add To Cart</button>
-				</form>
-				<!--- END: ADD TO CART EXAMPLE 1 --->
-				
+							<!--- Add to Cart Button --->
+							<button type="submit" class="btn">Add To Cart</button>
+						</form>
+						<!--- END: ADD TO CART EXAMPLE 2 --->
+							
+					</div>
+				</div>
 			</div>
 		</div>
 		
