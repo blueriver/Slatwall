@@ -90,7 +90,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	public any function copyAccountAddressToShippingAddress() {
 		if(!isNull(getAccountAddress()) && !getAccountAddress().getNewFlag()) {
-			setShippingAddress( getAccountAddress().getAddress().copyAddress() );
+			setShippingAddress( getAccountAddress().getAddress().copyAddress( true ) );
 		}
 	}
 	
@@ -141,12 +141,14 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
     public any function getAccountAddressOptions() {
     	if( !structKeyExists(variables, "accountAddressOptions")) {
-    		var smartList = getService("accountService").getAccountAddressSmartList();
-			smartList.addSelect(propertyIdentifier="accountAddressName", alias="name");
-			smartList.addSelect(propertyIdentifier="accountAddressID", alias="value"); 
-			smartList.addFilter(propertyIdentifier="account.accountID",value=this.getOrder().getAccount().getAccountID(),fetch="false");
-			smartList.addOrder("accountAddressName|ASC");
-			variables.accountAddressOptions = smartList.getRecords();
+    		variables.accountAddressOptions = [];
+			var s = getService("accountService").getAccountAddressSmartList();
+			s.addFilter(propertyIdentifier="account.accountID",value=getOrder().getAccount().getAccountID(),fetch="false");
+			s.addOrder("accountAddressName|ASC");
+			var r = s.getRecords();
+			for(var i=1; i<=arrayLen(r); i++) {
+				arrayAppend(variables.accountAddressOptions, {name=r[i].getSimpleRepresentation(), value=r[i].getAccountAddressID()});	
+			}
 		}
 		return variables.accountAddressOptions;
 	}

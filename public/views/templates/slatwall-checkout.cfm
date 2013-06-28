@@ -426,12 +426,26 @@ Notes:
 												<!--- If there are existing account addresses, then we can allow the user to select one of those --->
 												<cfif arrayLen(orderFulfillment.getAccountAddressOptions())>
 													
+													<!--- Get the options that the person can choose from --->
+													<cfset accountAddressOptions = orderFulfillment.getAccountAddressOptions() />
+													
+													<!--- Add a 'New' Attribute so that we can drive the new form below --->
+													<cfset arrayAppend(accountAddressOptions, {name='New', value=''}) />
+													
+													<!--- As long as there are no errors for the orderFulfillment, we can setup the default accountAddress value to be selected --->
+													<cfset accountAddressID = "" />
+													<cfif !orderFulfillment.hasErrors() && !isNull(orderFulfillment.getAccountAddress())>
+														<cfset accountAddressID = orderFulfillment.getAccountAddress().getAccountAddressID() />
+													<cfelseif !orderFulfillment.hasErrors()>
+														<cfset accountAddressID = $.slatwall.cart().getAccount().getPrimaryAddress().getAccountAddressID() />
+													</cfif>
+													
 													<!--- Account Address --->
 													<div class="control-group">
 								    					<label class="control-label" for="rating">Select Existing Address</label>
 								    					<div class="controls">
 								    						
-															<sw:FormField type="select" name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID" valueObject="#orderFulfillment#" valueObjectProperty="accountAddress" valueOptions="#orderFulfillment.getAccountAddressOptions()#" class="span4" />
+															<sw:FormField type="select" name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID" valueObject="#orderFulfillment#" valueObjectProperty="accountAddress" valueOptions="#accountAddressOptions#" value="#accountAddressID#" class="span4" />
 															<sw:ErrorDisplay object="#orderFulfillment#" errorName="accountAddress" />
 															
 								    					</div>
@@ -441,7 +455,27 @@ Notes:
 												</cfif>
 												
 												<!--- New Shipping Address --->
-												<sw:AddressForm id="newShippingAddress" address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#orderFulfillmentIndex#].shippingAddress." fieldClass="span4" />
+												<div id="new-shipping-address"<cfif arrayLen(orderFulfillment.getAccountAddressOptions())> class="hide"</cfif>>
+													<sw:AddressForm id="newShippingAddress" address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#orderFulfillmentIndex#].shippingAddress." fieldClass="span4" />
+												</div>
+												
+												<!--- SCRIPT IMPORTANT: This jQuery is just here for example purposes to show/hide the new address field if there are account addresses --->
+												<cfif arrayLen(orderFulfillment.getAccountAddressOptions())>
+													<script type="text/javascript">
+														(function($){
+															$(document).ready(function(){
+																$('body').on('change', 'select[name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID"]', function(e){
+																	if( $(this).val() === '' ) {
+																		$('##new-shipping-address').show();
+																	} else {
+																		$('##new-shipping-address').hide();
+																	}
+																});
+																$('select[name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID"]').change();
+															});
+														})( jQuery )
+													</script>
+												</cfif>
 												
 											</div>
 											
