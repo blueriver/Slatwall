@@ -35,11 +35,18 @@ jQuery(document).ready(function() {
 
 function initUIElements( scopeSelector ) {
 	
+	var convertedDateFormat = convertCFMLDateFormat( hibachiConfig.dateFormat );
+	var convertedTimeFormat = convertCFMLTimeFormat( hibachiConfig.timeFormat );
+	var ampm = true;
+	if(convertedTimeFormat.slice(-2) != 'TT') {
+		ampm = false;
+	}
+	
 	// Datetime Picker
 	jQuery( scopeSelector ).find(jQuery('.datetimepicker')).datetimepicker({
-		dateFormat: convertCFMLDateFormat( hibachiConfig.dateFormat ),
-		timeFormat: convertCFMLTimeFormat( hibachiConfig.timeFormat ),
-		ampm: true,
+		dateFormat: convertedDateFormat,
+		timeFormat: convertedTimeFormat,
+		ampm: ampm,
 		onSelect: function(dateText, inst) {
 			
 			// Listing Display Updates
@@ -62,11 +69,14 @@ function initUIElements( scopeSelector ) {
 	
 	// Date Picker
 	jQuery( scopeSelector ).find(jQuery('.datepicker')).datepicker({
-		dateFormat: convertCFMLDateFormat( hibachiConfig.dateFormat )
+		dateFormat: convertedDateFormat
 	});
 	
 	// Time Picker
-	jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker({});
+	jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker({
+		timeFormat: convertedTimeFormat,
+		ampm: ampm
+	});
 	
 	// Dragable
 	jQuery( scopeSelector ).find(jQuery('.draggable')).draggable();
@@ -94,22 +104,24 @@ function initUIElements( scopeSelector ) {
 		}
 		
 		// Open the correct sections
-		var loadValue = jQuery( jQuery(this).data('hibachi-selector') + ':checked' ).val() || jQuery( jQuery(this).data('hibachi-selector') ).children(":selected").val();
+		var loadValue = jQuery( jQuery(this).data('hibachi-selector') + ':checked' ).val() || jQuery( jQuery(this).data('hibachi-selector') ).children(":selected").val() || '';
 		if(bindData.valueAttribute.length) {
 			var loadValue = jQuery( jQuery(this).data('hibachi-selector') ).children(":selected").data(bindData.valueAttribute);
 		}
-		if( jQuery( this ).hasClass('hide') && bindData.showValues.toString().indexOf( loadValue ) > -1 ) {
+		if( jQuery( this ).hasClass('hide') && (bindData.showValues.toString().indexOf( loadValue ) > -1 || bindData.showValues === '*' && loadValue.length) ) {
 			jQuery( this ).removeClass('hide');
 		}
 		
 		jQuery( jQuery(this).data('hibachi-selector') ).on('change', bindData, function(e) {
-			var selectedValue = jQuery(this).val();
+			
+			var selectedValue = jQuery(this).val() || '';
 			if(bindData.valueAttribute.length) {
-				var selectedValue = jQuery(this).children(":selected").data(bindData.valueAttribute);
+				var selectedValue = jQuery(this).children(":selected").data(bindData.valueAttribute) || '';
 			}
-			if( jQuery( '#' + bindData.id ).hasClass('hide') && bindData.showValues.toString().indexOf( selectedValue ) > -1 ) {
+			
+			if( jQuery( '#' + bindData.id ).hasClass('hide') && (bindData.showValues.toString().indexOf( selectedValue ) > -1 || bindData.showValues === '*' && selectedValue.length) ) {
 				jQuery( '#' + bindData.id ).removeClass('hide');
-			} else if ( !jQuery( '#' + bindData.id ).hasClass('hide') && bindData.showValues.toString().indexOf( selectedValue ) === -1 ) {
+			} else if ( !jQuery( '#' + bindData.id ).hasClass('hide') && ((bindData.showValues !== '*' && bindData.showValues.toString().indexOf( selectedValue ) === -1) || (bindData.showValues === '*' && !selectedValue.length)) ) {
 				jQuery( '#' + bindData.id ).addClass('hide');
 			}
 		});

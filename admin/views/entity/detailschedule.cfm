@@ -44,15 +44,28 @@ Notes:
 		<cf_HibachiEntityActionBar type="detail" object="#rc.schedule#" edit="#rc.edit#" />
 		
 		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList>
+			
+			<cf_HibachiPropertyList divClass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="scheduleName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="recuringType" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="daysOfWeekToRun" edit="#rc.edit#" displayVisible="recuringType:weekly">
-				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="daysOfMonthToRun" edit="#rc.edit#" displayVisible="recuringType:monthly">
-				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="frequencyInterval" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="frequencyStartTime" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.schedule#" property="frequencyEndTime" edit="#rc.edit#">
+				
+				<cf_HibachiDisplayToggle selector="input[name='frequencyEndTime']" showValues="*">
+					<cf_HibachiPropertyDisplay object="#rc.schedule#" property="frequencyInterval" edit="#rc.edit#">
+				</cf_HibachiDisplayToggle>
 			</cf_HibachiPropertyList>
+			
+			<cf_HibachiPropertyList divClass="span6">
+				
+				<cf_HibachiDisplayToggle selector="select[name='recuringType']" showValues="weekly">
+					<cf_HibachiPropertyDisplay object="#rc.schedule#" property="daysOfWeekToRun" edit="#rc.edit#">
+				</cf_HibachiDisplayToggle>
+				<cf_HibachiDisplayToggle selector="select[name='recuringType']" showValues="monthly">
+					<cf_HibachiPropertyDisplay object="#rc.schedule#" property="daysOfMonthToRun" edit="#rc.edit#">	
+				</cf_HibachiDisplayToggle>
+			</cf_HibachiPropertyList>
+			
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.schedule#">
