@@ -62,7 +62,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public boolean function loadDataFromXMLDirectory(required string xmlDirectory) {
 		var dirList = directoryList(arguments.xmlDirectory);
-				
+		
 		// Because some records might depend on other records already being in the DB (fk constraints) we catch errors and re-loop over records
 		var retryCount=0;
 		var runPopulation = true;
@@ -73,7 +73,7 @@ component output="false" accessors="true" extends="HibachiService" {
 			
 			// Loop over files, read them, and send to loadData function 
 			for(var i=1; i<= arrayLen(dirList); i++) {
-				if(listLast(dirList[i],".") == "xml"){
+				if(len(dirList[i]) gt 7 && right(dirList[i],7) == "xml.cfm"){
 					var xmlRaw = FileRead(dirList[i]);
 					
 					try{
