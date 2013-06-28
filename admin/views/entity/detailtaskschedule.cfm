@@ -41,8 +41,13 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.taskSchedule#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.taskSchedule#" />
+	<cf_HibachiEntityDetailForm object="#rc.taskSchedule#" edit="#rc.edit#" 
+								saveActionQueryString="taskID=#rc.task.getTaskID()#">
+								
+		<cf_HibachiEntityActionBar type="detail" object="#rc.taskSchedule#" 
+								backAction="admin:entity.detailTask" 
+								backQueryString="taskID=#rc.task.getTaskID()#"
+								deleteQueryString="redirectAction=admin:entity.detailTask&taskID=#rc.task.getTaskID()#"/>
 		
 		<input type="hidden" name="task.taskID" value="#rc.task.getTaskID()#"/>
 		

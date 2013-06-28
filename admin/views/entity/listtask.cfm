@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiEntityActionBar type="listing" object="#rc.taskSmartList#" createmodal="true" />
 
 	<cf_HibachiListingDisplay smartlist="#rc.taskSmartList#" 
-	                          recorddetailaction="admin:entity.edittask"
+	                          recorddetailaction="admin:entity.detailtask"
 							  recordeditaction="admin:entity.edittask">
 		
 		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="taskName" />
