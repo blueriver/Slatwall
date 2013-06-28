@@ -126,12 +126,28 @@ component extends="org.Hibachi.Hibachi" output="false" {
 	
 	// Allows for custom views to be created for the admin, frontend or public subsystems
 	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
+		
 		arguments.fullPath = super.customizeViewOrLayoutPath(argumentcollection=arguments);
-		if(listFindNoCase("admin,frontend,public", arguments.pathInfo.subsystem)){
+		
+		if(listFindNoCase("admin,public", arguments.pathInfo.subsystem)){
 			var customFullPath = replace(replace(replace(arguments.fullPath, "/admin/", "/custom/admin/"), "/frontend/", "/custom/frontend/"), "/public/", "/custom/public/");
 			if(fileExists(expandPath(customFullPath))) {
 				arguments.fullPath = customFullPath;
 			}
+			
+		// DEPRECATED!!!
+		} else if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view" && structKeyExists(request, "muraScope")) {
+			
+			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.muraScope.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
+			var siteView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.muraScope.siteConfig('assetPath')#/includes/display_objects/custom/slatwall/");
+
+			if(fileExists(expandPath(themeView))) {
+				arguments.fullPath = themeView;	
+			} else if (fileExists(expandPath(siteView))) {
+				arguments.fullPath = siteView;
+			}
+
+		
 		} else if(arguments.type eq "layout" && arguments.pathInfo.subsystem neq "common") {
 			if(arguments.pathInfo.path eq "default" && !fileExists(expandPath(arguments.fullPath))) {
 				arguments.fullPath = left(arguments.fullPath, findNoCase("/integrationServices/", arguments.fullPath)) & 'admin/layouts/default.cfm';
