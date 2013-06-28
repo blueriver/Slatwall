@@ -373,6 +373,9 @@ Notes:
 								<!--- We need to check if this order fulfillment is one that needs to be updated, by checking if it is already processable or by checking if it has errors --->
 								<cfif not orderFulfillment.isProcessable( context="placeOrder" ) or orderFulfillment.hasErrors()>
 									
+									<!--- Increment the orderFulfillment index so that we can update multiple order fulfillments at once --->
+									<cfset orderFulfillmentIndex++ />
+									
 									<div class="row">
 										
 										<!---[DEVELOPER NOTES]																		
@@ -415,8 +418,6 @@ Notes:
 										<!--- SHIPPING --->
 										<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
 											
-											<!--- Increment the orderFulfillment index so that we can update multiple order fulfillments at once --->
-											<cfset orderFulfillmentIndex++ />
 											<input type="hidden" name="orderFulfillments[#orderFulfillmentIndex#].orderFulfillmentID" value="#orderFulfillment.getOrderFulfillmentID()#" />
 											
 											<div class="span4">

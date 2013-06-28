@@ -46,7 +46,6 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="manualFulfillmentChargeFlag" ormtype="boolean" hb_populateEnabled="false";
 	
 	// Related Object Properties (many-to-one)
-	property name="accountAddress" hb_populateEnabled="public" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
 	property name="accountEmailAddress" hb_populateEnabled="public" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="accountEmailAddressID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
@@ -73,6 +72,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="accountAddress" hb_populateEnabled="public" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID" persistent="false";
 	property name="accountAddressOptions" type="array" persistent="false";
 	property name="chargeAfterDiscount" type="numeric" persistent="false" hb_formatType="currency";
 	property name="discountAmount" type="numeric" persistent="false" hb_formatType="currency";
@@ -87,6 +87,12 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="subtotalAfterDiscountsWithTax" type="array" persistent="false" hb_formatType="currency";    
 	property name="taxAmount" type="numeric" persistent="false" hb_formatType="currency";
 	property name="totalShippingWeight" type="numeric" persistent="false" hb_formatType="weight";
+	
+	public any function copyAccountAddressToShippingAddress() {
+		if(!isNull(getAccountAddress()) && !getAccountAddress().getNewFlag()) {
+			setShippingAddress( getAccountAddress().getAddress().copyAddress() );
+		}
+	}
 	
 	public void function removeAccountAddress() {
 		structDelete(variables, "AccountAddress");
@@ -410,6 +416,19 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		
+		copyAccountAddressToShippingAddress();
+	}
+	
+	public void function preUpdate(Struct oldData){
+		super.preUpdate();
+		
+		copyAccountAddressToShippingAddress();
+	}
+	
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }
