@@ -103,6 +103,7 @@ function initUIElements( scopeSelector ) {
 			id : jQuery(this).attr('id')
 		}
 		
+		/*
 		// Open the correct sections
 		var loadValue = jQuery( jQuery(this).data('hibachi-selector') + ':checked' ).val() || jQuery( jQuery(this).data('hibachi-selector') ).children(":selected").val() || '';
 		if(bindData.valueAttribute.length) {
@@ -111,6 +112,7 @@ function initUIElements( scopeSelector ) {
 		if( jQuery( this ).hasClass('hide') && (bindData.showValues.toString().indexOf( loadValue ) > -1 || bindData.showValues === '*' && loadValue.length) ) {
 			jQuery( this ).removeClass('hide');
 		}
+		*/
 		
 		jQuery( jQuery(this).data('hibachi-selector') ).on('change', bindData, function(e) {
 			

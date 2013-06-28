@@ -40,8 +40,8 @@ component displayname="Promotion Period" entityname="SlatwallPromotionPeriod" ta
 	
 	// Persistent Properties
 	property name="promotionPeriodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="startDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.any";
-	property name="endDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.any";
+	property name="startDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
+	property name="endDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
 	property name="maximumUseCount" ormtype="integer" notnull="false"  hb_nullRBKey="define.unlimited";
 	property name="maximumAccountUseCount" ormtype="integer" notnull="false"  hb_nullRBKey="define.unlimited";
 	

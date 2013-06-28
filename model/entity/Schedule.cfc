@@ -42,7 +42,7 @@ component displayname="Schedule" entityname="SlatwallSchedule" table="SlatwallSc
 	property name="scheduleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="scheduleName" ormtype="string";
 	
-	property name="recuringType" ormtype="string" hb_formFieldtype="select";																							// Daily, Weekly, Monthly										Daily
+	property name="recuringType" ormtype="string" hb_formFieldtype="select" hb_formatType="rbKey";																							// Daily, Weekly, Monthly										Daily
 	property name="daysOfWeekToRun" ormtype="string" hb_formfieldType="checkboxgroup";																					// 1, 2, 3, 4, 5, 6, 7											NULL	(required if recuringType is weekly)
 	property name="daysOfMonthToRun" ormtype="string" hb_formfieldType="checkboxgroup";																					// 1 - 31			[1,10,20]									NULL	(required if recuringType is monthly)
 	

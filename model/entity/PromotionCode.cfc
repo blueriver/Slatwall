@@ -41,8 +41,8 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	// Persistent Properties
 	property name="promotionCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="promotionCode" ormtype="string";
-	property name="startDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.any";
-	property name="endDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.any";
+	property name="startDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
+	property name="endDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
 	property name="maximumUseCount" ormtype="integer" notnull="false" hb_nullRBKey="define.unlimited";
 	property name="maximumAccountUseCount" ormtype="integer" notnull="false" hb_nullRBKey="define.unlimited";
 
