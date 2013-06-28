@@ -138,7 +138,18 @@ component output="false" accessors="true" extends="HibachiService" {
 					updateData[ thisColumnName ] = columnRecord;
 				}
 			}
-			getDataDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumns, updateData, insertData);
+			
+			var idKey = "";
+			for(var l=1; l<=listLen(idColumns); l++) {
+				idKey = listAppend(idKey, insertData[listGetAt(idColumns, l)].value, "~");
+			}
+			
+			var insertedData = getDataDAO().getInsertedDataFile();
+			
+			if(!listFindNoCase(insertedData, idKey)) {
+				getDataDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumns, updateData, insertData);
+				getDataDAO().updateInsertedDataFile( idKey );
+			}
 		}
 	}
 	
