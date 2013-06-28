@@ -4,14 +4,14 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="order";
 	
 	// Injected, or lazily loaded by ID
-	property name="stock";
-	property name="sku";
-	property name="product";
-	property name="location";
-	property name="orderFulfillment";
-	property name="orderReturn";
-	property name="returnLocation";
-	property name="fulfillmentMethod";
+	property name="stock" hb_rbKey="entity.stock";
+	property name="sku" hb_rbKey="entity.sku";
+	property name="product" hb_rbKey="entity.product";
+	property name="location" hb_rbKey="entity.location";
+	property name="orderFulfillment" hb_rbKey="entity.orderFulfillment";
+	property name="orderReturn" hb_rbKey="entity.orderReturn";
+	property name="returnLocation" hb_rbKey="entity.location";
+	property name="fulfillmentMethod" hb_rbKey="entity.fulfillmentMethod";
 	
 	// Data Properties (ID's)
 	property name="stockID";
@@ -209,10 +209,12 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		if(!structKeyExists(variables, "orderFulfillmentIDOptions")) {
 			var ofArr = getOrder().getOrderFulfillments();
 			variables.orderFulfillmentIDOptions = [];
-			for(var i=1; i<=arrayLen(ofArr); i++) {
-				if(listFindNoCase(getSku().setting('skuEligibleFulfillmentMethods'), ofArr[i].getFulfillmentMethod().getFulfillmentMethodID())) {
-					arrayAppend(variables.orderFulfillmentIDOptions, {name=ofArr[i].getSimpleRepresentation(), value=ofArr[i].getOrderFulfillmentID()});	
-				}
+			if(!isNull(getSku())) {
+				for(var i=1; i<=arrayLen(ofArr); i++) {
+					if(listFindNoCase(getSku().setting('skuEligibleFulfillmentMethods'), ofArr[i].getFulfillmentMethod().getFulfillmentMethodID())) {
+						arrayAppend(variables.orderFulfillmentIDOptions, {name=ofArr[i].getSimpleRepresentation(), value=ofArr[i].getOrderFulfillmentID()});	
+					}
+				}	
 			}
 			arrayAppend(variables.orderFulfillmentIDOptions, {name=getHibachiScope().rbKey('define.new'), value=""});
 		}

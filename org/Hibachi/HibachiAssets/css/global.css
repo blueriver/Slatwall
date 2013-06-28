@@ -61,6 +61,9 @@ textarea {
 .tab-content {
   min-height: 300px;
 }
+.tooltip-inner {
+  white-space: normal !important;
+}
 .dl-horizontal {
   margin-top: 0px;
   margin-bottom: 5px;
@@ -81,7 +84,7 @@ textarea {
   min-height: 19px;
   font-size: 13px;
 }
-.dl-horizontal div {
+.dl-horizontal > div {
   padding: 0px;
   margin: 0px;
 }

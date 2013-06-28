@@ -216,6 +216,7 @@ Notes:
 						<!--- Start of form, note that the action can be set to whatever URL you would like the user to end up on. ---> 
 						<form action="?s=1" method="post">
 							<input type="hidden" name="slatAction" value="public:cart.addOrderItem" />
+							<input type="hidden" name="productID" value="#$.slatwall.product().getProductID()#" />
 							
 							<!--- First we get all the option groups this product uses --->
 							<cfset optionGroupsArr = $.slatwall.product().getOptionGroups() />
@@ -229,7 +230,7 @@ Notes:
 								
 								<label>#optionGroup.getOptionGroupName()#</label>
 								
-								<select name="selectedOptions">
+								<select name="selectedOptionIDList">
 									
 									<cfloop array="#optionsArr#" index="option">
 										<option value="#option.getOptionID()#" <cfif listFindNoCase(defaultSelectedOptions, option.getOptionID())> selected="selected"</cfif>>#option.getOptionName()#</option>
