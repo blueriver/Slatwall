@@ -337,9 +337,9 @@ Notes:
 			FROM
 				SlatwallSku
 			  INNER JOIN
-			  	SlatwallPromotionRewardSku on SlatwallPromotionRewardSku.skuID = SlatwallSku.skuID
+			  	SwPromoRewardSku on SwPromoRewardSku.skuID = SlatwallSku.skuID
 			  INNER JOIN
-			  	SlatwallPromotionReward prSku on prSku.promotionRewardID = SlatwallPromotionRewardSku.promotionRewardID
+			  	SwPromoReward prSku on prSku.promotionRewardID = SwPromoRewardSku.promotionRewardID
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppSku on ppSku.promotionPeriodID = prSku.promotionPeriodID
 			WHERE
@@ -368,9 +368,9 @@ Notes:
 			FROM
 				SlatwallSku
 			  INNER JOIN
-			  	SlatwallPromotionRewardProduct on SlatwallPromotionRewardProduct.productID = SlatwallSku.productID
+			  	SwPromoRewardProduct on SwPromoRewardProduct.productID = SlatwallSku.productID
 			  INNER JOIN
-			  	SlatwallPromotionReward prProduct on prProduct.promotionRewardID = SlatwallPromotionRewardProduct.promotionRewardID
+			  	SwPromoReward prProduct on prProduct.promotionRewardID = SwPromoRewardProduct.promotionRewardID
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppProduct on ppProduct.promotionPeriodID = prProduct.promotionPeriodID
 			WHERE
@@ -401,9 +401,9 @@ Notes:
 			  INNER JOIN
 			  	SlatwallProduct on SlatwallProduct.productID = SlatwallSku.productID
 			  INNER JOIN
-			  	SlatwallPromotionRewardBrand on SlatwallPromotionRewardBrand.brandID = SlatwallProduct.brandID
+			  	SwPromoRewardBrand on SwPromoRewardBrand.brandID = SlatwallProduct.brandID
 			  INNER JOIN
-			  	SlatwallPromotionReward prBrand on prBrand.promotionRewardID = SlatwallPromotionRewardBrand.promotionRewardID
+			  	SwPromoReward prBrand on prBrand.promotionRewardID = SwPromoRewardBrand.promotionRewardID
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppBrand on ppBrand.promotionPeriodID = prBrand.promotionPeriodID
 			WHERE
@@ -434,9 +434,9 @@ Notes:
 			  INNER JOIN
 			  	SlatwallSkuOption on SlatwallSkuOption.skuID = SlatwallSku.skuID
 			  INNER JOIN
-			  	SlatwallPromotionRewardOption on SlatwallPromotionRewardOption.optionID = SlatwallSkuOption.optionID
+			  	SwPromoRewardOption on SwPromoRewardOption.optionID = SlatwallSkuOption.optionID
 			  INNER JOIN
-			  	SlatwallPromotionReward prOption on prOption.promotionRewardID = SlatwallPromotionRewardOption.promotionRewardID
+			  	SwPromoReward prOption on prOption.promotionRewardID = SwPromoRewardOption.promotionRewardID
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppOption on ppOption.promotionPeriodID = prOption.promotionPeriodID
 			WHERE
@@ -470,12 +470,12 @@ Notes:
 			  	SlatwallProductType on SlatwallProduct.productTypeID = SlatwallProductType.productTypeID
 			  INNER JOIN
 			  <cfif getApplicationValue("databaseType") eq "MySQL">
-			  	SlatwallPromotionRewardProductType on SlatwallProductType.productTypeIDPath LIKE concat('%', SlatwallPromotionRewardProductType.productTypeID, '%')
+			  	SwPromoRewardProductType on SlatwallProductType.productTypeIDPath LIKE concat('%', SwPromoRewardProductType.productTypeID, '%')
 			  <cfelse>
-			  	SlatwallPromotionRewardProductType on SlatwallProductType.productTypeIDPath LIKE ('%' + SlatwallPromotionRewardProductType.productTypeID + '%')
+			  	SwPromoRewardProductType on SlatwallProductType.productTypeIDPath LIKE ('%' + SwPromoRewardProductType.productTypeID + '%')
 			  </cfif>
 			  INNER JOIN
-			  	SlatwallPromotionReward prProductType on prProductType.promotionRewardID = SlatwallPromotionRewardProductType.promotionRewardID
+			  	SwPromoReward prProductType on prProductType.promotionRewardID = SwPromoRewardProductType.promotionRewardID
 			  INNER JOIN
 			    SlatwallPromotionPeriod ppProductType on ppProductType.promotionPeriodID = prProductType.promotionPeriodID
 			WHERE
@@ -506,19 +506,19 @@ Notes:
 			  INNER JOIN
 			  	SlatwallProduct on SlatwallProduct.productID = SlatwallSku.productID
 			  CROSS JOIN
-				SlatwallPromotionReward prGlobal
+				SwPromoReward prGlobal
 			  INNER JOIN
 			  	SlatwallPromotionPeriod ppGlobal on prGlobal.promotionPeriodID = ppGlobal.promotionPeriodID
 			WHERE
 			  	prGlobal.rewardType IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="merchandise,subscription,contentAccess" list="true">)
 			  AND
-			  	NOT EXISTS(SELECT promotionRewardID FROM SlatwallPromotionRewardProduct WHERE SlatwallPromotionRewardProduct.promotionRewardID = prGlobal.promotionRewardID)
+			  	NOT EXISTS(SELECT promotionRewardID FROM SwPromoRewardProduct WHERE SwPromoRewardProduct.promotionRewardID = prGlobal.promotionRewardID)
 			  AND
-			  	NOT EXISTS(SELECT promotionRewardID FROM SlatwallPromotionRewardBrand WHERE SlatwallPromotionRewardBrand.promotionRewardID = prGlobal.promotionRewardID)
+			  	NOT EXISTS(SELECT promotionRewardID FROM SwPromoRewardBrand WHERE SwPromoRewardBrand.promotionRewardID = prGlobal.promotionRewardID)
 			  AND
-			  	NOT EXISTS(SELECT promotionRewardID FROM SlatwallPromotionRewardOption WHERE SlatwallPromotionRewardOption.promotionRewardID = prGlobal.promotionRewardID)
+			  	NOT EXISTS(SELECT promotionRewardID FROM SwPromoRewardOption WHERE SwPromoRewardOption.promotionRewardID = prGlobal.promotionRewardID)
 			  AND
-			  	NOT EXISTS(SELECT promotionRewardID FROM SlatwallPromotionRewardProductType WHERE SlatwallPromotionRewardProductType.promotionRewardID = prGlobal.promotionRewardID)
+			  	NOT EXISTS(SELECT promotionRewardID FROM SwPromoRewardProductType WHERE SwPromoRewardProductType.promotionRewardID = prGlobal.promotionRewardID)
 			  AND
 				(ppGlobal.startDateTime is null or ppGlobal.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">)
 			  AND
