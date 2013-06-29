@@ -57,8 +57,8 @@ component entityname="SlatwallVendor" table="SwVendor" persistent="true" accesso
 	property name="vendorEmailAddresses" singularname="vendorEmailAddress" type="array" cfc="VendorEmailAddress" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID";
-	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallVendorProduct" fkcolumn="vendorID" inversejoincolumn="productID";
+	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SwVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SwVendorProduct" fkcolumn="vendorID" inversejoincolumn="productID";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";

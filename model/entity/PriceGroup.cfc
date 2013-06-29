@@ -53,10 +53,10 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="SwPri
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="one-to-many" fkcolumn="priceGroupID" cascade="all-delete-orphan" inverse="true";    
 	
 	// Related Object Properties (many-to-many - invers)
-	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="accountID" inverse="true";
-	property name="subscriptionBenefits" singularname="subscriptionBenefit" cfc="SubscriptionBenefit" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="subscriptionBenefitID" inverse="true";
-	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="subscriptionUsageBenefitID" inverse="true";
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardEligiblePriceGroup" fkcolumn="priceGroupID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SwAccountPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="accountID" inverse="true";
+	property name="subscriptionBenefits" singularname="subscriptionBenefit" cfc="SubscriptionBenefit" type="array" fieldtype="many-to-many" linktable="SwSubscriptionBenefitPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="subscriptionBenefitID" inverse="true";
+	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="many-to-many" linktable="SwSubscriptionUsageBenefitPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="subscriptionUsageBenefitID" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SwPromotionRewardEligiblePriceGroup" fkcolumn="priceGroupID" inversejoincolumn="promotionRewardID" inverse="true";
 
 	// Audit properties
 	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";

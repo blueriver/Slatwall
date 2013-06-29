@@ -60,21 +60,21 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	// Related Entities (one-to-many)
 	
 	// Related Entities (many-to-many - owner)
-	property name="fulfillmentMethods" singularname="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierFulfillmentMethod" fkcolumn="promotionQualifierID" inversejoincolumn="fulfillmentMethodID";
-	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierShippingMethod" fkcolumn="promotionQualifierID" inversejoincolumn="shippingMethodID";
-	property name="shippingAddressZones" singularname="shippingAddressZone" cfc="AddressZone" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierShippingAddressZone" fkcolumn="promotionQualifierID" inversejoincolumn="addressZoneID";
+	property name="fulfillmentMethods" singularname="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SwPromotionQualifierFulfillmentMethod" fkcolumn="promotionQualifierID" inversejoincolumn="fulfillmentMethodID";
+	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SwPromotionQualifierShippingMethod" fkcolumn="promotionQualifierID" inversejoincolumn="shippingMethodID";
+	property name="shippingAddressZones" singularname="shippingAddressZone" cfc="AddressZone" fieldtype="many-to-many" linktable="SwPromotionQualifierShippingAddressZone" fkcolumn="promotionQualifierID" inversejoincolumn="addressZoneID";
 	
-	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierBrand" fkcolumn="promotionQualifierID" inversejoincolumn="brandID";
-	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierOption" fkcolumn="promotionQualifierID" inversejoincolumn="optionID";
-	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierSku" fkcolumn="promotionQualifierID" inversejoincolumn="skuID";
-	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProduct" fkcolumn="promotionQualifierID" inversejoincolumn="productID";
-	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductType" fkcolumn="promotionQualifierID" inversejoincolumn="productTypeID";
+	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SwPromotionQualifierBrand" fkcolumn="promotionQualifierID" inversejoincolumn="brandID";
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SwPromotionQualifierOption" fkcolumn="promotionQualifierID" inversejoincolumn="optionID";
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SwPromotionQualifierSku" fkcolumn="promotionQualifierID" inversejoincolumn="skuID";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SwPromotionQualifierProduct" fkcolumn="promotionQualifierID" inversejoincolumn="productID";
+	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SwPromotionQualifierProductType" fkcolumn="promotionQualifierID" inversejoincolumn="productTypeID";
 	
-	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedBrand" fkcolumn="promotionQualifierID" inversejoincolumn="brandID";
-	property name="excludedOptions" singularname="excludedOption" cfc="Option" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedOption" fkcolumn="promotionQualifierID" inversejoincolumn="optionID";
-	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedSku" fkcolumn="promotionQualifierID" inversejoincolumn="skuID";
-	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedProduct" fkcolumn="promotionQualifierID" inversejoincolumn="productID";
-	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedProductType" fkcolumn="promotionQualifierID" inversejoincolumn="productTypeID";
+	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SwPromotionQualifierExcludedBrand" fkcolumn="promotionQualifierID" inversejoincolumn="brandID";
+	property name="excludedOptions" singularname="excludedOption" cfc="Option" type="array" fieldtype="many-to-many" linktable="SwPromotionQualifierExcludedOption" fkcolumn="promotionQualifierID" inversejoincolumn="optionID";
+	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SwPromotionQualifierExcludedSku" fkcolumn="promotionQualifierID" inversejoincolumn="skuID";
+	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SwPromotionQualifierExcludedProduct" fkcolumn="promotionQualifierID" inversejoincolumn="productID";
+	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SwPromotionQualifierExcludedProductType" fkcolumn="promotionQualifierID" inversejoincolumn="productTypeID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";

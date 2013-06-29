@@ -68,7 +68,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referencedOrderID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-To-many - owner)
-	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
+	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SwOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
 	
 	// Related Object Properties (many-to-many - inverse)
 	

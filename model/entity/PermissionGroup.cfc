@@ -50,7 +50,7 @@ component entityname="SlatwallPermissionGroup" table="SwPermissionGroup" persist
 	// Related Object Properties (many-to-many - owner)
 
 	// Related Object Properties (many-to-many - inverse)
-	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPermissionGroup" fkcolumn="permissionGroupID" inversejoincolumn="accountID" inverse="true";
+	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SwAccountPermissionGroup" fkcolumn="permissionGroupID" inversejoincolumn="accountID" inverse="true";
 	
 	// Remote Properties
 	

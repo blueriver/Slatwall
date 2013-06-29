@@ -54,8 +54,8 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	// Related Object Properties (many-to-many - owner)
 	
 	// Related Object Properties (many-to-many - inverse)
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionRewardID" inverse="true";
-	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SwPromotionRewardShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SwPromotionQualifierShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionQualifierID" inverse="true";
 
 	// Remote Properties
 	property name="remoteID" ormtype="string";

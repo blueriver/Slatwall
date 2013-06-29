@@ -57,10 +57,10 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sw
 	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="productTypes" singularname="productType" cfc="ProductType" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetProductType" fkcolumn="attributeSetID" inversejoincolumn="productTypeID";
-	property name="products" singularname="product" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetProduct" fkcolumn="attributeSetID" inversejoincolumn="productID";
-	property name="brands" singularname="brand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetBrand" fkcolumn="attributeSetID" inversejoincolumn="brandID";
-	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetSku" fkcolumn="attributeSetID" inversejoincolumn="skuID";
+	property name="productTypes" singularname="productType" cfc="ProductType" type="array" fieldtype="many-to-many" linktable="SwAttributeSetProductType" fkcolumn="attributeSetID" inversejoincolumn="productTypeID";
+	property name="products" singularname="product" cfc="Product" type="array" fieldtype="many-to-many" linktable="SwAttributeSetProduct" fkcolumn="attributeSetID" inversejoincolumn="productID";
+	property name="brands" singularname="brand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SwAttributeSetBrand" fkcolumn="attributeSetID" inversejoincolumn="brandID";
+	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SwAttributeSetSku" fkcolumn="attributeSetID" inversejoincolumn="skuID";
 
 	// Related Object Properties (many-to-many - inverse)
 	

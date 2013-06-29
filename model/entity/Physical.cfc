@@ -50,11 +50,11 @@ component entityname="SlatwallPhysical" table="SwPhysical" output="false" persis
 	property name="stockAdjustments" singularname="stockAdjustment" cfc="StockAdjustment" type="array" fieldtype="one-to-many" fkcolumn="physicalID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="locations" singularname="location" cfc="Location" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalLocation" fkcolumn="physicalID" inversejoincolumn="locationID";
-	property name="productTypes" singularname="productType" cfc="ProductType" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalProductType" fkcolumn="physicalID" inversejoincolumn="productTypeID";
-	property name="products" singularname="product" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalProduct" fkcolumn="physicalID" inversejoincolumn="productID";
-	property name="brands" singularname="brand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalBrand" fkcolumn="physicalID" inversejoincolumn="BrandID";
-	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalSku" fkcolumn="physicalID" inversejoincolumn="skuID";
+	property name="locations" singularname="location" cfc="Location" type="array" fieldtype="many-to-many" linktable="SwPhysicalLocation" fkcolumn="physicalID" inversejoincolumn="locationID";
+	property name="productTypes" singularname="productType" cfc="ProductType" type="array" fieldtype="many-to-many" linktable="SwPhysicalProductType" fkcolumn="physicalID" inversejoincolumn="productTypeID";
+	property name="products" singularname="product" cfc="Product" type="array" fieldtype="many-to-many" linktable="SwPhysicalProduct" fkcolumn="physicalID" inversejoincolumn="productID";
+	property name="brands" singularname="brand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SwPhysicalBrand" fkcolumn="physicalID" inversejoincolumn="BrandID";
+	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SwPhysicalSku" fkcolumn="physicalID" inversejoincolumn="skuID";
 	
 	// Related Object Properties (many-to-many - inverse)
 	

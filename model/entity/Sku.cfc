@@ -62,18 +62,18 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="skuID" cfc="Stock" inverse="true" cascade="all-delete-orphan";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID"; 
-	property name="accessContents" singularname="accessContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSkuAccessContent" fkcolumn="skuID" inversejoincolumn="contentID"; 
-	property name="subscriptionBenefits" singularname="subscriptionBenefit" cfc="SubscriptionBenefit" type="array" fieldtype="many-to-many" linktable="SlatwallSkuSubscriptionBenefit" fkcolumn="skuID" inversejoincolumn="subscriptionBenefitID";
-	property name="renewalSubscriptionBenefits" singularname="renewalSubscriptionBenefit" cfc="SubscriptionBenefit" type="array" fieldtype="many-to-many" linktable="SlatwallSkuRenewalSubscriptionBenefit" fkcolumn="skuID" inversejoincolumn="subscriptionBenefitID";
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SwSkuOption" fkcolumn="skuID" inversejoincolumn="optionID"; 
+	property name="accessContents" singularname="accessContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SwSkuAccessContent" fkcolumn="skuID" inversejoincolumn="contentID"; 
+	property name="subscriptionBenefits" singularname="subscriptionBenefit" cfc="SubscriptionBenefit" type="array" fieldtype="many-to-many" linktable="SwSkuSubscriptionBenefit" fkcolumn="skuID" inversejoincolumn="subscriptionBenefitID";
+	property name="renewalSubscriptionBenefits" singularname="renewalSubscriptionBenefit" cfc="SubscriptionBenefit" type="array" fieldtype="many-to-many" linktable="SwSkuRenewalSubscriptionBenefit" fkcolumn="skuID" inversejoincolumn="subscriptionBenefitID";
 	
 	// Related Object Properties (many-to-many - inverse)
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
-	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExcludedSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
-	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
-	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExcludedSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
-	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
-	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalSku" fkcolumn="skuID" inversejoincolumn="physicalID" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SwPromotionRewardSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SwPromotionRewardExcludedSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SwPromotionQualifierSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SwPromotionQualifierExcludedSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SwPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
+	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SwPhysicalSku" fkcolumn="skuID" inversejoincolumn="physicalID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";

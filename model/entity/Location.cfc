@@ -51,7 +51,7 @@ component displayname="Location" entityname="SlatwallLocation" table="SwLocation
 	// Related Object Properties (Many-to-Many - owner)
 	
 	// Related Object Properties (many-to-many - inverse)
-	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalLocation" fkcolumn="locationID" inversejoincolumn="physicalID" inverse="true";
+	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SwPhysicalLocation" fkcolumn="locationID" inversejoincolumn="physicalID" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
