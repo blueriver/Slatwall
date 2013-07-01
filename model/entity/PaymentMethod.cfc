@@ -60,12 +60,12 @@ component entityname="SlatwallPaymentMethod" table="SwPaymentMethod" persistent=
 	property name="allowSaveFlag" ormtype="boolean" default="false";
 	property name="activeFlag" ormtype="boolean" default="false";
 	property name="sortOrder" ormtype="integer";
-	property name="saveAccountPaymentMethodTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
-	property name="saveAccountPaymentMethodEncryptFlag" ormtype="boolean";
-	property name="saveOrderPaymentTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
+	property name="saveAccountPaymentMethodTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey" column="saveAccountPaymentMethodTxType";
+	property name="saveAccountPaymentMethodEncryptFlag" ormtype="boolean" column="saveAccPaymentMethodEncFlag";
+	property name="saveOrderPaymentTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey" column="saveOrderPaymentTxType";
 	property name="saveOrderPaymentEncryptFlag" ormtype="boolean";
-	property name="placeOrderChargeTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
-	property name="placeOrderCreditTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
+	property name="placeOrderChargeTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey" column="placeOrderChargeTxType";
+	property name="placeOrderCreditTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey" column="placeOrderCreditTxType";
 	
 	// Related Object Properties (many-to-one)
 	property name="paymentIntegration" cfc="Integration" fieldtype="many-to-one" fkcolumn="paymentIntegrationID";

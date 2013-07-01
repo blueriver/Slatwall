@@ -46,7 +46,7 @@ component entityname="SlatwallSubscriptionStatus" table="SwSubscriptionStatus" p
 	// Related Object Properties (many-to-one)
 	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID";
 	property name="subscriptionStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="subscriptionStatusTypeID" hb_optionsSmartListData="f:parentType.systemCode=subscriptionStatusType";
-	property name="subscriptionStatusChangeReasonType" cfc="Type" fieldtype="many-to-one" fkcolumn="subscriptionStatusChangeReasonTypeID" hb_optionsSmartListData="f:parentType.systemCode=subscriptionStatusChangeReasonType";
+	property name="subscriptionStatusChangeReasonType" cfc="Type" fieldtype="many-to-one" fkcolumn="subsStatusChangeReasonTypeID" hb_optionsSmartListData="f:parentType.systemCode=subscriptionStatusChangeReasonType";
 	
 	// Related Object Properties (one-to-many)
 	

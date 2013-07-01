@@ -45,7 +45,7 @@ component displayname="Access" entityname="SlatwallAccess" table="SwAccess" pers
 	// Related Object Properties (many-to-one)
 	property name="subscriptionUsage" cfc="SubscriptionUsage" fieldtype="many-to-one" fkcolumn="subscriptionUsageID" hb_optionsNullRBKey="define.select";
 	property name="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" fieldtype="many-to-one" fkcolumn="subscriptionUsageBenefitID" hb_optionsNullRBKey="define.select";
-	property name="subscriptionUsageBenefitAccount" cfc="SubscriptionUsageBenefitAccount" fieldtype="many-to-one" fkcolumn="subscriptionUsageBenefitAccountID" hb_optionsNullRBKey="define.select";
+	property name="subscriptionUsageBenefitAccount" cfc="SubscriptionUsageBenefitAccount" fieldtype="many-to-one" fkcolumn="subsUsageBenefitAccountID" hb_optionsNullRBKey="define.select";
 		
 	// Related Object Properties (one-to-many)
 	

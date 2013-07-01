@@ -44,7 +44,7 @@ component displayname="Account Authentication" entityname="SlatwallAccountAuthen
 	property name="expirationDateTime" ormtype="timestamp";
 	property name="integrationAccountID" ormtype="string";
 	property name="integrationAccessToken" ormtype="string";
-	property name="integrationAccessTokenExpiration" ormtype="string";
+	property name="integrationAccessTokenExpiration" ormtype="string" column="integrationAccessTokenExp";
 	property name="integrationRefreshToken" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
