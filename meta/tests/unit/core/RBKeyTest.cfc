@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,28 +35,22 @@
 
 Notes:
 
---->
-<cfcomponent extends="HibachiDAO">
+*/
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
+
+	public void function all_entity_properties_have_keys() {
+		var allEntities = listToArray(structKeyList(ORMGetSessionFactory().getAllClassMetadata()));
+		var allFound = true;
+		for(var entityName in allEntities) {
+			var properties = request.slatwallScope.getService("hibachiService").getPropertiesByEntityName(entityName);
+			for(var property in properties) {
+				var keyValue = request.slatwallScope.rbKey('entity.#entityName#.#property.name#');
+				if(right(keyValue,8) == '_missing') {
+					debug(keyValue);
+				}
+			}
+		}
+	}
 	
-	<cffunction name="getMissingUserAccounts" returntype="any" access="public">
-		<cfquery name="accounts">
-			SELECT
-				accountID
-			FROM	
-				SlatwallAccount
-			INNER JOIN
-				tusers on SlatwallAccount.cmsAccountID = tusers.userID
-			WHERE
-				tusers.s2 = 1
-			AND
-				accountID NOT IN (
-					SELECT
-						accountID
-					FROM
-						SlatwallAccountPermissionGroup
-				)
-		</cfquery>	
-		<cfreturn accounts />
-	</cffunction>
-	
-</cfcomponent>
+}
+
