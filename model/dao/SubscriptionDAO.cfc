@@ -57,7 +57,7 @@ Notes:
 		<cfif getApplicationValue("databaseType") eq "MySQL">
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
-				FROM SwSubscriptionUsage su
+				FROM SwSubsUsage su
 				WHERE (su.nextBillDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
 					AND 'sstActive' = (SELECT systemCode FROM SwSubscriptionStatus 
 								INNER JOIN SwType ON SwSubscriptionStatus.subscriptionStatusTypeID = SwType.typeID
@@ -68,7 +68,7 @@ Notes:
 		<cfelse>
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
-				FROM SwSubscriptionUsage su
+				FROM SwSubsUsage su
 				WHERE (su.nextBillDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
 					AND 'sstActive' = (SELECT TOP 1 systemCode FROM SwSubscriptionStatus 
 								INNER JOIN SwType ON SwSubscriptionStatus.subscriptionStatusTypeID = SwType.typeID
@@ -94,7 +94,7 @@ Notes:
 		<cfif getApplicationValue("databaseType") eq "MySQL">
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
-				FROM SwSubscriptionUsage su
+				FROM SwSubsUsage su
 				WHERE (su.nextReminderEmailDate IS NULL OR su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
 					AND 'sstActive' = (SELECT systemCode FROM SwSubscriptionStatus 
 								INNER JOIN SwType ON SwSubscriptionStatus.subscriptionStatusTypeID = SwType.typeID
@@ -105,7 +105,7 @@ Notes:
 		<cfelse>
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
-				FROM SwSubscriptionUsage su
+				FROM SwSubsUsage su
 				WHERE (su.nextReminderEmailDate IS NULL OR su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
 					AND 'sstActive' = (SELECT TOP 1 systemCode FROM SwSubscriptionStatus 
 								INNER JOIN SwType ON SwSubscriptionStatus.subscriptionStatusTypeID = SwType.typeID

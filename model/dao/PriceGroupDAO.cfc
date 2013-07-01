@@ -47,10 +47,10 @@ Notes:
 		<cfif getApplicationValue("databaseType") eq "mySQL">
 				<cfquery name="getpg">
 					SELECT DISTINCT subpg.priceGroupID
-					FROM SwSubscriptionUsageBenefitAccount suba
-					INNER JOIN SwSubscriptionUsageBenefit sub ON suba.subscriptionUsageBenefitID = sub.subscriptionUsageBenefitID
-					INNER JOIN SwSubscriptionUsageBenefitPriceGroup subpg ON sub.subscriptionUsageBenefitID = subpg.subscriptionUsageBenefitID
-					INNER JOIN SwSubscriptionUsage su ON sub.subscriptionUsageID = su.subscriptionUsageID
+					FROM SwSubsUsageBenefitAccount suba
+					INNER JOIN SwSubsUsageBenefit sub ON suba.subscriptionUsageBenefitID = sub.subscriptionUsageBenefitID
+					INNER JOIN SwSubsUsageBenefitPriceGroup subpg ON sub.subscriptionUsageBenefitID = subpg.subscriptionUsageBenefitID
+					INNER JOIN SwSubsUsage su ON sub.subscriptionUsageID = su.subscriptionUsageID
 					WHERE (suba.endDateTime IS NULL
 							OR suba.endDateTime > <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />)
 						AND suba.accountID = <cfqueryparam value="#arguments.accountID#" cfsqltype="cf_sql_varchar" />
@@ -63,10 +63,10 @@ Notes:
 		<cfelse>
 				<cfquery name="getpg">
 					SELECT DISTINCT subpg.priceGroupID
-					FROM SwSubscriptionUsageBenefitAccount suba
-					INNER JOIN SwSubscriptionUsageBenefit sub ON suba.subscriptionUsageBenefitID = sub.subscriptionUsageBenefitID
-					INNER JOIN SwSubscriptionUsageBenefitPriceGroup subpg ON sub.subscriptionUsageBenefitID = subpg.subscriptionUsageBenefitID
-					INNER JOIN SwSubscriptionUsage su ON sub.subscriptionUsageID = su.subscriptionUsageID
+					FROM SwSubsUsageBenefitAccount suba
+					INNER JOIN SwSubsUsageBenefit sub ON suba.subscriptionUsageBenefitID = sub.subscriptionUsageBenefitID
+					INNER JOIN SwSubsUsageBenefitPriceGroup subpg ON sub.subscriptionUsageBenefitID = subpg.subscriptionUsageBenefitID
+					INNER JOIN SwSubsUsage su ON sub.subscriptionUsageID = su.subscriptionUsageID
 					WHERE (suba.endDateTime IS NULL
 							OR suba.endDateTime > <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />)
 						AND suba.accountID = <cfqueryparam value="#arguments.accountID#" cfsqltype="cf_sql_varchar" />
