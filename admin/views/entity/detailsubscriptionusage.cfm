@@ -45,6 +45,8 @@ Notes:
 			<cf_HibachiActionCaller action="admin:entity.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.renewSubscription_nav')#" queryString="process=1&processContext=manualRenew&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#&redirectAction=admin:entity.detailsubscriptionusage" type="list" />
 			<cf_HibachiActionCaller action="admin:entity.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.cancelSubscription_nav')#" queryString="process=1&processContext=cancel&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#&redirectAction=admin:entity.detailsubscriptionusage" type="list" />
 			<cf_HibachiActionCaller action="admin:entity.processSubscriptionUsage" text="#$.slatwall.rbKey('admin.account.processsubscriptionusage.updateSubscription_nav')#" queryString="process=1&processContext=update&subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#&redirectAction=admin:entity.detailsubscriptionusage" type="list" />
+			
+			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.processSubscriptionUsage" processContext="updateStatus" type="list" />
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>

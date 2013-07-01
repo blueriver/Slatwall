@@ -238,21 +238,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 		}
 	}
-
-	// process a subscription usage
-	public any function processSubscriptionUsage(required any subscriptionUsage, struct data={}, any processContext="update") {
-		if(arguments.processContext == 'autoRenew') {
-			return autoRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
-		} else if(arguments.processContext == 'manualRenew') {
-			return manualRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
-		} else if(arguments.processContext == 'retry') {
-			return retryRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
-		} else if(arguments.processContext == 'cancel') {
-			return cancelSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
-		} else if(arguments.processContext == 'update') {
-			return updateSubscriptionUsageStatus(arguments.subscriptionUsage);
-		}
-	}
 	
 	// renew a subscription usage automatically through a task
 	private any function autoRenewSubscriptionUsage(required any subscriptionUsage, struct data={}) {
@@ -328,8 +313,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				}
 
 			} 
+			
 			// update the Subscription Status
-			updateSubscriptionUsageStatus(arguments.subscriptionUsage);	
+			this.processSubscriptionUsage(arguments.subscriptionUsage, {}, 'updateStatus');
 		}
 		
 		return arguments.subscriptionUsage;
@@ -423,50 +409,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 
 		// update the Subscription Status
-		updateSubscriptionUsageStatus(arguments.subscriptionUsage);	
+		this.processSubscriptionUsage(arguments.subscriptionUsage, {}, 'updateStatus');
 		
-		return arguments.subscriptionUsage;
-	}
-	
-	// renew a subscription usage by retrying
-	private any function retryRenewSubscriptionUsage(required any subscriptionUsage, struct data={}) {
-		throw("Implement me!");
-	}
-
-	private void function updateSubscriptionUsageStatus(required any subscriptionUsage) {
-		// Is the next bill date + grace period in past || the next bill date is in the future, but the last order for this subscription usage hasn't been paid (+ grace period from that orders date)
-			// Suspend
-		
-		// get the current status
-		var currentStatus = arguments.subscriptionUsage.getCurrentStatus();
-		
-		// if current status is active and expiration date in past
-		if(currentStatus.getSubscriptionStatusType().getSystemCode() == 'sstActive' && arguments.subscriptionUsage.getExpirationDate() <= now()) {
-			// suspend
-			setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstSuspended');
-			// reset expiration date
-			arguments.subscriptionUsage.setExpirationDate(javaCast("null",""));
-		
-		} else if (arguments.subscriptionUsage.getExpirationDate() > now()) {
-			// if current status is not active, set active status to subscription usage
-			if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
-				setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstActive');
-			}
-		}
-	}
-	
-	private any function cancelSubscriptionUsage(required any subscriptionUsage, struct data={}) {
-		// first check if it's not alreayd cancelled
-		if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstCancelled') {
-			if(!structKeyExists(data, "effectiveDateTime")) {
-				data.effectiveDate = now();
-			}
-			if(!structKeyExists(data, "subscriptionStatusChangeReasonTypeCode")) {
-				data.subscriptionStatusChangeReasonTypeCode = "";
-			}
-			// add cancelled status to subscription usage
-			setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstCancelled', data.effectiveDate, data.subscriptionStatusChangeReasonTypeCode);
-		}
 		return arguments.subscriptionUsage;
 	}
 	
@@ -545,6 +489,59 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// ===================== START: DAO Passthrough ===========================
 	
 	// ===================== START: Process Methods ===========================
+	
+	/*
+	// process a subscription usage
+	public any function processSubscriptionUsage(required any subscriptionUsage, struct data={}, any processContext="update") {
+		if(arguments.processContext == 'autoRenew') {
+			return autoRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
+		} else if(arguments.processContext == 'manualRenew') {
+			return manualRenewSubscriptionUsage(arguments.subscriptionUsage, arguments.data);
+		}
+	}
+	*/
+	
+	
+	public any function processSubscriptionUsage_cancel(required any subscriptionUsage, struct data={}) {
+		// first check if it's not alreayd cancelled
+		if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstCancelled') {
+			if(!structKeyExists(data, "effectiveDateTime")) {
+				data.effectiveDate = now();
+			}
+			if(!structKeyExists(data, "subscriptionStatusChangeReasonTypeCode")) {
+				data.subscriptionStatusChangeReasonTypeCode = "";
+			}
+			
+			// add cancelled status to subscription usage
+			setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstCancelled', data.effectiveDate, data.subscriptionStatusChangeReasonTypeCode);
+		}
+		
+		return arguments.subscriptionUsage;
+	}
+	
+	public any function processSubscriptionUsage_updateStatus(required any subscriptionUsage) {
+		// Is the next bill date + grace period in past || the next bill date is in the future, but the last order for this subscription usage hasn't been paid (+ grace period from that orders date)
+			// Suspend
+		
+		// get the current status
+		var currentStatus = arguments.subscriptionUsage.getCurrentStatus();
+		
+		// if current status is active and expiration date in past
+		if(currentStatus.getSubscriptionStatusType().getSystemCode() == 'sstActive' && arguments.subscriptionUsage.getExpirationDate() <= now()) {
+			// suspend
+			setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstSuspended');
+			// reset expiration date
+			arguments.subscriptionUsage.setExpirationDate(javaCast("null",""));
+		
+		} else if (arguments.subscriptionUsage.getExpirationDate() > now()) {
+			// if current status is not active, set active status to subscription usage
+			if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
+				setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstActive');
+			}
+		}
+		
+		return arguments.subscriptionUsage;
+	}
 	
 	// =====================  END: Process Methods ============================
 	
