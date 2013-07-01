@@ -700,6 +700,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 	
 	public any function processOrder_create(required any order, required any processObject, required struct data={}) {
+		
 		// Setup Account
 		if(arguments.processObject.getNewAccountFlag()) {
 			var account = getAccountService().processAccount(getAccountService().newAccount(), arguments.data, "create");
@@ -708,6 +709,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		arguments.order.setAccount(account);
 		
+		// Setup Order Type
+		arguments.order.setOrderType( getSettingService().getType( processObject.getOrderTypeID() ) );
+		
 		// Setup the Order Origin
 		if( len(arguments.processObject.getOrderOriginID()) ) {
 			arguments.order.setOrderOrigin( getSettingService().getOrderOrigin(arguments.processObject.getOrderOriginID()) );
@@ -715,18 +719,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// Setup the Currency Code
 		arguments.order.setCurrencyCode( arguments.processObject.getCurrencyCode() );
-		
-		// Determine the order type
-		var orderType = getSettingService().getType( processObject.getOrderTypeID() );
-		
-		// If the order type is a return or exchange then setup the first order return
-		if (listFindNoCase("otReturnOrder,otExchangeOrder", orderType.getSystemCode())) {
-			
-			// Setup the first order fulfillment
-			var orderReturn = this.newOrderReturn();
-			
-			orderReturn.setOrder( arguments.order );
-		}
 		
 		// Save the order
 		arguments.order = this.saveOrder(arguments.order);
