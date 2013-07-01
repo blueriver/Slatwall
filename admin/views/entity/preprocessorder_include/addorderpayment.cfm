@@ -62,12 +62,12 @@ Notes:
 			<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject#" property="saveAccountPaymentMethodFlag" edit="#rc.edit#" />
 			
 			<!--- Save New Address Name --->
-			<cf_HibachiDisplayToggle selector="input[name='saveAccountPaymentMethodFlag']" loadVisable="#rc.addOrderPaymentProcessObject.getPropertyValue('saveAccountPaymentMethodFlag')#">
+			<cf_HibachiDisplayToggle selector="input[name='saveAccountPaymentMethodFlag']" loadVisable="#rc.addOrderPaymentProcessObject.getValueByPropertyIdentifier('saveAccountPaymentMethodFlag')#">
 				<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject#" property="saveAccountPaymentMethodName" edit="#rc.edit#" />
 			</cf_HibachiDisplayToggle>
 		</cf_HibachiDisplayToggle>
 		
-		<cfset loadPaymentMethodType = rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethodOptions()[1]['paymentMethodType'] />
+		<cfset loadPaymentMethodType = rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethodOptions()[1]['paymentmethodtype'] />
 		<cfif !isNull(rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethod())>
 			<cfset loadPaymentMethodType = rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethod().getPaymentMethodType() />
 		</cfif>
@@ -107,7 +107,7 @@ Notes:
 		<cf_HibachiDisplayToggle selector="select[name='newOrderPayment.paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard,check,termPayment" loadVisable="#listFindNoCase('creditCard,check,termPayment', loadPaymentMethodType)#">
 			<h5>#$.slatwall.rbKey('entity.orderPayment.billingAddress')#</h5>
 			<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject#" property="accountAddressID" edit="#rc.edit#">
-			<cf_HibachiDisplayToggle selector="select[name='accountAddressID']" showValues="">
+			<cf_HibachiDisplayToggle selector="select[name='accountAddressID']" showValues="" loadVisable="#!len(rc.addOrderPaymentProcessObject.getAccountAddressID())#">
 				<cf_SlatwallAdminAddressDisplay address="#rc.addOrderPaymentProcessObject.getNewOrderPayment().getBillingAddress()#" filedNamePrefix="newOrderPayment.billingAddresss." edit="#rc.edit#" />
 			</cf_HibachiDisplayToggle>	
 		</cf_HibachiDisplayToggle>
