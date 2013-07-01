@@ -356,7 +356,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// ================== START: Overridden Methods ========================
 	
-	public numeric function getFulfillmentRefundAmount() {
+	public numeric function getFulfillmentCharge() {
 		if(!structKeyExists(variables, "fulfillmentCharge")) {
 			variables.fulfillmentCharge = 0;
 		}
