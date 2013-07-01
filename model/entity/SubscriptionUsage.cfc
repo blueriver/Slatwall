@@ -75,10 +75,9 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 	
 	// Non-Persistent Properties
 	property name="currentStatus" persistent="false";
+	property name="currentStatusCode" persistent="false";
 	property name="currentStatusType" persistent="false";
 	property name="subscriptionOrderItemName" persistent="false";
-
-	
 	
 	public boolean function isActive() {
 		if(!isNull(getCurrentStatus())) {

@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -36,30 +36,19 @@
 Notes:
 
 --->
-
-<cfparam name="rc.redirectAction" type="string" default="admin:entity.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentID#" />
-<cfparam name="rc.processStockAdjustmentSmartList" type="any" />
-<cfparam name="rc.multiProcess" type="boolean" />
+<cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<cf_SlatwallProcessForm>
+	<cf_HibachiEntityProcessForm entity="#rc.order#" edit="#rc.edit#" sRedirectAction="admin:entity.editorder">
 		
-		<cf_HibachiEntityActionBar type="process" />
+		<cf_HibachiEntityActionBar type="preprocess" object="#rc.order#">
+		</cf_HibachiEntityActionBar>
 		
-		<cfswitch expression="#rc.processcontext#" >
-			<cfcase value="addItems">
+		<cf_HibachiPropertyRow>
+			<cf_HibachiPropertyList>
 				
-				<cf_SlatwallProcessListing processSmartList="#rc.processStockAdjustmentSmartList#" processRecordsProperty="adjustmentSkuOptions">
-					<cf_SlatwallProcessColumn propertyIdentifier="product.brand.brandName" />
-					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="product.productName" />
-					<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
-					<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
-					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
-				</cf_SlatwallProcessListing>
-				
-			</cfcase> 
-				
-		</cfswitch>
+			</cf_HibachiPropertyList>
+		</cf_HibachiPropertyRow>
 		
-	</cf_SlatwallProcessForm>
+	</cf_HibachiEntityProcessForm>
 </cfoutput>
