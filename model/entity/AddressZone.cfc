@@ -49,7 +49,7 @@ component displayname="Address Zone" entityname="SlatwallAddressZone" table="SwA
 	
 	// Related Object Properties (Many-To-Many)
 	property name="addressZoneLocations" singularname="addressZoneLocation" cfc="Address" fieldtype="many-to-many" linktable="SwAddressZoneLocation" fkcolumn="addressZoneID" inversejoincolumn="addressID" cascade="all-delete-orphan";
-	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SwPromoQualShippingAddressZone" fkcolumn="addressZoneID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SwPromoQualShipAddressZone" fkcolumn="addressZoneID" inversejoincolumn="promotionQualifierID" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
