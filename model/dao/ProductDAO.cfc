@@ -429,11 +429,11 @@ Notes:
 			SELECT
 				count(*) as 'count'
 			FROM
-				SlatwallOrderItem
+				SwOrderItem
 			  INNER JOIN
-			  	SlatwallSku on SlatwallOrderItem.SkuID = SlatwallSku.skuID
+			  	SwSku on SwOrderItem.SkuID = SwSku.skuID
 			WHERE
-				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.product.getProductID()#" />
+				SwSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.product.getProductID()#" />
 		</cfquery>
 		<cfif rs.count>
 			<cfreturn true />
@@ -443,13 +443,13 @@ Notes:
 			SELECT
 				count(*) as 'count'
 			FROM
-				SlatwallVendorOrderItem
+				SwVendorOrderItem
 			  INNER JOIN
-			  	SlatwallStock on SlatwallVendorOrderItem.stockID = SlatwallStock.stockID
+			  	SwStock on SwVendorOrderItem.stockID = SwStock.stockID
 			  INNER JOIN			  	
-			  	SlatwallSku on SlatwallStock.skuID = SlatwallSku.skuID
+			  	SwSku on SwStock.skuID = SwSku.skuID
 			WHERE
-				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.product.getProductID()#" />
+				SwSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.product.getProductID()#" />
 		</cfquery>
 		<cfif rs.count>
 			<cfreturn true />
@@ -459,13 +459,13 @@ Notes:
 			SELECT
 				count(*) as 'count'
 			FROM
-				SlatwallStockAdjustmentItem
+				SwStockAdjustmentItem
 			  INNER JOIN
-			  	SlatwallStock on SlatwallStockAdjustmentItem.fromStockID = SlatwallStock.stockID
+			  	SwStock on SwStockAdjustmentItem.fromStockID = SwStock.stockID
 			  INNER JOIN			  	
-			  	SlatwallSku on SlatwallStock.skuID = SlatwallSku.skuID
+			  	SwSku on SwStock.skuID = SwSku.skuID
 			WHERE
-				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.product.getProductID()#" />
+				SwSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.product.getProductID()#" />
 		</cfquery>
 		<cfif rs.count>
 			<cfreturn true />
@@ -475,13 +475,13 @@ Notes:
 			SELECT
 				count(*) as 'count'
 			FROM
-				SlatwallStockAdjustmentItem
+				SwStockAdjustmentItem
 			  INNER JOIN
-			  	SlatwallStock on SlatwallStockAdjustmentItem.toStockID = SlatwallStock.stockID
+			  	SwStock on SwStockAdjustmentItem.toStockID = SwStock.stockID
 			  INNER JOIN			  	
-			  	SlatwallSku on SlatwallStock.skuID = SlatwallSku.skuID
+			  	SwSku on SwStock.skuID = SwSku.skuID
 			WHERE
-				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.product.getProductID()#" />
+				SwSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.product.getProductID()#" />
 		</cfquery>
 		<cfif rs.count>
 			<cfreturn true />

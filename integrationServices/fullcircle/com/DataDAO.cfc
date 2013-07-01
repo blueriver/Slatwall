@@ -41,13 +41,13 @@
 			<cfset var sizeOptionGroupID = createSlatwallUUID() />
 			
 			<cfquery name="rs">
-				SELECT optionGroupID FROM SlatwallOptionGroup WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="S">
+				SELECT optionGroupID FROM SwOptionGroup WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="S">
 			</cfquery>
 			<cfif rs.recordCount>
 				<cfset sizeOptionGroupID = rs.optionGroupID />
 			<cfelse>
 				<cfquery name="rs">
-					INSERT INTO SlatwallOptionGroup (
+					INSERT INTO SwOptionGroup (
 						optionGroupID,
 						optionGroupName,
 						optionGroupCode,
@@ -66,13 +66,13 @@
 			<!--- Verify Color Option Groups Exist --->
 			<cfset var colorOptionGroupID = createSlatwallUUID() />
 			<cfquery name="rs">
-				SELECT optionGroupID FROM SlatwallOptionGroup WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="C">
+				SELECT optionGroupID FROM SwOptionGroup WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="C">
 			</cfquery>
 			<cfif rs.recordCount>
 				<cfset colorOptionGroupID = rs.optionGroupID />
 			<cfelse>
 				<cfquery name="rs">
-					INSERT INTO SlatwallOptionGroup (
+					INSERT INTO SwOptionGroup (
 						optionGroupID,
 						optionGroupName,
 						optionGroupCode,
@@ -96,7 +96,7 @@
 				
 				<cfquery name="rs" result="rsResult">
 					UPDATE
-						SlatwallSku
+						SwSku
 					SET
 						price = <cfqueryparam cfsqltype="cf_sql_money" value="#productData.Price#">,
 						listPrice = <cfqueryparam cfsqltype="cf_sql_money" value="#productData.Price#">
@@ -111,7 +111,7 @@
 					
 					<!--- Check if Product Exist --->
 					<cfquery name="rs">
-						SELECT productID FROM SlatwallProduct WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#productData.ProductCode#">
+						SELECT productID FROM SwProduct WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#productData.ProductCode#">
 					</cfquery>
 					<!--- It Does --->
 					<cfif rs.recordCount>
@@ -125,7 +125,7 @@
 						<cfif not structKeyExists(brandMappings, productData.DivisionCode)>
 					
 							<cfquery name="rs">
-								SELECT brandID FROM SlatwallBrand WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#productData.DivisionCode#">
+								SELECT brandID FROM SwBrand WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#productData.DivisionCode#">
 							</cfquery>
 							
 							<cfif rs.recordCount>
@@ -135,7 +135,7 @@
 								<cfset brandMappings[ productData.DivisionCode ] = createSlatwallUUID() />
 								
 								<cfquery name="rs">
-									INSERT INTO SlatwallBrand (
+									INSERT INTO SwBrand (
 										brandID,
 										activeFlag,
 										brandName,
@@ -154,7 +154,7 @@
 						
 						<!--- Insert Product --->
 						<cfquery name="rs">
-							INSERT INTO SlatwallProduct (
+							INSERT INTO SwProduct (
 								productID,
 								activeFlag,
 								brandID,
@@ -177,7 +177,7 @@
 					
 					<!--- Insert Sku --->
 					<cfquery name="rs">
-						INSERT INTO SlatwallSku (
+						INSERT INTO SwSku (
 							skuID,
 							skuCode,
 							activeFlag,
@@ -202,7 +202,7 @@
 					<cfif not structKeyExists(sizeMappings, productData.Size)>
 					
 						<cfquery name="rs">
-							SELECT optionID FROM SlatwallOption WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="S_#productData.Size#">
+							SELECT optionID FROM SwOption WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="S_#productData.Size#">
 						</cfquery>
 						
 						<cfif rs.recordCount>
@@ -212,7 +212,7 @@
 							<cfset sizeMappings[ productData.Size ] = createSlatwallUUID() />
 							
 							<cfquery name="rs">
-								INSERT INTO SlatwallOption (
+								INSERT INTO SwOption (
 									optionID,
 									optionGroupID,
 									optionName,
@@ -235,7 +235,7 @@
 					<cfif not structKeyExists(colorMappings, productData.ColorCode)>
 					
 						<cfquery name="rs">
-							SELECT optionID FROM SlatwallOption WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="C_#productData.ColorCode#">
+							SELECT optionID FROM SwOption WHERE remoteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="C_#productData.ColorCode#">
 						</cfquery>
 						
 						<cfif rs.recordCount>
@@ -245,7 +245,7 @@
 							<cfset colorMappings[ productData.ColorCode ] = createSlatwallUUID() />
 							
 							<cfquery name="rs">
-								INSERT INTO SlatwallOption (
+								INSERT INTO SwOption (
 									optionID,
 									optionGroupID,
 									optionName,
@@ -266,16 +266,16 @@
 					
 					<!--- Insert Sku Size --->
 					<cfquery name="rs">
-						INSERT INTO SlatwallSkuOption (skuID, optionID) VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#skuID#">, <cfqueryparam cfsqltype="cf_sql_varchar" value="#sizeMappings[ productData.Size ]#">)
+						INSERT INTO SwSkuOption (skuID, optionID) VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#skuID#">, <cfqueryparam cfsqltype="cf_sql_varchar" value="#sizeMappings[ productData.Size ]#">)
 					</cfquery>
 					<!--- Insert Sku Color --->
 					<cfquery name="rs">
-						INSERT INTO SlatwallSkuOption (skuID, optionID) VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#skuID#">, <cfqueryparam cfsqltype="cf_sql_varchar" value="#colorMappings[ productData.ColorCode ]#">)
+						INSERT INTO SwSkuOption (skuID, optionID) VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#skuID#">, <cfqueryparam cfsqltype="cf_sql_varchar" value="#colorMappings[ productData.ColorCode ]#">)
 					</cfquery>
 					
 					<!--- Update Products where defaultSkuID is null and productID is this productID --->
 					<cfquery name="rs">
-						UPDATE SlatwallProduct SET defaultSkuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#skuID#"> WHERE productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#productID#"> AND defaultSkuID IS NULL
+						UPDATE SwProduct SET defaultSkuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#skuID#"> WHERE productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#productID#"> AND defaultSkuID IS NULL
 					</cfquery>
 					
 				</cfif>

@@ -52,7 +52,7 @@ Notes:
 			SELECT
 				#idColumnName#
 			FROM
-				SlatwallPaymentTransaction 
+				SwPaymentTransaction 
 			WHERE
 				#idColumnName# = <cfqueryparam value="#arguments.paymentID#" cfsqltype="cf_sql_varchar" />
 			  AND

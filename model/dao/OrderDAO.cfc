@@ -44,7 +44,7 @@ Notes:
 		<cfset var rs = "" />
 		
 		<cfquery name="rs">
-			UPDATE SlatwallSession SET orderID = null WHERE orderID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.orderID#" />	
+			UPDATE SwSession SET orderID = null WHERE orderID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.orderID#" />	
 		</cfquery>
 	</cffunction>
 	

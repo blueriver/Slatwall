@@ -43,9 +43,9 @@ Notes:
 			SELECT
 				accountID
 			FROM	
-				SlatwallAccount
+				SwAccount
 			INNER JOIN
-				tusers on SlatwallAccount.cmsAccountID = tusers.userID
+				tusers on SwAccount.cmsAccountID = tusers.userID
 			WHERE
 				tusers.s2 = 1
 			AND
@@ -53,7 +53,7 @@ Notes:
 					SELECT
 						accountID
 					FROM
-						SlatwallAccountPermissionGroup
+						SwAccountPermissionGroup
 				)
 		</cfquery>	
 		<cfreturn accounts />

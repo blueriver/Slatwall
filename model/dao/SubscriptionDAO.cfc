@@ -57,23 +57,23 @@ Notes:
 		<cfif getApplicationValue("databaseType") eq "MySQL">
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
-				FROM SlatwallSubscriptionUsage su
+				FROM SwSubscriptionUsage su
 				WHERE (su.nextBillDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
-					AND 'sstActive' = (SELECT systemCode FROM SlatwallSubscriptionStatus 
-								INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
-								WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
-								AND SlatwallSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
+					AND 'sstActive' = (SELECT systemCode FROM SwSubscriptionStatus 
+								INNER JOIN SwType ON SwSubscriptionStatus.subscriptionStatusTypeID = SwType.typeID
+								WHERE SwSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
+								AND SwSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
 								ORDER BY changeDateTime DESC LIMIT 1)
 			</cfquery>
 		<cfelse>
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
-				FROM SlatwallSubscriptionUsage su
+				FROM SwSubscriptionUsage su
 				WHERE (su.nextBillDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
-					AND 'sstActive' = (SELECT TOP 1 systemCode FROM SlatwallSubscriptionStatus 
-								INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
-								WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
-								AND SlatwallSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
+					AND 'sstActive' = (SELECT TOP 1 systemCode FROM SwSubscriptionStatus 
+								INNER JOIN SwType ON SwSubscriptionStatus.subscriptionStatusTypeID = SwType.typeID
+								WHERE SwSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
+								AND SwSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
 								ORDER BY changeDateTime DESC)
 			</cfquery>
 		</cfif>
@@ -94,23 +94,23 @@ Notes:
 		<cfif getApplicationValue("databaseType") eq "MySQL">
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
-				FROM SlatwallSubscriptionUsage su
+				FROM SwSubscriptionUsage su
 				WHERE (su.nextReminderEmailDate IS NULL OR su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
-					AND 'sstActive' = (SELECT systemCode FROM SlatwallSubscriptionStatus 
-								INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
-								WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
-								AND SlatwallSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
+					AND 'sstActive' = (SELECT systemCode FROM SwSubscriptionStatus 
+								INNER JOIN SwType ON SwSubscriptionStatus.subscriptionStatusTypeID = SwType.typeID
+								WHERE SwSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
+								AND SwSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
 								ORDER BY changeDateTime DESC LIMIT 1)
 			</cfquery>
 		<cfelse>
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
-				FROM SlatwallSubscriptionUsage su
+				FROM SwSubscriptionUsage su
 				WHERE (su.nextReminderEmailDate IS NULL OR su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
-					AND 'sstActive' = (SELECT TOP 1 systemCode FROM SlatwallSubscriptionStatus 
-								INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
-								WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
-								AND SlatwallSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
+					AND 'sstActive' = (SELECT TOP 1 systemCode FROM SwSubscriptionStatus 
+								INNER JOIN SwType ON SwSubscriptionStatus.subscriptionStatusTypeID = SwType.typeID
+								WHERE SwSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
+								AND SwSubscriptionStatus.effectiveDateTime <= <cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />
 								ORDER BY changeDateTime DESC)
 			</cfquery>
 		</cfif>
