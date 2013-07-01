@@ -253,7 +253,7 @@ component extends="HibachiService" accessors="true" {
 		arguments.product.populate(arguments.data);
 		
 		if(isNull(arguments.product.getURLTitle())) {
-			arguments.product.setURLTitle(getDataService().createUniqueURLTitle(titleString=arguments.product.getTitle(), tableName="SlatwallProduct"));
+			arguments.product.setURLTitle(getDataService().createUniqueURLTitle(titleString=arguments.product.getTitle(), tableName="SwProduct"));
 		}
 		
 		// If this is a new product and it doesn't have any errors... there are a few additional steps we need to take
@@ -285,7 +285,7 @@ component extends="HibachiService" accessors="true" {
 			} else {
 				param name="arguments.data.productTypeName" default="";
 			}
-			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.productTypeName, tableName="SlatwallProduct");
+			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.productTypeName, tableName="SwProduct");
 		}
 		
 		arguments.productType = super.save(arguments.productType, arguments.data);
