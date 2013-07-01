@@ -1052,7 +1052,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Persit the new order
 		getHibachiDAO().save( returnOrder );
 		
-		return arguments.order;
+		// Return the new order so that the redirect takes users to this new order
+		return returnOrder;
 	}
 	
 	// Process: Order Delivery

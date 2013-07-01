@@ -112,7 +112,7 @@
 			
 			// if the entity still has no errors then we call call the process method
 			if(!arguments.entity.hasErrors()) {
-				this.invokeMethod("process#arguments.entity.getClassName()#_#arguments.processContext#", invokeArguments);
+				arguments.entity = this.invokeMethod("process#arguments.entity.getClassName()#_#arguments.processContext#", invokeArguments);
 			}	
 			
 			// Announce the after events
