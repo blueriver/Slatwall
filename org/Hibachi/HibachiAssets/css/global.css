@@ -291,7 +291,7 @@ range-filter-upper {
 .autocomplete-selected {
   position: absolute;
   float: left;
-  top: 6px;
+  top: 2px;
   left: 4px;
   width: 206px;
   padding: 4px 5px 4px 5px;

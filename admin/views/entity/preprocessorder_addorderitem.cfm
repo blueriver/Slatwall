@@ -82,10 +82,10 @@ Notes:
 							<!--- Fulfillment Method --->
 							<cf_HibachiPropertyDisplay object="#rc.processObject#" property="fulfillmentMethodID" edit="#rc.edit#">
 							
-							<cfset loadFulfillmentMethodType = rc.processObject.getFulfillmentMethodIDOptions()[1]['paymentmethodtype'] />
+							<cfset loadFulfillmentMethodType = rc.processObject.getFulfillmentMethodIDOptions()[1]['fulfillmentMethodType'] />
 							<cfloop array="#rc.processObject.getFulfillmentMethodIDOptions()#" index="option">
 								<cfif option['value'] eq rc.processObject.getOrderFulfillmentID()>
-									<cfset loadFulfillmentMethodType = option['fulfillmentmethodtype'] />
+									<cfset loadFulfillmentMethodType = option['fulfillmentMethodType'] />
 								</cfif> 	
 							</cfloop>
 							
@@ -104,7 +104,7 @@ Notes:
 								<cf_HibachiPropertyDisplay object="#rc.processObject#" property="shippingAccountAddressID" edit="#rc.edit#" value="#defaultValue#" />
 								
 								<!--- New Address --->
-								<cf_HibachiDisplayToggle selector="select[name='shippingAccountAddressID']" showValues="new" loadVisable="#rc.processObject.getShippingAccountAddressID() eq 'new'#">
+								<cf_HibachiDisplayToggle selector="select[name='shippingAccountAddressID']" showValues="" loadVisable="#rc.processObject.getShippingAccountAddressID() eq ''#">
 									
 									<!--- Address Display --->
 									<cf_SlatwallAdminAddressDisplay address="#rc.processObject.getShippingAddress()#" fieldNamePrefix="shippingAddress." />

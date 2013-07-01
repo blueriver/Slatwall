@@ -499,7 +499,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
 						
 						// Check for an accountAddress
-						if(len(arguments.processObject.getShippingAccountAddressID()) && arguments.processObject.getShippingAccountAddressID() neq "new") {
+						if(len(arguments.processObject.getShippingAccountAddressID())) {
 							
 							// Find the correct account address, and set it in the order fulfillment
 							var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getShippingAccountAddressID() );

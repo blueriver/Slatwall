@@ -67,7 +67,7 @@ Notes:
 			</cf_HibachiDisplayToggle>
 		</cf_HibachiDisplayToggle>
 		
-		<cfset loadPaymentMethodType = rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethodOptions()[1]['paymentmethodtype'] />
+		<cfset loadPaymentMethodType = rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethodOptions()[1]['paymentMethodType'] />
 		<cfif !isNull(rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethod())>
 			<cfset loadPaymentMethodType = rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethod().getPaymentMethodType() />
 		</cfif>
