@@ -36,7 +36,7 @@
 Notes:
 
 */
-component entityname="SlatwallSubscriptionBenefit" table="SwSubscriptionBenefit" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="subscriptionService" hb_permission="this" {
+component entityname="SlatwallSubscriptionBenefit" table="SwSubsBenefit" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="subscriptionService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="subscriptionBenefitID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -49,12 +49,12 @@ component entityname="SlatwallSubscriptionBenefit" table="SwSubscriptionBenefit"
 	// Related Object Properties (one-to-many)
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SwSubscriptionBenefitPriceGroup" fkcolumn="subscriptionBenefitID" inversejoincolumn="priceGroupID" cascade="all";
-	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SwSubscriptionBenefitPromotion" fkcolumn="subscriptionBenefitID" inversejoincolumn="promotionID" cascade="all";
-	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SwSubscriptionBenefitCategory" fkcolumn="subscriptionBenefitID" inversejoincolumn="categoryID" cascade="all";
-	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SwSubscriptionBenefitContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
-	property name="excludedCategories" singularname="excludedCategory" cfc="Category" type="array" fieldtype="many-to-many" linktable="SwSubscriptionBenefitExcludedCategory" fkcolumn="subscriptionBenefitID" inversejoincolumn="categoryID" cascade="all";
-	property name="excludedContents" singularname="excludedContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SwSubscriptionBenefitExcludedContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
+	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SwSubsBenefitPriceGroup" fkcolumn="subscriptionBenefitID" inversejoincolumn="priceGroupID" cascade="all";
+	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SwSubsBenefitPromotion" fkcolumn="subscriptionBenefitID" inversejoincolumn="promotionID" cascade="all";
+	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SwSubsBenefitCategory" fkcolumn="subscriptionBenefitID" inversejoincolumn="categoryID" cascade="all";
+	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SwSubsBenefitContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
+	property name="excludedCategories" singularname="excludedCategory" cfc="Category" type="array" fieldtype="many-to-many" linktable="SwSubsBenefitExcludedCategory" fkcolumn="subscriptionBenefitID" inversejoincolumn="categoryID" cascade="all";
+	property name="excludedContents" singularname="excludedContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SwSubsBenefitExcludedContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SwSkuSubscriptionBenefit" fkcolumn="subscriptionBenefitID" inversejoincolumn="skuID" inverse="true";
