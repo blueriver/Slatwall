@@ -159,21 +159,23 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				var reward = promotionRewards[pr];
 				
 				// Setup the promotionReward usage Details. This will be used for the maxUsePerQualification & and maxUsePerItem up front, and then later to remove discounts that violate max usage
-				promotionRewardUsageDetails[ reward.getPromotionRewardID() ] = {
-					usedInOrder = 0,
-					maximumUsePerOrder = 1000000,
-					maximumUsePerItem = 1000000,
-					maximumUsePerQualification = 1000000,
-					orderItemsUsage = []
-				};
-				if( !isNull(reward.getMaximumUsePerOrder()) && reward.getMaximumUsePerOrder() > 0) {
-					promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerOrder = reward.getMaximumUsePerOrder();
-				}
-				if( !isNull(reward.getMaximumUsePerItem()) && reward.getMaximumUsePerItem() > 0 ) {
-					promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerItem = reward.getMaximumUsePerItem();
-				}
-				if( !isNull(reward.getMaximumUsePerQualification()) && reward.getMaximumUsePerQualification() > 0 ) {
-					promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerQualification = reward.getMaximumUsePerQualification();
+				if(!structKeyExists(promotionRewardUsageDetails, reward.getPromotionRewardID())) {
+					promotionRewardUsageDetails[ reward.getPromotionRewardID() ] = {
+						usedInOrder = 0,
+						maximumUsePerOrder = 1000000,
+						maximumUsePerItem = 1000000,
+						maximumUsePerQualification = 1000000,
+						orderItemsUsage = []
+					};
+					if( !isNull(reward.getMaximumUsePerOrder()) && reward.getMaximumUsePerOrder() > 0) {
+						promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerOrder = reward.getMaximumUsePerOrder();
+					}
+					if( !isNull(reward.getMaximumUsePerItem()) && reward.getMaximumUsePerItem() > 0 ) {
+						promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerItem = reward.getMaximumUsePerItem();
+					}
+					if( !isNull(reward.getMaximumUsePerQualification()) && reward.getMaximumUsePerQualification() > 0 ) {
+						promotionRewardUsageDetails[ reward.getPromotionRewardID() ].maximumUsePerQualification = reward.getMaximumUsePerQualification();
+					}
 				}
 				
 				// Setup the boolean for if the promotionPeriod is okToApply based on general use count
@@ -313,6 +315,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 														discountQuantity = discountQuantity,
 														discountPerUseValue = discountPerUseValue
 													});
+													
 												}
 												
 											}
@@ -450,7 +453,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				} // END Promotion Period OK IF
 			
 			} // END of PromotionReward Loop
-			
 			
 			// Now that we has setup all the potential discounts for orderItems sorted by best price, we want to strip out any of the discounts that would exceed the maximum order use counts.
 			for(var prID in promotionRewardUsageDetails) {
