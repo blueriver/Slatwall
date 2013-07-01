@@ -310,7 +310,7 @@ Notes:
 			  AND
 			  	SwPromotion.activeFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 			  AND
-			  	NOT EXISTS(SELECT promotionPeriodID FROM SwPromotionQualifier WHERE SwPromotionQualifier.promotionPeriodID = SwPromotionPeriod.promotionPeriodID)
+			  	NOT EXISTS(SELECT promotionPeriodID FROM SwPromoQualifier WHERE SwPromoQualifier.promotionPeriodID = SwPromotionPeriod.promotionPeriodID)
 			  AND
 			  	NOT EXISTS(SELECT promotionID FROM SwPromotionCode WHERE SwPromotionCode.promotionID = SwPromotion.promotionID)
 		</cfquery>
