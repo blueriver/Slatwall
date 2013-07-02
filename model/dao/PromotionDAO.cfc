@@ -321,19 +321,19 @@ Notes:
 		
 		<cfquery name="allDiscounts">
 			SELECT
-				SwSku.skuID as 'skuID',
-				SwSku.price as 'originalPrice',
-				'sku' as 'discountLevel',
-				prSku.amountType as 'salePriceDiscountType',
+				SwSku.skuID as skuID,
+				SwSku.price as originalPrice,
+				'sku' as discountLevel,
+				prSku.amountType as salePriceDiscountType,
 				CASE prSku.amountType
 					WHEN 'amount' THEN prSku.amount
 					WHEN 'amountOff' THEN SwSku.price - prSku.amount
 					WHEN 'percentageOff' THEN SwSku.price - (SwSku.price * (prSku.amount / 100))
-				END as 'salePrice',
-				prSku.roundingRuleID as 'roundingRuleID',
-				ppSku.endDateTime as 'salePriceExpirationDateTime',
-				ppSku.promotionPeriodID as 'promotionPeriodID',
-				ppSku.promotionID as 'promotionID'
+				END as salePrice,
+				prSku.roundingRuleID as roundingRuleID,
+				ppSku.endDateTime as salePriceExpirationDateTime,
+				ppSku.promotionPeriodID as promotionPeriodID,
+				ppSku.promotionID as promotionID
 			FROM
 				SwSku
 			  INNER JOIN
@@ -352,19 +352,19 @@ Notes:
 			</cfif>
 		  UNION
 			SELECT
-				SwSku.skuID as 'skuID',
-				SwSku.price as 'originalPrice',
-				'product' as 'discountLevel',
-				prProduct.amountType as 'salePriceDiscountType',
+				SwSku.skuID as skuID,
+				SwSku.price as originalPrice,
+				'product' as discountLevel,
+				prProduct.amountType as salePriceDiscountType,
 				CASE prProduct.amountType
 					WHEN 'amount' THEN prProduct.amount
 					WHEN 'amountOff' THEN SwSku.price - prProduct.amount
 					WHEN 'percentageOff' THEN SwSku.price - (SwSku.price * (prProduct.amount / 100))
-				END as 'salePrice',
-				prProduct.roundingRuleID as 'roundingRuleID',
-				ppProduct.endDateTime as 'salePriceExpirationDateTime',
-				ppProduct.promotionPeriodID as 'promotionPeriodID',
-				ppProduct.promotionID as 'promotionID'
+				END as salePrice,
+				prProduct.roundingRuleID as roundingRuleID,
+				ppProduct.endDateTime as salePriceExpirationDateTime,
+				ppProduct.promotionPeriodID as promotionPeriodID,
+				ppProduct.promotionID as promotionID
 			FROM
 				SwSku
 			  INNER JOIN
@@ -383,19 +383,19 @@ Notes:
 			</cfif>
 		  UNION
 			SELECT
-				SwSku.skuID as 'skuID',
-				SwSku.price as 'originalPrice',
-				'brand' as 'discountLevel',
-				prBrand.amountType as 'salePriceDiscountType',
+				SwSku.skuID as skuID,
+				SwSku.price as originalPrice,
+				'brand' as discountLevel,
+				prBrand.amountType as salePriceDiscountType,
 				CASE prBrand.amountType
 					WHEN 'amount' THEN prBrand.amount
 					WHEN 'amountOff' THEN SwSku.price - prBrand.amount
 					WHEN 'percentageOff' THEN SwSku.price - (SwSku.price * (prBrand.amount / 100))
-				END as 'salePrice',
-				prBrand.roundingRuleID as 'roundingRuleID',
-				ppBrand.endDateTime as 'salePriceExpirationDateTime',
-				ppBrand.promotionPeriodID as 'promotionPeriodID',
-				ppBrand.promotionID as 'promotionID'
+				END as salePrice,
+				prBrand.roundingRuleID as roundingRuleID,
+				ppBrand.endDateTime as salePriceExpirationDateTime,
+				ppBrand.promotionPeriodID as promotionPeriodID,
+				ppBrand.promotionID as promotionID
 			FROM
 				SwSku
 			  INNER JOIN
@@ -416,19 +416,19 @@ Notes:
 			</cfif>
 		  UNION
 		  	SELECT
-		  		SwSku.skuID as 'skuID',
-				SwSku.price as 'originalPrice',
-				'option' as 'discountLevel',
-				prOption.amountType as 'salePriceDiscountType',
+		  		SwSku.skuID as skuID,
+				SwSku.price as originalPrice,
+				'option' as discountLevel,
+				prOption.amountType as salePriceDiscountType,
 				CASE prOption.amountType
 					WHEN 'amount' THEN prOption.amount
 					WHEN 'amountOff' THEN SwSku.price - prOption.amount
 					WHEN 'percentageOff' THEN SwSku.price - (SwSku.price * (prOption.amount / 100))
-				END as 'salePrice',
-				prOption.roundingRuleID as 'roundingRuleID',
-				ppOption.endDateTime as 'salePriceExpirationDateTime',
-				ppOption.promotionPeriodID as 'promotionPeriodID',
-				ppOption.promotionID as 'promotionID'
+				END as salePrice,
+				prOption.roundingRuleID as roundingRuleID,
+				ppOption.endDateTime as salePriceExpirationDateTime,
+				ppOption.promotionPeriodID as promotionPeriodID,
+				ppOption.promotionID as promotionID
 			FROM
 				SwSku
 			  INNER JOIN
@@ -449,19 +449,19 @@ Notes:
 			</cfif>
 		  UNION
 		  	SELECT
-		  		SwSku.skuID as 'skuID',
-				SwSku.price as 'originalPrice',
-				'productType' as 'discountLevel',
-				prProductType.amountType as 'salePriceDiscountType',
+		  		SwSku.skuID as skuID,
+				SwSku.price as originalPrice,
+				'productType' as discountLevel,
+				prProductType.amountType as salePriceDiscountType,
 				CASE prProductType.amountType
 					WHEN 'amount' THEN prProductType.amount
 					WHEN 'amountOff' THEN SwSku.price - prProductType.amount
 					WHEN 'percentageOff' THEN SwSku.price - (SwSku.price * (prProductType.amount / 100))
-				END as 'salePrice',
-				prProductType.roundingRuleID as 'roundingRuleID',
-				ppProductType.endDateTime as 'salePriceExpirationDateTime',
-				ppProductType.promotionPeriodID as 'promotionPeriodID',
-				ppProductType.promotionID as 'promotionID'
+				END as salePrice,
+				prProductType.roundingRuleID as roundingRuleID,
+				ppProductType.endDateTime as salePriceExpirationDateTime,
+				ppProductType.promotionPeriodID as promotionPeriodID,
+				ppProductType.promotionID as promotionID
 			FROM
 				SwSku
 			  INNER JOIN
@@ -488,19 +488,19 @@ Notes:
 			</cfif>
 		  UNION
 			SELECT
-				SwSku.skuID as 'skuID',
-				SwSku.price as 'originalPrice',
-				'global' as 'discountLevel',
-				prGlobal.amountType as 'salePriceDiscountType',
+				SwSku.skuID as skuID,
+				SwSku.price as originalPrice,
+				'global' as discountLevel,
+				prGlobal.amountType as salePriceDiscountType,
 				CASE prGlobal.amountType
 					WHEN 'amount' THEN prGlobal.amount
 					WHEN 'amountOff' THEN SwSku.price - prGlobal.amount
 					WHEN 'percentageOff' THEN SwSku.price - (SwSku.price * (prGlobal.amount / 100))
-				END as 'salePrice',
-				prGlobal.roundingRuleID as 'roundingRuleID',
-				ppGlobal.endDateTime as 'salePriceExpirationDateTime',
-				ppGlobal.promotionPeriodID as 'promotionPeriodID',
-				ppGlobal.promotionID as 'promotionID'
+				END as salePrice,
+				prGlobal.roundingRuleID as roundingRuleID,
+				ppGlobal.endDateTime as salePriceExpirationDateTime,
+				ppGlobal.promotionPeriodID as promotionPeriodID,
+				ppGlobal.promotionID as promotionID
 			FROM
 				SwSku
 			  INNER JOIN
