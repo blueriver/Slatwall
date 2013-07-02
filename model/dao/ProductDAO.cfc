@@ -297,6 +297,13 @@ Notes:
 					SET imageFile = (SELECT concat(productCode, '.#setting("globalImageExtension")#') FROM SlatwallProduct WHERE SlatwallSku.productID = SlatwallProduct.productID)
 					WHERE SlatwallSku.imageFile IS NULL
 				");
+			} else if(getApplicationValue("databaseType") eq "Oracle10g") {	
+				dataQuery.setSql("
+					UPDATE SlatwallSku
+					SET imageFile = (SELECT productCode || '.' || '#setting("globalImageExtension")#' FROM SlatwallProduct WHERE SlatwallSku.productID = SlatwallProduct.productID)
+					FROM SlatwallProduct INNER JOIN SlatwallSku ON SlatwallProduct.productID = SlatwallSku.productID
+					WHERE SlatwallSku.imageFile IS NULL
+				");
 			} else {	
 				dataQuery.setSql("
 					UPDATE SlatwallSku

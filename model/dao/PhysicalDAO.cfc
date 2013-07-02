@@ -108,7 +108,7 @@ Notes:
 				  OR
 				  	EXISTS(SELECT SwPhysicalProduct.productID FROM SwPhysicalProduct WHERE SwPhysicalProduct.productID=SwProduct.productID AND SwPhysicalProduct.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />)
 				  OR
-				  	EXISTS(SELECT SwPhysicalProductType.productTypeID FROM SwPhysicalProductType WHERE SwProductType.productTypeIDPath LIKE <cfif getApplicationValue("databaseType") eq "MySQL">concat('%', SwPhysicalProductType.productTypeID, '%')<cfelse>('%' + SwPhysicalProductType.productTypeID + '%')</cfif> AND SwPhysicalProductType.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />)
+				  	EXISTS(SELECT SwPhysicalProductType.productTypeID FROM SwPhysicalProductType WHERE SwProductType.productTypeIDPath LIKE <cfif getApplicationValue("databaseType") eq "MySQL">concat('%', SwPhysicalProductType.productTypeID, '%')<cfelseif getApplicationValue("databaseType") eq "Oracle10g">('%' || SwPhysicalProductType.productTypeID || '%')<cfelse>('%' + SwPhysicalProductType.productTypeID + '%')</cfif> AND SwPhysicalProductType.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />)
 				  OR
 				  	EXISTS(SELECT SwPhysicalBrand.brandID FROM SwPhysicalBrand WHERE SwPhysicalBrand.brandID=SwBrand.brandID AND SwPhysicalBrand.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />)
 			
