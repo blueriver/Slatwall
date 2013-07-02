@@ -730,6 +730,8 @@
 		
 		// @hint returns the primary id property name of a given entityName
 		public string function getPrimaryIDPropertyNameByEntityName( required string entityName ) {
+			var shortEntityName = getProperlyCasedShortEntityName(arguments.entityName);
+			return lcase(shortEntityName.charAt(0)) & shortEntityName.subString(1) & "ID";
 			var idColumnNames = getIdentifierColumnNamesByEntityName( arguments.entityName );
 			
 			if( arrayLen(idColumnNames)) {
