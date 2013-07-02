@@ -9,8 +9,8 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	// Data Properties
 	property name="renewalStartType" hb_formFieldType="select";
 	property name="proratedPrice" hb_rbKey="entity.sku.renewalPrice" hb_formatType="currency";
-	property name="extendExpirationDateTime" hb_rbKey="entity.subscriptionUsage.expirationDate" hb_formatType="datetime";
-	property name="prorateExpirationDateTime" hb_rbKey="entity.subscriptionUsage.expirationDate" hb_formatType="datetime";
+	property name="extendExpirationDate" hb_formatType="date";
+	property name="prorateExpirationDate" hb_formatType="date";
 	
 	property name="renewalPaymentType" hb_formFieldType="select";
 	
@@ -18,6 +18,31 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="orderPaymentID" hb_formFieldType="select" hb_rbKey="entity.orderPayment";
 	
 	property name="newOrderPayment" cfc="OrderPayment" fieldType="many-to-one" persistent="false" fkcolumn="orderPaymentID";
+	
+	property name="saveAccountPaymentMethodFlag" hb_formFieldType="yesno";
+	property name="saveAccountPaymentMethodName" hb_formFieldType="yesno";
+	property name="updateSubscriptionUsageAccountPaymentMethodFlag" hb_formFieldType="yesno";
+	
+	public boolean function getSaveAccountPaymentMethodFlag() {
+		if(!structKeyExists(variables, "saveAccountPaymentMethodFlag")) {
+			variables.saveAccountPaymentMethodFlag = 0;
+		}
+		return variables.saveAccountPaymentMethodFlag;
+	}
+	
+	public boolean function getUpdateSubscriptionUsageAccountPaymentMethodFlag() {
+		if(!structKeyExists(variables, "updateSubscriptionUsageAccountPaymentMethodFlag")) {
+			variables.updateSubscriptionUsageAccountPaymentMethodFlag = 0;
+		}
+		return variables.updateSubscriptionUsageAccountPaymentMethodFlag;
+	}
+	
+	public any function getNewOrderPayment() {
+		if(!structKeyExists(variables, "newOrderPayment")) {
+			variables.newOrderPayment = getService('orderService').newOrderPayment();
+		}
+		return variables.newOrderPayment;
+	}
 	
 	public any function getOrder() {
 		if(!structKeyExists(variables, "order")) {
@@ -33,17 +58,17 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		return variables.order;
 	}
 	
-	public string function getExtendExpirationDateTime() {
-		return getSubscriptionUsage().getSubscriptionOrderItems()[1].getOrderItem().getSku().getSubscriptionTerm().getRenewalTerm().getEndDate( getSubscriptionUsage().getNextBillDate() );
+	public string function getExtendExpirationDate() {
+		return getSubscriptionUsage().getSubscriptionOrderItems()[1].getOrderItem().getSku().getSubscriptionTerm().getRenewalTerm().getEndDate( getSubscriptionUsage().getExpirationDate() );
 	}
 	
-	public string function getProrateExpirationDateTime() {
+	public string function getProrateExpirationDate() {
 		return getSubscriptionUsage().getSubscriptionOrderItems()[1].getOrderItem().getSku().getSubscriptionTerm().getRenewalTerm().getEndDate( now() );
 	}
 	
 	public numeric function getProratedPrice() {
-		var extendDurationFromNow = dateDiff("d", now(), getExtendExpirationDateTime() );
-		var prorateDurationFromNow = dateDiff("d", getSubscriptionUsage().getExpirationDate(), getProrateExpirationDateTime() );
+		var extendDurationFromNow = dateDiff("d", getSubscriptionUsage().getExpirationDate(), getExtendExpirationDate() );
+		var prorateDurationFromNow = dateDiff("d", getSubscriptionUsage().getExpirationDate(), getProrateExpirationDate() );
 		var proratePercentage = prorateDurationFromNow / extendDurationFromNow * 100;
 		
 		return round(getSubscriptionUsage().getRenewalPrice() * proratePercentage)/100;
@@ -80,14 +105,14 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		var options = [];
 		
 		if(arrayLen(getAccountPaymentMethodIDOptions())) {
-			arrayAppend(options, {name=rbKey('entity.accountPaymentMethod'), value='accountPaymentMethod'});
+			arrayAppend(options, {name=rbKey('processObject.SubscriptionUsage_Renew.renewalPaymentType.accountPaymentMethod'), value='accountPaymentMethod'});
 		}
 		
-		arrayAppend(options, {name=rbKey('entity.orderPayment'), value='orderPayment'});
-		arrayAppend(options, {name=rbKey('define.new'), value='new'});
+		arrayAppend(options, {name=rbKey('processObject.SubscriptionUsage_Renew.renewalPaymentType.orderPayment'), value='orderPayment'});
+		arrayAppend(options, {name=rbKey('processObject.SubscriptionUsage_Renew.renewalPaymentType.new'), value='new'});
 		
 		if(getOrder().getNewFlag()) {
-			arrayAppend(options, {name=rbKey('define.none'), value='none'});	
+			arrayAppend(options, {name=rbKey('processObject.SubscriptionUsage_Renew.renewalPaymentType.none'), value='none'});	
 		}
 		
 		return options;
@@ -103,6 +128,10 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	public array function getOrderPaymentIDOptions() {
 		if(!structKeyExists(variables, "orderPaymentIDOptions")) {
 			variables.orderPaymentIDOptions = [];
+			var previousOrderPayments = getSubscriptionUsage().getUniquePreviousSubscriptionOrderPayments();
+			for(var orderPayment in previousOrderPayments) {
+				arrayAppend(variables.orderPaymentIDOptions, {name=orderPayment.getSimpleRepresentation(), value=orderPayment.getOrderPaymentID()});	
+			}
 		}
 		return variables.orderPaymentIDOptions;
 	}

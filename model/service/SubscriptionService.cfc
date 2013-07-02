@@ -311,6 +311,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getSubscriptionDAO().getSubscriptionCurrentStatus( argumentCollection=arguments );
 	}
 	
+	public any function getUniquePreviousSubscriptionOrderPayments( required string subscriptionUsageID ) {
+		return getSubscriptionDAO().getUniquePreviousSubscriptionOrderPayments( argumentCollection=arguments );
+	}
+	
 	// ===================== START: DAO Passthrough ===========================
 	
 	// ===================== START: Process Methods ===========================
