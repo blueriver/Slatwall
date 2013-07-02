@@ -94,6 +94,8 @@ component entityname="SlatwallPaymentTransaction" table="SlatwallPaymentTransact
 			return getOrderPayment();
 		} else if (!isNull(getAccountPayment())) {
 			return getAccountPayment();
+		} else if (!isNull(getAccountPaymentMethod())) {
+			return getAccountPaymentMethod();
 		}
 	}
 	
