@@ -41,7 +41,7 @@ Notes:
 
 <cf_HibachiListingDisplay smartList="#rc.ordersPlacedSmartList#"
 						  recordDetailAction="admin:entity.detailorder"
-						  recordDetailQueryString="accountID=#rc.account.getAccountID()#">
+						  recordEditAction="admin:entity.editorder">
 
 	<cf_HibachiListingColumn propertyIdentifier="orderNumber" />
 	<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime" />

@@ -260,7 +260,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			for(var i=1; i<=arrayLen(r); i++) {
 				arrayAppend(variables.shippingAccountAddressIDOptions, {name=r[i].getSimpleRepresentation(), value=r[i].getAccountAddressID()});	
 			}
-			arrayAppend(variables.shippingAccountAddressIDOptions, {name=getHibachiScope().rbKey('define.new'), value="new"});
+			arrayAppend(variables.shippingAccountAddressIDOptions, {name=getHibachiScope().rbKey('define.new'), value=""});
 		}
 		return variables.shippingAccountAddressIDOptions;
 	}
