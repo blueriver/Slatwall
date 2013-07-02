@@ -1087,7 +1087,7 @@
 				<cfquery name="rs">
 					SELECT
 						SwAccount.accountID,
-						(SELECT SwAccountAuthentication.accountAuthenticationID FROM SwAccountAuthentication WHERE SwAccountAuthentication.accountID = SwAccount.accountID AND SwAccountAuthentication.integrationID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#getMuraIntegrationID()#" />) as 'accountAuthenticationID'
+						(SELECT SwAccountAuthentication.accountAuthenticationID FROM SwAccountAuthentication WHERE SwAccountAuthentication.accountID = SwAccount.accountID AND SwAccountAuthentication.integrationID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#getMuraIntegrationID()#" />) as accountAuthenticationID
 					FROM
 						SwAccount
 					WHERE
