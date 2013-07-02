@@ -59,7 +59,7 @@ Notes:
 				    SwInventory i on a.stockID = i.stockID
 				WHERE
 				  	a.stockID = SwStock.stockID
-				) as 'Qoh',
+				) as Qoh,
 				(SELECT
 					(SELECT
 						COALESCE(SUM(i.quantityIn),0) - COALESCE(SUM(i.quantityOut),0)
@@ -86,7 +86,7 @@ Notes:
 					pci.stockID = SwStock.stockID
 				  AND
 				  	pc.physicalID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.physicalID#" />
-				) * -1 as 'discrepancy'
+				) * -1 as discrepancy
 			FROM
 				SwStock
 			  INNER JOIN

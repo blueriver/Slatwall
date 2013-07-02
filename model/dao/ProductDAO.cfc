@@ -427,7 +427,7 @@ Notes:
 		
 		<cfquery name="rs">
 			SELECT
-				count(*) as 'count'
+				count(*) as count
 			FROM
 				SwOrderItem
 			  INNER JOIN
@@ -441,7 +441,7 @@ Notes:
 		
 		<cfquery name="rs">
 			SELECT
-				count(*) as 'count'
+				count(*) as count
 			FROM
 				SwVendorOrderItem
 			  INNER JOIN
@@ -457,7 +457,7 @@ Notes:
 		
 		<cfquery name="rs">
 			SELECT
-				count(*) as 'count'
+				count(*) as count
 			FROM
 				SwStockAdjustmentItem
 			  INNER JOIN
@@ -473,7 +473,7 @@ Notes:
 		
 		<cfquery name="rs">
 			SELECT
-				count(*) as 'count'
+				count(*) as count
 			FROM
 				SwStockAdjustmentItem
 			  INNER JOIN

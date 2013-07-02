@@ -191,7 +191,7 @@ Notes:
 			<cfset var rs = "" />
 			
 			<cfquery name="rs">
-				SELECT max(SwOptionGroup.sortOrder) as 'max' FROM SwOptionGroup
+				SELECT max(SwOptionGroup.sortOrder) as max FROM SwOptionGroup
 			</cfquery>
 			<cfif rs.recordCount>
 				<cfset variables.nextOptionGroupSortOrder = rs.max + 1 />

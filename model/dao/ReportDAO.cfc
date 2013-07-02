@@ -78,7 +78,7 @@ Notes:
 		
 		<cfif arguments.startDate eq "">
 			<cfquery name="rs">
-				SELECT min(createdDateTime) as 'createdDateTime' FROM SlatwallOrder
+				SELECT min(createdDateTime) as createdDateTime FROM SlatwallOrder
 			</cfquery>
 			<cfif rs.recordCount>
 				<cfset startDate = rs.createdDateTime />
@@ -87,23 +87,23 @@ Notes:
 		
 		<cfquery name="cartCreated">
 			SELECT
-				#MSSQL_DATEPART('DD', 'SwOrder.createdDateTime')# as 'DD',
-				#MSSQL_DATEPART('MM', 'SwOrder.createdDateTime')# as 'MM',
-				#MSSQL_DATEPART('YYYY', 'SwOrder.createdDateTime')# as 'YYYY',
-				COUNT(SwOrder.orderID) as 'OrderCount',
-				SUM(SwOrderItem.price * SwOrderItem.quantity) as 'SubtotalBeforeDiscount',
-				SUM(SwOrderItem.price * SwOrderItem.quantity) - COALESCE(SUM(SwPromotionApplied.discountAmount),0) as 'SubtotalAfterDiscount',
-				SUM(SwPromotionApplied.discountAmount) as 'ItemDiscount',
-				SUM(SwOrderFulfillment.fulfillmentCharge) as 'FulfillmentBeforeDiscount',
-				SUM(SwOrderFulfillment.fulfillmentCharge) as 'FulfillmentAfterDiscount',
-				0 as 'FulfillmentDiscount',
-				SUM(SwTaxApplied.taxAmount) as 'TaxBeforeDiscount',
-				SUM(SwTaxApplied.taxAmount) as 'TaxAfterDiscount',
-				0 as 'TaxDiscount',
-				0 as 'OrderDiscount',
-				(SUM(SwOrderItem.price * SwOrderItem.quantity) + SUM(SwOrderFulfillment.fulfillmentCharge) + SUM(SwTaxApplied.taxAmount)) as 'TotalBeforeDiscount',
+				#MSSQL_DATEPART('DD', 'SwOrder.createdDateTime')# as DD,
+				#MSSQL_DATEPART('MM', 'SwOrder.createdDateTime')# as MM,
+				#MSSQL_DATEPART('YYYY', 'SwOrder.createdDateTime')# as YYYY,
+				COUNT(SwOrder.orderID) as OrderCount,
+				SUM(SwOrderItem.price * SwOrderItem.quantity) as SubtotalBeforeDiscount,
+				SUM(SwOrderItem.price * SwOrderItem.quantity) - COALESCE(SUM(SwPromotionApplied.discountAmount),0) as SubtotalAfterDiscount,
+				SUM(SwPromotionApplied.discountAmount) as ItemDiscount,
+				SUM(SwOrderFulfillment.fulfillmentCharge) as FulfillmentBeforeDiscount,
+				SUM(SwOrderFulfillment.fulfillmentCharge) as FulfillmentAfterDiscount,
+				0 as FulfillmentDiscount,
+				SUM(SwTaxApplied.taxAmount) as TaxBeforeDiscount,
+				SUM(SwTaxApplied.taxAmount) as TaxAfterDiscount,
+				0 as TaxDiscount,
+				0 as OrderDiscount,
+				(SUM(SwOrderItem.price * SwOrderItem.quantity) + SUM(SwOrderFulfillment.fulfillmentCharge) + SUM(SwTaxApplied.taxAmount)) as TotalBeforeDiscount,
 				(SUM(SwOrderItem.price * SwOrderItem.quantity) + SUM(SwOrderFulfillment.fulfillmentCharge) + SUM(SwTaxApplied.taxAmount)) -
-				  COALESCE(SUM(SwPromotionApplied.discountAmount),0) as 'TotalAfterDiscount'
+				  COALESCE(SUM(SwPromotionApplied.discountAmount),0) as TotalAfterDiscount
 			FROM
 				SwOrder
 			  INNER JOIN
@@ -131,23 +131,23 @@ Notes:
 		</cfquery>
 		<cfquery name="orderPlaced">
 			SELECT
-				#MSSQL_DATEPART('DD', 'SwOrder.orderOpenDateTime')# as 'DD',
-				#MSSQL_DATEPART('MM', 'SwOrder.orderOpenDateTime')# as 'MM',
-				#MSSQL_DATEPART('YYYY', 'SwOrder.orderOpenDateTime')# as 'YYYY',
-				COUNT(SwOrder.orderID) as 'OrderCount',
-				SUM(SwOrderItem.price * SwOrderItem.quantity) as 'SubtotalBeforeDiscount',
-				SUM(SwOrderItem.price * SwOrderItem.quantity) - COALESCE(SUM(SwPromotionApplied.discountAmount),0) as 'SubtotalAfterDiscount',
-				SUM(SwPromotionApplied.discountAmount) as 'ItemDiscount',
-				SUM(SwOrderFulfillment.fulfillmentCharge) as 'FulfillmentBeforeDiscount',
-				SUM(SwOrderFulfillment.fulfillmentCharge) as 'FulfillmentAfterDiscount',
-				0 as 'FulfillmentDiscount',
-				SUM(SwTaxApplied.taxAmount) as 'TaxBeforeDiscount',
-				SUM(SwTaxApplied.taxAmount) as 'TaxAfterDiscount',
-				0 as 'TaxDiscount',
-				0 as 'OrderDiscount',
-				(SUM(SwOrderItem.price * SwOrderItem.quantity) + SUM(SwOrderFulfillment.fulfillmentCharge) + SUM(SwTaxApplied.taxAmount)) as 'TotalBeforeDiscount',
+				#MSSQL_DATEPART('DD', 'SwOrder.orderOpenDateTime')# as DD,
+				#MSSQL_DATEPART('MM', 'SwOrder.orderOpenDateTime')# as MM,
+				#MSSQL_DATEPART('YYYY', 'SwOrder.orderOpenDateTime')# as YYYY,
+				COUNT(SwOrder.orderID) as OrderCount,
+				SUM(SwOrderItem.price * SwOrderItem.quantity) as SubtotalBeforeDiscount,
+				SUM(SwOrderItem.price * SwOrderItem.quantity) - COALESCE(SUM(SwPromotionApplied.discountAmount),0) as SubtotalAfterDiscount,
+				SUM(SwPromotionApplied.discountAmount) as ItemDiscount,
+				SUM(SwOrderFulfillment.fulfillmentCharge) as FulfillmentBeforeDiscount,
+				SUM(SwOrderFulfillment.fulfillmentCharge) as FulfillmentAfterDiscount,
+				0 as FulfillmentDiscount,
+				SUM(SwTaxApplied.taxAmount) as TaxBeforeDiscount,
+				SUM(SwTaxApplied.taxAmount) as TaxAfterDiscount,
+				0 as TaxDiscount,
+				0 as OrderDiscount,
+				(SUM(SwOrderItem.price * SwOrderItem.quantity) + SUM(SwOrderFulfillment.fulfillmentCharge) + SUM(SwTaxApplied.taxAmount)) as TotalBeforeDiscount,
 				(SUM(SwOrderItem.price * SwOrderItem.quantity) + SUM(SwOrderFulfillment.fulfillmentCharge) + SUM(SwTaxApplied.taxAmount)) -
-				  COALESCE(SUM(SwPromotionApplied.discountAmount),0) as 'TotalAfterDiscount'
+				  COALESCE(SUM(SwPromotionApplied.discountAmount),0) as TotalAfterDiscount
 			FROM
 				SwOrder
 			  INNER JOIN
@@ -175,23 +175,23 @@ Notes:
 		</cfquery>
 		<cfquery name="orderClosed">
 			SELECT
-				#MSSQL_DATEPART('DD', 'SwOrder.orderCloseDateTime')# as 'DD',
-				#MSSQL_DATEPART('MM', 'SwOrder.orderCloseDateTime')# as 'MM',
-				#MSSQL_DATEPART('YYYY', 'SwOrder.orderCloseDateTime')# as 'YYYY',
-				COUNT(SwOrder.orderID) as 'OrderCount',
-				SUM(SwOrderItem.price * SwOrderItem.quantity) as 'SubtotalBeforeDiscount',
-				SUM(SwOrderItem.price * SwOrderItem.quantity) - COALESCE(SUM(SwPromotionApplied.discountAmount),0) as 'SubtotalAfterDiscount',
-				SUM(SwPromotionApplied.discountAmount) as 'ItemDiscount',
-				SUM(SwOrderFulfillment.fulfillmentCharge) as 'FulfillmentBeforeDiscount',
-				SUM(SwOrderFulfillment.fulfillmentCharge) as 'FulfillmentAfterDiscount',
-				0 as 'FulfillmentDiscount',
-				SUM(SwTaxApplied.taxAmount) as 'TaxBeforeDiscount',
-				SUM(SwTaxApplied.taxAmount) as 'TaxAfterDiscount',
-				0 as 'TaxDiscount',
-				0 as 'OrderDiscount',
-				(SUM(SwOrderItem.price * SwOrderItem.quantity) + SUM(SwOrderFulfillment.fulfillmentCharge) + SUM(SwTaxApplied.taxAmount)) as 'TotalBeforeDiscount',
+				#MSSQL_DATEPART('DD', 'SwOrder.orderCloseDateTime')# as DD,
+				#MSSQL_DATEPART('MM', 'SwOrder.orderCloseDateTime')# as MM,
+				#MSSQL_DATEPART('YYYY', 'SwOrder.orderCloseDateTime')# as YYYY,
+				COUNT(SwOrder.orderID) as OrderCount,
+				SUM(SwOrderItem.price * SwOrderItem.quantity) as SubtotalBeforeDiscount,
+				SUM(SwOrderItem.price * SwOrderItem.quantity) - COALESCE(SUM(SwPromotionApplied.discountAmount),0) as SubtotalAfterDiscount,
+				SUM(SwPromotionApplied.discountAmount) as ItemDiscount,
+				SUM(SwOrderFulfillment.fulfillmentCharge) as FulfillmentBeforeDiscount,
+				SUM(SwOrderFulfillment.fulfillmentCharge) as FulfillmentAfterDiscount,
+				0 as FulfillmentDiscount,
+				SUM(SwTaxApplied.taxAmount) as TaxBeforeDiscount,
+				SUM(SwTaxApplied.taxAmount) as TaxAfterDiscount,
+				0 as TaxDiscount,
+				0 as OrderDiscount,
+				(SUM(SwOrderItem.price * SwOrderItem.quantity) + SUM(SwOrderFulfillment.fulfillmentCharge) + SUM(SwTaxApplied.taxAmount)) as TotalBeforeDiscount,
 				(SUM(SwOrderItem.price * SwOrderItem.quantity) + SUM(SwOrderFulfillment.fulfillmentCharge) + SUM(SwTaxApplied.taxAmount)) -
-				  COALESCE(SUM(SwPromotionApplied.discountAmount),0) as 'TotalAfterDiscount'
+				  COALESCE(SUM(SwPromotionApplied.discountAmount),0) as TotalAfterDiscount
 			FROM
 				SwOrder
 			  INNER JOIN
