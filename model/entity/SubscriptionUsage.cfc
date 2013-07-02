@@ -186,13 +186,14 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 	
     public any function getAccountPaymentMethodOptions() {
 		if(!structKeyExists(variables, "accountPaymentMethodOptions")) {
-			var smartList = getService("accountService").getAccountPaymentSmartList();
-			smartList.addSelect(propertyIdentifier="accountPaymentMethodName", alias="name");
-			smartList.addSelect(propertyIdentifier="accountPaymentMethodID", alias="value");
-			smartList.addFilter(propertyIdentifier="account_accountID", value="#getAccount().getAccountID()#");
+			variables.accountPaymentMethodOptions = [];
+			var smartList = getService("accountService").getAccountPaymentMethodSmartList();
+			smartList.addFilter(propertyIdentifier="account.accountID", value=getAccount().getAccountID());
 			smartList.addOrder("accountPaymentMethodName|ASC");
-			variables.accountPaymentMethodOptions = smartList.getRecords();
-			arrayPrepend(variables.accountPaymentMethodOptions,{name=rbKey("define.select"),value=""});
+			for(var apm in smartList.getRecords()) {
+				arrayAppend(variables.accountPaymentMethodOptions,{name=apm.getSimpleRepresentation(),value=apm.getAccountPaymentMethodID()});
+			}
+			arrayPrepend(variables.accountPaymentMethodOptions,{name=rbKey("define.none"),value=""});
 		}
 		return variables.accountPaymentMethodOptions;
     }

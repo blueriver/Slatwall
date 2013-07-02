@@ -54,7 +54,6 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	property name="nameOnCreditCard" ormType="string";
 	property name="providerToken" ormType="string";
 	
-
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" hb_optionsNullRBKey="define.select";
 	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID" hb_optionsNullRBKey="define.select";

@@ -315,7 +315,142 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: Process Methods ===========================
 	
+	public any function processSubscriptionUsage_cancel(required any subscriptionUsage, required any processObject) {
+		if(isNull(processObject.getEffectiveDateTime())) {
+			processObject.setEffectiveDateTime( now() );
+		}
+		
+		setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstCancelled', data.effectiveDateTime);
+		
+		return arguments.subscriptionUsage;
+	}
+	
+	public any function processSubscriptionUsage_renew(required any subscriptionUsage, required any processObject) {
+		
+		// First check if there is an open order for renewal, if there is, use it else create a new one
+		for(var subscriptionOrderItem in arguments.subscriptionUsage.getSubscriptionOrderItems()) {
+			if(subscriptionOrderItem.getSubscriptionOrderItemType().getSystemCode() == 'soitRenewal' && subscriptionOrderItem.getOrderItem().getOrder().getOrderStatusType().getSystemCode() != 'ostClosed') {
+				var order = subscriptionOrderItem.getOrderItem().getOrder();
+			}
+		}
+		
+		// If the order is null then we need to create a new one
+		if(isNull(order)) {
+			// create a new order
+			var order = getOrderService().newOrder();
+			
+			// set order status to new (aka placed)
+			order.setOrderStatusType( this.getTypeBySystemCode("ostNew") );
+
+			// set the account for order
+			order.setAccount( arguments.subscriptionUsage.getAccount() );
+			
+			// add order item to order
+			var itemData = {
+				preProcessDisplayedFlag=1,
+				skuID=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku().getSkuID()
+			};
+			order = getOrderService().processOrder( order, itemData, 'addOrderItem' );
+			
+			// set the orderitem price to renewal price
+			order.getOrderItems()[1].setPrice( arguments.processObject.getRenewalPrice() );
+	
+			// create new subscription orderItem
+			var subscriptionOrderItem = this.newSubscriptionOrderItem();
+			subscriptionOrderItem.setOrderItem( order.getOrderItems()[1] );
+			subscriptionOrderItem.setSubscriptionOrderItemType( this.getTypeBySystemCode('soitRenewal') );
+			subscriptionOrderItem.setSubscriptionUsage( arguments.subscriptionUsage );
+			this.saveSubscriptionOrderItem( subscriptionOrderItem );
+
+			// save order for processing
+			getOrderService().getHibachiDAO().save(order);
+				
+			// flush session to make sure order is persisted to DB
+			getHibachiDAO().flushORMSession();
+		}	
+					
+		// add order payment to order if amount > 0 
+		if(order.getTotal() > 0) {
+			var paymentProcessed = false;
+			// check if payment is applied
+			if( !arrayLen(order.getOrderPayments()) ) {
+				var orderPayment = getPaymentService().newOrderPayment();
+				orderPayment.setOrder(order);
+				orderPayment.setAmount(order.getTotal());
+				orderPayment.copyFromAccountPaymentMethod( subscriptionUsage.getAccountPaymentMethod() );
+				orderPayment.setOrderPaymentType( this.getTypeBySystemCode("optCharge") );
+				getPaymentService().saveOrderPayment(orderPayment);
+			} else {
+				var orderPayment = order.getOrderPayments()[1];
+			}
+				
+			// if orderPayment has no error and amount not received yet, then try to process payment
+			if(!orderPayment.hasErrors()) {
+				var amount = order.getTotal() - orderPayment.getAmountReceived();
+				var paymentProcessed = getPaymentService().processPayment(orderPayment, 'authorizeAndCharge', amount);
+			} 
+		} else {
+			var paymentProcessed = true;
+		}
+
+		// if payment is processed, close out fulfillment and order
+		if(paymentProcessed) {
+			var orderFulfillment = getOrderService().processOrderFulfillment(order.getOrderFulfillments()[1], {locationID=order.getOrderFulfillments()[1].setting('fulfillmentMethodAutoLocation')}, "fulfillItems");
+			
+			if(!orderFulfillment.hasErrors()) {
+				// persist order changes to DB 
+				getHibachiDAO().flushORMSession();
+				
+				//send email confirmation, needs a setting to enable this
+				getEmailService().sendEmailByEvent("manualSubscriptionUsageRenewalOrderPlaced", order);
+			} else {
+				for(var errorName in orderFulfillment.getErrors()) {
+					for(var error in orderFulfillment.getErrors()[errorName]) {
+						arguments.subscriptionUsage.addError("processing", error);
+					}
+				}
+			}
+		}
+
+		// update the Subscription Status
+		this.processSubscriptionUsage(arguments.subscriptionUsage, {}, 'updateStatus');
+		
+		return arguments.subscriptionUsage;
+	}
+	
+	
+	
+	
+	public any function processSubscriptionUsage_updateStatus(required any subscriptionUsage) {
+		// Is the next bill date + grace period in past || the next bill date is in the future, but the last order for this subscription usage hasn't been paid (+ grace period from that orders date)
+			// Suspend
+		
+		// get the current status
+		var currentStatus = arguments.subscriptionUsage.getCurrentStatus();
+		
+		// if current status is active and expiration date in past
+		if(currentStatus.getSubscriptionStatusType().getSystemCode() == 'sstActive' && arguments.subscriptionUsage.getExpirationDate() <= now()) {
+			// suspend
+			setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstSuspended');
+			// reset expiration date
+			arguments.subscriptionUsage.setExpirationDate(javaCast("null",""));
+		
+		} else if (arguments.subscriptionUsage.getExpirationDate() > now()) {
+			// if current status is not active, set active status to subscription usage
+			if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
+				setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstActive');
+			}
+		}
+		
+		return arguments.subscriptionUsage;
+	}
+	
+	
+	/*
+	
+	
 	public any function processSubscriptionUsage_autoRenew(required any subscriptionUsage) {
+		
 		// first check if it's time for renewal
 		if(arguments.subscriptionUsage.getNextBillDate() <= now() && arguments.subscriptionUsage.getCurrentStatusCode() != 'sstCancelled') {
 			
@@ -398,49 +533,43 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.subscriptionUsage;
 	}
 	
-	public any function processSubscriptionUsage_cancel(required any subscriptionUsage, required any processObject) {
-		if(isNull(processObject.getEffectiveDateTime())) {
-			processObject.setEffectiveDateTime( now() );
-		}
-		
-		setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstCancelled', data.effectiveDateTime);
-		
-		return arguments.subscriptionUsage;
-	}
 	
 	public any function processSubscriptionUsage_manualRenew(required any subscriptionUsage) {
-		// first check if there is an open order for renewal, if there is, use it else create a new one
+		
+		// First check if there is an open order for renewal, if there is, use it else create a new one
 		for(var subscriptionOrderItem in arguments.subscriptionUsage.getSubscriptionOrderItems()) {
 			if(subscriptionOrderItem.getSubscriptionOrderItemType().getSystemCode() == 'soitRenewal' && subscriptionOrderItem.getOrderItem().getOrder().getOrderStatusType().getSystemCode() != 'ostClosed') {
 				var order = subscriptionOrderItem.getOrderItem().getOrder();
 			}
-		}	
+		}
+		
+		// If the order is null then we need to create a new one
 		if(isNull(order)) {
 			// create a new order
 			var order = getOrderService().newOrder();
 			
 			// set order status to new (aka placed)
-			order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+			order.setOrderStatusType( this.getTypeBySystemCode("ostNew") );
 
 			// set the account for order
-			order.setAccount(arguments.subscriptionUsage.getAccount());
+			order.setAccount( arguments.subscriptionUsage.getAccount() );
 			
 			// add order item to order
 			var itemData = {
+				preProcessDisplayedFlag=1,
 				skuID=arguments.subscriptionUsage.getSubscriptionOrderItems()[1].getOrderItem().getSku().getSkuID()
 			};
-			getOrderService().processOrder( order, itemData, 'addOrderItem' );
+			order = getOrderService().processOrder( order, itemData, 'addOrderItem' );
 			
 			// set the orderitem price to renewal price
-			order.getOrderItems()[1].setPrice(arguments.subscriptionUsage.getRenewalPrice());
-			order.getOrderItems()[1].setSkuPrice(arguments.subscriptionUsage.getRenewalPrice());
+			order.getOrderItems()[1].setPrice( arguments.processObject.getRenewalPrice() );
 	
 			// create new subscription orderItem
 			var subscriptionOrderItem = this.newSubscriptionOrderItem();
-			subscriptionOrderItem.setOrderItem(order.getOrderItems()[1]);
-			subscriptionOrderItem.setSubscriptionOrderItemType(this.getTypeBySystemCode('soitRenewal'));
-			subscriptionOrderItem.setSubscriptionUsage(arguments.subscriptionUsage);
-			this.saveSubscriptionOrderItem(subscriptionOrderItem);
+			subscriptionOrderItem.setOrderItem( order.getOrderItems()[1] );
+			subscriptionOrderItem.setSubscriptionOrderItemType( this.getTypeBySystemCode('soitRenewal') );
+			subscriptionOrderItem.setSubscriptionUsage( arguments.subscriptionUsage );
+			this.saveSubscriptionOrderItem( subscriptionOrderItem );
 
 			// save order for processing
 			getOrderService().getHibachiDAO().save(order);
@@ -457,12 +586,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if(order.getTotal() > 0) {
 			var paymentProcessed = false;
 			// check if payment is applied
-			if(!arrayLen(order.getOrderPayments())) {
+			if( !arrayLen(order.getOrderPayments()) ) {
 				var orderPayment = getPaymentService().newOrderPayment();
 				orderPayment.setOrder(order);
 				orderPayment.setAmount(order.getTotal());
-				orderPayment.copyFromAccountPaymentMethod(subscriptionUsage.getAccountPaymentMethod());
-				orderPayment.setOrderPaymentType(this.getTypeBySystemCode("optCharge"));
+				orderPayment.copyFromAccountPaymentMethod( subscriptionUsage.getAccountPaymentMethod() );
+				orderPayment.setOrderPaymentType( this.getTypeBySystemCode("optCharge") );
 				getPaymentService().saveOrderPayment(orderPayment);
 			} else {
 				var orderPayment = order.getOrderPayments()[1];
@@ -501,30 +630,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		return arguments.subscriptionUsage;
 	}
-	
-	public any function processSubscriptionUsage_updateStatus(required any subscriptionUsage) {
-		// Is the next bill date + grace period in past || the next bill date is in the future, but the last order for this subscription usage hasn't been paid (+ grace period from that orders date)
-			// Suspend
-		
-		// get the current status
-		var currentStatus = arguments.subscriptionUsage.getCurrentStatus();
-		
-		// if current status is active and expiration date in past
-		if(currentStatus.getSubscriptionStatusType().getSystemCode() == 'sstActive' && arguments.subscriptionUsage.getExpirationDate() <= now()) {
-			// suspend
-			setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstSuspended');
-			// reset expiration date
-			arguments.subscriptionUsage.setExpirationDate(javaCast("null",""));
-		
-		} else if (arguments.subscriptionUsage.getExpirationDate() > now()) {
-			// if current status is not active, set active status to subscription usage
-			if(arguments.subscriptionUsage.getCurrentStatusCode() != 'sstActive') {
-				setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstActive');
-			}
-		}
-		
-		return arguments.subscriptionUsage;
-	}
+	*/
 	
 	// =====================  END: Process Methods ============================
 	
