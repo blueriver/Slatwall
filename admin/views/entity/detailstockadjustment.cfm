@@ -65,6 +65,7 @@ Notes:
 		<cf_HibachiTabGroup object="#rc.stockAdjustment#" allowComments="true">
 			<cf_HibachiTab property="stockadjustmentitems" />
 			<cf_HibachiTab property="stockreceivers" />
+			<cf_SlatwallAdminTabComments object="#rc.stockAdjustment#" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

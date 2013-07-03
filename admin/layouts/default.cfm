@@ -62,22 +62,24 @@ Notes:
 				}
 			</script>
 		</cfif>
+		<style type="text/css">
+			.navbar .brand {margin-left:0px;}
+		</style>
 	</head>
 	<body>
 		<div class="navbar navbar-fixed-top navbar-inverse">
 			<div class="navbar-inner">
 				<div class="container-fluid">
+					<cfset homeLink = request.slatwallScope.getBaseURL() />
+					<cfif not len(homeLink)>
+						<cfset homeLink = "/" />
+					</cfif>
+					<a href="#homeLink#" class="brand" style="margin-left:-20px;"><img src="#request.slatwallScope.getBaseURL()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
+					<cfloop array="#$.slatwall.getService('integrationService').getAdminNavbarHTMLArray()#" index="navbarHTML">
+						#navbarHTML#
+					</cfloop>
 					<ul class="nav">
-						<cfset homeLink = request.slatwallScope.getBaseURL() />
-						<cfif not len(homeLink)>
-							<cfset homeLink = "/" />
-						</cfif>
-						<a href="#homeLink#" class="brand"><img src="#request.slatwallScope.getBaseURL()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
 						<li class="divider-vertical"></li>
-						<cfloop array="#$.slatwall.getService('integrationService').getAdminNavbarHTMLArray()#" index="navbarHTML">
-							#navbarHTML#
-							<li class="divider-vertical"></li>
-						</cfloop>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.products_nav')#" icon="tags icon-white" type="nav">
 							<cf_HibachiDividerHider>
 								<cf_HibachiActionCaller action="admin:entity.listproduct" type="list">

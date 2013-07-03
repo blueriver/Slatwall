@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,19 +35,22 @@
 
 Notes:
 
---->
+*/
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
-<cfparam name="rc.redirectAction" type="string" default="admin:entity.liststockreceiver" />
-<cfparam name="rc.processStockReceiverSmartList" type="any" />
-<cfparam name="rc.multiProcess" type="boolean" />
+	public void function all_entity_properties_have_keys() {
+		var allEntities = listToArray(structKeyList(ORMGetSessionFactory().getAllClassMetadata()));
+		var allFound = true;
+		for(var entityName in allEntities) {
+			var properties = request.slatwallScope.getService("hibachiService").getPropertiesByEntityName(entityName);
+			for(var property in properties) {
+				var keyValue = request.slatwallScope.rbKey('entity.#entityName#.#property.name#');
+				if(right(keyValue,8) == '_missing') {
+					debug(keyValue);
+				}
+			}
+		}
+	}
+	
+}
 
-<cfoutput>
-	<cf_SlatwallProcessForm>
-		<cf_HibachiEntityActionBar type="process" />
-		
-		<cf_SlatwallProcessOptionBar>
-			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
-		</cf_SlatwallProcessOptionBar>
-		
-	</cf_SlatwallProcessForm>
-</cfoutput>

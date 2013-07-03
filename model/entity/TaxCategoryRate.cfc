@@ -42,9 +42,17 @@ component entityname="SlatwallTaxCategoryRate" table="SlatwallTaxCategoryRate" p
 	property name="taxCategoryRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="taxRate" ormtype="float" hb_formatType="percentage";
 	
-	// Related Object Properties
+	// Related Object Properties (many-to-one)
 	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID" hb_optionsNullRBKey="define.all";
 	property name="taxCategory" cfc="TaxCategory" fieldtype="many-to-one" fkcolumn="taxCategoryID";
+		
+	// Related Object Properties (one-to-many)
+	property name="appliedTaxes" singularname="appliedTax" cfc="TaxApplied" fieldtype="one-to-many" fkcolumn="taxCategoryRateID" cascade="all" inverse="true" lazy="extra";
+	
+	// Related Object Properties (many-to-many - owner)
+	
+	// Related Object Properties (many-to-many - inverse)
+	
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";

@@ -41,7 +41,6 @@ Notes:
 	<cffunction name="eval" >
 		<cfargument name="recordIDCol" >
 	</cffunction>
-
 	
 	<cffunction name="recordUpdate" returntype="void">
 		<cfargument name="tableName" required="true" type="string" />
@@ -118,6 +117,23 @@ Notes:
 		</cfif>
 		
 		<cfreturn true />
+	</cffunction>
+	
+	<cffunction name="getInsertedDataFile">
+		<cfset var returnFile = "" />
+		<cfif !fileExists(expandPath("/Slatwall/config/insertedData.txt.cfm"))>
+			<cffile action="write" file="#expandPath("/Slatwall/config/insertedData.txt.cfm")#" output="" addnewline="false" /> 
+		</cfif>
+		
+		<cffile action="read" file="#expandPath("/Slatwall/config/insertedData.txt.cfm")#" variable="returnFile" >
+		
+		<cfreturn returnFile />
+	</cffunction>
+	
+	<cffunction name="updateInsertedDataFile">
+		<cfargument name="idKey" type="string" required="true" />
+		
+		<cffile action="append" file="#expandPath("/Slatwall/config/insertedData.txt.cfm")#" output=",#arguments.idKey#" addnewline="false" />
 	</cffunction>
 	
 </cfcomponent>

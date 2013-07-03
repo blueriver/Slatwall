@@ -194,7 +194,7 @@ globalEncryptionKeySize
 					productTypeMetaKeywordsString = {fieldType="textarea"},
 					
 					// Site
-					siteForgotPasswordEmailTemplate = {fieldType="select"},
+					siteForgotPasswordEmailTemplate = {fieldType="select", defaultValue="dbb327e796334dee73fb9d8fd801df91"},
 					
 					// Shipping Method
 					shippingMethodQualifiedRateSelection = {fieldType="select", defaultValue="lowest"},

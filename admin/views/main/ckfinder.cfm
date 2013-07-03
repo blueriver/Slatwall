@@ -44,7 +44,7 @@ Notes:
 	<div style="width:900px;">
 		<cfscript>
 			ckfinder = createObject( "component", "Slatwall.org.Hibachi.ckfinder.ckfinder" ) ;
-			ckfinder.BasePath = "/org/Hibachi/ckfinder" ;
+			ckfinder.BasePath = "#rc.$.slatwall.getApplicationValue('baseURL')#/org/Hibachi/ckfinder" ;
 			ckfinder.SelectFunction = 'ShowFileInfo' ;
 			ckfinder.Height = 460;
 			ckfinder.Width = 900;

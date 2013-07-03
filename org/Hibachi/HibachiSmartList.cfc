@@ -537,7 +537,7 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			if(i != getBaseEntityName()) {
 				var joinType = variables.entities[i].joinType;
 				if(!len(joinType)) {
-					joinType = "inner";
+					joinType = "left";
 				}
 				
 				var fetch = "";

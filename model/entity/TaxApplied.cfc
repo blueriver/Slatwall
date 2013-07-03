@@ -52,6 +52,12 @@ component entityname="SlatwallTaxApplied" table="SlatwallTaxApplied" persistent=
 	property name="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="many-to-one" fkcolumn="taxCategoryRateID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID" hb_cascadeCalculate="true";
 	
+	// Related Object Properties (one-to-many)
+	
+	// Related Object Properties (many-to-many - owner)
+	
+	// Related Object Properties (many-to-many - inverse)
+	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
@@ -60,6 +66,8 @@ component entityname="SlatwallTaxApplied" table="SlatwallTaxApplied" persistent=
 	property name="createdByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
+	// Non-Persistent Properties
 	
 	
 	// ============ START: Non-Persistent Property Methods =================

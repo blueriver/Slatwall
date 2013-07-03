@@ -77,14 +77,14 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 	// Non persistent properties
 	property name="discountAmount" persistent="false" hb_formatType="currency" hint="This is the discount amount after quantity (talk to Greg if you don't understand)" ;
 	property name="extendedPrice" persistent="false" hb_formatType="currency";
-	property name="extendedPriceAfterDiscount" persistent="false" hb_formatType="currency" ; 
+	property name="extendedPriceAfterDiscount" persistent="false" hb_formatType="currency";
+	property name="orderStatusCode" persistent="false"; 
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
 	property name="quantityReceived" persistent="false";
 	property name="quantityUnreceived" persistent="false";
-	property name="taxAmount" persistent="false" hb_formatType="currency" ;
-	property name="itemTotal" persistent="false" hb_formatType="currency" ; 
-
+	property name="taxAmount" persistent="false" hb_formatType="currency";
+	property name="itemTotal" persistent="false" hb_formatType="currency";
 
 	public numeric function getMaximumOrderQuantity() {
 		var maxQTY = 0;
@@ -106,6 +106,10 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 	
 	public boolean function hasQuantityWithinMaxOrderQuantity() {
 		return getQuantity() <= getMaximumOrderQuantity();
+	}
+	
+	public string function getOrderStatusCode(){
+		return getOrder().getStatusCode();
 	}
 	
 	public string function getStatus(){

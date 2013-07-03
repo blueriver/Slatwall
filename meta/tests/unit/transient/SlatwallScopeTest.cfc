@@ -1,4 +1,4 @@
-﻿<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,31 +35,12 @@
 
 Notes:
 
---->
+*/
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
-<cfparam name="rc.redirectAction" type="string" default="admin:entity.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentID#" />
-<cfparam name="rc.processStockAdjustmentSmartList" type="any" />
-<cfparam name="rc.multiProcess" type="boolean" />
+	public void function getEntity_works() {
+		assert(!isNull(request.slatwallScope.getEntity('SlatwallCountry', 'US')));
+	}
+	
+}
 
-<cfoutput>
-	<cf_SlatwallProcessForm>
-		
-		<cf_HibachiEntityActionBar type="process" />
-		
-		<cfswitch expression="#rc.processcontext#" >
-			<cfcase value="addItems">
-				
-				<cf_SlatwallProcessListing processSmartList="#rc.processStockAdjustmentSmartList#" processRecordsProperty="adjustmentSkuOptions">
-					<cf_SlatwallProcessColumn propertyIdentifier="product.brand.brandName" />
-					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="product.productName" />
-					<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
-					<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
-					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
-				</cf_SlatwallProcessListing>
-				
-			</cfcase> 
-				
-		</cfswitch>
-		
-	</cf_SlatwallProcessForm>
-</cfoutput>

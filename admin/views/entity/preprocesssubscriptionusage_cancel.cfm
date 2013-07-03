@@ -36,27 +36,20 @@
 Notes:
 
 --->
-<cfcomponent extends="HibachiDAO">
-	
-	<cffunction name="getMissingUserAccounts" returntype="any" access="public">
-		<cfquery name="accounts">
-			SELECT
-				accountID
-			FROM	
-				SlatwallAccount
-			INNER JOIN
-				tusers on SlatwallAccount.cmsAccountID = tusers.userID
-			WHERE
-				tusers.s2 = 1
-			AND
-				accountID NOT IN (
-					SELECT
-						accountID
-					FROM
-						SlatwallAccountPermissionGroup
-				)
-		</cfquery>	
-		<cfreturn accounts />
-	</cffunction>
-	
-</cfcomponent>
+<cfparam name="rc.subscriptionUsage" type="any" />
+<cfparam name="rc.processObject" type="any" />
+
+<cfoutput>
+	<cf_HibachiEntityProcessForm entity="#rc.subscriptionUsage#" edit="#rc.edit#" sRedirectAction="admin:entity.detailSubscriptionUsage">
+		
+		<cf_HibachiEntityActionBar type="preprocess" object="#rc.subscriptionUsage#">
+		</cf_HibachiEntityActionBar>
+		
+		<cf_HibachiPropertyRow>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="effectiveDateTime" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiPropertyRow>
+		
+	</cf_HibachiEntityProcessForm>
+</cfoutput>

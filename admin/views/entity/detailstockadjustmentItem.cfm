@@ -40,11 +40,11 @@ Notes:
 
 
 <cfparam name="rc.stockAdjustmentItem" type="any">
+<cfparam name="rc.stockAdjustment" type="any" default="#rc.stockAdjustmentItem.getStockAdjustment()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.stockAdjustmentItem#" edit="#rc.edit#">
-		<input type="hidden" name="redirectAction" value="admin:entity.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentItem.getStockAdjustment().getStockAdjustmentID()#"	 />
+	<cf_HibachiEntityDetailForm object="#rc.stockAdjustmentItem#" edit="#rc.edit#" saveActionQueryString="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#">
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>

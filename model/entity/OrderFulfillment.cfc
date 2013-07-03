@@ -40,13 +40,12 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="fulfillmentCharge" ormtype="big_decimal" default=0;
+	property name="fulfillmentCharge" ormtype="big_decimal";
 	property name="currencyCode" ormtype="string" length="3";
 	property name="emailAddress" hb_populateEnabled="public" ormtype="string";
 	property name="manualFulfillmentChargeFlag" ormtype="boolean" hb_populateEnabled="false";
 	
 	// Related Object Properties (many-to-one)
-	property name="accountAddress" hb_populateEnabled="public" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
 	property name="accountEmailAddress" hb_populateEnabled="public" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="accountEmailAddressID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
@@ -73,6 +72,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
+	property name="accountAddress" hb_populateEnabled="public" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID" persistent="false";
 	property name="accountAddressOptions" type="array" persistent="false";
 	property name="chargeAfterDiscount" type="numeric" persistent="false" hb_formatType="currency";
 	property name="discountAmount" type="numeric" persistent="false" hb_formatType="currency";
@@ -87,6 +87,12 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="subtotalAfterDiscountsWithTax" type="array" persistent="false" hb_formatType="currency";    
 	property name="taxAmount" type="numeric" persistent="false" hb_formatType="currency";
 	property name="totalShippingWeight" type="numeric" persistent="false" hb_formatType="weight";
+	
+	public any function copyAccountAddressToShippingAddress() {
+		if(!isNull(getAccountAddress()) && !getAccountAddress().getNewFlag()) {
+			setShippingAddress( getAccountAddress().getAddress().copyAddress( true ) );
+		}
+	}
 	
 	public void function removeAccountAddress() {
 		structDelete(variables, "AccountAddress");
@@ -135,12 +141,14 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
     public any function getAccountAddressOptions() {
     	if( !structKeyExists(variables, "accountAddressOptions")) {
-    		var smartList = getService("accountService").getAccountAddressSmartList();
-			smartList.addSelect(propertyIdentifier="accountAddressName", alias="name");
-			smartList.addSelect(propertyIdentifier="accountAddressID", alias="value"); 
-			smartList.addFilter(propertyIdentifier="account.accountID",value=this.getOrder().getAccount().getAccountID(),fetch="false");
-			smartList.addOrder("accountAddressName|ASC");
-			variables.accountAddressOptions = smartList.getRecords();
+    		variables.accountAddressOptions = [];
+			var s = getService("accountService").getAccountAddressSmartList();
+			s.addFilter(propertyIdentifier="account.accountID",value=getOrder().getAccount().getAccountID(),fetch="false");
+			s.addOrder("accountAddressName|ASC");
+			var r = s.getRecords();
+			for(var i=1; i<=arrayLen(r); i++) {
+				arrayAppend(variables.accountAddressOptions, {name=r[i].getSimpleRepresentation(), value=r[i].getAccountAddressID()});	
+			}
 		}
 		return variables.accountAddressOptions;
 	}
@@ -348,6 +356,13 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// ================== START: Overridden Methods ========================
 	
+	public numeric function getFulfillmentCharge() {
+		if(!structKeyExists(variables, "fulfillmentCharge")) {
+			variables.fulfillmentCharge = 0;
+		}
+		return variables.fulfillmentCharge;
+	}
+	
 	public boolean function getManualfulfillmentChargeFlag() {
 		if(!structKeyExists(variables, "manualFulfillmentChargeFlag")) {
 			variables.manualFulfillmentChargeFlag = 0;
@@ -410,6 +425,19 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		
+		copyAccountAddressToShippingAddress();
+	}
+	
+	public void function preUpdate(Struct oldData){
+		super.preUpdate();
+		
+		copyAccountAddressToShippingAddress();
+	}
+	
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }
