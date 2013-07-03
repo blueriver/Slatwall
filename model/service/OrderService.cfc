@@ -774,6 +774,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if( !hasPaymentTransaction ) {
 			this.deleteOrder( arguments.order );
 		}
+		
+		return this.newOrder();
 	}
 	
 	public any function processOrder_create(required any order, required any processObject, required struct data={}) {
