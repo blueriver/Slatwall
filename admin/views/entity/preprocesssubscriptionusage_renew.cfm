@@ -68,12 +68,12 @@ Notes:
 				
 				<!--- Copy Account Payment Method --->
 				<cf_HibachiDisplayToggle selector="select[name='renewalPaymentType']" showValues="accountPaymentMethod" loadVisable="#rc.processObject.getRenewalPaymentType() eq 'accountPaymentMethod'#">
-					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accountPaymentMethodID" edit="true" />	
+					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accountPaymentMethod" edit="true" />	
 				</cf_HibachiDisplayToggle>
 				
 				<!--- Copy Order Payment --->
 				<cf_HibachiDisplayToggle selector="select[name='renewalPaymentType']" showValues="orderPayment" loadVisable="#rc.processObject.getRenewalPaymentType() eq 'orderPayment'#">
-					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderPaymentID" edit="true" />
+					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderPayment" edit="true" />
 				</cf_HibachiDisplayToggle>
 				
 				<!--- New Order Payment --->

@@ -1216,7 +1216,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			subscriptionOrderItem.getSubscriptionUsage().setExpirationDate( subscriptionOrderItem.getSubscriptionUsage().getRenewalTerm().getEndDate(startDate) );
 			
-			getSubscriptionService().updateSubscriptionUsageStatus( subscriptionOrderItem.getSubscriptionUsage() );
+			getSubscriptionService().processSubscriptionUsage( subscriptionOrderItem.getSubscriptionUsage(), {}, 'updateStatus' );
 			
 			// set renewal benefit if needed
 			getSubscriptionService().setupRenewalSubscriptionBenefitAccess( subscriptionOrderItem.getSubscriptionUsage() );

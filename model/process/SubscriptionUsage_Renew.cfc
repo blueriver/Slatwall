@@ -14,9 +14,8 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	
 	property name="renewalPaymentType" hb_formFieldType="select";
 	
-	property name="accountPaymentMethodID" hb_formFieldType="select" hb_rbKey="entity.accountPaymentMethod";
-	property name="orderPaymentID" hb_formFieldType="select" hb_rbKey="entity.orderPayment";
-	
+	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldType="many-to-one" persistent="false" fkcolumn="accountPaymentMethodID" hb_rbKey="entity.accountPaymentMethod";
+	property name="orderPayment" cfc="OrderPayment" fieldType="many-to-one" persistent="false" fkcolumn="orderPaymentID" hb_rbKey="entity.orderPayment";
 	property name="newOrderPayment" cfc="OrderPayment" fieldType="many-to-one" persistent="false" fkcolumn="orderPaymentID";
 	
 	property name="saveAccountPaymentMethodFlag" hb_formFieldType="yesno";
@@ -74,13 +73,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		return round(getSubscriptionUsage().getRenewalPrice() * proratePercentage)/100;
 	}
 	
-	public array function getRenewalStartTypeOptions() {
-		return [
-			{name="Extend Current Expiration", value='extend'},
-			{name="Prorate & Extend From Today", value='prorate'}
-		];
-	}
-	
 	public string function getRenewalStartType() {
 		if(!structKeyExists(variables, "renewalStartType")) {
 			variables.renewalStartType = 'extend';
@@ -89,12 +81,21 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		return variables.renewalStartType;
 	}
 	
+	public array function getRenewalStartTypeOptions() {
+		return [
+			{name="Extend Current Expiration", value='extend'},
+			{name="Prorate & Extend From Today", value='prorate'}
+		];
+	}
+	
 	public string function getRenewalPaymentType() {
 		if(!structKeyExists(variables, "renewalPaymentType")) {
-			if(arrayLen(getAccountPaymentMethodIDOptions())) {
+			if(arrayLen(getAccountPaymentMethodOptions())) {
 				variables.renewalPaymentType = 'accountPaymentMethod';
-			} else {
+			} else if(arrayLen(getOrderPaymentOptions())) {
 				variables.renewalPaymentType = 'orderPayment';	
+			} else {
+				variables.renewalPaymentType = 'new';
 			}
 		}
 		
@@ -104,49 +105,39 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	public array function getRenewalPaymentTypeOptions() {
 		var options = [];
 		
-		if(arrayLen(getAccountPaymentMethodIDOptions())) {
+		if(arrayLen(getAccountPaymentMethodOptions())) {
 			arrayAppend(options, {name=rbKey('processObject.SubscriptionUsage_Renew.renewalPaymentType.accountPaymentMethod'), value='accountPaymentMethod'});
 		}
-		
-		arrayAppend(options, {name=rbKey('processObject.SubscriptionUsage_Renew.renewalPaymentType.orderPayment'), value='orderPayment'});
-		arrayAppend(options, {name=rbKey('processObject.SubscriptionUsage_Renew.renewalPaymentType.new'), value='new'});
-		
-		if(getOrder().getNewFlag()) {
-			arrayAppend(options, {name=rbKey('processObject.SubscriptionUsage_Renew.renewalPaymentType.none'), value='none'});	
+		if(arrayLen(getOrderPaymentOptions())) {
+			arrayAppend(options, {name=rbKey('processObject.SubscriptionUsage_Renew.renewalPaymentType.orderPayment'), value='orderPayment'});
 		}
+		arrayAppend(options, {name=rbKey('processObject.SubscriptionUsage_Renew.renewalPaymentType.new'), value='new'});
 		
 		return options;
 	}
 	
-	public numeric function getRenewalPrice() {
-		if(!structKeyExists(variables, "renewalPrice")) {
-			variables.renewalPrice = getSubscriptionUsage().getRenewalPrice();
-		}
-		return variables.renewalPrice;
-	}
-	
-	public array function getOrderPaymentIDOptions() {
-		if(!structKeyExists(variables, "orderPaymentIDOptions")) {
-			variables.orderPaymentIDOptions = [];
+	public array function getOrderPaymentOptions() {
+		if(!structKeyExists(variables, "orderPaymentOptions")) {
+			variables.orderPaymentOptions = [];
 			var previousOrderPayments = getSubscriptionUsage().getUniquePreviousSubscriptionOrderPayments();
 			for(var orderPayment in previousOrderPayments) {
-				arrayAppend(variables.orderPaymentIDOptions, {name=orderPayment.getSimpleRepresentation(), value=orderPayment.getOrderPaymentID()});	
+				arrayAppend(variables.orderPaymentOptions, {name=orderPayment.getSimpleRepresentation(), value=orderPayment.getOrderPaymentID()});	
 			}
 		}
-		return variables.orderPaymentIDOptions;
+		return variables.orderPaymentOptions;
 	}
 	
-	public any function getAccountPaymentMethodIDOptions() {
-		if(!structKeyExists(variables, "accountPaymentMethodIDOptions")) {
-			variables.accountPaymentMethodIDOptions = [];
+	public any function getAccountPaymentMethodOptions() {
+		if(!structKeyExists(variables, "accountPaymentMethodOptions")) {
+			variables.accountPaymentMethodOptions = [];
 			var smartList = getService("accountService").getAccountPaymentMethodSmartList();
 			smartList.addFilter(propertyIdentifier="account.accountID", value=getSubscriptionUsage().getAccount().getAccountID());
 			smartList.addOrder("accountPaymentMethodName|ASC");
 			for(var apm in smartList.getRecords()) {
-				arrayAppend(variables.accountPaymentMethodIDOptions,{name=apm.getSimpleRepresentation(),value=apm.getAccountPaymentMethodID()});
+				arrayAppend(variables.accountPaymentMethodOptions,{name=apm.getSimpleRepresentation(),value=apm.getAccountPaymentMethodID()});
 			}
 		}
-		return variables.accountPaymentMethodIDOptions;
+		return variables.accountPaymentMethodOptions;
     }
 	
 }
