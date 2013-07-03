@@ -528,10 +528,17 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 			// If there is an order, it has not been placed and there is only 1 order payment with no explicit value set... then we can return the order total.
 			if(!isNull(getOrder()) && listFindNoCase("ostNotPlaced,ostNew,ostOnHold,ostProcessing", getOrder().getOrderStatusType().getSystemCode()) && !getPeerOrderPaymentNullAmountExistsFlag()) {
 				var orderAmountNeeded = getOrderAmountNeeded();
-				if(orderAmountNeeded gt 0 && getOrderPaymentType().getSystemCode() eq "optCharge") {
-					return orderAmountNeeded;
-				} else if (orderAmountNeeded gt 0 && getOrderPaymentType().getSystemCode() eq "optCredit") {
-					return orderAmountNeeded * -1;
+					
+				if(getOrderPaymentType().getSystemCode() eq "optCharge") {
+					if(orderAmountNeeded gt 0) {
+						return orderAmountNeeded;	
+					}
+					return 0;
+				} else if (getOrderPaymentType().getSystemCode() eq "optCredit") {
+					if(orderAmountNeeded lt 0) {
+						return orderAmountNeeded * -1;	
+					}
+					return 0;
 				}
 			}
 			
