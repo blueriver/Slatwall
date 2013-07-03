@@ -243,6 +243,8 @@ component extends="HibachiService" accessors="true" {
 		} catch(any e) {
 			processObject.addError('imageFile', getHibachiScope().rbKey('validate.fileUpload'));
 		}
+		
+		return arguments.product;
 	}
 	
 	

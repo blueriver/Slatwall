@@ -45,9 +45,9 @@ component entityname="SlatwallSubscriptionUsage" table="SwSubsUsage" persistent=
 	property name="currencyCode" ormtype="string" length="3";
 	property name="autoRenewFlag" ormtype="boolean" hb_formatType="yesno";
 	property name="autoPayFlag" ormtype="boolean" hb_formatType="yesno";
-	property name="nextBillDate" ormtype="timestamp";
+	property name="nextBillDate" ormtype="timestamp" hb_formatType="date" hb_formFieldType="date";
 	property name="nextReminderEmailDate" ormtype="timestamp";
-	property name="expirationDate" ormtype="timestamp";
+	property name="expirationDate" ormtype="timestamp" hb_formatType="date" hb_formFieldType="date";
 	
 	// Related Object Properties (many-to-one)
 	property name="initialTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="initialTermID";
@@ -85,6 +85,10 @@ component entityname="SlatwallSubscriptionUsage" table="SwSubsUsage" persistent=
 		} else {
 			return false;
 		}
+	}
+	
+	public array function getUniquePreviousSubscriptionOrderPayments() {
+		return getService("subscriptionService").getUniquePreviousSubscriptionOrderPayments( getSubscriptionUsageID() );
 	}
 	
 	public void function copyOrderItemInfo(required any orderItem) {
@@ -186,13 +190,14 @@ component entityname="SlatwallSubscriptionUsage" table="SwSubsUsage" persistent=
 	
     public any function getAccountPaymentMethodOptions() {
 		if(!structKeyExists(variables, "accountPaymentMethodOptions")) {
-			var smartList = getService("accountService").getAccountPaymentSmartList();
-			smartList.addSelect(propertyIdentifier="accountPaymentMethodName", alias="name");
-			smartList.addSelect(propertyIdentifier="accountPaymentMethodID", alias="value");
-			smartList.addFilter(propertyIdentifier="account_accountID", value="#getAccount().getAccountID()#");
+			variables.accountPaymentMethodOptions = [];
+			var smartList = getService("accountService").getAccountPaymentMethodSmartList();
+			smartList.addFilter(propertyIdentifier="account.accountID", value=getAccount().getAccountID());
 			smartList.addOrder("accountPaymentMethodName|ASC");
-			variables.accountPaymentMethodOptions = smartList.getRecords();
-			arrayPrepend(variables.accountPaymentMethodOptions,{name=rbKey("define.select"),value=""});
+			for(var apm in smartList.getRecords()) {
+				arrayAppend(variables.accountPaymentMethodOptions,{name=apm.getSimpleRepresentation(),value=apm.getAccountPaymentMethodID()});
+			}
+			arrayPrepend(variables.accountPaymentMethodOptions,{name=rbKey("define.none"),value=""});
 		}
 		return variables.accountPaymentMethodOptions;
     }
