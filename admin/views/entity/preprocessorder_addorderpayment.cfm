@@ -54,12 +54,14 @@ Notes:
 				<!--- Add a hidden field for the orderID --->
 				<input type="hidden" name="newOrderPayment.order.orderID" value="#rc.order.getOrderID()#" />
 				
+				<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="orderPaymentType" fieldName="newOrderPayment.orderPaymentType.typeID" edit="#rc.edit#">
+				
 				<!--- Display the amount that is going to be used, but allow for override --->				
 				<cfif not arrayLen(rc.order.getOrderPayments()) || (arrayLen(rc.order.getOrderPayments()) eq 1 && rc.order.getOrderPayments()[1].hasErrors())>
 					<div class="control-group">
 						<label class="control-label">#$.slatwall.rbKey('define.amount')#</label>
 						<div class="controls">
-							#$.slatwall.rbKey('admin.entity.detailOrderPayment.entireOrderTotal')#l - #rc.order.getFormattedValue('total')#<br />
+							#$.slatwall.rbKey('admin.entity.detailOrderPayment.entireOrderTotal')#: <span <cfif rc.order.getTotal() lt 0>class="negative"</cfif>>#rc.order.getFormattedValue('total')#</span><br />
 							<a href="##" id='changeAmount'>#$.slatwall.rbKey('admin.entity.detailOrderPayment.changeAmount')#</a>
 						</div>
 						<script type="text/javascript">
@@ -81,8 +83,6 @@ Notes:
 				<cfelse>
 					<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="amount" fieldName="newOrderPayment.amount" edit="#rc.edit#">
 				</cfif>
-				
-				<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="orderPaymentType" fieldName="newOrderPayment.orderPaymentType.typeID" edit="#rc.edit#">
 				
 				<cfinclude template="preprocessorder_include/addorderpayment.cfm" />
 				

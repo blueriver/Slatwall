@@ -433,10 +433,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getOrderDAO().getMaxOrderNumber();
 	}
 	
-	public boolean function getPeerOrderPaymentNullAmountExistsFlag(required string orderID, required string orderPaymentID) {
-		return getOrderDAO().getPeerOrderPaymentNullAmountExistsFlag(argumentcollection=arguments);
-	}
-	
 	public numeric function getOrderPaymentNonNullAmountTotal(required string orderID) {
 		return getOrderDAO().getOrderPaymentNonNullAmountTotal(argumentcollection=arguments);
 	}
