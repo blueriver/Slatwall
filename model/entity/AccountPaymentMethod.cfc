@@ -78,6 +78,7 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	property name="giftCardNumber" persistent="false";
 	property name="bankRoutingNumber" persistent="false";
 	property name="bankAccountNumber" persistent="false";
+	property name="securityCode" persistent="false";
 	property name="paymentMethodOptions" persistent="false";
 	property name="paymentMethodOptionsSmartList" persistent="false";
 	

@@ -655,10 +655,22 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// If saveAccountPaymentMethodFlag is set to true, then we need to save this object
 			if(arguments.processObject.getSaveAccountPaymentMethodFlag()) {
+				
+				// Create a new Account Payment Method
 				var newAccountPaymentMethod = getAccountService().newAccountPaymentMethod();
-				newAccountPaymentMethod.copyFromOrderPayment( newOrderPayment );
+				
+				// Attach to Account
 				newAccountPaymentMethod.setAccount( arguments.order.getAccount() );
 				
+				// Setup name if exists
+				if(!isNull(arguments.processObject.getSaveAccountPaymentMethodName())) {
+					newAccountPaymentMethod.setAccountPaymentMethodName( arguments.processObject.getSaveAccountPaymentMethodName() );	
+				}
+				
+				// Copy over details
+				newAccountPaymentMethod.copyFromOrderPayment( newOrderPayment );
+				
+				// Save it
 				newAccountPaymentMethod = getAccountService().saveAccountPaymentMethod( newAccountPaymentMethod );
 			}
 
