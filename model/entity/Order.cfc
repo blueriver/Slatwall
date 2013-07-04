@@ -87,6 +87,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="addPaymentRequirementDetails" persistent="false";
 	property name="deliveredItemsAmountTotal" persistent="false";
 	property name="discountTotal" persistent="false" hb_formatType="currency";
+	property name="dynamicChargeOrderPayment" persistent="false";
+	property name="dynamicCreditOrderPayment" persistent="false";
+	property name="dynamicChargeOrderPaymentAmount" persistent="false" hb_formatType="currency";
+	property name="dynamicCreditOrderPaymentAmount" persistent="false" hb_formatType="currency";
 	property name="eligiblePaymentMethodDetails" persistent="false";
 	property name="itemDiscountAmountTotal" persistent="false" hb_formatType="currency";
 	property name="fulfillmentDiscountAmountTotal" persistent="false" hb_formatType="currency";
@@ -121,7 +125,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="totalQuantity" persistent="false";
 	property name="totalSaleQuantity" persistent="false";
 	property name="totalReturnQuantity" persistent="false";
-	
 	
 	public string function getStatus() {
 		return getOrderStatusType().getType();
@@ -369,6 +372,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		
 		return 0;
+		
 	}
 	
 	public numeric function getOrderPaymentChargeAmountNeeded() {
@@ -413,6 +417,28 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		if(!isNull(returnOrderPayment)) {
 			return returnOrderPayment;
 		}
+	}
+	
+	public any function getDynamicChargeOrderPaymentAmount() {
+		var nonNullPayments = getService("orderService").getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
+		var orderPaymentAmountNeeded = precisionEvaluate( getTotal() - nonNullPayments );
+		
+		if(orderPaymentAmountNeeded gt 0) {
+			return orderPaymentAmountNeeded;
+		}
+		
+		return 0;
+	}
+	
+	public any function getDynamicCreditOrderPaymentAmount() {
+		var nonNullPayments = getService("orderService").getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
+		var orderPaymentAmountNeeded = precisionEvaluate( getTotal() - nonNullPayments );
+		
+		if(orderPaymentAmountNeeded lt 0) {
+			return orderPaymentAmountNeeded * -1;
+		}
+		
+		return 0;
 	}
 	
 	public numeric function getPaymentAmountTotal() {
