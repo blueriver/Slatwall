@@ -68,7 +68,7 @@ Notes:
 							<a href="##" id='changeChargeAmount'>#$.slatwall.rbKey('admin.entity.detailOrderPayment.changeAmount')#</a>
 						</div>
 						<div id="dynamic-credit-amount" class="hide">
-							#$.slatwall.rbKey('admin.entity.detailOrderPayment.dynamicCredit')#: #rc.order.getFormattedValue('orderPaymentCreditAmountNeeded')#<br />
+							#$.slatwall.rbKey('admin.entity.detailOrderPayment.dynamicCredit')#: <span class="negative">( #rc.order.getFormattedValue('orderPaymentCreditAmountNeeded')# )<span></span><br />
 							<a href="##" id='changeCreditAmount'>#$.slatwall.rbKey('admin.entity.detailOrderPayment.changeAmount')#</a>
 						</div>
 						<div id="charge-amount" class="hide">
@@ -84,7 +84,7 @@ Notes:
 								
 								var paymentDetails = {
 									dynamicChargeOK : '#UCASE(isNull(rc.order.getDynamicChargeOrderPayment()))#',
-									dynamicCreditOK : '#UCASE(isNull(rc.order.getDynamicChargeOrderPayment()))#'
+									dynamicCreditOK : '#UCASE(isNull(rc.order.getDynamicCreditOrderPayment()))#'
 								};
 								
 								$('body').on('change', 'select[name="newOrderPayment.orderPaymentType.typeID"]', function(e) {

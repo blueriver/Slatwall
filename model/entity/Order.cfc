@@ -358,7 +358,17 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public numeric function getOrderPaymentAmountNeeded() {
-		return precisionEvaluate( getTotal() - getService("orderService").getOrderPaymentNonNullAmountTotal(orderID=getOrderID()));
+		
+		var nonNullPayments = getService("orderService").getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
+		var orderPaymentAmountNeeded = precisionEvaluate( getTotal() - nonNullPayments );
+		
+		if(orderPaymentAmountNeeded gt 0 && isNull(getDynamicChargeOrderPayment())) {
+			return orderPaymentAmountNeeded;
+		} else if (orderPaymentAmountNeeded lt 0 && isNull(getDynamicCreditOrderPayment())) {
+			return orderPaymentAmountNeeded;
+		}
+		
+		return 0;
 	}
 	
 	public numeric function getOrderPaymentChargeAmountNeeded() {
