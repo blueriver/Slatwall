@@ -44,10 +44,12 @@ component accessors="true" extends="Slatwall.org.Hibachi.HibachiService" {
 			
 			var settingsRemoved = getService("settingService").updateAllSettingValuesToRemoveSpecificID( arguments.entity.getPrimaryIDValue() );
 			
-			if(settingsRemoved gt 0) {
+			if(settingsRemoved gt 0 || listFindNoCase("Currency,FulfillmentMethod,OrderOrigin,PaymentTerm,PaymentMethod",arguments.entity.getClassName())) {
 				getService("settingService").clearAllSettingsCache();
 			}
 		}
+		
+		
 		
 		return arguments.entity;
 	}
