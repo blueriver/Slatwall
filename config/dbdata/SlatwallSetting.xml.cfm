@@ -9,7 +9,6 @@
 		<column name="paymentMethodID" update="false" />
 	</Columns>
 	<Records>
-		<Record settingID="dbb327d3f6444d22ddcdc2afb43a899b" settingName="skuEligibleFulfillmentMethods" settingValue="444df2fb93d5fa960ba2966ba2017953,444df2ffeca081dc22f69c807d2bd8fe" />
 		<Record settingID="dbb327c3ebccc259a5484776f066cad5" settingName="skuEligibleFulfillmentMethods" settingValue="444df2fb93d5fa960ba2966ba2017953" productTypeID="444df2f7ea9c87e60051f3cd87b435a1" />
 		<Record settingID="dbb327cbea9fe180f55e9e8a06896138" settingName="skuEligibleFulfillmentMethods" settingValue="444df2ffeca081dc22f69c807d2bd8fe" productTypeID="444df2f9c7deaa1582e021e894c0e299" />
 		<Record settingID="dbb327ccf8fc943529d8fc067bc82886" settingName="skuEligibleFulfillmentMethods" settingValue="444df2ffeca081dc22f69c807d2bd8fe" productTypeID="444df313ec53a08c32d8ae434af5819a" />

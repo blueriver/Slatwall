@@ -47,6 +47,7 @@ globalEncryptionKeySize
 	<cfproperty name="contentService" type="any" />
 	<cfproperty name="currencyService" type="any" />
 	<cfproperty name="emailService" type="any" />
+	<cfproperty name="fulfillmentService" type="any" />
 	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="locationService" type="any" />
 	<cfproperty name="measurementService" type="any" />
@@ -209,10 +210,10 @@ globalEncryptionKeySize
 					skuAllowBackorderFlag = {fieldType="yesno", defaultValue=0},
 					skuAllowPreorderFlag = {fieldType="yesno", defaultValue=0},
 					skuCurrency = {fieldType="select", defaultValue="USD"},
-					skuEligibleCurrencies = {fieldType="listingMultiselect", defaultValue="USD", listingMultiselectEntityName="Currency"},
-					skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
-					skuEligibleOrderOrigins = {fieldType="listingMultiselect", defaultValue="", listingMultiselectEntityName="OrderOrigin"},
-					skuEligiblePaymentMethods = {fieldType="listingMultiselect", defaultValue="", listingMultiselectEntityName="PaymentMethod"},
+					skuEligibleCurrencies = {fieldType="listingMultiselect", listingMultiselectEntityName="Currency", defaultValue=getCurrencyService().getAllActiveCurrencyIDList()},
+					skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod", defaultValue=getFulfillmentService().getAllActiveFulfillmentMethodIDList()},
+					skuEligibleOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin", defaultValue=this.getAllActiveOrderOriginIDList()},
+					skuEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod", defaultValue=getPaymentService().getAllActivePaymentMethodIDList()},
 					skuHoldBackQuantity = {fieldType="text", defaultValue=0},
 					skuOrderMinimumQuantity = {fieldType="text", defaultValue=1},
 					skuOrderMaximumQuantity = {fieldType="text", defaultValue=1000},
@@ -661,6 +662,18 @@ globalEncryptionKeySize
 				setupData["f:sku.product.activeFlag"] = 1;
 				getTaskService().updateEntityCalculatedProperties("Stock", setupData);
 			} 
+		}
+		
+		public string function getAllActiveOrderOriginIDList() {
+			var returnList = "";
+			var apmSL = this.getOrderOriginSmartList();
+			apmSL.addFilter('activeFlag', 1);
+			apmSL.addSelect('orderOriginID', 'orderOriginID');
+			var records = apmSL.getRecords();
+			for(var i=1; i<=arrayLen(records); i++) {
+				returnList = listAppend(returnList, records[i]['orderOriginID']);
+			}
+			return returnList;
 		}
 		
 	</cfscript>
