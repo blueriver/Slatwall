@@ -46,7 +46,7 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 	property name="autoRenewFlag" ormtype="boolean" hb_formatType="yesno";
 	property name="autoPayFlag" ormtype="boolean" hb_formatType="yesno";
 	property name="nextBillDate" ormtype="timestamp" hb_formatType="date" hb_formFieldType="date";
-	property name="nextReminderEmailDate" ormtype="timestamp";
+	property name="nextReminderEmailDate" ormtype="timestamp" hb_formatType="date" hb_formFieldType="date";
 	property name="expirationDate" ormtype="timestamp" hb_formatType="date" hb_formFieldType="date";
 	
 	// Related Object Properties (many-to-one)
