@@ -409,7 +409,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	}
 	
 	public any function processSubscriptionUsage_sendRenewalReminder(required any subscriptionUsage) {
-		// Get the email template
+		
+		if(len(subscriptionUsage.setting('subscriptionUsageRenewalReminderEmailTemplate'))) {
+			
+			var email = getEmailService().newEmail();
+			var emailData = {
+				subscriptionUsageID = subscriptionUsage.getSubscriptionUsageID(),
+				emailTemplateID = subscriptionUsage.setting('subscriptionUsageRenewalReminderEmailTemplate')
+			};
+			
+			email = getEmailService().processEmail(email, emailData, 'createFromTemplate');
+			email = getEmailService().processEmail(email, {}, 'addToQueue');
+			
+		} else {
+			throw("No reminder email template found.  Please update the setting 'Subscription Renewal Reminder Email Template' either globally, for the subscription term, or subscription usage.");
+		}
 		
 		return arguments.subscriptionUsage;
 	}

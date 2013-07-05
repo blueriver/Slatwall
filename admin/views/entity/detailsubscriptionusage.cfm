@@ -43,8 +43,9 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.subscriptionUsage#" edit="#rc.edit#" saveActionQueryString="subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.subscriptionUsage#">
 			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.preProcessSubscriptionUsage" processContext="renew" type="list" modal="true" />
-			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.processSubscriptionUsage" processContext="updateStatus" type="list" />
 			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.preProcessSubscriptionUsage" processContext="cancel" type="list" modal="true" />
+			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.processSubscriptionUsage" processContext="updateStatus" type="list" />
+			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.processSubscriptionUsage" processContext="sendRenewalReminder" type="list" />
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
