@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.stockReceiver.getStockReceiverItemsSmartList()#">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="stock.sku.product.calculatedTitle" />
-		<cf_HibachiListingColumn propertyIdentifier="stock.sku.optionsDisplay" sort="false" />
+		<cf_HibachiListingColumn propertyIdentifier="stock.sku.skuDefinition" sort="false" />
 		<cf_HibachiListingColumn propertyIdentifier="stock.sku.skuCode" />
 		<cf_HibachiListingColumn propertyIdentifier="stock.location.locationName" />
 		<cf_HibachiListingColumn propertyIdentifier="quantity" />
