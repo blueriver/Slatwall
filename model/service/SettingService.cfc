@@ -72,6 +72,7 @@ globalEncryptionKeySize
 			"accountAuthentication",
 			"shippingMethodRate",
 			"fulfillmentMethod",
+			"subscriptionUsage",
 			"subscriptionTerm",
 			"shippingMethod",
 			"paymentMethod",
@@ -95,7 +96,8 @@ globalEncryptionKeySize
 			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
 			email = ["emailTemplate.emailTemplateID"],
 			shippingMethodRate = ["shippingMethod.shippingMethodID"],
-			accountAuthentication = [ "integration.integrationID" ]
+			accountAuthentication = [ "integration.integrationID" ],
+			subscriptionUsage = [ "subscriptionTerm.subscriptionTermID" ]
 		};
 		
 		public any function getSettingMetaData(required string settingName) {
@@ -226,7 +228,9 @@ globalEncryptionKeySize
 					skuTrackInventoryFlag = {fieldType="yesno", defaultValue=0},
 					
 					// Subscription Term
-					subscriptionTermRenewalReminderEmailTemplate = {fieldType="select", defaultValue=""},
+					subscriptionUsageAutoRetryPaymentDays = {fieldType="text", defaultValue=""},
+					subscriptionUsageRenewalReminderDays = {fieldType="text", defaultValue=""},
+					subscriptionUsageRenewalReminderEmailTemplate = {fieldType="select", defaultValue=""},
 					
 					// DEPRECATED***
 					globalImageExtension = {fieldType="text",defaultValue="jpg"},
@@ -339,8 +343,8 @@ globalEncryptionKeySize
 					optionSL.addSelect('taxCategoryName', 'name');
 					optionSL.addSelect('taxCategoryID', 'value');
 					return optionSL.getRecords();
-				case "subscriptionTermRenewalReminderEmailTemplate":
-					return getEmailService().getEmailTemplateOptions( "subscriptionTerm" );
+				case "subscriptionUsageRenewalReminderEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "subscriptionUsage" );
 			}
 			
 			if(structKeyExists(getSettingMetaData(arguments.settingName), "valueOptions")) {
@@ -801,6 +805,11 @@ globalEncryptionKeySize
 						AND LOWER(allSettings.subscriptionTermID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.subscriptionTermID)#" > 
 					<cfelseif structKeyExists(allSettings, "subscriptionTermID")>
 						AND allSettings.subscriptionTermID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "subscriptionUsageID") and structKeyExists(allSettings, "subscriptionUsageID")>
+						AND LOWER(allSettings.subscriptionUsageID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.subscriptionUsageID)#" > 
+					<cfelseif structKeyExists(allSettings, "subscriptionUsageID")>
+						AND allSettings.subscriptionUsageID IS NULL
 					</cfif>
 		</cfquery>
 		

@@ -66,6 +66,7 @@ Notes:
 			<!---<cf_HibachiTab view="admin:entity/subscriptionusagetabs/usagebenifits">
 			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/renewalusagebenefits">--->
 			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/orderitems">
+			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/subscriptionusagesettings" />
 		</cf_HibachiTabGroup>
 
 	</cf_HibachiEntityDetailForm>

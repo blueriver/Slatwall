@@ -36,8 +36,12 @@
 Notes:
 
 --->
+<cfparam name="rc.subscriptionUsage" type="any" />
+
 <cfoutput>
-	<cf_SlatwallSettingTable showInheritance="false">
-		<cf_SlatwallSetting settingName="subscriptionTermRenewalReminderEmailTemplate" />
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="subscriptionUsageAutoRetryPaymentDays" settingObject="#rc.subscriptionUsage#" />
+		<cf_SlatwallSetting settingName="subscriptionUsageRenewalReminderDays" settingObject="#rc.subscriptionUsage#" />
+		<cf_SlatwallSetting settingName="subscriptionUsageRenewalReminderEmailTemplate" settingObject="#rc.subscriptionUsage#" />
 	</cf_SlatwallSettingTable>
 </cfoutput>

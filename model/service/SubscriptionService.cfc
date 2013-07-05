@@ -315,6 +315,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getSubscriptionDAO().getUniquePreviousSubscriptionOrderPayments( argumentCollection=arguments );
 	}
 	
+	public any function getSubscriptionUsageForRenewal() {
+		return getSubscriptionDAO().getSubscriptionUsageForRenewal();
+	}
+	
+	public any function getSubscriptionUsageForRenewalReminder() {
+		return getSubscriptionDAO().getSubscriptionUsageForRenewalReminder();
+	}
+	
 	// ===================== START: DAO Passthrough ===========================
 	
 	// ===================== START: Process Methods ===========================
@@ -397,6 +405,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// TODO: Add Retry Logic
 		}
 
+		return arguments.subscriptionUsage;
+	}
+	
+	public any function processSubscriptionUsage_sendRenewalReminder(required any subscriptionUsage) {
+		// Get the email template
+		
 		return arguments.subscriptionUsage;
 	}
 	
