@@ -149,6 +149,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return returnList;
 	}
 	
+	public string function getAllActivePaymentTermIDList() {
+		var returnList = "";
+		var apmSL = this.getPaymentTermSmartList();
+		apmSL.addFilter('activeFlag', 1);
+		apmSL.addSelect('paymentTermID', 'paymentTermID');
+		var records = apmSL.getRecords();
+		for(var i=1; i<=arrayLen(records); i++) {
+			returnList = listAppend(returnList, records[i]['paymentTermID']);
+		}
+		return returnList;
+	}
+	
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================

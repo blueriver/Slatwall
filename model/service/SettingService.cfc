@@ -105,7 +105,7 @@ globalEncryptionKeySize
 					
 					// Account
 					accountEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod", defaultValue=getPaymentService().getAllActivePaymentMethodIDList()},
-					accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
+					accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm", defaultValue=getPaymentService().getAllActivePaymentTermIDList()},
 					accountPaymentTerm = {fieldType="select"},
 					accountTermCreditLimit = {fieldType="text", formatType="currency",defaultValue=0},
 					
