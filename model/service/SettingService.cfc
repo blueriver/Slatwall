@@ -100,7 +100,6 @@ globalEncryptionKeySize
 		public any function getSettingMetaData(required string settingName) {
 			
 			if(!structKeyExists(variables, 'settingMetaData')) {
-				
 				var smd = {
 					
 					// Account
@@ -371,7 +370,11 @@ globalEncryptionKeySize
 		
 		public any function clearAllSettingsCache() {
 			structDelete(variables, "allSettingsQuery");
+			structDelete(variables, "settingMetaData");
 			variables.settingDetailsCache = {};
+			if(!getHibachiScope().getORMHasErrors()) {
+				getHibachiDAO().flushORMSession();
+			}
 			writeLog(file="Slatwall", text="General Log - All settings cache was cleared");
 		}
 		
