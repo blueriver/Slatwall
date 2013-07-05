@@ -59,5 +59,6 @@ Notes:
 		<cf_HibachiTab view="admin:entity/settingstabs/shippingmethod" />
 		<cf_HibachiTab view="admin:entity/settingstabs/shippingmethodrate" />
 		<cf_HibachiTab view="admin:entity/settingstabs/sku" />
+		<cf_HibachiTab view="admin:entity/settingstabs/subscriptionterm" />
 	</cf_HibachiTabGroup>
 </cfoutput>

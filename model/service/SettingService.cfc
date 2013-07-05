@@ -72,6 +72,7 @@ globalEncryptionKeySize
 			"accountAuthentication",
 			"shippingMethodRate",
 			"fulfillmentMethod",
+			"subscriptionTerm",
 			"shippingMethod",
 			"paymentMethod",
 			"productType",
@@ -224,6 +225,9 @@ globalEncryptionKeySize
 					skuTaxCategory = {fieldType="select", defaultValue="444df2c8cce9f1417627bd164a65f133"},
 					skuTrackInventoryFlag = {fieldType="yesno", defaultValue=0},
 					
+					// Subscription Term
+					subscriptionTermRenewalReminderEmailTemplate = {fieldType="select", defaultValue=""},
+					
 					// DEPRECATED***
 					globalImageExtension = {fieldType="text",defaultValue="jpg"},
 					globalPageShoppingCart = {fieldType="text", defaultValue="shopping-cart"},
@@ -285,8 +289,8 @@ globalEncryptionKeySize
 						return getContentService().getDisplayTemplateOptions( "barrierPage", arguments.settingObject.getSite().getSiteID() );	
 					}
 					return getContentService().getDisplayTemplateOptions( "barrierPage" );
-				case "productImageOptionCodeDelimiter":
-					return ['-','_'];
+				case "fulfillmentMethodAutoLocation" :
+					return getLocationService().getLocationOptions();
 				case "globalDefaultSite":
 					var optionSL = getSiteService().getSiteSmartList();
 					optionSL.addSelect('siteName', 'name');
@@ -318,6 +322,10 @@ globalEncryptionKeySize
 					optionSL.addSelect('unitName', 'name');
 					optionSL.addSelect('unitCode', 'value');
 					return optionSL.getRecords();
+				case "paymentMethodCheckoutTransactionType" :
+					return [{name='None', value='none'}, {name='Authorize Only', value='authorize'}, {name='Authorize And Charge', value='authorizeAndCharge'}];
+				case "productImageOptionCodeDelimiter":
+					return ['-','_'];
 				case "siteForgotPasswordEmailTemplate":
 					return getEmailService().getEmailTemplateOptions( "account" );
 				case "shippingMethodQualifiedRateSelection" :
@@ -331,10 +339,8 @@ globalEncryptionKeySize
 					optionSL.addSelect('taxCategoryName', 'name');
 					optionSL.addSelect('taxCategoryID', 'value');
 					return optionSL.getRecords();
-				case "paymentMethodCheckoutTransactionType" :
-					return [{name='None', value='none'}, {name='Authorize Only', value='authorize'}, {name='Authorize And Charge', value='authorizeAndCharge'}];
-				case "fulfillmentMethodAutoLocation" :
-					return getLocationService().getLocationOptions();
+				case "subscriptionTermRenewalReminderEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "subscriptionTerm" );
 			}
 			
 			if(structKeyExists(getSettingMetaData(arguments.settingName), "valueOptions")) {
@@ -736,31 +742,6 @@ globalEncryptionKeySize
 					<cfelseif structKeyExists(allSettings, "cmsContentID")>
 						AND allSettings.cmsContentID IS NULL
 					</cfif>
-				  	<cfif structKeyExists(settingRelationships, "paymentMethodID") and structKeyExists(allSettings, "paymentMethodID")>
-						AND LOWER(allSettings.paymentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.paymentMethodID)#" > 
-					<cfelseif structKeyExists(allSettings, "paymentMethodID")>
-						AND allSettings.paymentMethodID IS NULL
-					</cfif>
-				  	<cfif structKeyExists(settingRelationships, "productTypeID") and structKeyExists(allSettings, "productTypeID")>
-						AND LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
-					<cfelseif structKeyExists(allSettings, "productTypeID")>
-						AND allSettings.productTypeID IS NULL
-					</cfif>
-					<cfif structKeyExists(settingRelationships, "productID") and structKeyExists(allSettings, "productID")>
-						AND LOWER(allSettings.productID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productID)#" > 
-					<cfelseif structKeyExists(allSettings, "productID")>
-						AND allSettings.productID IS NULL
-					</cfif>
-					<cfif structKeyExists(settingRelationships, "siteID") and structKeyExists(allSettings, "siteID")>
-						AND LOWER(allSettings.siteID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.siteID)#" > 
-					<cfelseif structKeyExists(allSettings, "siteID")>
-						AND allSettings.siteID IS NULL
-					</cfif>
-					<cfif structKeyExists(settingRelationships, "skuID") and structKeyExists(allSettings, "skuID")>
-						AND LOWER(allSettings.skuID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.skuID)#" > 
-					<cfelseif structKeyExists(allSettings, "skuID")>
-						AND allSettings.skuID IS NULL
-					</cfif>
 					<cfif structKeyExists(settingRelationships, "brandID") and structKeyExists(allSettings, "brandID")>
 						AND LOWER(allSettings.brandID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.brandID)#" > 
 					<cfelseif structKeyExists(allSettings, "brandID")>
@@ -776,6 +757,26 @@ globalEncryptionKeySize
 					<cfelseif structKeyExists(allSettings, "emailTemplateID")>
 						AND allSettings.emailTemplateID IS NULL
 					</cfif>
+				  	<cfif structKeyExists(settingRelationships, "fulfillmentMethodID") and structKeyExists(allSettings, "fulfillmentMethodID")>
+						AND LOWER(allSettings.fulfillmentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.fulfillmentMethodID)#" > 
+					<cfelseif structKeyExists(allSettings, "fulfillmentMethodID")>
+						AND allSettings.fulfillmentMethodID IS NULL
+					</cfif>
+				  	<cfif structKeyExists(settingRelationships, "paymentMethodID") and structKeyExists(allSettings, "paymentMethodID")>
+						AND LOWER(allSettings.paymentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.paymentMethodID)#" > 
+					<cfelseif structKeyExists(allSettings, "paymentMethodID")>
+						AND allSettings.paymentMethodID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "productID") and structKeyExists(allSettings, "productID")>
+						AND LOWER(allSettings.productID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productID)#" > 
+					<cfelseif structKeyExists(allSettings, "productID")>
+						AND allSettings.productID IS NULL
+					</cfif>
+				  	<cfif structKeyExists(settingRelationships, "productTypeID") and structKeyExists(allSettings, "productTypeID")>
+						AND LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
+					<cfelseif structKeyExists(allSettings, "productTypeID")>
+						AND allSettings.productTypeID IS NULL
+					</cfif>
 				  	<cfif structKeyExists(settingRelationships, "shippingMethodID") and structKeyExists(allSettings, "shippingMethodID")>
 						AND LOWER(allSettings.shippingMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.shippingMethodID)#" > 
 					<cfelseif structKeyExists(allSettings, "shippingMethodID")>
@@ -786,10 +787,20 @@ globalEncryptionKeySize
 					<cfelseif structKeyExists(allSettings, "shippingMethodRateID")>
 						AND allSettings.shippingMethodRateID IS NULL
 					</cfif>
-				  	<cfif structKeyExists(settingRelationships, "fulfillmentMethodID") and structKeyExists(allSettings, "fulfillmentMethodID")>
-						AND LOWER(allSettings.fulfillmentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.fulfillmentMethodID)#" > 
-					<cfelseif structKeyExists(allSettings, "fulfillmentMethodID")>
-						AND allSettings.fulfillmentMethodID IS NULL
+					<cfif structKeyExists(settingRelationships, "siteID") and structKeyExists(allSettings, "siteID")>
+						AND LOWER(allSettings.siteID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.siteID)#" > 
+					<cfelseif structKeyExists(allSettings, "siteID")>
+						AND allSettings.siteID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "skuID") and structKeyExists(allSettings, "skuID")>
+						AND LOWER(allSettings.skuID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.skuID)#" > 
+					<cfelseif structKeyExists(allSettings, "skuID")>
+						AND allSettings.skuID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "subscriptionTermID") and structKeyExists(allSettings, "subscriptionTermID")>
+						AND LOWER(allSettings.subscriptionTermID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.subscriptionTermID)#" > 
+					<cfelseif structKeyExists(allSettings, "subscriptionTermID")>
+						AND allSettings.subscriptionTermID IS NULL
 					</cfif>
 		</cfquery>
 		
