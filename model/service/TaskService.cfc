@@ -38,8 +38,9 @@ Notes:
 */
 component extends="HibachiService" output="false" accessors="true"{
 
+	property name="emailService" type="any";
 	property name="subscriptionService" type="any";
-	  
+	
 	// ===================== START: Logical Methods ===========================
 	
 	public void function updateEntityCalculatedProperties(required any entityName, struct smartListData={}) {
@@ -168,6 +169,9 @@ component extends="HibachiService" output="false" accessors="true"{
 			
 			// Call save on the task history
 			taskHistory = this.saveTaskHistory( taskHistory );
+			
+			// Send out any emails in the queue
+			getEmailService().sendEmailQueue();
 			
 			// Flush the DB again to persist all updates
 			getHibachiDAO().flushORMSession();
