@@ -131,11 +131,11 @@ globalEncryptionKeySize
 					contentMetaKeywordsString = {fieldType="textarea"},
 					
 					// Email
-					emailFromAddress = {fieldType="text",defaultValue="info@myslatwallStore.com"},
-					emailToAddress = {fieldType="text",defaultValue="info@myslatwallStore.com"},
+					emailFromAddress = {fieldType="text", defaultValue="info@myslatwallStore.com"},
+					emailToAddress = {fieldType="text", defaultValue="info@myslatwallStore.com"},
 					emailCCAddress = {fieldType="text"},
 					emailBCCAddress = {fieldType="text"},
-					emailSubject = {fieldType="text",defaultValue="Message From MySlatwallStore"},
+					emailSubject = {fieldType="text", defaultValue="Message From MySlatwallStore"},
 					
 					// Fulfillment Method
 					fulfillmentMethodEmailFrom = {fieldType="text"},
