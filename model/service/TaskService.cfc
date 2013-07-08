@@ -139,6 +139,9 @@ component extends="HibachiService" output="false" accessors="true"{
 				taskHistory.setSuccessFlag( true );
 				taskHistory.setResponse( "" );
 				
+				// Log the error
+				logHibachi( "The task '#task.getTaskName()#' was run successfully." );
+				
 			} catch(any e){
 				
 				// Log the error
@@ -169,6 +172,13 @@ component extends="HibachiService" output="false" accessors="true"{
 			
 			// Call save on the task history
 			taskHistory = this.saveTaskHistory( taskHistory );
+			
+			// Create success or failure email, and also log results
+			if(taskHistory.getSuccessFlag()) {
+				getEmailService().generateAndSendFromEntityAndEmailTemplateID(entity=task,emailTemplateID=task.setting('taskSuccessEmailTemplate'));
+			} else {
+				getEmailService().generateAndSendFromEntityAndEmailTemplateID(entity=task,emailTemplateID=task.setting('taskFailureEmailTemplate'));
+			}
 			
 			// Send out any emails in the queue
 			getEmailService().sendEmailQueue();

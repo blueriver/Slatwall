@@ -346,6 +346,12 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Call save on the account now that it is all setup
 		arguments.account = this.saveAccount(arguments.account);
 		
+		// Setup the Default to & from emails in the system to this users account
+		var defaultSetupData = {
+			emailAddress = processObject.getEmailAddress() 
+		};
+		getSettingService().setupDefaultValues( defaultSetupData );
+		
 		// Login the new account
 		if(!arguments.account.hasErrors()) {
 			getHibachiSessionService().loginAccount(account=arguments.account, accountAuthentication=accountAuthentication);	

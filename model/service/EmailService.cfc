@@ -127,6 +127,20 @@ Notes:
 	
 	<!--- =====================  END: Logical Methods ============================ --->
 	
+	<cfscript>
+		
+	public void function generateAndSendFromEntityAndEmailTemplateID( required any entity, required any emailTemplateID ) {
+		var email = this.newEmail();
+		var emailData = {
+			emailTemplateID = arguments.emailTemplateID
+		};
+		emailData[ arguments.entity.getPrimaryIDPropertyName() ] = arguments.entity.getPrimaryIDValue();
+		email = this.processEmail(email, emailData, 'createFromTemplate');
+		email = this.processEmail(email, {}, 'addToQueue');
+	}
+	
+	</cfscript>
+	
 	<!--- ===================== START: DAO Passthrough =========================== --->
 	
 	<!--- ===================== START: DAO Passthrough =========================== --->

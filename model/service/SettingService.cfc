@@ -85,6 +85,7 @@ globalEncryptionKeySize
 			"email",
 			"stock",
 			"site",
+			"task",
 			"sku"
 		];
 		
@@ -131,11 +132,11 @@ globalEncryptionKeySize
 					contentMetaKeywordsString = {fieldType="textarea"},
 					
 					// Email
-					emailFromAddress = {fieldType="text", defaultValue="info@myslatwallStore.com"},
-					emailToAddress = {fieldType="text", defaultValue="info@myslatwallStore.com"},
+					emailFromAddress = {fieldType="text", defaultValue="no-reply@getslatwall.com"},
+					emailToAddress = {fieldType="text", defaultValue="no-reply@getslatwall.com"},
 					emailCCAddress = {fieldType="text"},
 					emailBCCAddress = {fieldType="text"},
-					emailSubject = {fieldType="text", defaultValue="Message From MySlatwallStore"},
+					emailSubject = {fieldType="text", defaultValue="Notification From Slatwall"},
 					
 					// Fulfillment Method
 					fulfillmentMethodEmailFrom = {fieldType="text"},
@@ -231,6 +232,10 @@ globalEncryptionKeySize
 					subscriptionUsageAutoRetryPaymentDays = {fieldType="text", defaultValue=""},
 					subscriptionUsageRenewalReminderDays = {fieldType="text", defaultValue=""},
 					subscriptionUsageRenewalReminderEmailTemplate = {fieldType="select", defaultValue=""},
+					
+					// Task
+					taskFailureEmailTemplate = {fieldType="select", defaultValue=""},
+					taskSuccessEmailTemplate = {fieldType="select", defaultValue=""},
 					
 					// DEPRECATED***
 					globalImageExtension = {fieldType="text",defaultValue="jpg"},
@@ -345,6 +350,10 @@ globalEncryptionKeySize
 					return optionSL.getRecords();
 				case "subscriptionUsageRenewalReminderEmailTemplate":
 					return getEmailService().getEmailTemplateOptions( "subscriptionUsage" );
+				case "taskFailureEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "task" );
+				case "taskSuccessEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "task" );
 			}
 			
 			if(structKeyExists(getSettingMetaData(arguments.settingName), "valueOptions")) {
@@ -352,6 +361,38 @@ globalEncryptionKeySize
 			}
 							
 			throw("The setting '#arguments.settingName#' doesn't have any valueOptions configured.  Either add them in the setting metadata or in the SettingService.cfc")
+		}
+		
+		public void function setupDefaultValues( required struct data ) {
+			
+			// Default Values Based on Email Address
+			if(structKeyExists(arguments.data, "emailAddress")) {
+				
+				// SETUP - emailFromAddress
+				var fromEmailSL = this.getSettingSmartList();
+				fromEmailSL.addFilter( 'emailFromAddress' );
+				if(!fromEmailSL.getRecordsCount()) {
+					var setting = this.newSetting();
+					setting.setSettingName( 'emailFromAddress' );
+					setting.setSettingValue( arguments.data.emailAddress );
+					this.saveSetting( setting );
+				}
+				
+				// SETUP - emailToAddress
+				var toEmailSL = this.getSettingSmartList();
+				toEmailSL.addFilter( 'emailToAddress' );
+				if(!toEmailSL.getRecordsCount()) {
+					var setting = this.newSetting();
+					setting.setSettingName( 'emailToAddress' );
+					setting.setSettingValue( arguments.data.emailAddress );
+					this.saveSetting( setting );
+				}
+				
+			}
+			
+			// Clear out the setting Cached
+			clearAllSettingsCache();
+				
 		}
 		
 		public array function getCustomIntegrationOptions() {
@@ -810,6 +851,11 @@ globalEncryptionKeySize
 						AND LOWER(allSettings.subscriptionUsageID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.subscriptionUsageID)#" > 
 					<cfelseif structKeyExists(allSettings, "subscriptionUsageID")>
 						AND allSettings.subscriptionUsageID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "taskID") and structKeyExists(allSettings, "taskID")>
+						AND LOWER(allSettings.taskID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.taskID)#" > 
+					<cfelseif structKeyExists(allSettings, "taskID")>
+						AND allSettings.taskID IS NULL
 					</cfif>
 		</cfquery>
 		
