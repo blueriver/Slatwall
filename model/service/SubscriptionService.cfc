@@ -210,9 +210,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if(arrayLen(arguments.subscriptionUsage.getSubscriptionOrderItems()) == 2 && arrayLen(arguments.subscriptionUsage.getRenewalSubscriptionUsageBenefits())) {
 			// expire all existing benefits
 			for(var subscriptionUsageBenefit in arguments.subscriptionUsage.getSubscriptionUsageBenefits()) {
-				var subscriptionUsageBenefitAccount = this.getSubscriptionUsageBenefitAccountBySubscriptionUsageBenefit(subscriptionUsageBenefit);
-				subscriptionUsageBenefitAccount.setEndDateTime(now());
-				this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);
+				for(var subscriptionUsageBenefitAccount in subscriptionUsageBenefit.getSubscriptionUsageBenefitAccounts()) {
+					subscriptionUsageBenefitAccount.setEndDateTime(now());
+					this.saveSubscriptionUsageBenefitAccount(subscriptionUsageBenefitAccount);		
+				}
 			}
 			
 			this.saveSubscriptionUsage(arguments.subscriptionUsage);
