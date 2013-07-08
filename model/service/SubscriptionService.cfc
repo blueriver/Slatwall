@@ -397,7 +397,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					orderPayment.setOrder( order );
 					
 				} else if (arguments.processObject.getRenewalPaymentType() eq 'new') {
-					order = getOrderService().addOrderPayment(order, arguments.data, 'addOrderPayment');
+					order = getOrderService().processOrder(order, arguments.data, 'addOrderPayment');
 					
 				}
 				
