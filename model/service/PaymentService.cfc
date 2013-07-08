@@ -85,6 +85,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						maximumAmount = maxAmountViaOrderPercentage;
 					}
 					
+					// If the maximumAmount is more than we need for this order, then just set it to the amount needed
+					if(maximumAmount > arguments.order.getOrderPaymentChargeAmountNeeded()) {
+						maximumAmount = arguments.order.getOrderPaymentChargeAmountNeeded();
+					}
+					
 					// If this is a termPayment type, then we need to check the account on the order to verify the max that it can use.
 					if(activePaymentMethods[i].getPaymentMethodType() eq "termPayment") {
 						
