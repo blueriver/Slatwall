@@ -88,6 +88,19 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 		}
 	}
 	
+	public void function setFirstReminderEmailDateBasedOnNextBillDate() {
+		// Setup the next Reminder email 
+		if( len(this.setting('subscriptionUsageRenewalReminderDays')) ) {
+			// Find the first reminder day
+			var firstReminder = listFirst(this.setting('subscriptionUsageRenewalReminderDays'));
+			// Make sure it is numeric
+			if(isNumeric(firstReminder)) {
+				// Setup teh next reminder emailDate
+				this.setNextReminderEmailDate( dateAdd("d", firstReminder, this.getNextBillDate()) );	
+			}
+		}
+	}
+	
 	public array function getUniquePreviousSubscriptionOrderPayments() {
 		return getService("subscriptionService").getUniquePreviousSubscriptionOrderPayments( getSubscriptionUsageID() );
 	}

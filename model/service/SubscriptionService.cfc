@@ -127,17 +127,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Set the Expiration & Next Bill Date
 		subscriptionUsage.setExpirationDate( arguments.orderItem.getSku().getSubscriptionTerm().getInitialTerm().getEndDate() );
 		subscriptionUsage.setNextBillDate( subscriptionUsage.getExpirationDate() );
-		
-		// Setup the next Reminder email 
-		if( len(subscriptionUsage.setting('subscriptionUsageRenewalReminderDays')) ) {
-			// Find the first reminder day
-			var firstReminder = listFirst(subscriptionUsage.setting('subscriptionUsageRenewalReminderDays'));
-			// Make sure it is numeric
-			if(isNumeric(firstReminder)) {
-				// Setup teh next reminder emailDate
-				subscriptionUsage.setNextReminderEmailDate( dateAdd("d", firstReminder, subscriptionUsage.getExpirationDate()) );	
-			}
-		}
+		subscriptionUsage.setFirstReminderEmailDateBasedOnNextBillDate();
 		
 		// add active status to subscription usage
 		setSubscriptionUsageStatus(subscriptionUsage, 'sstActive');
@@ -353,6 +343,15 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// New Renewal Order
 		if(order.getNewFlag()) {
 			
+			// First pull out the nextBillDate if sucessful to populate later
+			if(arguments.processObject.getRenewalStartType() == 'extend') {
+				// Extend
+				var nextBillDate = arguments.processObject.getExtendExpirationDate();
+			} else {
+				// Prorate
+				var nextBillDate = arguments.processObject.getProrateExpirationDate();
+			}
+			
 			// set the account for order
 			arguments.processObject.getOrder().setAccount( arguments.subscriptionUsage.getAccount() );
 			
@@ -363,51 +362,62 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			};
 			order = getOrderService().processOrder( order, itemData, 'addOrderItem' );
 			
-			// set the orderitem price to renewal price
-			if(arguments.processObject.getRenewalStartType() == 'extend') {
-				// Extend
-				order.getOrderItems()[1].setPrice( arguments.subscriptionUsage.getRenewalPrice() );	
-			} else {
-				// Prorate
-				order.getOrderItems()[1].setPrice( arguments.processObject.getProratedPrice() );
+			// Make sure that the orderItem was added to the order without issue
+			if(!order.hasErrors()) {
+				// set the orderitem price to renewal price
+				if(arguments.processObject.getRenewalStartType() == 'extend') {
+					// Extend
+					order.getOrderItems()[1].setPrice( arguments.subscriptionUsage.getRenewalPrice() );	
+				} else {
+					// Prorate
+					order.getOrderItems()[1].setPrice( arguments.processObject.getProratedPrice() );
+				}
+				
+				// create new subscription orderItem
+				var subscriptionOrderItem = this.newSubscriptionOrderItem();
+				subscriptionOrderItem.setOrderItem( order.getOrderItems()[1] );
+				subscriptionOrderItem.setSubscriptionOrderItemType( this.getTypeBySystemCode('soitRenewal') );
+				subscriptionOrderItem.setSubscriptionUsage( arguments.subscriptionUsage );
+				this.saveSubscriptionOrderItem( subscriptionOrderItem );
+				
+				// Setup the Order Payment
+				if(arguments.processObject.getRenewalPaymentType() eq 'accountPaymentMethod') {
+					var orderPayment = getOrderService().newOrderPayment();
+					
+					orderPayment.copyFromAccountPaymentMethod( arguments.processObject.getAccountPaymentMethod() );
+					
+					orderPayment.setOrder( order );
+					
+				} else if (arguments.processObject.getRenewalPaymentType() eq 'orderPayment') {
+					var orderPayment = getOrderService().newOrderPayment();
+					
+					orderPayment.copyFromOrderPayment( arguments.processObject.getOrderPayment() );
+					
+					orderPayment.setOrder( order );
+					
+				} else if (arguments.processObject.getRenewalPaymentType() eq 'new') {
+					order = getOrderService().addOrderPayment(order, arguments.data, 'addOrderPayment');
+					
+				}
+				
+				// save order for processing
+				getOrderService().getHibachiDAO().save( order );
+				
+				// Persist the order to the DB
+				getHibachiDAO().flushORMSession();
+				
+				// Place the Order
+				order = getOrderService().processOrder(order, {}, 'placeOrder');
+				
+				// As long as the order was placed, then we can update the nextBillDateTime & nextReminderDateTime
+				if(order.getStatusCode() != "ostNotPlaced") {
+					
+					// set the subscription usage nextBillDate
+					arguments.subscriptionUsage.setNextBillDate( nextBillDate );
+					arguments.subscriptionUsage.setFirstReminderEmailDateBasedOnNextBillDate();
+					
+				}
 			}
-			
-			// create new subscription orderItem
-			var subscriptionOrderItem = this.newSubscriptionOrderItem();
-			subscriptionOrderItem.setOrderItem( order.getOrderItems()[1] );
-			subscriptionOrderItem.setSubscriptionOrderItemType( this.getTypeBySystemCode('soitRenewal') );
-			subscriptionOrderItem.setSubscriptionUsage( arguments.subscriptionUsage );
-			this.saveSubscriptionOrderItem( subscriptionOrderItem );
-			
-			// Setup the Order Payment
-			if(arguments.processObject.getRenewalPaymentType() eq 'accountPaymentMethod') {
-				var orderPayment = getOrderService().newOrderPayment();
-				
-				orderPayment.copyFromAccountPaymentMethod( arguments.processObject.getAccountPaymentMethod() );
-				
-				orderPayment.setOrder( order );
-				
-			} else if (arguments.processObject.getRenewalPaymentType() eq 'orderPayment') {
-				var orderPayment = getOrderService().newOrderPayment();
-				
-				orderPayment.copyFromOrderPayment( arguments.processObject.getOrderPayment() );
-				
-				orderPayment.setOrder( order );
-				
-			} else if (arguments.processObject.getRenewalPaymentType() eq 'new') {
-				order = getOrderService().addOrderPayment(order, arguments.data, 'addOrderPayment');
-				
-			}
-			
-			// save order for processing
-			getOrderService().getHibachiDAO().save( order );
-			
-			// Persist the order to the DB
-			getHibachiDAO().flushORMSession();
-			
-			// Place the Order
-			order = getOrderService().processOrder(order, {}, 'placeOrder');
-			
 		// Existing Renewal Order to be re-submitted
 		} else {
 			
