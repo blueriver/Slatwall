@@ -57,7 +57,7 @@ Notes:
 	
 	<!--- If in edit and order is of correct status then we can add sale order items --->
 	<cfif rc.edit and listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
-		<cfset rc.addSkuAddStockType = "oitReturn" />
+		<cfset rc.addSkuAddStockType = "oitSale" />
 		
 		<cf_HibachiTabGroup tabLocation="top">
 			<cf_HibachiTab view="admin:entity/ordertabs/addsku" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.sku')#" />

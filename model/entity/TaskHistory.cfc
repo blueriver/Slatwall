@@ -69,6 +69,8 @@ component entityname="SlatwallTaskHistory" table="SlatwallTaskHistory" persisten
 			variables.duration = 0;
 			if(!isNull(getStartTime()) && !isNull(getEndTime())) {
 				variables.duration = dateDiff("s", getStartTime(), getEndTime());
+			} else if (!isNull(getStartTime())) {
+				variables.duration = dateDiff("s", getStartTime(), now());
 			}
 		}	
 		return variables.duration;

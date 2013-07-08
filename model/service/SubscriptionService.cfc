@@ -341,7 +341,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			processObject.setEffectiveDateTime( now() );
 		}
 		
-		setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstCancelled', data.effectiveDateTime);
+		setSubscriptionUsageStatus(arguments.subscriptionUsage, 'sstCancelled', processObject.getEffectiveDateTime());
 		
 		return arguments.subscriptionUsage;
 	}
