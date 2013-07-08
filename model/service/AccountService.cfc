@@ -176,6 +176,8 @@ component extends="HibachiService" accessors="true" output="false" {
 				authArray[i].setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), authArray[i].getAccountAuthenticationID()) );		
 			}
 		}
+		
+		return arguments.account;
 	}
 	
 	public any function processAccount_create(required any account, required any processObject) {

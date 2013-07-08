@@ -75,10 +75,18 @@ Notes:
 	</cffunction>
 		
 	<cffunction name="sendEmailQueue" returntype="void" access="public">
+		
 		<cfset var email = "" />
+		
+		<!--- Loop over the queue --->
 		<cfloop array="#getHibachiScope().getEmailQueue()#" index="email">
+			
+			<!--- Send the email --->
 			<cfset sendEmail(email) />
 		</cfloop>
+		
+		<!--- Clear out the queue --->
+		<cfset getHibachiScope().setEmailQueue( [] ) />
 	</cffunction>
 		
 	<cffunction name="getEmailTemplateFileOptions" output="false" access="public">
