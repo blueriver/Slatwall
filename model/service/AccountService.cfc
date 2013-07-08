@@ -44,6 +44,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="paymentService" type="any";
 	property name="permissionService" type="any";
 	property name="priceGroupService" type="any";
+	property name="settingService" type="any";
 	property name="siteService" type="any";
 	property name="validationService" type="any";
 	

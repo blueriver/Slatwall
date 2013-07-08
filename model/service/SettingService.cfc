@@ -370,7 +370,7 @@ globalEncryptionKeySize
 				
 				// SETUP - emailFromAddress
 				var fromEmailSL = this.getSettingSmartList();
-				fromEmailSL.addFilter( 'emailFromAddress' );
+				fromEmailSL.addFilter( 'settingName', 'emailFromAddress' );
 				if(!fromEmailSL.getRecordsCount()) {
 					var setting = this.newSetting();
 					setting.setSettingName( 'emailFromAddress' );
@@ -380,7 +380,7 @@ globalEncryptionKeySize
 				
 				// SETUP - emailToAddress
 				var toEmailSL = this.getSettingSmartList();
-				toEmailSL.addFilter( 'emailToAddress' );
+				toEmailSL.addFilter( 'settingName', 'emailToAddress' );
 				if(!toEmailSL.getRecordsCount()) {
 					var setting = this.newSetting();
 					setting.setSettingName( 'emailToAddress' );
