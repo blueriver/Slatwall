@@ -46,7 +46,7 @@ Notes:
 								   backaction="admin:entity.detailorder"
 								   backquerystring="orderID=#rc.orderReturn.getOrder().getOrderID()#">
 			
-			<cf_HibachiProcessCaller action="admin:entity.processOrderReturn" entity="#rc.orderReturn#" processContext="receive" type="list" />
+			<cf_HibachiProcessCaller action="admin:entity.preProcessOrderReturn" entity="#rc.orderReturn#" processContext="receive" type="list" />
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
