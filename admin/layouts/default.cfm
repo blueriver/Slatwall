@@ -56,12 +56,6 @@ Notes:
 		<cfif arrayLen($.slatwall.getPrintQueue()) and request.context.slatAction neq "admin:print.default">
 			<script type="text/javascript">
 				var printWindow = window.open('#request.slatwallScope.getBaseURL()#?slatAction=admin:print.default', '_blank');
-				printWindow.print();
-				setTimeout(function(){
-					printWindow.onmousemove = function() {
-						printWindow.close();
-					}	
-				}, 100);
 			</script>
 		</cfif>
 		<style type="text/css">
