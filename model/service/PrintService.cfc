@@ -85,7 +85,7 @@ Notes:
 						}
 						
 						if(len(templateFileResponse) && !structKeyExists(local.printData, "printContent")) {
-							local.printData.printContent = templateFileRespone;
+							local.printData.printContent = templateFileResponse;
 						}
 						
 						arguments.print.populate( local.printData );

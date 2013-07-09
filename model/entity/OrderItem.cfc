@@ -108,6 +108,10 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 		return getQuantity() <= getMaximumOrderQuantity();
 	}
 	
+	public boolean function hasQuantityWithinMinOrderQuantity() {
+		return getQuantity() >= getSku().setting('skuOrderMinimumQuantity');
+	}
+	
 	public string function getOrderStatusCode(){
 		return getOrder().getStatusCode();
 	}
@@ -178,7 +182,7 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 	}
 	
 	public numeric function getExtendedPrice() {
-		return precisionEvaluate(getPrice() * getQuantity());
+		return precisionEvaluate(getPrice() * val(getQuantity()));
 	}
 	
 	public numeric function getExtendedSkuPrice() {

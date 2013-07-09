@@ -44,6 +44,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="paymentService" type="any";
 	property name="permissionService" type="any";
 	property name="priceGroupService" type="any";
+	property name="settingService" type="any";
 	property name="siteService" type="any";
 	property name="validationService" type="any";
 	
@@ -176,6 +177,8 @@ component extends="HibachiService" accessors="true" output="false" {
 				authArray[i].setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), authArray[i].getAccountAuthenticationID()) );		
 			}
 		}
+		
+		return arguments.account;
 	}
 	
 	public any function processAccount_create(required any account, required any processObject) {
@@ -343,6 +346,12 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		// Call save on the account now that it is all setup
 		arguments.account = this.saveAccount(arguments.account);
+		
+		// Setup the Default to & from emails in the system to this users account
+		var defaultSetupData = {
+			emailAddress = processObject.getEmailAddress() 
+		};
+		getSettingService().setupDefaultValues( defaultSetupData );
 		
 		// Login the new account
 		if(!arguments.account.hasErrors()) {
@@ -534,8 +543,8 @@ component extends="HibachiService" accessors="true" output="false" {
 			arguments.account.setPrimaryPhoneNumber(javaCast("null", ""));
 			arguments.account.setPrimaryAddress(javaCast("null", ""));
 			
-			getAccountDAO().removeAccountFromAllSessions( accountID );
-			getAccountDAO().removeAccountFromAuditProperties( accountID );
+			getAccountDAO().removeAccountFromAllSessions( arguments.account.getAccountID() );
+			getAccountDAO().removeAccountFromAuditProperties( arguments.account.getAccountID() );
 			
 			return delete( arguments.account );
 		}

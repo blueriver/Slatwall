@@ -36,30 +36,20 @@
 Notes:
 
 --->
-<cfset sites = $.slatwall.getService('siteService').getSiteSmartList() />
-<cfset sites.addFilter('activeFlag', 1) />
-
-<cfset rc.sitesArray = sites.getRecords() />
+<cfparam name="rc.orderDeliverySmartList" type="any" />
 
 <cfoutput>
-	<cf_HibachiEntityActionBar type="static"></cf_HibachiEntityActionBar>
+	<cf_HibachiEntityActionBar type="listing" object="#rc.orderDeliverySmartList#" showCreate="false" />
 	
-	<cf_HibachiTabGroup>
-		<cf_HibachiTab view="admin:entity/settingstabs/global" />
-		<cf_HibachiTab view="admin:entity/settingstabs/globaladvanced" />
-		<cf_HibachiTab view="admin:entity/settingstabs/account" />
-		<cf_HibachiTab view="admin:entity/settingstabs/brand" />
-		<cf_HibachiTab view="admin:entity/settingstabs/email" />
-		<cf_HibachiTab view="admin:entity/settingstabs/fulfillmentmethod" />
-		<cf_HibachiTab view="admin:entity/settingstabs/image" />
-		<cf_HibachiTab view="admin:entity/settingstabs/paymentmethod" />
-		<cf_HibachiTab view="admin:entity/settingstabs/producttype" />
-		<cf_HibachiTab view="admin:entity/settingstabs/product" />
-		<cf_HibachiTab view="admin:entity/settingstabs/site" />
-		<cf_HibachiTab view="admin:entity/settingstabs/shippingmethod" />
-		<cf_HibachiTab view="admin:entity/settingstabs/shippingmethodrate" />
-		<cf_HibachiTab view="admin:entity/settingstabs/sku" />
-		<cf_HibachiTab view="admin:entity/settingstabs/subscriptionusage" />
-		<cf_HibachiTab view="admin:entity/settingstabs/task" />
-	</cf_HibachiTabGroup>
+	<cf_HibachiListingDisplay smartList="#rc.orderDeliverySmartList#"
+			recorddetailaction="admin:entity.detailorderdelivery">
+		<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" />
+		<cf_HibachiListingColumn propertyIdentifier="order.orderOpenDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />	
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" />
+		<cf_HibachiListingColumn propertyIdentifier="location.locationName" />
+		<cf_HibachiListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" />
+		<cf_HibachiListingColumn propertyIdentifier="shippingMethod.shippingMethodName" />
+		<cf_HibachiListingColumn propertyIdentifier="trackingNumber" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

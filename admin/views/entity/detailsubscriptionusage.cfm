@@ -43,29 +43,35 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.subscriptionUsage#" edit="#rc.edit#" saveActionQueryString="subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.subscriptionUsage#">
 			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.preProcessSubscriptionUsage" processContext="renew" type="list" modal="true" />
-			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.processSubscriptionUsage" processContext="updateStatus" type="list" />
 			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.preProcessSubscriptionUsage" processContext="cancel" type="list" modal="true" />
+			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.processSubscriptionUsage" processContext="updateStatus" type="list" />
+			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.processSubscriptionUsage" processContext="sendRenewalReminder" type="list" />
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divClass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="currentStatusType" edit="false">
-				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="expirationDate" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="gracePeriodTerm" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="accountPaymentMethod" edit="#rc.edit#">
-			</cf_HibachiPropertyList>
-			<cf_HibachiPropertyList divClass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="autoRenewFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="autoPayFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="renewalPrice" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="accountPaymentMethod" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divClass="span6">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="expirationDate" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="gracePeriodTerm" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="nextBillDate" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.subscriptionUsage#" property="nextReminderEmailDate" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.subscriptionUsage#">
-			<!---<cf_HibachiTab view="admin:entity/subscriptionusagetabs/usagebenifits">
-			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/renewalusagebenefits">--->
+			<!---
+			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/usagebenifits">
+			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/renewalusagebenefits">
+			--->
+			<cf_HibachiTab property="subscriptionStatus">
 			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/orderitems">
+			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/subscriptionusagesettings" />
 		</cf_HibachiTabGroup>
 
 	</cf_HibachiEntityDetailForm>

@@ -405,13 +405,13 @@ Notes:
 															<a class="accordion-toggle" data-toggle="collapse" data-parent="##add-account-address" href="##new-account-address-form"><i class="icon-plus"></i>Add Account Address</a>
 														</div>
 													
+														<!--- get the newPropertyEntity for accountAddress --->
+														<cfset newAccountAddress = $.slatwall.getAccount().getNewPropertyEntity( 'accountAddresses' ) />
+														
 														<!--- This is the accordian details when expanded --->
-														<div id="new-account-address-form" class="accordion-body collapse">
+														<div id="new-account-address-form" class="accordion-body collapse<cfif newAccountAddress.hasErrors()> in</cfif>">
 														
 															<div class="accordion-inner">
-																
-																<!--- get the newPropertyEntity for accountAddress --->
-																<cfset newAccountAddress = $.slatwall.getAccount().getNewPropertyEntity( 'accountAddresses' ) />
 																
 																<!--- Start: New Address Form --->
 																<form action="?s=1" method="post">
@@ -539,7 +539,7 @@ Notes:
 																</div>
 															
 																<!--- This is the accordian details when expanded --->
-																<div id="#pmID#" class="accordion-body collapse">
+																<div id="#pmID#" class="accordion-body collapse<cfif newAccountPaymentMethod.hasErrors() and newAccountPaymentMethod.getPaymentMethod().getPaymentMethodID() eq paymentMethod.getPaymentMethodID()> in</cfif>">
 																
 																	<div class="accordion-inner">
 																		
@@ -1144,7 +1144,69 @@ Notes:
 					</div>
 				</div>
 			</div>
-			
+		
+		<!--- RESET PASSWORD --->
+		<cfelseif structKeyExists(url, "swprid") and len(url.swprid) eq 64>
+			<div class="row">
+				<div class="span12">
+					<h2>My Account</h2>
+				</div>
+			</div>
+			<div class="row">
+				<!--- Reset Password --->
+				<div class="span6">
+					<h5>Reset Password</h5>
+					
+					<!--- If this item was just added show the success message --->
+					<cfif $.slatwall.hasSuccessfulAction( "public:account.resetPassword" )>
+						<div class="alert alert-success">
+							Your account's password has been reset.
+						</div>
+					<!--- If this item was just tried to be added, but failed then show the failure message ---> 
+					<cfelseif $.slatwall.hasFailureAction( "public:account.resetPassword" )>
+						<div class="alert alert-error">
+							There was an error trying to reset your password.
+						</div>
+					</cfif>
+					
+					<cfset resetPasswordObj = $.slatwall.getAccount().getProcessObject('resetPassword') />
+					
+					<form action="?s=1&swprid=#url.swprid#" method="post">
+						<input type="hidden" name="slatAction" value="public:account.resetPassword,public:account.login" />
+						<input type="hidden" name="accountID" value="#left(url.swprid, 32)#" />
+						
+						<!--- New Password --->
+						<div class="control-group">
+	    					<label class="control-label" for="rating">New Password</label>
+	    					<div class="controls">
+	    						
+								<sw:FormField type="password" valueObject="#resetPasswordObj#" valueObjectProperty="password" class="span6" />
+								<sw:ErrorDisplay object="#resetPasswordObj#" errorName="password" />
+								
+	    					</div>
+	  					</div>
+						
+						<!--- Confirm Password --->
+						<div class="control-group">
+	    					<label class="control-label" for="rating">Confirm Password</label>
+	    					<div class="controls">
+	    						
+								<sw:FormField type="password" valueObject="#resetPasswordObj#" valueObjectProperty="passwordConfirm" class="span6" />
+								<sw:ErrorDisplay object="#resetPasswordObj#" errorName="passwordConfirm" />
+								
+	    					</div>
+	  					</div>
+						
+						<!--- Reset Button --->
+						<div class="control-group">
+	    					<div class="controls">
+	      						<button type="submit" class="btn btn-primary">Reset Password</button>
+	    					</div>
+	  					</div>
+						
+					</form>
+				</div>
+			</div>
 		<!--- CREATE / LOGIN FORMS --->
 		<cfelse>
 			<div class="row">
@@ -1205,6 +1267,12 @@ Notes:
 					
 					<!--- Sets up the account login processObject --->
 					<cfset forgotPasswordObj = $.slatwall.getAccount().getProcessObject('forgotPassword') />
+					
+					<cfif $.slatwall.hasSuccessfulAction( "public:account.forgotPassword" )>
+						<div class="alert alert-success">
+							An email has been sent to the address you provided with a link to reset your password. 
+						</div>
+					</cfif>
 					
 					<!--- Start: Forgot Password Form --->
 					<form action="?s=1" method="post">

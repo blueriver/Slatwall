@@ -36,8 +36,21 @@
 Notes:
 
 --->
-
 <html>
+<head>
+	<cfoutput><script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-1.7.1.min.js"></script></cfoutput>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			window.print();
+			setTimeout(function(){
+				onmousemove = function() {
+					close();
+				}	
+			}, 10);
+		});
+	</script>
+	
+</head>
 <body>
 <cfif arrayLen($.slatwall.getPrintQueue())>
 <cfloop from="1" to="#arrayLen($.slatwall.getPrintQueue())#" index="i">

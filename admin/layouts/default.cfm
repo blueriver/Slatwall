@@ -56,10 +56,6 @@ Notes:
 		<cfif arrayLen($.slatwall.getPrintQueue()) and request.context.slatAction neq "admin:print.default">
 			<script type="text/javascript">
 				var printWindow = window.open('#request.slatwallScope.getBaseURL()#?slatAction=admin:print.default', '_blank');
-				printWindow.print();
-				printWindow.onmousemove = function() {
-					printWindow.close();
-				}
 			</script>
 		</cfif>
 		<style type="text/css">
@@ -105,6 +101,7 @@ Notes:
 								<cf_HibachiActionCaller action="admin:entity.listorderitem" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listorderfulfillment" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listorderpayment" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listorderdelivery" type="list">
 								<li class="divider"></li>
 								<cf_HibachiActionCaller action="admin:entity.listvendororder" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listvendororderitem" type="list">
