@@ -795,7 +795,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	// ========================= START: DELIGATION HELPERS ==========================================
 	
 	// @hint helper function to pass this entity along with a template to the string replace function
-	public string function stringReplace( required string templateString, boolean formatValues=false ) {
-		return getService("hibachiUtilityService").replaceStringTemplate(arguments.templateString, this, arguments.formatValues);
+	public string function stringReplace( required string templateString, boolean formatValues=false, boolean removeMissingKeys=false ) {
+		return getService("hibachiUtilityService").replaceStringTemplate(arguments.templateString, this, arguments.formatValues, arguments.removeMissingKeys);
 	}
 }	

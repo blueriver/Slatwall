@@ -185,11 +185,11 @@ Notes:
 					if(!isNull(templateObject)) {
 						
 						// Setup the email values
-						arguments.email.setEmailTo( templateObject.stringReplace( emailTemplate.setting('emailToAddress') ) );
-						arguments.email.setEmailFrom( templateObject.stringReplace( emailTemplate.setting('emailFromAddress') ) );
-						arguments.email.setEmailCC( templateObject.stringReplace( emailTemplate.setting('emailCCAddress') ) );
-						arguments.email.setEmailBCC( templateObject.stringReplace( emailTemplate.setting('emailBCCAddress') ) );
-						arguments.email.setEmailSubject( templateObject.stringReplace( emailTemplate.setting('emailSubject') ) );
+						arguments.email.setEmailTo( templateObject.stringReplace( emailTemplate.setting('emailToAddress'), false, true ) );
+						arguments.email.setEmailFrom( templateObject.stringReplace( emailTemplate.setting('emailFromAddress'), false, true ) );
+						arguments.email.setEmailCC( templateObject.stringReplace( emailTemplate.setting('emailCCAddress'), false, true ) );
+						arguments.email.setEmailBCC( templateObject.stringReplace( emailTemplate.setting('emailBCCAddress'), false, true ) );
+						arguments.email.setEmailSubject( templateObject.stringReplace( emailTemplate.setting('emailSubject'), false, true ) );
 						arguments.email.setEmailBodyHTML( templateObject.stringReplace( emailTemplate.getEmailBodyHTML() ) );
 						arguments.email.setEmailBodyText( templateObject.stringReplace( emailTemplate.getEmailBodyText() ) );
 						
