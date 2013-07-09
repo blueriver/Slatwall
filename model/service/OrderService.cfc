@@ -555,7 +555,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							
 						foundItem = true;
 						orderFulfillment.getOrderFulfillmentItems()[i].setQuantity(orderFulfillment.getOrderFulfillmentItems()[i].getQuantity() + arguments.processObject.getQuantity());
-						
+						orderFulfillment.getOrderFulfillmentItems()[i].validate(context='save');
+						if(orderFulfillment.getOrderFulfillmentItems()[i].hasErrors()) {
+							arguments.order.addError('addOrderItem', orderFulfillment.getOrderFulfillmentItems()[i].getErrors());
+						}
 						break;
 						
 					}
@@ -611,7 +614,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			newOrderItem.populate( arguments.data );
 			
 			// Save the new order items
-			this.saveOrderItem( newOrderItem );
+			newOrderItem = this.saveOrderItem( newOrderItem );
+			
+			if(newOrderItem.hasErrors()) {
+				arguments.order.addError('addOrderItem', newOrderItem.getErrors());
+			}
 		}
 		
 		// Call save order to place in the hibernate session and re-calculate all of the totals 
