@@ -108,6 +108,10 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 		return getQuantity() <= getMaximumOrderQuantity();
 	}
 	
+	public boolean function hasQuantityWithinMinOrderQuantity() {
+		return getQuantity() >= getSku().setting('skuOrderMinimumQuantity');
+	}
+	
 	public string function getOrderStatusCode(){
 		return getOrder().getStatusCode();
 	}

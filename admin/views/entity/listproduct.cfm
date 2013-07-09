@@ -58,10 +58,10 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.productSmartList#"
 			recordEditAction="admin:entity.editproduct"
 			recorddetailaction="admin:entity.detailproduct">
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName"  />
-		<cf_HibachiListingColumn propertyIdentifier="productCode" />
 		<cf_HibachiListingColumn propertyIdentifier="productType.productTypeName" />
 		<cf_HibachiListingColumn propertyIdentifier="brand.brandName" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName"  />
+		<cf_HibachiListingColumn propertyIdentifier="productCode" />
 		<cf_HibachiListingColumn propertyIdentifier="defaultSku.price" />
 		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 		<cf_HibachiListingColumn propertyIdentifier="publishedFlag" />
