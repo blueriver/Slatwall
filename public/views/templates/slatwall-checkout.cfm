@@ -100,6 +100,9 @@ Notes:
 	</cfif>
 </cfif>
 
+<!--- We are paraming this variable so that we can use it later to see if a specific step was clicked on.  Using the url.step is just a templating thing and it has nothing to do really with the core of Slatwall.  This could be changed to anything --->
+<cfparam name="url.step" default="" />
+
 <cfoutput>
 	<div class="container">
 		
@@ -119,7 +122,7 @@ Notes:
 					
 					
 <!--- ============== ACCOUNT ========================================= --->
-					<cfif listFindNoCase(orderRequirementsList, "account")>
+					<cfif listFindNoCase(orderRequirementsList, "account") or url.step eq 'account'>
 						
 						<!--- START: ACCOUNT --->
 						<h5>Step 1 - Account Details</h5>
@@ -354,7 +357,7 @@ Notes:
 						<!--- END: ACCOUNT --->
 					
 <!--- ============= FULFILLMENT ============================================== --->
-					<cfelseif listFindNoCase(orderRequirementsList, "fulfillment")>
+					<cfelseif listFindNoCase(orderRequirementsList, "fulfillment") or url.step eq 'fulfillment'>
 						
 						<!--- START: FULFILLMENT --->
 						<h5>Step 2 - Fulfillment Details</h5>
@@ -371,7 +374,7 @@ Notes:
 							<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="orderFulfillment">
 								
 								<!--- We need to check if this order fulfillment is one that needs to be updated, by checking if it is already processable or by checking if it has errors --->
-								<cfif not orderFulfillment.isProcessable( context="placeOrder" ) or orderFulfillment.hasErrors()>
+								<cfif not orderFulfillment.isProcessable( context="placeOrder" ) or orderFulfillment.hasErrors() or url.step eq 'fulfillment'>
 									
 									<!--- Increment the orderFulfillment index so that we can update multiple order fulfillments at once --->
 									<cfset orderFulfillmentIndex++ />
@@ -550,7 +553,7 @@ Notes:
 						<!--- END: FULFILLMENT --->
 							
 <!--- ============= PAYMENT ============================================== --->
-					<cfelseif listFindNoCase(orderRequirementsList, "payment")>
+					<cfelseif listFindNoCase(orderRequirementsList, "payment") or url.step eq 'payment'>
 					
 						<!--- get the eligable payment methods for this order --->
 						<cfset eligiblePaymentMethods = $.slatwall.cart().getEligiblePaymentMethodDetails() />
@@ -810,14 +813,14 @@ Notes:
 							
 <!--- ============= CONFIRMATION ============================================== --->
 <!--- ============= ORDER REVIEW ============================================== --->
-					<cfelseif not len(orderRequirementsList)>
+					<cfelseif not len(orderRequirementsList) or url.step eq 'review'>
 						<h4>Step 4 - Order Review</h4>
 
 						<!--- Account Details --->
 						<cfif not listFindNoCase(orderRequirementsList, "account") and not $.slatwall.cart().getAccount().isNew()>						
 							<div class="row-fluid">
 								<div class="span12">
-									<h5>ACCOUNT</h5>
+									<h5>Account Details <a href="?step=account">edit</a></h5>
 									
 									<p>
 										<!--- Name --->
@@ -838,7 +841,7 @@ Notes:
 						<cfif not listFindNoCase(orderRequirementsList, "account") and not $.slatwall.cart().getAccount().isNew()>
 							<div class="row-fluid">
 								<div class="span12">						
-									<h5>FULFILLMENT</h5>
+									<h5>Fulfillment Details <a href="?step=fulfillment">edit</a></h5>
 									<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="orderFulfillment">
 										<div class="row-fluid">
 											<div class="span6">										
@@ -902,7 +905,7 @@ Notes:
 						<!--- Payment Details --->
 						<div class="row-fluid">
 							<div class="span12">
-								<h5>PAYMENT</h5>
+								<h5>Payment Details <a href="?step=payment">edit</a></h5>
 								<!--- List the payment methods applied to this order --->
 								<cfloop array="#$.slatwall.cart().getOrderPayments()#" index="orderPayment">
 									<div class="row-fluid">
@@ -964,7 +967,7 @@ Notes:
 					
 					<!--- Account Details --->
 					<cfif not listFindNoCase(orderRequirementsList, "account") and not $.slatwall.cart().getAccount().isNew()>
-						<h5>Account Details</h5>
+						<h5>Account Details <a href="?step=account">edit</a></h5>
 						
 						<p>
 							<!--- Name --->
@@ -986,7 +989,7 @@ Notes:
 					
 					<!--- Fulfillment Details --->
 					<cfif not listFindNoCase(orderRequirementsList, "account") and not $.slatwall.cart().getAccount().isNew()>
-						<h5>Fulfillment Details</h5>
+						<h5>Fulfillment Details <a href="?step=fulfillment">edit</a></h5>
 						<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="orderFulfillment">
 							<p>
 								<!--- Fulfillment Method --->
