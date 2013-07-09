@@ -132,8 +132,8 @@ globalEncryptionKeySize
 					contentMetaKeywordsString = {fieldType="textarea"},
 					
 					// Email
-					emailFromAddress = {fieldType="text", defaultValue="no-reply@getslatwall.com"},
-					emailToAddress = {fieldType="text", defaultValue="no-reply@getslatwall.com"},
+					emailFromAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
+					emailToAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
 					emailCCAddress = {fieldType="text"},
 					emailBCCAddress = {fieldType="text"},
 					emailSubject = {fieldType="text", defaultValue="Notification From Slatwall"},
@@ -160,10 +160,6 @@ globalEncryptionKeySize
 					globalEncryptionService = {fieldType="select",defaultValue="internal"},
 					globalLogMessages = {fieldType="select",defaultValue="General"},
 					globalMissingImagePath = {fieldType="text", defaultValue=getURLFromPath(getApplicationValue('applicationRootMappingPath')) & '/custom/assets/images/missingimage.jpg'},
-					globalOrderPlacedEmailFrom = {fieldType="text",defaultValue="info@mySlatwallStore.com"},
-					globalOrderPlacedEmailCC = {fieldType="text",defaultValue=""},
-					globalOrderPlacedEmailBCC = {fieldType="text",defaultValue=""},
-					globalOrderPlacedEmailSubjectString = {fieldType="text",defaultValue="Order Confirmation - Order Number: ${orderNumber}"},
 					globalOrderNumberGeneration = {fieldType="select",defaultValue="Internal"},
 					globalRemoteIDShowFlag = {fieldType="yesno",defaultValue=0},
 					globalRemoteIDEditFlag = {fieldType="yesno",defaultValue=0},
@@ -239,6 +235,10 @@ globalEncryptionKeySize
 					
 					// DEPRECATED***
 					globalImageExtension = {fieldType="text",defaultValue="jpg"},
+					globalOrderPlacedEmailFrom = {fieldType="text",defaultValue="info@mySlatwallStore.com"},
+					globalOrderPlacedEmailCC = {fieldType="text",defaultValue=""},
+					globalOrderPlacedEmailBCC = {fieldType="text",defaultValue=""},
+					globalOrderPlacedEmailSubjectString = {fieldType="text",defaultValue="Order Confirmation - Order Number: ${orderNumber}"},
 					globalPageShoppingCart = {fieldType="text", defaultValue="shopping-cart"},
 					globalPageOrderStatus = {fieldType="text", defaultValue="order-status"},
 					globalPageOrderConfirmation = {fieldType="text", defaultValue="order-confirmation"},
