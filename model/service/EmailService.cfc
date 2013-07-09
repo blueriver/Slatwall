@@ -46,30 +46,51 @@ Notes:
 	<cffunction name="sendEmail" returntype="void" access="public">
 		<cfargument name="email" type="any" required="true" />
 		
-		<!--- Send the actual E-mail --->
-		<cfmail to="#arguments.email.getEmailTo()#"
+		<!--- Send Multipart E-mail --->
+		<cfif len(arguments.email.getEmailBodyHTML()) && len(arguments.email.getEmailBodyText())>
+			<cfmail to="#arguments.email.getEmailTo()#"
 				from="#arguments.email.getEmailFrom()#"
 				subject="#arguments.email.getEmailSubject()#"
 				cc="#arguments.email.getEmailCC()#"
 				bcc="#arguments.email.getEmailBCC()#"
 				charset="utf-8">
-			
-			<!--- If a Text Body exists --->
-			<cfif len(arguments.email.getEmailBodyText())>
 				<cfmailpart type="text/plain">
-					#arguments.email.getEmailBodyText()#
+					<cfoutput>#arguments.email.getEmailBodyText()#</cfoutput>
 				</cfmailpart>
-			</cfif>
-			
-			<cfmailpart type="text/html">
+				<cfmailpart type="text/html">
+					<html>
+						<body><cfoutput>#arguments.email.getEmailBodyHTML()#</cfoutput></body>
+					</html>
+				</cfmailpart>
+			</cfmail>
+		<!--- Send HTML Only E-mail --->
+		<cfelseif len(arguments.email.getEmailBodyHTML())>
+			<cfmail to="#arguments.email.getEmailTo()#"
+				from="#arguments.email.getEmailFrom()#"
+				subject="#arguments.email.getEmailSubject()#"
+				cc="#arguments.email.getEmailCC()#"
+				bcc="#arguments.email.getEmailBCC()#"
+				charset="utf-8"
+				type="text/html">
 				<html>
-					<body>#arguments.email.getEmailBodyHTML()#</body>
+					<body><cfoutput>#arguments.email.getEmailBodyHTML()#</cfoutput></body>
 				</html>
-			</cfmailpart>
-		</cfmail>
+			</cfmail>
+		<!--- Send Text Only E-mail --->
+		<cfelseif len(arguments.email.getEmailBodyText())>
+			<cfmail to="#arguments.email.getEmailTo()#"
+				from="#arguments.email.getEmailFrom()#"
+				subject="#arguments.email.getEmailSubject()#"
+				cc="#arguments.email.getEmailCC()#"
+				bcc="#arguments.email.getEmailBCC()#"
+				charset="utf-8"
+				type="text/plain">
+				<cfoutput>#arguments.email.getEmailBodyText()#</cfoutput>
+			</cfmail>
+		</cfif>
 		
 		<!--- If the email is set to be saved, then we persist to the DB --->
-		<cfif(arguments.email.getLogEmailFlag()) >
+		<cfif arguments.email.getLogEmailFlag()>
 			<cfset getHibachiDAO().save(arguments.email) />
 		</cfif>
 	</cffunction>
