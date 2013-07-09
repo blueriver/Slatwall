@@ -244,7 +244,7 @@ Notes:
 																<span>#accountPhoneNumber.getPhoneNumber()#</span>
 																
 																<cfif accountPhoneNumber.getAccountPhoneNumberID() eq $.slatwall.getAccount().getPrimaryPhoneNumber().getAccountPhoneNumberID()>
-																	- <i class="icon-asterisk" title="#accountPhoneNumber.getPhoneNumber()# is the primary phone number for this account"></i>
+																	- <i class="icon-star" title="#accountPhoneNumber.getPhoneNumber()# is the primary phone number for this account"></i>
 																<cfelse>
 																	<span class="pull-right">
 																		<a href="?slatAction=public:account.update&primaryPhoneNumber.accountPhoneNumberID=#accountPhoneNumber.getAccountPhoneNumberID()#" title="Set #accountPhoneNumber.getPhoneNumber()# as your primary phone number"><i class="icon-asterisk"></i></a>&nbsp;
@@ -300,7 +300,7 @@ Notes:
 																
 																<!--- Admin buttons --->
 																<cfif accountEmailAddress.getAccountEmailAddressID() eq $.slatwall.getAccount().getPrimaryEmailAddress().getAccountEmailAddressID()>
-																	- <i class="icon-asterisk" title="#accountEmailAddress.getEmailAddress()# is the primary email address for this account"></i>
+																	- <i class="icon-star" title="#accountEmailAddress.getEmailAddress()# is the primary email address for this account"></i>
 																<cfelse>
 																	<span class="pull-right">
 																		<a href="?slatAction=public:account.update&primaryEmailAddress.accountEmailAddressID=#accountEmailAddress.getAccountEmailAddressID()#" title="Set #accountEmailAddress.getEmailAddress()# as your primary email address"><i class="icon-asterisk"></i></a>&nbsp;
@@ -370,7 +370,7 @@ Notes:
 															<span class="pull-right">
 																<!--- If this is the primary address, then just show the astricks --->
 																<cfif accountAddress.getAccountAddressID() eq $.slatwall.getAccount().getPrimaryAddress().getAccountAddressID()>
-																	<i class="icon-asterisk" title="This is the primary address for your account"></i>
+																	<i class="icon-star" title="This is the primary address for your account"></i>
 																<!--- Otherwise add buttons to be able to delete the address, or make it the primary --->
 																<cfelse>
 																	<a href="?slatAction=public:account.update&primaryAddress.accountAddressID=#accountAddress.getAccountAddressID()#" title="Set this as your primary phone address"><i class="icon-asterisk"></i></a>
@@ -479,7 +479,7 @@ Notes:
 																
 																<!--- If this is the primary payment method, then just show the astricks --->
 																<cfif accountPaymentMethod.getAccountPaymentMethodID() eq $.slatwall.getAccount().getPrimaryPaymentMethod().getAccountPaymentMethodID()>
-																	<i class="icon-asterisk" title="This is the primary payment method for your account"></i>
+																	<i class="icon-star" title="This is the primary payment method for your account"></i>
 																<!--- Otherwise add buttons to be able to delete the address, or make it the primary --->
 																<cfelse>
 																	<a href="?slatAction=public:account.update&primaryPaymentMethod.accountPaymentMethodID=#accountPaymentMethod.getAccountPaymentMethodID()#" title="Set this as your primary phone address"><i class="icon-asterisk"></i></a>
