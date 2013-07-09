@@ -51,6 +51,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.paymentTransaction#" property="amountAuthorized">
 				<cf_HibachiPropertyDisplay object="#rc.paymentTransaction#" property="amountReceived">
 				<cf_HibachiPropertyDisplay object="#rc.paymentTransaction#" property="amountCredited">
+				<cf_HibachiPropertyDisplay object="#rc.paymentTransaction#" property="securityCodeMatchFlag">
 				<cf_HibachiPropertyDisplay object="#rc.paymentTransaction#" property="avsCode">
 				<cf_HibachiPropertyDisplay object="#rc.paymentTransaction#" property="statusCode">
 				<cf_HibachiPropertyDisplay object="#rc.paymentTransaction#" property="message">
