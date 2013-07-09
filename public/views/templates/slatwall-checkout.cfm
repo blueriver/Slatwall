@@ -1107,7 +1107,7 @@ Notes:
 				</div>
 				<div class="span3">
 					<div class="btn-group">
-					    <a class="btn btn-large" href="##"><i class="icon-phone"></i></a>
+					    <a class="btn btn-large" href="##"><i class="icon-headphones"></i></a>
 					    <a class="btn btn-large" href="##"><i class="icon-envelope"></i></a>
 					    <a class="btn btn-large" href="##"><i class="icon-print"></i></a>
 					</div>
