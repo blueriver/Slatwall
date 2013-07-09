@@ -104,7 +104,7 @@ Notes:
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#local.deliveryItem.getOrderItem().getSku().getProduct().getTitle()#</td>
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;"><cfif len(local.deliveryItem.getOrderItem().getSku().displayOptions())>#local.deliveryItem.getOrderItem().getSku().displayOptions()#</cfif></td>
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#NumberFormat(local.deliveryItem.getQuantity())# </td>
-								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#local.deliveryItem.getOrderItem().getFormattedValue('extendedPriceAfterDiscount', 'currency')#</td>
+								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#local.deliveryItem.getOrderItem().getFormattedValue('price', 'currency')#</td>
 							</tr>
 						</cfloop>
 					</tbody>
