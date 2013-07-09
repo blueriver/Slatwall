@@ -67,7 +67,7 @@ Notes:
 		<!--- <img src="http://Full_URL_Path_To_Company_Logo/logo.jpg" border="0" style="float: right;"> --->
 		
 		<div id="top" style="width: 325px; margin: 0; padding: 0;">
-			<h1 style="font-size: 20px;">Order Confirmation</h1>
+			<h1 style="font-size: 20px;">Invoice</h1>
 			
 			<table id="orderInfo" style="border-spacing: 0px; border-collapse: collapse; border: 1px solid ##d8d8d8; text-align: left; font-size: 12px; width: 350px;">
 				<tbody>
