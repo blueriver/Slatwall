@@ -405,13 +405,13 @@ Notes:
 															<a class="accordion-toggle" data-toggle="collapse" data-parent="##add-account-address" href="##new-account-address-form"><i class="icon-plus"></i>Add Account Address</a>
 														</div>
 													
+														<!--- get the newPropertyEntity for accountAddress --->
+														<cfset newAccountAddress = $.slatwall.getAccount().getNewPropertyEntity( 'accountAddresses' ) />
+														
 														<!--- This is the accordian details when expanded --->
-														<div id="new-account-address-form" class="accordion-body collapse">
+														<div id="new-account-address-form" class="accordion-body collapse<cfif newAccountAddress.hasErrors()> in</cfif>">
 														
 															<div class="accordion-inner">
-																
-																<!--- get the newPropertyEntity for accountAddress --->
-																<cfset newAccountAddress = $.slatwall.getAccount().getNewPropertyEntity( 'accountAddresses' ) />
 																
 																<!--- Start: New Address Form --->
 																<form action="?s=1" method="post">
@@ -539,7 +539,7 @@ Notes:
 																</div>
 															
 																<!--- This is the accordian details when expanded --->
-																<div id="#pmID#" class="accordion-body collapse">
+																<div id="#pmID#" class="accordion-body collapse<cfif newAccountPaymentMethod.hasErrors() and newAccountPaymentMethod.getPaymentMethod().getPaymentMethodID() eq paymentMethod.getPaymentMethodID()> in</cfif>">
 																
 																	<div class="accordion-inner">
 																		
