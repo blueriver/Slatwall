@@ -602,6 +602,9 @@ function setupEventHandlers() {
 				if(r.success) {
 					listingDisplayUpdate(updateTableID, {});
 				} else {
+					jQuery.each(r.messages, function(i, v){
+						jQuery('#' + updateTableID).after('<div class="alert alert-error"><a class="close" data-dismiss="alert">x</a>' + v.MESSAGE + '</div>');
+					});
 					if(("preProcessView" in r)) {
 						jQuery('#adminModal').html(r.preProcessView);
 						jQuery('#adminModal').modal();
@@ -612,6 +615,8 @@ function setupEventHandlers() {
 					            return -(jQuery('#adminModal').width() / 2);
 					        }
 						});
+					} else {
+						
 					}
 				}
 				
