@@ -43,9 +43,18 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	property name="emailAddress" hb_populateEnabled="public" ormtype="string" hb_formatType="email";
 	property name="verifiedFlag" ormtype="boolean";
 	
-	// Related Object Properties (Many-To-One)
+	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="accountEmailType" hb_populateEnabled="public" cfc="Type" fieldtype="many-to-one" fkcolumn="accountEmailTypeID" hb_optionsNullRBKey="define.select" hb_optionsSmartListData="f:parentType.systemCode=accountEmailType";
+	
+	// Related Object Properties (one-to-many)
+	
+	// Related Object Properties (many-to-many - owner)
+	
+	// Related Object Properties (many-to-many - inverse)
+	
+	// Remote properties
+	property name="remoteID" hb_populateEnabled="false" ormtype="string";
 	
 	// Audit Properties
 	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
@@ -53,6 +62,18 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Non Persistent
+	
+	public boolean function getEmailAddressNotInUseFlag() {
+		if(!isNull(getEmailAddress())) {
+			if(!isNull(getAccount())) {
+				return getService("accountService").getEmailAddressNotInUseFlag( emailAddress=getEmailAddress(), accountID=getAccount().getAccountID() );
+			} else {
+				return getService("accountService").getEmailAddressNotInUseFlag( emailAddress=getEmailAddress() );	
+			}
+		}
+		return true;
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

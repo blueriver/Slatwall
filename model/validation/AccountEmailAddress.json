@@ -1,5 +1,13 @@
 {
+	"conditions":{
+	    "authenticatedAccount":{
+	        "account.guestAccountFlag":{"eq":false}
+	    }
+	},
 	"properties":{
-		"emailAddress":		[{"contexts":"save","required":true,"dataType":"email"}]
+		"emailAddress":		[
+		    					{"contexts":"save","required":true,"dataType":"email"},
+								{"contexts":"save","conditions":"authenticatedAccount","method":"getEmailAddressNotInUseFlag"}
+							]
 	}
 }

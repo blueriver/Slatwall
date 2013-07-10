@@ -40,7 +40,11 @@ Notes:
 	
 	<cffunction name="getEmailAddressNotInUseFlag" returntype="boolean" access="public">
 		<cfargument name="emailAddress" required="true" type="string" />
+		<cfargument name="accountID" type="string" />
 		
+		<cfif structKeyExists(arguments, "accountID")>
+			<cfreturn not arrayLen(ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.accountEmailAddresses aea WHERE aea.emailAddress=:emailAddress AND a.accountID <> :accountID", {emailAddress=arguments.emailAddress, accountID=arguments.accountID})) />
+		</cfif>
 		<cfreturn not arrayLen(ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.accountEmailAddresses aea WHERE aea.emailAddress=:emailAddress", {emailAddress=arguments.emailAddress})) />
 	</cffunction>
 	

@@ -87,6 +87,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
+	property name="accountEmailAddressesNotInUseFlag" persistent="false";
 	property name="activeSubscriptionUsageBenefitsSmartList" persistent="false";
 	property name="address" persistent="false";
 	property name="adminIcon" persistent="false";
@@ -108,6 +109,19 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getAccountEmailAddressesNotInUseFlag() {
+		if(!structKeyExists(variables, "accountEmailAddressesNotInUseFlag")) {
+			variables.accountEmailAddressesNotInUseFlag = true;
+			for(var accountEmailAddress in getAccountEmailAddresses()) {
+				if(!getService("accountService").getEmailAddressNotInUseFlag( emailAddress=getEmailAddress() )) {
+					variables.accountEmailAddressesNotInUseFlag = false;
+					break;		
+				}
+			}
+		}
+		return variables.accountEmailAddressesNotInUseFlag;
+	}
 	
 	public any function getActiveSubscriptionUsageBenefitsSmartList() {
 		if(!structKeyExists(variables, "activeSubscriptionUsageBenefitsSmartList")) {
