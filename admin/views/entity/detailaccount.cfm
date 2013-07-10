@@ -66,10 +66,14 @@ Notes:
 		<!--- Totals --->
 		<cf_HibachiPropertyList divclass="span6">
 			<cf_HibachiPropertyTable>
+				
+				<!--- Term Payment Details --->
 				<cf_HibachiPropertyTableBreak header="#$.slatwall.rbKey('admin.entity.detailaccount.termPaymentDetails')#" />
 				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountBalance" edit="false" displayType="table">
 				<cf_HibachiPropertyDisplay object="#rc.account#" property="termAccountAvailableCredit" edit="false" displayType="table">
-				<cf_HibachiPropertyTableBreak header="#$.slatwall.rbKey('admin.entity.detailaccount.authenticationDetails')#" />
+				
+				<!--- Authentication Details --->
+				<cf_HibachiPropertyTableBreak header="#$.slatwall.rbKey('admin.entity.detailaccount.authenticationDetails')#" hint="#$.slatwall.rbKey("admin.entity.detailaccount.authenticationDetails_hint")#" />
 				<cf_HibachiPropertyDisplay object="#rc.account#" property="guestAccountFlag" edit="false" displayType="table">
 				<cfloop array="#rc.account.getAccountAuthentications()#" index="accountAuthentication">
 					<cfsavecontent variable="thisValue">
