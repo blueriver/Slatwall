@@ -539,7 +539,7 @@ Notes:
 																</div>
 															
 																<!--- This is the accordian details when expanded --->
-																<div id="#pmID#" class="accordion-body collapse<cfif newAccountPaymentMethod.hasErrors() and newAccountPaymentMethod.getPaymentMethod().getPaymentMethodID() eq paymentMethod.getPaymentMethodID()> in</cfif>">
+																<div id="#pmID#" class="accordion-body collapse<cfif newAccountPaymentMethod.hasErrors() and not isNull(newAccountPaymentMethod.getPaymentMethod()) and newAccountPaymentMethod.getPaymentMethod().getPaymentMethodID() eq paymentMethod.getPaymentMethodID()> in</cfif>">
 																
 																	<div class="accordion-inner">
 																		
