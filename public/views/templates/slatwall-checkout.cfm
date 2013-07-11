@@ -437,9 +437,9 @@ Notes:
 													
 													<!--- As long as there are no errors for the orderFulfillment, we can setup the default accountAddress value to be selected --->
 													<cfset accountAddressID = "" />
-													<cfif !orderFulfillment.hasErrors() && !isNull(orderFulfillment.getAccountAddress())>
+													<cfif orderFulfillment.getAddress().getNewFlag() and !orderFulfillment.hasErrors() and !isNull(orderFulfillment.getAccountAddress())>
 														<cfset accountAddressID = orderFulfillment.getAccountAddress().getAccountAddressID() />
-													<cfelseif !orderFulfillment.hasErrors()>
+													<cfelseif orderFulfillment.getAddress().getNewFlag() and !orderFulfillment.hasErrors()>
 														<cfset accountAddressID = $.slatwall.cart().getAccount().getPrimaryAddress().getAccountAddressID() />
 													</cfif>
 													
@@ -458,8 +458,35 @@ Notes:
 												</cfif>
 												
 												<!--- New Shipping Address --->
-												<div id="new-shipping-address"<cfif arrayLen(orderFulfillment.getAccountAddressOptions())> class="hide"</cfif>>
+												<div id="new-shipping-address#orderFulfillmentIndex#"<cfif arrayLen(orderFulfillment.getAccountAddressOptions()) and orderFulfillment.getAddress().getNewFlag()> class="hide"</cfif>>
 													<sw:AddressForm id="newShippingAddress" address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#orderFulfillmentIndex#].shippingAddress." fieldClass="span4" />
+													
+													<!--- As long as the account is not a guest account, and this is truely new address we are adding, then we can offer to save as an account address for use on later purchases --->
+													<cfif orderFulfillment.getAddress().getNewFlag() and not $.slatwall.getCart().getAccount().getGuestAccountFlag()>
+														
+														<!--- Save As Account Address --->
+														<div class="control-group">
+									    					<label class="control-label" for="rating">Save In Address Book</label>
+									    					<div class="controls">
+									    						
+																<sw:FormField type="yesno" name="orderFulfillments[#orderFulfillmentIndex#].saveAccountAddressFlag" valueObject="#orderFulfillment#" valueObjectProperty="saveAccountAddressFlag" />
+																
+									    					</div>
+									  					</div>
+														
+														<!--- Save Account Address Name --->
+														<div id="save-account-address-name#orderFulfillmentIndex#"<cfif not orderFulfillment.getSaveAccountAddressFlag()> class="hide"</cfif>>
+															<div class="control-group">
+										    					<label class="control-label" for="rating">Address Nickname (optional)</label>
+										    					<div class="controls">
+										    						
+																	<sw:FormField type="text" name="orderFulfillments[#orderFulfillmentIndex#].saveAccountAddressName" valueObject="#orderFulfillment#" valueObjectProperty="saveAccountAddressName" class="span4" />
+																	
+										    					</div>
+										  					</div>
+														</div>
+														
+													</cfif>
 												</div>
 												
 												<!--- SCRIPT IMPORTANT: This jQuery is just here for example purposes to show/hide the new address field if there are account addresses --->
@@ -469,9 +496,16 @@ Notes:
 															$(document).ready(function(){
 																$('body').on('change', 'select[name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID"]', function(e){
 																	if( $(this).val() === '' ) {
-																		$('##new-shipping-address').show();
+																		$('##new-shipping-address#orderFulfillmentIndex#').show();
 																	} else {
-																		$('##new-shipping-address').hide();
+																		$('##new-shipping-address#orderFulfillmentIndex#').hide();
+																	}
+																});
+																$('body').on('change', 'input[name="orderFulfillments[#orderFulfillmentIndex#].saveAccountAddressFlag"]', function(e){
+																	if( $(this).val() ) {
+																		$('##save-account-address-name#orderFulfillmentIndex#').show();
+																	} else {
+																		$('##save-account-address-name#orderFulfillmentIndex#').hide();
 																	}
 																});
 																$('select[name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID"]').change();
@@ -479,7 +513,7 @@ Notes:
 														})( jQuery )
 													</script>
 												</cfif>
-												
+													
 											</div>
 											
 											<!--- START: Shipping Method Selection --->
