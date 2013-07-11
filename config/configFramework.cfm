@@ -1,6 +1,9 @@
 <cfset variables.framework.applicationKey="Slatwall" />
 <cfset variables.framework.action="slatAction" />
 
+<!--- Configure admin UI to respond correctly --->
+<cfset arrayAppend(variables.framework.routes, {"$GET/admin/" = "/admin:main/default/"}) />
+
 <!--- Configure the example public UI --->
 <cfset arrayAppend(variables.framework.routes, {"$GET/account/" = "/public:main/account/"}) />
 <cfset arrayAppend(variables.framework.routes, {"$GET/brand/:urlTitle" = "/public:main/brand/urlTitle/:urlTitle/"}) />
