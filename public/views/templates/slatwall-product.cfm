@@ -156,8 +156,11 @@ Notes:
 				<!--- If this item was just tried to be added, but failed then show the failure message ---> 
 				<cfelseif $.slatwall.hasFailureAction( "public:cart.addOrderItem" )>
 					<div class="alert alert-error">
+						<!--- Display whatever errors might have been associated with the specific options --->
 						<sw:ErrorDisplay object="#$.slatwall.cart().getProcessObject('addOrderItem')#" />
-						<sw:ErrorDisplay object="#$.slatwall.cart()#" />
+						
+						<!--- Display any errors with saving the order after the item was atempted to be added --->
+						<sw:ErrorDisplay object="#$.slatwall.cart()#" errorName="addOrderItem" />
 					</div>
 				</cfif>
 				
