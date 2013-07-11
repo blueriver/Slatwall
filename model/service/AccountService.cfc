@@ -232,7 +232,9 @@ component extends="HibachiService" accessors="true" output="false" {
 		getHibachiDAO().save(accountAuthentication);
 	
 		// Set the password
-		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );	
+		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );
+		
+		return account;	
 	}
 	
 	public any function processAccount_login(required any account, required any processObject) {
