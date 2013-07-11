@@ -63,19 +63,36 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
-	
-	public boolean function getEmailAddressNotInUseFlag() {
-		if(!isNull(getEmailAddress())) {
-			if(!isNull(getAccount())) {
-				return getService("accountService").getEmailAddressNotInUseFlag( emailAddress=getEmailAddress(), accountID=getAccount().getAccountID() );
-			} else {
-				return getService("accountService").getEmailAddressNotInUseFlag( emailAddress=getEmailAddress() );	
-			}
-		}
-		return true;
-	}
+	property name="primaryEmailAddressNotInUseFlag" persistent="false";
+	property name="primaryFlag" persistent="false";
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public boolean function getPrimaryEmailAddressNotInUseFlag() {
+		if(!structKeyExists(variables, "primaryEmailAddressNotInUseFlag")) {
+			variables.primaryEmailAddressNotInUseFlag = true;
+			if(!isNull(getEmailAddress())) {
+				if(!isNull(getAccount())) {
+					variables.primaryEmailAddressNotInUseFlag = getService("accountService").getPrimaryEmailAddressNotInUseFlag( emailAddress=getEmailAddress(), accountID=getAccount().getAccountID() );
+				} else {
+					variables.primaryEmailAddressNotInUseFlag = getService("accountService").getPrimaryEmailAddressNotInUseFlag( emailAddress=getEmailAddress() );	
+				}
+			}
+		}
+		
+		return variables.primaryEmailAddressNotInUseFlag;
+	}
+	
+	public boolean function getPrimaryFlag() {
+		if(!structKeyExists(variables, "primaryFlag")) {
+			variables.primaryFlag = true;
+			if(!isNull(getAccount())) {
+				variables.primaryFlag = getAccount().getPrimaryEmailAddress().getAccountEmailAddressID() == this.getAccountEmailAddressID();
+			}
+		}
+		
+		return variables.primaryFlag;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	

@@ -1,4 +1,9 @@
 {
+	"conditions":{
+	    "slatwallAuthenticatedAccount":{
+	        "slatwallAuthenticationExistsFlag":{"eq":true}
+	    }
+	},
 	"properties":{
 		"firstName":							[{"contexts":"save","required":true}],
 		"lastName":								[{"contexts":"save","required":true}],
@@ -11,6 +16,7 @@
 											    	{"contexts":"createPassword","eq":false},
 											    	{"contexts":"changePassword","eq":true}
 												],
-		"accountEmailAddressesNotInUseFlag":	[{"contexts":"createPassword","eq":true}]
+		"accountEmailAddressesNotInUseFlag":	[{"contexts":"createPassword","eq":true}],
+		"primaryEmailAddress":					[{"contexts":"save","conditions":"slatwallAuthenticatedAccount","method":"getPrimaryEmailAddressesNotInUseFlag"}]
 	}
 }

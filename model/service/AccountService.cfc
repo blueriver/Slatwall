@@ -74,8 +74,8 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: DAO Passthrough ===========================
 	
-	public boolean function getEmailAddressNotInUseFlag( required string emailAddress, string accountID ) {
-		return getAccountDAO().getEmailAddressNotInUseFlag(argumentcollection=arguments);
+	public boolean function getPrimaryEmailAddressNotInUseFlag( required string emailAddress, string accountID ) {
+		return getAccountDAO().getPrimaryEmailAddressNotInUseFlag(argumentcollection=arguments);
 	}
 	
 	public any function getInternalAccountAuthenticationsByEmailAddress(required string emailAddress) {

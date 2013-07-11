@@ -87,7 +87,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
-	property name="accountEmailAddressesNotInUseFlag" persistent="false";
+	property name="primaryEmailAddressNotInUseFlag" persistent="false";
 	property name="activeSubscriptionUsageBenefitsSmartList" persistent="false";
 	property name="address" persistent="false";
 	property name="adminIcon" persistent="false";
@@ -110,17 +110,18 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public any function getAccountEmailAddressesNotInUseFlag() {
-		if(!structKeyExists(variables, "accountEmailAddressesNotInUseFlag")) {
-			variables.accountEmailAddressesNotInUseFlag = true;
-			for(var accountEmailAddress in getAccountEmailAddresses()) {
-				if(!getService("accountService").getEmailAddressNotInUseFlag( emailAddress=getEmailAddress() )) {
-					variables.accountEmailAddressesNotInUseFlag = false;
-					break;		
-				}
+	public any function getPrimaryEmailAddressesNotInUseFlag() {
+		if(!structKeyExists(variables, "primaryEmailAddressNotInUseFlag")) {
+			variables.primaryEmailAddressNotInUseFlag = true;
+			if(len(getEmailAddress())) {
+				if(getNewFlag()) {
+					variables.primaryEmailAddressNotInUseFlag = getService("accountService").getPrimaryEmailAddressNotInUseFlag( emailAddress=getEmailAddress() );	
+				} else {
+					variables.primaryEmailAddressNotInUseFlag = getService("accountService").getPrimaryEmailAddressNotInUseFlag( emailAddress=getEmailAddress(), accountID=getAccountID() );
+				}	
 			}
 		}
-		return variables.accountEmailAddressesNotInUseFlag;
+		return variables.primaryEmailAddressNotInUseFlag;
 	}
 	
 	public any function getActiveSubscriptionUsageBenefitsSmartList() {
@@ -482,11 +483,15 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(!isNull(variables.primaryEmailAddress)) {
 			return variables.primaryEmailAddress;
 		} else if (arrayLen(getAccountEmailAddresses())) {
-			variables.primaryEmailAddress = getAccountEmailAddresses()[1];
-			return variables.primaryEmailAddress;
-		} else {
-			return getService("accountService").newAccountEmailAddress();
+			for(var accountEmailAddress in getAccountEmailAddresses()) {
+				if(getService("accountService").getPrimaryEmailAddressNotInUseFlag( emailAddress=accountEmailAddress.getEmailAddress(), accountID=getAccountID() )) {
+					variables.primaryEmailAddress = getAccountEmailAddresses()[1];
+					return variables.primaryEmailAddress;				
+				}
+			}
 		}
+		
+		return getService("accountService").newAccountEmailAddress();
 	}
 	
 	public any function getPrimaryPhoneNumber() {

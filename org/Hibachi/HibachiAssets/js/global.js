@@ -939,7 +939,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 								
 						} else if ( jQuery(cv).hasClass('admin') ){
 							
-							newtd += '<td>' + jQuery.trim(rv[ 'admin' ]) + '</td>';
+							newtd += '<td class="admin">' + jQuery.trim(rv[ 'admin' ]) + '</td>';
 							
 						}
 						
