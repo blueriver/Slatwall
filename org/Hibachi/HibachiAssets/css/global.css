@@ -266,11 +266,14 @@ range-filter-upper {
   margin-left: 200px;
 }
 .table-section {
-  font-weight: bold;
-  background-color: #08C !important;
-  color: #fff;
-  padding: 1px 5px !important;
-}
+	font-weight: bold;
+	padding: 3px 5px !important;
+	color: #333;
+	font-size: 12px;
+	line-height: 25px;
+	background-color: #ddd !important;  
+	}
+
 .table-total {
   font-weight: bold;
   font-size: 14px !important;

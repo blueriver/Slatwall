@@ -248,7 +248,6 @@ Notes:
 														
 														<tr>
 															<td>
-																
 																<!--- Display Number --->
 																<div class="apn#accountPhoneNumberIndex#">
 																	<span>#accountPhoneNumber.getPhoneNumber()#</span>
@@ -338,6 +337,7 @@ Notes:
 														<tr>
 															<td>
 																
+
 																<!--- Display Email Address --->
 																<div class="aea#accountEmailAddressIndex#">
 																	
@@ -602,7 +602,7 @@ Notes:
 													
 													<!--- Display payment method block --->	
 													<div class="thumbnail">
-														
+
 														<!--- Display Payment Method --->
 														<div class="apm#accountPaymentMethodIndex#">
 															
@@ -996,19 +996,7 @@ Notes:
 																</tr>
 															</table>
 														</div>
-														<div class="span3">
-															<div class="btn-group">
-															    <a class="btn btn-large" href="##"><i class="icon-phone"></i></a>
-															    <a class="btn btn-large" href="##"><i class="icon-envelope"></i></a>
-															    <a class="btn btn-large" href="##"><i class="icon-print"></i></a>
-															</div>
-															<br />
-															<br />
-															<p>
-																If you have questions about your order, please contact customer service <a href="tel:888.555.5555">888.555.5555</a>
-															</p>
-														</div>
-														<div class="span4 pull-right">
+														<div class="span4 offset3 pull-right">
 															<table class="table table-bordered table-condensed">
 																<tr>
 																	<td>Subtotal</td>
