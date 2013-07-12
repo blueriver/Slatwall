@@ -45,10 +45,10 @@ Notes:
 			<h5>#$.slatwall.rbKey('entity.accountEmailAddress_plural')#</h5>
 			<cf_HibachiListingDisplay smartList="#rc.account.getAccountEmailAddressesSmartList()#"
 									  recordEditAction="admin:entity.editaccountemailaddress"
-									  recordEditQueryString="accountID=#rc.account.getAccountID()#"
+									  recordEditQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
 									  recordEditModal=true
 									  recordDeleteAction="admin:entity.deleteaccountemailaddress"
-									  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
+									  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
 									  selectFieldName="primaryEmailAddress.accountEmailAddressID"
 									  selectValue="#rc.account.getPrimaryEmailAddress().getAccountEmailAddressID()#"
 									  selectTitle="#$.slatwall.rbKey('define.primary')#"
@@ -67,10 +67,10 @@ Notes:
 			<h5>#$.slatwall.rbKey('entity.accountPhoneNumber_plural')#</h5>
 			<cf_HibachiListingDisplay smartList="#rc.account.getAccountPhoneNumbersSmartList()#"
 									  recordEditAction="admin:entity.editaccountphonenumber"
-									  recordEditQueryString="accountID=#rc.account.getAccountID()#"
+									  recordEditQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
 									  recordEditModal=true
 									  recordDeleteAction="admin:entity.deleteaccountphonenumber"
-									  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
+									  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
 									  selectFieldName="primaryPhoneNumber.accountPhoneNumberID"
 									  selectValue="#rc.account.getPrimaryPhoneNumber().getAccountPhoneNumberID()#"
 									  selectTitle="#$.slatwall.rbKey('define.primary')#"
@@ -91,10 +91,10 @@ Notes:
 			<h5>#$.slatwall.rbKey('entity.accountAddress_plural')#</h5>
 			<cf_HibachiListingDisplay smartList="#rc.account.getAccountAddressesSmartList()#"
 									  recordEditAction="admin:entity.editaccountaddress"
-									  recordEditQueryString="accountID=#rc.account.getAccountID()#"
+									  recordEditQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
 									  recordEditModal=true
 									  recordDeleteAction="admin:entity.deleteaccountaddress"
-									  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount"
+									  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
 									  selectFieldName="primaryAddress.accountAddressID"
 									  selectValue="#rc.account.getPrimaryAddress().getAccountAddressID()#"
 									  selectTitle="#$.slatwall.rbKey('define.primary')#"
