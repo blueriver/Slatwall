@@ -505,7 +505,7 @@ Notes:
 																<div class="control-group">
 											    					<div class="controls">
 											      						<button type="submit" class="btn btn-primary">Save</button>
-																		<button class="btn" onClick="$('.aa#accountAddressIndex#').toggle()">Cancel</button>
+																		<button type="button" class="btn" onClick="$('.aa#accountAddressIndex#').toggle()">Cancel</button>
 											    					</div>
 											  					</div>
 																
@@ -765,7 +765,7 @@ Notes:
 																<div class="control-group">
 											    					<div class="controls">
 											      						<button type="submit" class="btn btn-primary">Save</button>
-																		<button class="btn" onClick="$('.apm#accountPaymentMethodIndex#').toggle()">Cancel</button>
+																		<button type="button" class="btn" onClick="$('.apm#accountPaymentMethodIndex#').toggle()">Cancel</button>
 											    					</div>
 											  					</div>
 																
