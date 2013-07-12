@@ -238,19 +238,58 @@ Notes:
 												
 												<!--- Start: Existing Phone Numbers --->
 												<table class="table table-condensed">
+													
+													<cfset accountPhoneNumberIndex=0 />
+													
+													<!--- Loop over the phone numbers to display them --->
 													<cfloop array="#$.slatwall.getAccount().getAccountPhoneNumbersSmartList().getRecords()#" index="accountPhoneNumber">
+														
+														<cfset accountPhoneNumberIndex++ />
+														
 														<tr>
 															<td>
-																<span>#accountPhoneNumber.getPhoneNumber()#</span>
 																
-																<cfif accountPhoneNumber.getAccountPhoneNumberID() eq $.slatwall.getAccount().getPrimaryPhoneNumber().getAccountPhoneNumberID()>
-																	- <i class="icon-asterisk" title="#accountPhoneNumber.getPhoneNumber()# is the primary phone number for this account"></i>
-																<cfelse>
+																<!--- Display Number --->
+																<div class="apn#accountPhoneNumberIndex#">
+																	<span>#accountPhoneNumber.getPhoneNumber()#</span>
 																	<span class="pull-right">
-																		<a href="?slatAction=public:account.update&primaryPhoneNumber.accountPhoneNumberID=#accountPhoneNumber.getAccountPhoneNumberID()#" title="Set #accountPhoneNumber.getPhoneNumber()# as your primary phone number"><i class="icon-asterisk"></i></a>&nbsp;
+																		<a href="##" onClick="$('.apn#accountPhoneNumberIndex#').toggle()" title="Edit Phone Number"><i class="icon-pencil"></i></a>
 																		<a href="?slatAction=public:account.deleteAccountPhoneNumber&accountPhoneNumberID=#accountPhoneNumber.getAccountPhoneNumberID()#" title="Delete Phone Number - #accountPhoneNumber.getPhoneNumber()#"><i class="icon-trash"></i></a>
+																		<cfif accountPhoneNumber.getAccountPhoneNumberID() eq $.slatwall.getAccount().getPrimaryPhoneNumber().getAccountPhoneNumberID()>
+																			<i class="icon-asterisk" title="#accountPhoneNumber.getPhoneNumber()# is the primary phone number for this account" style="margin-right:5px;"></i>
+																		<cfelse>
+																			<a href="?slatAction=public:account.update&primaryPhoneNumber.accountPhoneNumberID=#accountPhoneNumber.getAccountPhoneNumberID()#" title="Set #accountPhoneNumber.getPhoneNumber()# as your primary phone number"><i class="icon-asterisk"></i></a>&nbsp;	
+																		</cfif>
 																	</span>
-																</cfif>
+																</div>
+																
+																<!--- Edit Number --->
+																<div class="apn#accountPhoneNumberIndex# hide">
+																	
+																	<!--- Start: Edit Phone Number --->
+																	<form action="?s=1" method="post">
+																		
+																		<input type="hidden" name="slatAction" value="public:account.update" />
+																			
+																		<!--- Phone Number --->
+																		<div class="control-group">
+													    					<div class="controls">
+													    						
+																				<div class="input-append">
+																					<input type="hidden" name="accountPhoneNumbers[1].accountPhoneNumberID" value="#accountPhoneNumber.getAccountPhoneNumberID()#" />
+												    								<sw:FormField type="text" name="accountPhoneNumbers[1].phoneNumber" valueObject="#accountPhoneNumber#" valueObjectProperty="phoneNumber" class="span3" />
+																					<button type="submit" class="btn btn-primary">Save</button>
+																				</div>
+																				
+																				<sw:ErrorDisplay object="#accountPhoneNumber#" errorName="phoneNumber" />
+																				
+													    					</div>
+													  					</div>
+																		
+																	</form>
+																	<!--- End: Edit Phone Number --->
+																</div>
+																
 															</td>
 														</tr>
 													</cfloop>
@@ -289,24 +328,64 @@ Notes:
 												<!--- Existing Email Addresses --->
 												<table class="table table-condensed">
 													
+													<cfset accountEmailAddressIndex = 0 />
+													
 													<!--- Loop over all of the existing email addresses --->
 													<cfloop array="#$.slatwall.getAccount().getAccountEmailAddressesSmartList().getRecords()#" index="accountEmailAddress">
+														
+														<cfset accountEmailAddressIndex++ />
 														
 														<tr>
 															<td>
 																
-																<!--- Email Address --->
-																<span>#accountEmailAddress.getEmailAddress()#</span>
-																
-																<!--- Admin buttons --->
-																<cfif accountEmailAddress.getAccountEmailAddressID() eq $.slatwall.getAccount().getPrimaryEmailAddress().getAccountEmailAddressID()>
-																	- <i class="icon-asterisk" title="#accountEmailAddress.getEmailAddress()# is the primary email address for this account"></i>
-																<cfelse>
+																<!--- Display Email Address --->
+																<div class="aea#accountEmailAddressIndex#">
+																	
+																	<!--- Email Address --->
+																	<span>#accountEmailAddress.getEmailAddress()#</span>
+																	
+																	<!--- Admin buttons --->
 																	<span class="pull-right">
-																		<a href="?slatAction=public:account.update&primaryEmailAddress.accountEmailAddressID=#accountEmailAddress.getAccountEmailAddressID()#" title="Set #accountEmailAddress.getEmailAddress()# as your primary email address"><i class="icon-asterisk"></i></a>&nbsp;
-																		<a href="?slatAction=public:account.deleteAccountEmailAddress&accountEmailAddressID=#accountEmailAddress.getAccountEmailAddressID()#" title="Delete Email Address - #accountEmailAddress.getEmailAddress()#"><i class="icon-trash"></i></a>
+																		<a href="##" onClick="$('.aea#accountEmailAddressIndex#').toggle()" title="Edit Email Address"><i class="icon-pencil"></i></a>
+																		<cfif accountEmailAddress.getAccountEmailAddressID() neq $.slatwall.getAccount().getPrimaryEmailAddress().getAccountEmailAddressID()>
+																			<a href="?slatAction=public:account.deleteAccountEmailAddress&accountEmailAddressID=#accountEmailAddress.getAccountEmailAddressID()#" title="Delete Email Address - #accountEmailAddress.getEmailAddress()#"><i class="icon-trash"></i></a>
+																		</cfif>
+																		<cfif accountEmailAddress.getAccountEmailAddressID() eq $.slatwall.getAccount().getPrimaryEmailAddress().getAccountEmailAddressID()>
+																			<i class="icon-asterisk" title="#accountEmailAddress.getEmailAddress()# is the primary email address for this account" style="margin-right:5px;"></i>
+																		<cfelse>
+																			<a href="?slatAction=public:account.update&primaryEmailAddress.accountEmailAddressID=#accountEmailAddress.getAccountEmailAddressID()#" title="Set #accountEmailAddress.getEmailAddress()# as your primary email address"><i class="icon-asterisk"></i></a>&nbsp;
+																		</cfif>
 																	</span>
-																</cfif>
+																	
+																	
+																</div>
+																
+																<!--- Edit Email Address --->
+																<div class="aea#accountEmailAddressIndex# hide">
+																	
+																	<!--- Start: Edit Email Address --->
+																	<form action="?s=1" method="post">
+																		
+																		<input type="hidden" name="slatAction" value="public:account.update" />
+																			
+																		<!--- Email Address --->
+																		<div class="control-group">
+													    					<div class="controls">
+													    						
+																				<div class="input-append">
+																					<input type="hidden" name="accountEmailAddresses[1].emailAddress" value="#accountEmailAddress.getAccountEmailAddressID()#" />
+												    								<sw:FormField type="text" name="accountEmailAddresses[1].emailAddress" valueObject="#accountEmailAddress#" valueObjectProperty="emailAddress" class="span3" />
+																					<button type="submit" class="btn btn-primary">Save</button>
+																				</div>
+																				
+																				<sw:ErrorDisplay object="#accountEmailAddress#" errorName="emailAddress" />
+																				
+													    					</div>
+													  					</div>
+																		
+																	</form>
+																	<!--- End: Edit Email Address --->
+																</div>
 																
 															</td>
 														</tr>
@@ -357,8 +436,12 @@ Notes:
 											
 										<ul class="thumbnails">
 											
+											<cfset accountAddressIndex = 0 />
+											
 											<!--- Loop over each of the addresses that are saved against the account --->
 											<cfloop array="#$.slatwall.getAccount().getAccountAddressesSmartList().getRecords()#" index="accountAddress">
+												
+												<cfset accountAddressIndex++ />
 												
 												<li class="span4">
 													
@@ -368,13 +451,14 @@ Notes:
 														<!--- Administration options --->
 														<div class="pull-right">
 															<span class="pull-right">
+																<a href="##" onClick="$('.aa#accountAddressIndex#').toggle()" title="Edit Address"><i class="icon-pencil"></i></a>
+																<a href="?slatAction=public:account.deleteAccountAddress&accountAddressID=#accountAddress.getAccountAddressID()#" title="Delete Address"><i class="icon-trash"></i></a>
 																<!--- If this is the primary address, then just show the astricks --->
 																<cfif accountAddress.getAccountAddressID() eq $.slatwall.getAccount().getPrimaryAddress().getAccountAddressID()>
 																	<i class="icon-asterisk" title="This is the primary address for your account"></i>
 																<!--- Otherwise add buttons to be able to delete the address, or make it the primary --->
 																<cfelse>
 																	<a href="?slatAction=public:account.update&primaryAddress.accountAddressID=#accountAddress.getAccountAddressID()#" title="Set this as your primary phone address"><i class="icon-asterisk"></i></a>
-																	<a href="?slatAction=public:account.deleteAccountAddress&accountAddressID=#accountAddress.getAccountAddressID()#" title="Delete Address"><i class="icon-trash"></i></a>
 																</cfif>
 															</span>
 														</div>
