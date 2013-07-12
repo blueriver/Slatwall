@@ -44,12 +44,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="paymentService" type="any";
 	property name="subscriptionService" type="any";
 	
-	public any function init(required any fw) {
-		setUserUtility( getCMSBean("userUtility") );
-		
-		return super.init(arguments.fw);
-	}
-	
 	public void function create(required struct rc) {
 		rc.account = rc.$.slatwall.getCurrentAccount();
 		if(!rc.account.isNew()){
@@ -100,7 +94,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.forgotPasswordEmail" default="";
 		
 		if(rc.forgotPasswordEmail != "") {
-			rc.forgotPasswordResult = getUserUtility().sendLoginByEmail(email=rc.forgotPasswordEmail, siteid=rc.$.event('siteID'));
+			rc.forgotPasswordResult = rc.$.getBean('userUtility').sendLoginByEmail(email=rc.forgotPasswordEmail, siteid=rc.$.event('siteID'));
 		} else {
 			var loginSuccess = getAccountService().loginCmsUser(username=rc.username, password=rc.password, siteID=rc.$.event('siteID'));
 		
