@@ -48,11 +48,11 @@ Notes:
 							  recordProcessEntity="#rc.order#"
 							  recordProcessUpdateTableID="LD#replace(rc.order.getSaleItemSmartList().getSavedStateID(),'-','','all')#">
 							    
-		<cf_HibachiListingColumn propertyIdentifier="skuCode" />
+		<cf_HibachiListingColumn propertyIdentifier="skuCode" title="#$.slatwall.rbKey('entity.sku')#" />
 		<cf_HibachiListingColumn propertyIdentifier="product.productCode" />
-		<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" />
-		<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" />
+		<cf_HibachiListingColumn propertyIdentifier="product.brand.brandName" title="#$.slatwall.rbKey('entity.brand')#" />
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="product.productName" title="#$.slatwall.rbKey('entity.product')#" />
+		<cf_HibachiListingColumn propertyIdentifier="product.productType.productTypeName" title="#$.slatwall.rbKey('entity.producttype')#" />
 		<cf_HibachiListingColumn propertyIdentifier="skuDefinition" />
 		<cf_HibachiListingColumn propertyIdentifier="calculatedQATS" />
 		<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
