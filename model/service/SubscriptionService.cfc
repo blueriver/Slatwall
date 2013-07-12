@@ -423,6 +423,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		} else {
 			
 			// TODO: Add Retry Logic
+			arguments.subscriptionUsage.addError('renew', rbKey('validate.processSubscriptionUsage_renew.order.newFlag') & ' <a href="?slatAction=admin:entity.detailOrder&orderID=#order.getOrderID()#">#order.getOrderNumber()#</a>');
 		}
 
 		return arguments.subscriptionUsage;
