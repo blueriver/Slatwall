@@ -49,18 +49,18 @@ Notes:
 			<h5>#request.slatwallScope.rbKey("admin.main.dashboard.neworders")#</h5>
 			<cf_HibachiListingDisplay smartList="#rc.orderSmartList#" 
 					recordDetailAction="admin:entity.detailorder">
-				<cf_HibachiListingColumn propertyIdentifier="orderNumber" title="#$.slatwall.rbKey('entity.order')#" />
+				<cf_HibachiListingColumn propertyIdentifier="orderNumber" />
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
 				<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime" />
-				<cf_HibachiListingColumn propertyIdentifier="total" />
+				<cf_HibachiListingColumn propertyIdentifier="calculatedTotal" />
 			</cf_HibachiListingDisplay>
 		</div>
 		<div class="span6">
 			<h5>#request.slatwallScope.rbKey("admin.main.dashboard.recentproductupdates")#</h5>
 			<cf_HibachiListingDisplay smartList="#rc.productSmartList#" 
 					recordDetailAction="admin:entity.detailproduct">
-				<cf_HibachiListingColumn propertyIdentifier="brand.brandName" title="#$.slatwall.rbKey('entity.brand')#" />
-				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName"  title="#$.slatwall.rbKey('entity.product')#" />
+				<cf_HibachiListingColumn propertyIdentifier="brand.brandName" />
+				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="productName" />
 				<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" />
 				<cf_HibachiListingColumn propertyIdentifier="modifiedByAccount.fullname" />
 			</cf_HibachiListingDisplay>
