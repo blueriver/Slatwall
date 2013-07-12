@@ -74,6 +74,9 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// Non-Persistent Properties
 	property name="accountAddress" hb_populateEnabled="public" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID" persistent="false";
 	property name="accountAddressOptions" type="array" persistent="false";
+	property name="saveAccountAddressFlag" persistent="false";
+	property name="saveAccountAddressName" persistent="false";
+	
 	property name="chargeAfterDiscount" type="numeric" persistent="false" hb_formatType="currency";
 	property name="discountAmount" type="numeric" persistent="false" hb_formatType="currency";
 	property name="fulfillmentMethodType" type="numeric" persistent="false";
@@ -88,26 +91,19 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="taxAmount" type="numeric" persistent="false" hb_formatType="currency";
 	property name="totalShippingWeight" type="numeric" persistent="false" hb_formatType="weight";
 	
-	public any function copyAccountAddressToShippingAddress() {
-		if(!isNull(getAccountAddress()) && !getAccountAddress().getNewFlag()) {
-			setShippingAddress( getAccountAddress().getAddress().copyAddress( true ) );
-		}
-	}
+	// Deprecated
+	property name="discountTotal" persistent="false";
+	property name="shippingCharge" persistent="false";
+	property name="saveAccountAddress" persistent="false";
+	
+	// ==================== START: Logical Methods =========================
 	
 	public void function removeAccountAddress() {
-		structDelete(variables, "AccountAddress");
+		structDelete(variables, "accountAddress");
 	}
 
 	public void function removeShippingAddress() {
-		structDelete(variables, "ShippingAddress");
-	}
-	
-	public numeric function getDiscountTotal() {
-		return precisionEvaluate(getDiscountAmount() + getItemDiscountAmountTotal());
-	}
-    
-	public numeric function getShippingCharge() {
-		return getFulfillmentCharge();
+		structDelete(variables, "shippingAddress");
 	}
 	
 	public boolean function hasValidShippingMethodRate() {
@@ -136,6 +132,21 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     		return getService("addressService").newAddress();
     	}
     }
+    
+    public void function confirmShippingAddressAndAccountAddress() {
+    	if(!getAddress().getNewFlag() && !getAddress().hasErrors() && getSaveAccountAddressFlag() && !getOrder().getAccount().getGuestAccountFlag()) {
+			var accountAddress = getService('accountService').newAccountAddress();
+			accountAddress.setAccountAddressName( getSaveAccountAddressName() );
+			accountAddress.setAddress( getAddress().copyAddress(true) );
+			accountAddress.setAccount( getOrder().getAccount() );
+			accountAddress = getService('accountService').saveAccountAddress( accountAddress );
+		}
+		if(!isNull(getAccountAddress()) && !getAccountAddress().getNewFlag()) {
+			setShippingAddress( getAccountAddress().getAddress().copyAddress( true ) );
+		}
+	}
+	
+	// ====================  END: Logical Methods ==========================
 
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -247,6 +258,16 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	if(structKeyExists(variables, "selectedShippingMethodOption")) {
     		return variables.selectedShippingMethodOption;	
     	}
+    }
+    
+    public boolean function getSaveAccountAddressFlag() {
+    	if(!structKeyExists(variables, "saveAccountAddressFlag")) {
+    		variables.saveAccountAddressFlag = 0;
+    		if(!isNull(getSaveAccountAddress())) {
+    			variables.saveAccountAddressFlag = getSaveAccountAddress();	
+    		}
+    	}
+    	return variables.saveAccountAddressFlag;
     }
     
 	public numeric function getSubtotal() {
@@ -429,15 +450,27 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	public void function preInsert(){
 		super.preInsert();
 		
-		copyAccountAddressToShippingAddress();
+		confirmShippingAddressAndAccountAddress();
 	}
 	
 	public void function preUpdate(Struct oldData){
 		super.preUpdate();
 		
-		copyAccountAddressToShippingAddress();
+		confirmShippingAddressAndAccountAddress();
 	}
 	
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	// ================== START: Deprecated Methods ========================
+	
+	public numeric function getDiscountTotal() {
+		return precisionEvaluate(getDiscountAmount() + getItemDiscountAmountTotal());
+	}
+    
+	public numeric function getShippingCharge() {
+		return getFulfillmentCharge();
+	}
+	
+	// ==================  END:  Deprecated Methods ========================
 }

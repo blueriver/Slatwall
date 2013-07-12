@@ -40,7 +40,7 @@ component extends="FW1.framework" {
   	variables.framework.password = 'true';
   	variables.framework.reloadApplicationOnEveryRequest = false;
   	variables.framework.generateSES = false;
-  	variables.framework.SESOmitIndex = true;
+  	variables.framework.SESOmitIndex = false;
   	variables.framework.suppressImplicitService = true;
 	variables.framework.unhandledExtensions = 'cfc';
 	variables.framework.unhandledPaths = '/flex2gateway';
@@ -345,7 +345,7 @@ component extends="FW1.framework" {
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - Full Update Initiated");
 						
 						// Set the request timeout to 360
-						getHibachiScope().getService("hibachiTagService").cfsetting(requesttimeout=360);
+						getHibachiScope().getService("hibachiTagService").cfsetting(requesttimeout=600);
 						
 						// Reload ORM
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - ORMReload() started");

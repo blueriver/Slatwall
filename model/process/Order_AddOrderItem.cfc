@@ -338,7 +338,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	public any function getQuantity() {
 		if(!structKeyExists(variables, "quantity")) {
 			variables.quantity = 1;
-			if(getSku().setting('skuOrderMinimumQuantity') > 1) {
+			if(!isNull(getSku()) && getSku().setting('skuOrderMinimumQuantity') > 1) {
 				variables.quantity = getSku().setting('skuOrderMinimumQuantity');
 			}
 		}

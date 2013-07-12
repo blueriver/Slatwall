@@ -74,8 +74,8 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: DAO Passthrough ===========================
 	
-	public boolean function getEmailAddressNotInUseFlag( required string emailAddress ) {
-		return getAccountDAO().getEmailAddressNotInUseFlag(argumentcollection=arguments);
+	public boolean function getPrimaryEmailAddressNotInUseFlag( required string emailAddress, string accountID ) {
+		return getAccountDAO().getPrimaryEmailAddressNotInUseFlag(argumentcollection=arguments);
 	}
 	
 	public any function getInternalAccountAuthenticationsByEmailAddress(required string emailAddress) {
@@ -232,7 +232,9 @@ component extends="HibachiService" accessors="true" output="false" {
 		getHibachiDAO().save(accountAuthentication);
 	
 		// Set the password
-		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );	
+		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );
+		
+		return account;	
 	}
 	
 	public any function processAccount_login(required any account, required any processObject) {

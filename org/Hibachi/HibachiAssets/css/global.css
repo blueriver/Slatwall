@@ -210,7 +210,6 @@ range-filter-upper {
 }
 .table th,
 .table td {
-  white-space: nowrap;
   font-size: 12px;
 }
 .table th div.btn-group,
@@ -218,9 +217,10 @@ range-filter-upper {
   width: auto;
   height: 13px;
 }
-.table th.primary,
-.table td.primary {
-  width: 100%;
+.table th.admin,
+.table td.admin {
+  width: 1%;
+  white-space: nowrap;
 }
 .table td.primary {
   white-space: normal;

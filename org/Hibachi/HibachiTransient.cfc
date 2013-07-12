@@ -62,6 +62,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		getHibachiErrors().addError(argumentCollection=arguments);
 	}
 	
+	// @hint helper method to add an array of errors to the error bean
+	public void function addErrors( required struct errors ) {
+		getHibachiErrors().addErrors(argumentCollection=arguments);
+	}
+	
 	// @hint helper method that returns all error messages as <p> html tags
 	public string function getAllErrorsHTML( ) {
 		var returnString = "";
