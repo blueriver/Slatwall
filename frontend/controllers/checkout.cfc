@@ -112,9 +112,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.forgotPasswordEmail" default="";
 		
 		if(rc.forgotPasswordEmail != "") {
-			rc.forgotPasswordResult = getUserUtility().sendLoginByEmail(email=rc.forgotPasswordEmail, siteid=rc.$.event('siteID'));
+			rc.forgotPasswordResult = rc.$.getBean('userUtility').sendLoginByEmail(email=rc.forgotPasswordEmail, siteid=rc.$.event('siteID'));
 		} else {
-			var loginSuccess = getAccountService().loginCmsUser(username=arguments.rc.username, password=arguments.rc.password, siteID=rc.$.event('siteid'));
+			var loginSuccess = rc.$.getBean('userUtility').login(username=arguments.rc.username, password=arguments.rc.password, siteID=rc.$.event('siteid'));
 			
 			if(!loginSuccess) {
 				request.status = "failed";
