@@ -50,7 +50,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var eligiblePaymentMethodDetails = [];
 		
 		// Verify that this account has eligiblePaymentMethods
-		if(len(arguments.order.getAccount().setting('accountEligiblePaymentMethods'))) {
+		if(!isNull(arguments.order.getAccount()) && len(arguments.order.getAccount().setting('accountEligiblePaymentMethods'))) {
 			
 			// Get the smartList for all the eligible payment methods for this account
 			var paymentMethodSmartList = this.getPaymentMethodSmartList();
