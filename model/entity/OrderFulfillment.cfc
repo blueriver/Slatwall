@@ -299,14 +299,14 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     }
     
 	public numeric function getTotalShippingWeight() {
-    	if( !structKeyExists(variables, "totalShippingWeight") ) {
-	    	variables.totalShippingWeight = 0;
-	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
-	    		var convertedWeight = getService("measurementService").convertWeightToGlobalWeightUnit(getOrderFulfillmentItems()[i].getSku().setting('skuShippingWeight'), getOrderFulfillmentItems()[i].getSku().setting('skuShippingWeightUnitCode'));
-	    		variables.totalShippingWeight = precisionEvaluate(variables.totalShippingWeight + (convertedWeight * getOrderFulfillmentItems()[i].getQuantity()) );
-	    	}			
-  		}
-    	return variables.totalShippingWeight;
+    	var totalShippingWeight = 0;
+    	
+    	for( var orderItem in getOrderFulfillmentItems()) {
+    		var convertedWeight = getService("measurementService").convertWeightToGlobalWeightUnit(orderItem.getSku().setting('skuShippingWeight'), orderItem.getSku().setting('skuShippingWeightUnitCode'));
+    		totalShippingWeight = precisionEvaluate( totalShippingWeight + (convertedWeight * orderItem.getQuantity()) );
+    	}			
+  		
+    	return totalShippingWeight;
     }
 	
 	// ============  END:  Non-Persistent Property Methods =================
