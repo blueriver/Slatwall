@@ -57,7 +57,7 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="sku.skuDefinition" />
 		<cf_HibachiListingColumn propertyIdentifier="sku.calculatedQATS" />
 		<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
-		<cf_HibachiListingColumn processObjectProperty="price" title="#$.slatwall.rbKey('entity.price')#" fieldClass="span1" />
+		<cf_HibachiListingColumn processObjectProperty="price" title="#$.slatwall.rbKey('define.price')#" fieldClass="span1" />
 		<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 	</cf_HibachiListingDisplay>
 </cfoutput>
