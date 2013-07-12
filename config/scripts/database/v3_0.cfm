@@ -239,7 +239,7 @@ Notes:
 	</cfcatch>
 </cftry>
 
-<!--- Remove old email templates --->
+<!--- Update old email templates --->
 <cftry>
 	<cfquery name="local.updateTemplate">
 		UPDATE
@@ -261,6 +261,22 @@ Notes:
 	</cfquery>
 	<cfcatch>
 		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Deleting old emails and email templates">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+<!--- Add an orderPaymentStatusType to all missing it --->
+<cftry>
+	<cfquery name="local.updateOrderPaymentStatus">
+		UPDATE
+			SlatwallOrderPayment
+		SET
+			orderPaymentStatusTypeID = '5accbf57dcf5bb3eb71614febe83a31d'
+		WHERE
+			orderPaymentStatusTypeID is null
+	</cfquery>
+	<cfcatch>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Updating the orderPaymentStatusType has issues">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>

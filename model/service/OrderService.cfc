@@ -279,8 +279,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Otherwise, make sure that the order payments all pass the isProcessable for placeOrder & does not have any errors
 		} else {
 			
-			for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-				if(!arguments.order.getOrderPayments()[i].isProcessable( context="placeOrder" ) || arguments.order.getOrderPayments()[i].hasErrors()) {
+			for(var orderPayment in arguments.order.getOrderPayments()) {
+				if(orderPayment.getStatusCode() eq 'opstActive' && (!orderPayment.isProcessable( context="placeOrder" ) || orderPayment.hasErrors())) {
 					orderRequirementsList = listAppend(orderRequirementsList, "payment");
 					break;
 				}
@@ -751,17 +751,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		// Loop over all the payments and credit for any charges, and set paymentAmount to 0
-		for(var p=1; p<=arrayLen(arguments.order.getOrderPayments()); p++) {
-			var totalReceived = precisionEvaluate(arguments.order.getOrderPayments()[p].getAmountReceived() - arguments.order.getOrderPayments()[p].getAmountCredited());
-			if(totalReceived gt 0) {
-				var transactionData = {
-					amount = totalReceived,
-					transactionType = 'credit'
-				};
-				this.processOrderPayment(arguments.order.getOrderPayments()[p], transactionData, 'createTransaction');
+		for(var orderPayment in arguments.order.getOrderPayments()) {
+			
+			if(orderPayment.getStatusCode() eq "opstActive") {
+				var totalReceived = precisionEvaluate(orderPayment.getAmountReceived() - orderPayment.getAmountCredited());
+				if(totalReceived gt 0) {
+					var transactionData = {
+						amount = totalReceived,
+						transactionType = 'credit'
+					};
+					this.processOrderPayment(orderPayment, transactionData, 'createTransaction');
+				}
+				
+				// Set payment amount to 0
+				orderPayment.setAmount(0);
 			}
-			// Set payment amount to 0
-			arguments.order.getOrderPayments()[p].setAmount(0);
 		}
 		
 		// Change the status
@@ -778,16 +782,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var hasPaymentTransaction = false;
 		
 		// Loop over to make sure there are no payment transactions
-		for(var p=1; p<=arrayLen(arguments.order.getOrderPayments()); p++) {
-			if( arrayLen(arguments.order.getOrderPayments()[p].getPaymentTransactions()) ) {
+		for(var orderPayment in arguments.order.getOrderPayments()) {
+			if( arrayLen(orderPayment.getPaymentTransactions()) ) {
 				hasPaymentTransaction = true;
 				break;
-			}	
+			}
 		}
 		
 		// As long as there is no payment transactions, then we can delete the order
 		if( !hasPaymentTransaction ) {
 			this.deleteOrder( arguments.order );
+			
+		// Otherwise we can just remove the account so that it isn't remember as an open cart for this account
+		} else {
+			
+			order.setAccount( javaCast("null", "") );
 		}
 		
 		return this.newOrder();
@@ -925,12 +934,15 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						var amountAuthorizeCreditReceive = 0;
 						
 						// Process All Payments and Save the ones that were successful
-						for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+						for(var orderPayment in arguments.order.getOrderPayments()) {
 							
-							// Call the placeOrderTransactionType for the order payment
-							var thisOrderPayment = this.processOrderPayment(arguments.order.getOrderPayments()[i], {}, 'runPlaceOrderTransaction');
+							// As long as this orderPayment is active then we can run the place order transaction
+							if(orderPayment.getStatusCode() == 'opstActive') {
+								// Call the placeOrderTransactionType for the order payment
+								var thisOrderPayment = this.processOrderPayment(arguments.order.getOrderPayments()[i], {}, 'runPlaceOrderTransaction');
 							
-							amountAuthorizeCreditReceive = precisionEvaluate(amountAuthorizeCreditReceive + arguments.order.getOrderPayments()[i].getAmountAuthorized() + arguments.order.getOrderPayments()[i].getAmountReceived() + arguments.order.getOrderPayments()[i].getAmountCredited());
+								amountAuthorizeCreditReceive = precisionEvaluate(amountAuthorizeCreditReceive + arguments.order.getOrderPayments()[i].getAmountAuthorized() + arguments.order.getOrderPayments()[i].getAmountReceived() + arguments.order.getOrderPayments()[i].getAmountCredited());
+							}
 						}
 						
 						// After all of the processing, double check that the order does not have errors.  If one of the payments didn't go through, then an error would have been set on the order.
@@ -1101,26 +1113,24 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if(arguments.processObject.getCaptureAuthorizedPaymentsFlag()) {
 			var amountToBeCaptured = arguments.processObject.getCapturableAmount();
 			
-			var opArr = arguments.processObject.getOrder().getOrderPayments();
-			
-			for(var p=1; p<=arrayLen(opArr); p++) {
+			for(var orderPayment in arguments.processObject.getOrder().getOrderPayments()) {
 				
-				var orderPayment = opArr[p];
-				
-				if(orderPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard" && orderPayment.getAmountUnreceived() gt 0 && amountToBeCaptured gt 0) {
-					var transactionData = {
-						transactionType = 'chargePreAuthorization',
-						amount = amountToBeCaptured
-					};
-					
-					if(transactionData.amount gt orderPayment.getAmountUnreceived()) {
-						transactionData.amount = orderPayment.getAmountUnreceived();
-					}
-					
-					orderPayment = this.processOrderPayment(orderPayment, transactionData, 'createTransaction');
-					
-					if(!orderPayment.hasErrors()) {
-						amountToBeCaptured = precisionEvaluate(amountToBeCaptured - transactionData.amount);
+				if(orderPayment.getStatusCode() == 'opstActive') {
+					if(orderPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard" && orderPayment.getAmountUnreceived() gt 0 && amountToBeCaptured gt 0) {
+						var transactionData = {
+							transactionType = 'chargePreAuthorization',
+							amount = amountToBeCaptured
+						};
+						
+						if(transactionData.amount gt orderPayment.getAmountUnreceived()) {
+							transactionData.amount = orderPayment.getAmountUnreceived();
+						}
+						
+						orderPayment = this.processOrderPayment(orderPayment, transactionData, 'createTransaction');
+						
+						if(!orderPayment.hasErrors()) {
+							amountToBeCaptured = precisionEvaluate(amountToBeCaptured - transactionData.amount);
+						}
 					}
 				}
 			}

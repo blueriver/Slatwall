@@ -111,6 +111,8 @@ Notes:
 				SlatwallOrderPayment.orderID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.orderID#" />
 			  AND
 			  	SlatwallOrderPayment.amount is not null
+			  AND
+			  	(SlatwallOrderPayment.orderPaymentStatusTypeID is null or SlatwallOrderPayment.orderPaymentStatusTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="5accbf57dcf5bb3eb71614febe83a31d" />)
 		</cfquery>
 		
 		<cfloop query="rs">
