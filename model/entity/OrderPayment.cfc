@@ -515,10 +515,12 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	public any function getAmount() {
 		// If an amount has not been explicity set, then we can return another value if needed
 		if( !structKeyExists(variables, "amount") ) {
-			if(!isNull(getOrder()) && getOrderPaymentType().getSystemCode() eq 'optCharge' && getOrder().getDynamicChargeOrderPayment().getOrderPaymentID() eq getOrderPaymentID()) {
+			if(!isNull(getOrder()) && !isNull(getOrder().getDynamicChargeOrderPayment()) && getOrderPaymentType().getSystemCode() eq 'optCharge' && getOrder().getDynamicChargeOrderPayment().getOrderPaymentID() eq getOrderPaymentID()) {
 				return getOrder().getDynamicChargeOrderPaymentAmount();
-			} else if (!isNull(getOrder()) && getOrderPaymentType().getSystemCode() eq 'optCredit' && getOrder().getDynamicCreditOrderPayment().getOrderPaymentID() eq getOrderPaymentID()) {
+			} else if (!isNull(getOrder()) && !isNull(getOrder().getDynamicCreditOrderPayment()) && getOrderPaymentType().getSystemCode() eq 'optCredit' && getOrder().getDynamicCreditOrderPayment().getOrderPaymentID() eq getOrderPaymentID()) {
 				return getOrder().getDynamicCreditOrderPaymentAmount(); 
+			} else if (!isNull(getOrder())) {
+				return 0;
 			}
 			
 			// Return null to describe that it hasn't been defined yet, but it will need to.

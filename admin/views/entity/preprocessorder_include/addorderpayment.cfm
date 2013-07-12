@@ -48,7 +48,7 @@ Notes:
 	<!--- New Payment Method --->
 	<cf_HibachiDisplayToggle selector="select[name='accountPaymentMethodID']" showValues="" loadVisable="#!len(rc.addOrderPaymentProcessObject.getAccountPaymentMethodID())#">
 		
-		<input type="hidden" name="newOrderPayment.orderPaymentID" value="" />
+		<input type="hidden" name="newOrderPayment.orderPaymentID" value="#rc.addOrderPaymentProcessObject.getNewOrderPayment().getOrderPaymentID()#" />
 		
 		<!--- New Payment Type --->
 		<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="paymentMethod" fieldName="newOrderPayment.paymentMethod.paymentMethodID" edit="#rc.edit#">
@@ -94,7 +94,7 @@ Notes:
 			<h5>#$.slatwall.rbKey('entity.orderPayment.billingAddress')#</h5>
 			<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject#" property="accountAddressID" edit="#rc.edit#">
 			<cf_HibachiDisplayToggle selector="select[name='accountAddressID']" showValues="" loadVisable="#!len(rc.addOrderPaymentProcessObject.getAccountAddressID())#">
-				<cf_SlatwallAdminAddressDisplay address="#rc.addOrderPaymentProcessObject.getNewOrderPayment().getBillingAddress()#" filedNamePrefix="newOrderPayment.billingAddresss." edit="#rc.edit#" />
+				<cf_SlatwallAdminAddressDisplay address="#rc.addOrderPaymentProcessObject.getNewOrderPayment().getBillingAddress()#" fieldNamePrefix="newOrderPayment.billingAddresss." edit="#rc.edit#" />
 			</cf_HibachiDisplayToggle>	
 		</cf_HibachiDisplayToggle>
 		

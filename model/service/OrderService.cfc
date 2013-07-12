@@ -632,6 +632,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Get the populated newOrderPayment out of the processObject
 		var newOrderPayment = processObject.getNewOrderPayment();
 		
+		// In case we are trying to re-submit an orderPayment that was previously marked as invalid, we set it back to active
+		newOrderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );
+		
 		// Make sure that this new orderPayment gets attached to the order
 		if(isNull(newOrderPayment.getOrder())) {
 			newOrderPayment.setOrder( arguments.order );
@@ -938,10 +941,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							
 							// As long as this orderPayment is active then we can run the place order transaction
 							if(orderPayment.getStatusCode() == 'opstActive') {
+								
 								// Call the placeOrderTransactionType for the order payment
-								var thisOrderPayment = this.processOrderPayment(arguments.order.getOrderPayments()[i], {}, 'runPlaceOrderTransaction');
+								orderPayment = this.processOrderPayment(orderPayment, {}, 'runPlaceOrderTransaction');
 							
-								amountAuthorizeCreditReceive = precisionEvaluate(amountAuthorizeCreditReceive + arguments.order.getOrderPayments()[i].getAmountAuthorized() + arguments.order.getOrderPayments()[i].getAmountReceived() + arguments.order.getOrderPayments()[i].getAmountCredited());
+								amountAuthorizeCreditReceive = precisionEvaluate(amountAuthorizeCreditReceive + orderPayment.getAmountAuthorized() + orderPayment.getAmountReceived() + orderPayment.getAmountCredited());
 							}
 						}
 						
@@ -1368,6 +1372,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// If the paymentTransaction has errors, then add those errors to the orderPayment itself
 		if(paymentTransaction.hasError('runTransaction')) {
 			arguments.orderPayment.addError('createTransaction', paymentTransaction.getError('runTransaction'), true);
+			
+			// If this order payment has never had and amount Authorize, Received or Credited... then we can set it as invalid
+			if(arguments.orderPayment.getAmountAuthorized() == 0 && arguments.orderPayment.getAmountReceived() == 0 && arguments.orderPayment.getAmountCredited() == 0 ) {
+				
+				arguments.orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstInvalid') );
+			}
 		} else {
 			this.processOrder(arguments.orderPayment.getOrder(), {}, 'updateStatus');
 		}

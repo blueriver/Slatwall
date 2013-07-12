@@ -209,7 +209,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			
 			// Loop over the order payments to setAmount = getAmount so that any null payments get explicitly defined
 			for(var orderPayment in getOrderPayments()) {
-				getOrderPayments()[i].setAmount( orderPayment.getAmount() );
+				orderPayment.setAmount( orderPayment.getAmount() );
 			}
 		}
 		
