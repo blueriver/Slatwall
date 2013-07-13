@@ -589,6 +589,7 @@ Notes:
 										
 										<!--- START: PAYMENT METHODS --->
 										<h5>Payment Methods</h5>
+										
 										<hr style="margin-top:10px;border-top-color:##ddd;" />
 										
 										<ul class="thumbnails">
@@ -788,13 +789,13 @@ Notes:
 											<cfset newAccountPaymentMethod = $.slatwall.getAccount().getNewPropertyEntity( 'accountPaymentMethods' ) />
 											
 											<!--- verify that there are payment methods that can be saved --->
-											<cfif arrayLen(newAccountPaymentMethod.getPaymentMethodOptionsSmartList().getRecords())>
+											<cfif arrayLen($.slatwall.getAccount().getSaveablePaymentMethodsSmartList().getRecords())>
 												<li class="span4">
 													
 													<div class="accordion" id="add-account-payment-method">
 														
 														<!--- Loop over all of the potential payment methods that can be saved --->
-														<cfloop array="#newAccountPaymentMethod.getPaymentMethodOptionsSmartList().getRecords()#" index="paymentMethod">
+														<cfloop array="#$.slatwall.getAccount().getSaveablePaymentMethodsSmartList().getRecords()#" index="paymentMethod">
 															
 															<cfset pmID = "pm#lcase(createUUID())#" /> 
 															
