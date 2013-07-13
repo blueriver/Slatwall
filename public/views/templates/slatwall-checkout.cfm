@@ -110,6 +110,9 @@ Notes:
 		<div class="row">
 			<div class="span12">
 				<h3>Checkout Example ( 3 or 4 Step Process: Account-Fulfillment-Payment-Confirm )</h3>
+				
+				<!--- Display any errors associated with actually placing the order, and running those transactions --->
+				<sw:ErrorDisplay object="#$.slatwall.cart()#" errorName="runPlaceOrderTransaction" />
 			</div>
 		</div>
 		
@@ -596,16 +599,24 @@ Notes:
 						<h5>Step 3 - Payment Details</h5>
 						
 						<br />
+						
+						<!--- Get the applied payments smart list, and filter by only payments that are active --->
+						<cfset appliedPaymentsSmartList = $.slatwall.cart().getOrderPaymentsSmartList() />
+						<cfset appliedPaymentsSmartList.addFilter('orderPaymentStatusType.systemCode', 'opstActive') />
+						
 						<!--- Display existing order payments, we are using the smart list here so that any non-persisted order payments don't show up --->
-						<cfif $.slatwall.cart().getOrderPaymentsSmartList().getRecordsCount()>
+						<cfif appliedPaymentsSmartList.getRecordsCount()>
 							<h5>Payments Applied</h5>
+							
+							<!--- Applied Payments Table --->
 							<table class="table">
 								<tr>
 									<th>Payment Details</th>
 									<th>Amount</th>
 									<th>&nbsp;</th>
 								</tr>
-								<cfloop array="#$.slatwall.cart().getOrderPaymentsSmartList().getRecords()#" index="orderPayment">
+								
+								<cfloop array="#appliedPaymentsSmartList.getRecords()#" index="orderPayment">
 									<tr>
 										<td>#orderPayment.getSimpleRepresentation()#</td>
 										<td>#orderPayment.getAmount()#</td>
@@ -614,6 +625,9 @@ Notes:
 								</cfloop>
 							</table>
 						</cfif>
+						
+						<!--- Display any errors associated with adding order payment --->
+						<sw:ErrorDisplay object="#$.slatwall.cart()#" errorName="addOrderPayment" />
 						
 						<!--- Payment Method Nav Tabs --->
 						<ul class="nav nav-tabs" id="myTab">
@@ -650,7 +664,7 @@ Notes:
 										
 										<!--- Hidden value to setup the slatAction --->
 										<input id="slatActionApplyAccountPaymentMethod" type="hidden" name="slatAction" value="public:cart.addOrderPayment" />
-											
+										
 										<cfset apmFirst = true />
 										
 										<!--- Loop over all of the account payment methods and display them as a radio button to select --->
@@ -710,9 +724,11 @@ Notes:
 											<input id="slatActionAddOrderPayment" type="hidden" name="slatAction" value="public:cart.addOrderPayment" />
 											
 											<!--- Hidden value to identify the type of payment method this is --->
-											<input type="hidden" name="newOrderPayment.orderPaymentID" value="" />
+											<input type="hidden" name="newOrderPayment.orderPaymentID" value="#addOrderPaymentObj.getNewOrderPayment().getOrderPaymentID()#" />
 											<input type="hidden" name="newOrderPayment.order.orderID" value="#$.slatwall.cart().getOrderID()#" />
 											<input type="hidden" name="newOrderPayment.paymentMethod.paymentMethodID" value="#paymentDetails.paymentMethod.getPaymentMethodID()#" />
+											
+											<sw:ErrorDisplay object="#$.slatwall.cart()#" errorName="addOrderPayment" />
 											
 											<!--- CASH --->
 											<cfif paymentDetails.paymentMethod.getPaymentMethodType() eq "cash">

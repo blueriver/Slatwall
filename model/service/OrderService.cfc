@@ -1421,7 +1421,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			) {
 				
 				// Add a generic payment processing error and make it persistable
-				arguments.orderPayment.getOrder().addError('processing', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
+				arguments.orderPayment.getOrder().addError('runPlaceOrderTransaction', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
 				
 			}
 
