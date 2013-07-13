@@ -91,9 +91,9 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	public any function getNewPropertyEntity( required string propertyName ) {
 		if(!structKeyExists(variables, "requestNewPropertyEntity#arguments.propertyName#")) {
 			var entities = this.invokeMethod("get#arguments.propertyName#");
-			for(var e=1; e<=arrayLen(entities); e++) {
-				if(entities[e].hasErrors()) {
-					variables[ "requestNewPropertyEntity#arguments.propertyName#" ] = entities[e];
+			for(var entity in entities) {
+				if(entity.hasErrors() && entity.getNewFlag()) {
+					variables[ "requestNewPropertyEntity#arguments.propertyName#" ] = entity;
 					break;
 				}
 			}

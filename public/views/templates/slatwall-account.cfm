@@ -249,7 +249,7 @@ Notes:
 														<tr>
 															<td>
 																<!--- Display Number --->
-																<div class="apn#accountPhoneNumberIndex#">
+																<div class="apn#accountPhoneNumberIndex#<cfif accountPhoneNumber.hasErrors()> hide</cfif>">
 																	<span>#accountPhoneNumber.getPhoneNumber()#</span>
 																	<span class="pull-right">
 																		<a href="##" onClick="$('.apn#accountPhoneNumberIndex#').toggle()" title="Edit Phone Number"><i class="icon-pencil"></i></a>
@@ -263,7 +263,7 @@ Notes:
 																</div>
 																
 																<!--- Edit Number --->
-																<div class="apn#accountPhoneNumberIndex# hide">
+																<div class="apn#accountPhoneNumberIndex#<cfif not accountPhoneNumber.hasErrors()> hide</cfif>">
 																	
 																	<!--- Start: Edit Phone Number --->
 																	<form action="?s=1" method="post">
@@ -339,7 +339,7 @@ Notes:
 																
 
 																<!--- Display Email Address --->
-																<div class="aea#accountEmailAddressIndex#">
+																<div class="aea#accountEmailAddressIndex#<cfif accountEmailAddress.hasErrors()> hide</cfif>">
 																	
 																	<!--- Email Address --->
 																	<span>#accountEmailAddress.getEmailAddress()#</span>
@@ -361,7 +361,7 @@ Notes:
 																</div>
 																
 																<!--- Edit Email Address --->
-																<div class="aea#accountEmailAddressIndex# hide">
+																<div class="aea#accountEmailAddressIndex#<cfif not accountEmailAddress.hasErrors()> hide</cfif>">
 																	
 																	<!--- Start: Edit Email Address --->
 																	<form action="?s=1" method="post">
@@ -449,7 +449,7 @@ Notes:
 													<div class="thumbnail">
 														
 														<!--- Display Address --->
-														<div class="aa#accountAddressIndex#">
+														<div class="aa#accountAddressIndex#<cfif accountAddress.hasErrors()> hide</cfif>">
 															<!--- Administration options --->
 															<div class="pull-right">
 																
@@ -477,7 +477,7 @@ Notes:
 														</div>
 														
 														<!--- Edit Address --->
-														<div class="aa#accountAddressIndex# hide">
+														<div class="aa#accountAddressIndex#<cfif not accountAddress.hasErrors()> hide</cfif>">
 															
 															<!--- Start: Edit Address Form --->
 															<form action="?s=1" method="post">
@@ -604,7 +604,7 @@ Notes:
 													<div class="thumbnail">
 
 														<!--- Display Payment Method --->
-														<div class="apm#accountPaymentMethodIndex#">
+														<div class="apm#accountPaymentMethodIndex#<cfif accountPaymentMethod.hasErrors()> hide</cfif>">
 															
 															<!--- Administration options --->
 															<div class="pull-right">
@@ -647,7 +647,7 @@ Notes:
 														</div>
 														
 														<!--- Edit Payment Method --->
-														<div class="apm#accountPaymentMethodIndex# hide">
+														<div class="apm#accountPaymentMethodIndex#<cfif not accountPaymentMethod.hasErrors()> hide</cfif>">
 															
 															<!--- Start: Edit Payment Method Form --->
 															<form action="?s=1" method="post">
