@@ -218,12 +218,15 @@ range-filter-upper {
   height: 13px;
 }
 .table th.admin,
-.table td.admin {
+.table td.admin,
+.table th.sort,
+.table td.sort,
+.table th.select,
+.table td.select,
+.table th.multiselect,
+.table td.multiselect {
   width: 1%;
   white-space: nowrap;
-}
-.table td.primary {
-  white-space: normal;
 }
 .table th.wrap,
 .table td.wrap {
@@ -266,14 +269,11 @@ range-filter-upper {
   margin-left: 200px;
 }
 .table-section {
-	font-weight: bold;
-	padding: 3px 5px !important;
-	color: #333;
-	font-size: 12px;
-	line-height: 25px;
-	background-color: #ddd !important;  
-	}
-
+  font-weight: bold;
+  background-color: #ccc !important;
+  color: #000;
+  padding: 3px 5px !important;
+}
 .table-total {
   font-weight: bold;
   font-size: 14px !important;
