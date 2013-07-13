@@ -1113,10 +1113,12 @@ Notes:
 															<th>Amount</td>
 														</tr>
 														<cfloop array="#order.getOrderPayments()#" index="orderPayment">
-															<tr>
-																<td>#orderPayment.getSimpleRepresentation()#</td>
-																<td>#orderPayment.getFormattedValue('amount')#</td>
-															</tr>
+															<cfif orderPayment.getOrderPaymentStatusType().getSystemCode() EQ "opstActive">
+																<tr>
+																	<td>#orderPayment.getSimpleRepresentation()#</td>
+																	<td>#orderPayment.getFormattedValue('amount')#</td>
+																</tr>
+															</cfif>
 														</cfloop>
 													</table>
 													<!--- End: Order Payments --->
