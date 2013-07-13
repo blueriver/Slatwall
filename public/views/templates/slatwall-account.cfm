@@ -269,14 +269,15 @@ Notes:
 																	<form action="?s=1" method="post">
 																		
 																		<input type="hidden" name="slatAction" value="public:account.update" />
+																		<input type="hidden" name="accountPhoneNumbers[1].accountPhoneNumberID" value="#accountPhoneNumber.getAccountPhoneNumberID()#" />
 																			
 																		<!--- Phone Number --->
 																		<div class="control-group">
 													    					<div class="controls">
 													    						
 																				<div class="input-append">
-																					<input type="hidden" name="accountPhoneNumbers[1].accountPhoneNumberID" value="#accountPhoneNumber.getAccountPhoneNumberID()#" />
-												    								<sw:FormField type="text" name="accountPhoneNumbers[1].phoneNumber" valueObject="#accountPhoneNumber#" valueObjectProperty="phoneNumber" class="span3" />
+																					<sw:FormField type="text" name="accountPhoneNumbers[1].phoneNumber" valueObject="#accountPhoneNumber#" valueObjectProperty="phoneNumber" class="span3" />
+																					<button type="button" class="btn" onClick="$('.apn#accountPhoneNumberIndex#').toggle()">x</button>
 																					<button type="submit" class="btn btn-primary">Save</button>
 																				</div>
 																				
@@ -367,14 +368,15 @@ Notes:
 																	<form action="?s=1" method="post">
 																		
 																		<input type="hidden" name="slatAction" value="public:account.update" />
-																			
+																		<input type="hidden" name="accountEmailAddresses[1].accountEmailAddressID" value="#accountEmailAddress.getAccountEmailAddressID()#" />
+																		
 																		<!--- Email Address --->
 																		<div class="control-group">
 													    					<div class="controls">
 													    						
 																				<div class="input-append">
-																					<input type="hidden" name="accountEmailAddresses[1].emailAddress" value="#accountEmailAddress.getAccountEmailAddressID()#" />
-												    								<sw:FormField type="text" name="accountEmailAddresses[1].emailAddress" valueObject="#accountEmailAddress#" valueObjectProperty="emailAddress" class="span3" />
+																					<sw:FormField type="text" name="accountEmailAddresses[1].emailAddress" valueObject="#accountEmailAddress#" valueObjectProperty="emailAddress" class="span3" />
+																					<button type="button" class="btn" onClick="$('.aea#accountEmailAddressIndex#').toggle()">x</button>
 																					<button type="submit" class="btn btn-primary">Save</button>
 																				</div>
 																				
@@ -405,16 +407,16 @@ Notes:
 													<!--- Email Address --->
 													<div class="control-group">
 								    					<div class="controls">
-							    							<div class="input-append">
-							    								<cfset newAccountEmailAddress = $.slatwall.getAccount().getNewPropertyEntity( 'accountEmailAddresses' ) />
+								    						
+								    						<cfset newAccountEmailAddress = $.slatwall.getAccount().getNewPropertyEntity( 'accountEmailAddresses' ) />
 															
-								    							<div class="input-append">
-								    								<sw:FormField type="text" name="accountEmailAddresses[1].emailAddress" valueObject="#newAccountEmailAddress#" valueObjectProperty="emailAddress" fieldAttributes='placeholder="Add Email Address"' class="span3" />
-																	<button type="submit" class="btn btn-primary"><i class="icon-plus icon-white"></i></button>
-																</div>
-																
-																<sw:ErrorDisplay object="#newAccountEmailAddress#" errorName="emailAddress" />
+						    								<div class="input-append">
+							    								<sw:FormField type="text" name="accountEmailAddresses[1].emailAddress" valueObject="#newAccountEmailAddress#" valueObjectProperty="emailAddress" fieldAttributes='placeholder="Add Email Address"' class="span3" />
+																<button type="submit" class="btn btn-primary"><i class="icon-plus icon-white"></i></button>
 															</div>
+															
+															<sw:ErrorDisplay object="#newAccountEmailAddress#" errorName="emailAddress" />
+															
 								    					</div>
 								  					</div>
 													
