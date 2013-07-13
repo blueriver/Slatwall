@@ -133,6 +133,16 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 			ratesResponseBean.addMessage(messageName="communicationError", message="An unexpected communication error occured, please notify system administrator.");
 			// If XML fault then log error
 			ratesResponseBean.addError("unknown", "An unexpected communication error occured, please notify system administrator.");
+			
+			// Log the error
+			logHibachi("An unexpected communication error occured, please notify system administrator.", true);
+		} else if (isDefined('xmlResponse.Error')) {
+			ratesResponseBean.addMessage(messageName=xmlResponse.Error.Number.xmlText, message=xmlResponse.Error.Description.xmlText);
+			// If XML fault then log error
+			ratesResponseBean.addError(xmlResponse.Error.Number.xmlText, xmlResponse.Error.Description.xmlText);
+			
+			// Log the error
+			logHibachi(xmlResponse.Error.Description.xmlText, true);
 		} else {
 			if(structKeyExists(xmlResponse.RateV4Response.Package, "Error")) {
 				ratesResponseBean.addMessage(
