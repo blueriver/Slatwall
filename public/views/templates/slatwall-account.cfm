@@ -1368,7 +1368,40 @@ Notes:
 							<!--- ==================== SUBSCRIPTIONS ==================== --->
 							<div class="tab-pane" id="subscriptions">
 								<h5>Subscription Management</h5>
-								Show Subscriptions Here
+								
+								<table class="table">
+									<tr>
+										<th>Subscription</th>
+										<th>Status</th>
+										<th>Expiration Date</th>
+										<th>Next Bill Date</th>
+										<th>Auto Renew</th>
+										<th>Auto Pay</th>
+									</tr>
+		
+									<cfset subscriptionUsageIndex = 0 />
+									
+									<cfloop array="#$.slatwall.getAccount().getSubscriptionUsages()#" index="subscriptionUsage">
+										
+										<cfset subscriptionUsageIndex++ />
+										
+										<tr>
+											<td>#subscriptionUsage.getSubscriptionOrderItemName()#</td>
+											<td>#subscriptionUsage.getCurrentStatusType()#</td>
+											<td>#subscriptionUsage.getFormattedValue('expirationDate')#</td>
+											<td>#subscriptionUsage.getFormattedValue('nextBillDate')#</td>
+											<td>#subscriptionUsage.getFormattedValue('autoRenewFlag')#</td>
+											<td>#subscriptionUsage.getFormattedValue('autoPayFlag')#</td>
+											<!--- 
+											<form action="?s=1" method="post">
+												<input type="hidden" name="slatAction" value="publi:account.updateSubscriptionUsage" />
+											</form>
+											--->
+										</tr>
+									</cfloop>
+									
+								</table>
+								
 							</div>
 							
 							<!--- ==================== PURCHASED CONTENT ==================== --->
