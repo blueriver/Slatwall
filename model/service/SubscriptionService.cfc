@@ -442,10 +442,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			email = getEmailService().processEmail(email, emailData, 'createFromTemplate');
 			email = getEmailService().processEmail(email, {}, 'addToQueue');
 			
+			subscriptionUsage.setNextReminderEmailDate( javaCast("null", "") );
+			
 			// Setup the next Reminder email 
 			if( len(arguments.subscriptionUsage.setting('subscriptionUsageRenewalReminderDays')) ) {
-				
-				var nextReminderDateFound = false;
 				
 				// Loop over each of the days looking for the next one
 				for(var nextReminderDay in listToArray(subscriptionUsage.setting('subscriptionUsageRenewalReminderDays'))) {
@@ -455,16 +455,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					
 					// If this option is > than now, then we can set the date and break out of loop
 					if(nextReminderDate > now()) {
+						
 						// Set the next date
 						subscriptionUsage.setNextReminderEmailDate( nextReminderDate );	
-						nextReminderDateFound = true;
+						
 						break;
 					}
 				}
 				
-				if(!nextReminderDateFound) {
-					subscriptionUsage.setNextReminderEmailDate( javaCast("null", "") );
-				}
 			}
 			
 			
