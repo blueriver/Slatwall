@@ -97,6 +97,8 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 			if(isNumeric(firstReminder)) {
 				// Setup teh next reminder emailDate
 				this.setNextReminderEmailDate( dateAdd("d", firstReminder, this.getNextBillDate()) );	
+			} else {
+				this.setNextReminderEmailDate( javaCast("null", "") );
 			}
 		}
 	}

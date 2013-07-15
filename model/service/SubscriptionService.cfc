@@ -410,20 +410,20 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				// Place the Order
 				order = getOrderService().processOrder(order, {}, 'placeOrder');
 				
+				// set the subscription usage nextBillDate
+				arguments.subscriptionUsage.setNextBillDate( nextBillDate );
+				arguments.subscriptionUsage.setFirstReminderEmailDateBasedOnNextBillDate();
+				
 				// As long as the order was placed, then we can update the nextBillDateTime & nextReminderDateTime
-				if(order.getStatusCode() != "ostNotPlaced") {
-					
-					// set the subscription usage nextBillDate
-					arguments.subscriptionUsage.setNextBillDate( nextBillDate );
-					arguments.subscriptionUsage.setFirstReminderEmailDateBasedOnNextBillDate();
-					
+				if(order.getStatusCode() == "ostNotPlaced") {
+					arguments.subscriptionUsage.addMessage("notPlaced", rbKey('validate.processSubscriptionUsage_renew.order.notPlaced') & ' <a href="?slatAction=admin:entity.detailOrder&orderID=#order.getOrderID()#">#getHibachiScope().rbKey('define.notPlaced')#</a>');
 				}
 			}
 		// Existing Renewal Order to be re-submitted
 		} else {
 			
 			// TODO: Add Retry Logic
-			arguments.subscriptionUsage.addError('renew', rbKey('validate.processSubscriptionUsage_renew.order.newFlag') & ' <a href="?slatAction=admin:entity.detailOrder&orderID=#order.getOrderID()#">#order.getOrderNumber()#</a>');
+			arguments.subscriptionUsage.addError('renew', rbKey('validate.processSubscriptionUsage_renew.order.newFlag') & ' <a href="?slatAction=admin:entity.detailOrder&orderID=#order.getOrderID()#"><cfif not isNull(order.getOrderNumber())>#order.getOrderNumber()#<cfelse>#getHibachiScope().rbKey('define.notPlaced')#</cfif></a>');
 		}
 
 		return arguments.subscriptionUsage;
