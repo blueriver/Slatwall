@@ -156,13 +156,19 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	// Add Order Payment
 	public void function addOrderPayment(required any rc) {
+		param name="rc.newOrderPayment" default="#structNew()#";
+		param name="rc.newOrderPayment.orderPaymentID" default="";
 		
-		// Setup newOrderPayment requirements
-		if(structKeyExists(rc, "newOrderPayment")) {
-			rc.newOrderPayment.orderPaymentID = '';
-			rc.newOrderPayment.order.orderID = rc.$.slatwall.cart().getOrderID();
-			rc.newOrderPayment.orderPaymentType.typeID = '444df2f0fed139ff94191de8fcd1f61b';
+		// Make sure that someone isn't trying to pass in another users orderPaymentID
+		if(len(rc.newOrderPayment.orderPaymentID)) {
+			var orderPayment = getOrderService().getOrderPayment(rc.newOrderPayment.orderPaymentID);
+			if(orderPayment.getOrder().getOrderID() != rc.$.slatwall.cart().getOrderID()) {
+				rc.newOrderPayment.orderPaymentID = "";
+			}
 		}
+		
+		rc.newOrderPayment.order.orderID = rc.$.slatwall.cart().getOrderID();
+		rc.newOrderPayment.orderPaymentType.typeID = '444df2f0fed139ff94191de8fcd1f61b';
 		
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addOrderPayment');
 		

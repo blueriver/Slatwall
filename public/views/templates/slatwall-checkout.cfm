@@ -493,29 +493,27 @@ Notes:
 												</div>
 												
 												<!--- SCRIPT IMPORTANT: This jQuery is just here for example purposes to show/hide the new address field if there are account addresses --->
-												<cfif arrayLen(orderFulfillment.getAccountAddressOptions())>
-													<script type="text/javascript">
-														(function($){
-															$(document).ready(function(){
-																$('body').on('change', 'select[name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID"]', function(e){
-																	if( $(this).val() === '' ) {
-																		$('##new-shipping-address#orderFulfillmentIndex#').show();
-																	} else {
-																		$('##new-shipping-address#orderFulfillmentIndex#').hide();
-																	}
-																});
-																$('body').on('change', 'input[name="orderFulfillments[#orderFulfillmentIndex#].saveAccountAddressFlag"]', function(e){
-																	if( $(this).val() ) {
-																		$('##save-account-address-name#orderFulfillmentIndex#').show();
-																	} else {
-																		$('##save-account-address-name#orderFulfillmentIndex#').hide();
-																	}
-																});
-																$('select[name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID"]').change();
+												<script type="text/javascript">
+													(function($){
+														$(document).ready(function(){
+															$('body').on('change', 'select[name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID"]', function(e){
+																if( $(this).val() === '' ) {
+																	$('##new-shipping-address#orderFulfillmentIndex#').show();
+																} else {
+																	$('##new-shipping-address#orderFulfillmentIndex#').hide();
+																}
 															});
-														})( jQuery )
-													</script>
-												</cfif>
+															$('body').on('change', 'input[name="orderFulfillments[#orderFulfillmentIndex#].saveAccountAddressFlag"]', function(e){
+																if( $(this).val() ) {
+																	$('##save-account-address-name#orderFulfillmentIndex#').show();
+																} else {
+																	$('##save-account-address-name#orderFulfillmentIndex#').hide();
+																}
+															});
+															$('select[name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID"]').change();
+														});
+													})( jQuery )
+												</script>
 													
 											</div>
 											
@@ -1064,7 +1062,7 @@ Notes:
 					</cfif>
 					
 					<!--- Fulfillment Details --->
-					<cfif not listFindNoCase(orderRequirementsList, "account") and not $.slatwall.cart().getAccount().isNew()>
+					<cfif not listFindNoCase(orderRequirementsList, "fulfillment")>
 						<h5>Fulfillment Details <a href="?step=fulfillment">edit</a></h5>
 						<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="orderFulfillment">
 							<p>
