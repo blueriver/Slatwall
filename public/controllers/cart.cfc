@@ -104,7 +104,16 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.$.slatwall.addActionResult( "public:cart.addOrderItem", cart.hasErrors() );
 		
 		if(!cart.hasErrors()) {
+			// If the cart doesn't have errors then clear the process object
 			cart.clearProcessObject("addOrderItem");
+			
+			// Also make sure that this cart gets set in the session as the order
+			rc.$.slatwall.getSession().setOrder( cart );
+
+			// Check to see if we can attach the current account to this order
+			if( isNull(cart.getAccount()) && rc.$.slatwall.getLoggedInFlag() ) {
+				cart.setAccount( rc.$.slatwall.getAccount() );
+			}
 		}
 	}
 	

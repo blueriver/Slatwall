@@ -1456,19 +1456,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				}
 			}
 			
-			// Check to see if this order is the same as the currentCart
-			if(arguments.order.getOrderID() == getHibachiScope().getCart().getOrderID()) {
-				
-				// Make sure that this order gets attached to the current session
-				getHibachiScope().getSession().setOrder( arguments.order );
-
-				// Check to see if we can attach the current account to this order
-				if( isNull(arguments.order.getAccount()) && getHibachiScope().getLoggedInFlag() ) {
-					arguments.order.setAccount( getHibachiScope().getAccount() );
-				}
-			
-			}
-			
 			// Recalculate the order amounts for tax and promotions
 			recalculateOrderAmounts(arguments.order);
 		}
