@@ -1458,6 +1458,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// Recalculate the order amounts for tax and promotions
 			recalculateOrderAmounts(arguments.order);
+			
+			// Make sure the auto-state stuff gets called.
+			arguments.order.confirmOrderNumberOpenDateCloseDatePaymentAmount();
 		}
 		
 		return arguments.order;
