@@ -83,8 +83,8 @@ Notes:
 							$(document).ready(function(e){
 								
 								var paymentDetails = {
-									dynamicChargeOK : '#UCASE(isNull(rc.order.getDynamicChargeOrderPayment()))#',
-									dynamicCreditOK : '#UCASE(isNull(rc.order.getDynamicCreditOrderPayment()))#'
+									dynamicChargeOK : '#UCASE(isNull(rc.order.getDynamicChargeOrderPayment()) && rc.order.getStatusCode() eq "ostNotPlaced")#',
+									dynamicCreditOK : '#UCASE(isNull(rc.order.getDynamicCreditOrderPayment()) && rc.order.getStatusCode() eq "ostNotPlaced")#'
 								};
 								
 								$('body').on('change', 'select[name="newOrderPayment.orderPaymentType.typeID"]', function(e) {
