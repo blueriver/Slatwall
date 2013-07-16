@@ -432,8 +432,6 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 					}
 				}
 			}
-			
-			structDelete(variables, "populatedSubProperties");
 		}
 		
 		if(this.isPersistent() && this.hasErrors()) {

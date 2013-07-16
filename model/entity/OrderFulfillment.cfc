@@ -135,15 +135,12 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     }
     
     public void function confirmShippingAddressAndAccountAddress() {
-    	if(!getAddress().getNewFlag() && !getAddress().hasErrors() && getSaveAccountAddressFlag() && !getOrder().getAccount().getGuestAccountFlag()) {
+    	if( isNull(getAccountAddress()) && !isNull(getShippingAddress()) && !getShippingAddress().hasErrors() && getSaveAccountAddressFlag() && !getOrder().getAccount().getGuestAccountFlag()) {
 			var accountAddress = getService('accountService').newAccountAddress();
 			accountAddress.setAccountAddressName( getSaveAccountAddressName() );
-			accountAddress.setAddress( getAddress().copyAddress(true) );
+			accountAddress.setAddress( getAddress().copyAddress( true ) );
 			accountAddress.setAccount( getOrder().getAccount() );
 			accountAddress = getService('accountService').saveAccountAddress( accountAddress );
-		}
-		if(!isNull(getAccountAddress()) && !getAccountAddress().getNewFlag()) {
-			setShippingAddress( getAccountAddress().getAddress().copyAddress( true ) );
 		}
 	}
 	
