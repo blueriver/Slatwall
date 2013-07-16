@@ -401,33 +401,39 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 				var propertyContext = getService("hibachiValidationService").getPopulatedPropertyValidationContext( object=this, propertyName=propertyName, originalContext=arguments.context );
 				var entityService = getService( "hibachiService" ).getServiceByEntityName( listLast(getPropertyMetaData(propertyName).cfc,'.') );
 				
-				// If this was a one-to-many than validate each
-				if(isArray(variables.populatedSubProperties[ propertyName ])) {
+				// Make sure that the context is a valid context
+				if( len(propertyContext) && (!isBoolean(propertyContext) || propertyContext) ) {
 					
-					// Loop over each one that was populated and call the validation
-					for(var i=1; i<=arrayLen(variables.populatedSubProperties[ propertyName ]); i++) {
+					// If this was a one-to-many than validate each
+					if(isArray(variables.populatedSubProperties[ propertyName ])) {
 						
-						// Validate this one
-						variables.populatedSubProperties[ propertyName ][i].validate( propertyContext );
+						// Loop over each one that was populated and call the validation
+						for(var i=1; i<=arrayLen(variables.populatedSubProperties[ propertyName ]); i++) {
+							
+							// Validate this one
+							variables.populatedSubProperties[ propertyName ][i].validate( propertyContext );
+							
+							// If it had errors, add an error to this entity
+							if(variables.populatedSubProperties[ propertyName ][i].hasErrors()) {
+								getHibachiErrors().addError('populate', propertyName);
+							}
+						}
+						
+					// If this was a many-to-one, then just validate it
+					} else if (!isNull(variables[ propertyName ])) {
+						
+						// Validate the property
+						variables[ propertyName ].validate( propertyContext );
 						
 						// If it had errors, add an error to this entity
-						if(variables.populatedSubProperties[ propertyName ][i].hasErrors()) {
+						if(variables[ propertyName ].hasErrors()) {
 							getHibachiErrors().addError('populate', propertyName);
 						}
 					}
-					
-				// If this was a many-to-one, then just validate it
-				} else {
-					
-					// Validate the property
-					variables.populatedSubProperties[ propertyName ].validate( propertyContext );
-					
-					// If it had errors, add an error to this entity
-					if(variables.populatedSubProperties[ propertyName ].hasErrors()) {
-						getHibachiErrors().addError('populate', propertyName);
-					}
 				}
 			}
+			
+			structDelete(variables, "populatedSubProperties");
 		}
 		
 		if(this.isPersistent() && this.hasErrors()) {

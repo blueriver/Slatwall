@@ -632,14 +632,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Get the populated newOrderPayment out of the processObject
 		var newOrderPayment = processObject.getNewOrderPayment();
 		
-		// In case we are trying to re-submit an orderPayment that was previously marked as invalid, we set it back to active
-		newOrderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );
-		
-		// Make sure that this new orderPayment gets attached to the order
-		if(isNull(newOrderPayment.getOrder())) {
-			newOrderPayment.setOrder( arguments.order );
-		}
-		
 		// If this is an existing account payment method, then we can pull the data from there
 		if( len(arguments.processObject.getAccountPaymentMethodID()) ) {
 			
@@ -647,46 +639,46 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			var accountPaymentMethod = getAccountService().getAccountPaymentMethod( arguments.processObject.getAccountPaymentMethodID() );
 			newOrderPayment.copyFromAccountPaymentMethod( accountPaymentMethod );
 			
-		// This is a new payment, so we need to setup the billing address and see if there is a need to save it against the account
-		} else {
+		// If they just used an exiting account address then we can try that by itself
+		} else if(!isNull(arguments.processObject.getAccountAddressID()) && len(arguments.processObject.getAccountAddressID())) {
+			var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getAccountAddressID() );
 			
-			// Setup the billing address as an accountAddress if it existed, otherwise the billing address will have most likely just been populated already
-			if(!isNull(arguments.processObject.getAccountAddressID()) && len(arguments.processObject.getAccountAddressID())) {
-				var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getAccountAddressID() );
-				
-				if(!isNull(accountAddress)) {
-					newOrderPayment.setBillingAddress( accountAddress.getAddress().copyAddress( true ) );
-				}
+			if(!isNull(accountAddress)) {
+				newOrderPayment.setBillingAddress( accountAddress.getAddress().copyAddress( true ) );
 			}
-			
-			// If saveAccountPaymentMethodFlag is set to true, then we need to save this object
-			if(arguments.processObject.getSaveAccountPaymentMethodFlag()) {
-				
-				// Create a new Account Payment Method
-				var newAccountPaymentMethod = getAccountService().newAccountPaymentMethod();
-				
-				// Attach to Account
-				newAccountPaymentMethod.setAccount( arguments.order.getAccount() );
-				
-				// Setup name if exists
-				if(!isNull(arguments.processObject.getSaveAccountPaymentMethodName())) {
-					newAccountPaymentMethod.setAccountPaymentMethodName( arguments.processObject.getSaveAccountPaymentMethodName() );	
-				}
-				
-				// Copy over details
-				newAccountPaymentMethod.copyFromOrderPayment( newOrderPayment );
-				
-				// Save it
-				newAccountPaymentMethod = getAccountService().saveAccountPaymentMethod( newAccountPaymentMethod );
-			}
-
 		}
+		
+		// Make sure that the payment gets attached to the order and the currencyCode matches
+		newOrderPayment.setOrder( arguments.order );
+		newOrderPayment.setCurrencyCode( arguments.order.getCurrencyCode() );
 		
 		// Save the newOrderPayment
 		newOrderPayment = this.saveOrderPayment( newOrderPayment );
 		
+		// Attach 'createTransaction' errors to the order 
 		if(newOrderPayment.hasError('createTransaction')) {
 			arguments.order.addError('addOrderPayment', newOrderPayment.getError('createTransaction'));
+			
+		// Otherwise if no errors, and we are supposed to save as accountpayment, and an accountPaymentMethodID doesn't already exist then we can create one.
+		} else if (!newOrderPayment.hasErrors() && arguments.processObject.getSaveAccountPaymentMethodFlag() && isNull(newOrderPayment.getAccountPaymentMethod())) {
+				
+			// Create a new Account Payment Method
+			var newAccountPaymentMethod = getAccountService().newAccountPaymentMethod();
+			
+			// Attach to Account
+			newAccountPaymentMethod.setAccount( arguments.order.getAccount() );
+			
+			// Setup name if exists
+			if(!isNull(arguments.processObject.getSaveAccountPaymentMethodName())) {
+				newAccountPaymentMethod.setAccountPaymentMethodName( arguments.processObject.getSaveAccountPaymentMethodName() );	
+			}
+			
+			// Copy over details
+			newAccountPaymentMethod.copyFromOrderPayment( newOrderPayment );
+			
+			// Save it
+			newAccountPaymentMethod = getAccountService().saveAccountPaymentMethod( newAccountPaymentMethod );
+			
 		}
 		
 		return arguments.order;
@@ -1516,7 +1508,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		arguments.orderPayment = save(arguments.orderPayment, arguments.data, arguments.context);
 		
 		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
-		if(wasNew && !arguments.orderPayment.hasErrors() && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
+		if((wasNew || arguments.orderPayment.getStatusCode() == 'opstInvalid') && !arguments.orderPayment.hasErrors() && isNull(arguments.orderPayment.getAccountPaymentMethod()) && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
+			
+			// In case we are trying to re-submit an orderPayment that was previously marked as invalid, we set it back to active
+			arguments.orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );
 			
 			// Setup the transaction data
 			var transactionData = {

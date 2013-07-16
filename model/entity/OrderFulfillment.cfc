@@ -46,6 +46,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="manualFulfillmentChargeFlag" ormtype="boolean" hb_populateEnabled="false";
 	
 	// Related Object Properties (many-to-one)
+	property name="accountAddress" hb_populateEnabled="public" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
 	property name="accountEmailAddress" hb_populateEnabled="public" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="accountEmailAddressID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
@@ -72,7 +73,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="accountAddress" hb_populateEnabled="public" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID" persistent="false";
+	
 	property name="accountAddressOptions" type="array" persistent="false";
 	property name="saveAccountAddressFlag" persistent="false";
 	property name="saveAccountAddressName" persistent="false";

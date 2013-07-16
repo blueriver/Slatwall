@@ -100,6 +100,7 @@
 			
 			// If we pass preProcess validation then we can try to setup the processObject if the entity has one, and validate that
 			if(!arguments.entity.hasErrors() && arguments.entity.hasProcessObject(arguments.processContext)) {
+				
 				invokeArguments[ "processObject" ] = arguments.entity.getProcessObject(arguments.processContext);
 				
 				if(!invokeArguments[ "processObject" ].getPopulatedFlag()) {
@@ -108,6 +109,7 @@
 				}
 				
 				invokeArguments[ "processObject" ].validate( context=arguments.processContext );
+				
 			}
 			
 			// if the entity still has no errors then we call call the process method

@@ -149,7 +149,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		if(listFindNoCase("creditCard,giftCard", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
 			setProviderToken( arguments.accountPaymentMethod.getProviderToken() );
 		}
-		
+			
 		// Credit Card & Term Payment
 		if(listFindNoCase("creditCard,termPayment", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
 			setBillingAddress( arguments.accountPaymentMethod.getBillingAddress().copyAddress( true ) );
