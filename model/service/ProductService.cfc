@@ -195,6 +195,8 @@ component extends="HibachiService" accessors="true" {
 				fileDelete(getHibachiScope().setting('globalAssetsImageFolderPath') & '/product/default/#imageFile#');	
 			}
 		}
+		
+		return arguments.product;
 	}
 	
 	public any function processProduct_updateDefaultImageFileNames( required any product ) {
