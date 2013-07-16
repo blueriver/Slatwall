@@ -41,16 +41,17 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" sRedirectAction="admin:entity.detailAccount" sRedirectQS="accountID=#rc.account.getAccountID()#">
+	<cf_HibachiEntityDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" 
+								saveActionQueryString="accountID=#rc.account.getAccountID()#"
+								saveActionHash="tabaccountpaymentmethods">
+								
 		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPaymentMethod#" edit="#rc.edit#"
 					backAction="admin:entity.detailAccount" 
 					backQueryString="accountID=#rc.account.getAccountID()#"
 					cancelAction="admin:entity.detailAccount"
-					cancelQueryString="accountID=#rc.account.getAccountID()#"></cf_HibachiEntityActionBar>
-		
-		<!--- Hidden field to allow rc.account to be set on invalid submit --->
-		<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
-		
+					cancelQueryString="accountID=#rc.account.getAccountID()#"
+					deleteQueryString="redirectAction=admin:entity.detailAccount&accountID=#rc.account.getAccountID()#" /> />
+
 		<!--- Hidden field to attach this to the account --->
 		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
 		

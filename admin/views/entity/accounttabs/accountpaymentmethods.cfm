@@ -54,5 +54,5 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createaccountpaymentmethod" class="btn" icon="plus" querystring="accountID=#rc.account.getAccountID()#" modal=true />
+	<cf_HibachiActionCaller action="admin:entity.createaccountpaymentmethod" class="btn" icon="plus" querystring="sRedirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal=true />
 </cfoutput>
