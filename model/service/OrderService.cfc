@@ -1634,7 +1634,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Recalculate the order amounts
 			recalculateOrderAmounts( order );
 			
-			return delete( arguments.orderItem );
+			// Actually delete the entity
+			getHibachiDAO().delete( arguments.orderItem );
+			
+			return true;
 		}
 		
 		return delete( arguments.orderItem );

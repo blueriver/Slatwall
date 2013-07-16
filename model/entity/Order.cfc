@@ -214,7 +214,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			
 			// Loop over the order fulfillments to remove and accountAddresses
 			for(var orderFulfillment in getOrderFulfillments()) {
-				orderPayment.setAccountAddress( javaCast("null", "") );
+				orderFulfillment.setAccountAddress( javaCast("null", "") );
 			}
 		}
 		
