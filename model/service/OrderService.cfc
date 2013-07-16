@@ -648,9 +648,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 		}
 		
-		// Make sure that the payment gets attached to the order and the currencyCode matches
-		newOrderPayment.setOrder( arguments.order );
+		// Make sure that the payment gets attached to the order 
+		if(isNull(newOrderPayment.getOrder())) {
+			newOrderPayment.setOrder( arguments.order );
+		}
+		
+		// Make sure that the currencyCode matches the order
 		newOrderPayment.setCurrencyCode( arguments.order.getCurrencyCode() );
+		
 		
 		// Save the newOrderPayment
 		newOrderPayment = this.saveOrderPayment( newOrderPayment );
