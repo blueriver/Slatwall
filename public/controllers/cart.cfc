@@ -122,11 +122,17 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'create');
 		
 		if( !account.hasErrors() ) {
-			rc.$.slatwall.getCart().setAccount( account );
+			if( !isNull(rc.$.slatwall.getCart().getAccount())) {
+				var newCart = getOrderService().duplicateOrderWithNewAccount( getHibachiScope().getSession().getOrder(), getHibachiScope().getSession().getAccount() );
+				rc.$.slatwall.getSession().setOrder( newCart );
+			} else {
+				rc.$.slatwall.getCart().setAccount( account );	
+			}
 			arguments.rc.$.slatwall.addActionResult( "public:cart.guestCheckout", false );
 		} else {
 			arguments.rc.$.slatwall.addActionResult( "public:cart.guestCheckout", true );	
 		}
+		
 	}
 	
 	// Remove Order Item

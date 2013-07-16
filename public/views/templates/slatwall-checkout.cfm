@@ -109,7 +109,7 @@ Notes:
 		<!--- START CEHECKOUT EXAMPLE 1 --->
 		<div class="row">
 			<div class="span12">
-				<h3>Checkout Example ( 3 or 4 Step Process: Account-Fulfillment-Payment-Confirm )</h3>
+				<h3>Checkout Example (4 Step)</h3>
 				
 				<!--- Display any errors associated with actually placing the order, and running those transactions --->
 				<sw:ErrorDisplay object="#$.slatwall.cart()#" errorName="runPlaceOrderTransaction" />
@@ -352,7 +352,6 @@ Notes:
 									
 								</form>
 								<!--- End: Create Account Form --->
-								
 								
 							</div>
 							
@@ -885,7 +884,7 @@ Notes:
 							<cfif not listFindNoCase(orderRequirementsList, "account") and not $.slatwall.cart().getAccount().isNew()>						
 								<div class="row-fluid">
 									<div class="span12">
-										<h5>Account Details <a href="?step=account">edit</a></h5>
+										<h5>Account Details <cfif $.slatwall.cart().getAccount().getGuestAccountFlag()><a href="?step=account">edit</a></cfif></h5>
 										
 										<p>
 											<!--- Name --->
@@ -896,6 +895,12 @@ Notes:
 											
 											<!--- Phone Number --->
 											<cfif len($.slatwall.cart().getAccount().getPhoneNumber())>#$.slatwall.cart().getAccount().getPhoneNumber()#<br /></cfif>
+											
+											<!--- Logout Link --->
+											<cfif not $.slatwall.cart().getAccount().getGuestAccountFlag()>
+												<br />
+												<a href="?slatAction=public:account.logout">That isn't me ( Logout )</a>
+											</cfif>
 										</p>
 										<hr>
 									</div>
@@ -1053,7 +1058,7 @@ Notes:
 					
 					<!--- Account Details --->
 					<cfif not listFindNoCase(orderRequirementsList, "account") and not $.slatwall.cart().getAccount().isNew()>
-						<h5>Account Details <a href="?step=account">edit</a></h5>
+						<h5>Account Details <cfif $.slatwall.cart().getAccount().getGuestAccountFlag()><a href="?step=account">edit</a></cfif></h5>
 						
 						<p>
 							<!--- Name --->
@@ -1066,15 +1071,17 @@ Notes:
 							<cfif len($.slatwall.cart().getAccount().getPhoneNumber())>#$.slatwall.cart().getAccount().getPhoneNumber()#<br /></cfif>
 							
 							<!--- Logout Link --->
-							<a href="?slatAction=public:account.logout">That isn't me ( logout )</a>
-								
+							<cfif not $.slatwall.cart().getAccount().getGuestAccountFlag()>
+								<br />
+								<a href="?slatAction=public:account.logout">That isn't me ( Logout )</a>
+							</cfif>
 						</p>
 						
 						<hr />
 					</cfif>
 					
 					<!--- Fulfillment Details --->
-					<cfif not listFindNoCase(orderRequirementsList, "fulfillment")>
+					<cfif not listFindNoCase(orderRequirementsList, "account") and not listFindNoCase(orderRequirementsList, "fulfillment")>
 						<h5>Fulfillment Details <a href="?step=fulfillment">edit</a></h5>
 						<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="orderFulfillment">
 							<p>

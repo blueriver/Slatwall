@@ -137,7 +137,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     public void function checkNewAccountAddressSave() {
     	
 		// If this isn't a guest, there isn't an accountAddress, save is on - copy over an account address
-    	if(!getOrder().getAccount().getGuestAccountFlag() && isNull(getAccountAddress()) && !isNull(getShippingAddress()) && !getShippingAddress().hasErrors() && getSaveAccountAddressFlag()) {
+    	if(!isNull(getOrder().getAccount()) && !getOrder().getAccount().getGuestAccountFlag() && isNull(getAccountAddress()) && !isNull(getShippingAddress()) && !getShippingAddress().hasErrors() && getSaveAccountAddressFlag()) {
     		
     		// Create a New Account Address, Copy over Shipping Address, and save
     		var accountAddress = getService('accountService').newAccountAddress();
