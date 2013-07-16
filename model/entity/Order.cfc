@@ -211,6 +211,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			for(var orderPayment in getOrderPayments()) {
 				orderPayment.setAmount( orderPayment.getAmount() );
 			}
+			
+			// Loop over the order fulfillments to remove and accountAddresses
+			for(var orderFulfillment in getOrderFulfillments()) {
+				orderPayment.setAccountAddress( javaCast("null", "") );
+			}
 		}
 		
 		// If the order is closed, and has no close dateTime

@@ -1442,10 +1442,17 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 			
 			// loop over any fulfillments and update the shippingMethodOptions for any shipping fulfillments
-			for(var f = arrayLen(arguments.order.getOrderFulfillments()); f >= 1; f--) {
-				if(arguments.order.getOrderFulfillments()[f].getFulfillmentMethodType() eq "shipping") {
-					getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.order.getOrderFulfillments()[f] );
+			for(var orderFulfillment in arguments.order.getOrderFulfillments()) {
+				
+				if(orderFulfillment.getFulfillmentMethodType() eq "shipping") {
+					
+					// Update the shipping methods
+					getShippingService().updateOrderFulfillmentShippingMethodOptions( orderFulfillment );
+					
+					// Save the accountAddress if needed
+					orderFulfillment.checkNewAccountAddressSave();
 				}
+				
 			}
 			
 			// Recalculate the order amounts for tax and promotions
@@ -1468,7 +1475,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// If this is a shipping fulfillment, then update the shippingMethodOptions and charge
 			if(arguments.orderFulfillment.getFulfillmentMethodType() eq "shipping") {
+				
+				// Update the shipping Methods
 				getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				
+				// Save the accountAddress if needed
+				arguments.orderFulfillment.checkNewAccountAddressSave();
 			}
 			
 			// Recalculate the order amounts for tax and promotions

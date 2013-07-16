@@ -382,6 +382,8 @@ Notes:
 									<!--- Increment the orderFulfillment index so that we can update multiple order fulfillments at once --->
 									<cfset orderFulfillmentIndex++ />
 									
+									<input type="hidden" name="orderFulfillments[#orderFulfillmentIndex#].orderFulfillmentID" value="#orderFulfillment.getOrderFulfillmentID()#" />
+									
 									<div class="row">
 										
 										<!---[DEVELOPER NOTES]																		
@@ -396,59 +398,62 @@ Notes:
 										<!--- EMAIL --->
 										<cfif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "email">
 											
-											<!--- Email Address --->
-											<div class="control-group">
-						    					<label class="control-label" for="rating">Email Address</label>
-						    					<div class="controls">
-						    						
-													<sw:FormField type="text" name="orderFulfillments[#orderFulfillmentIndex#].emailAddress" valueObject="#orderFulfillment#" valueObjectProperty="emailAddress" class="span4" />
-													<sw:ErrorDisplay object="#orderFulfillment#" errorName="emailAddress" />
-													
-						    					</div>
-						  					</div>
+											<div class="span8">
+												<!--- Email Address --->
+												<div class="control-group">
+							    					<label class="control-label" for="rating">Email Address</label>
+							    					<div class="controls">
+							    						
+														<sw:FormField type="text" name="orderFulfillments[#orderFulfillmentIndex#].emailAddress" valueObject="#orderFulfillment#" valueObjectProperty="emailAddress" class="span4" />
+														<sw:ErrorDisplay object="#orderFulfillment#" errorName="emailAddress" />
+														
+							    					</div>
+							  					</div>
+											</div>
 											
 										<!--- PICKUP --->
 										<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup">
 											
-											<!--- Pickup Location --->
-											<div class="control-group">
-						    					<label class="control-label" for="rating">Pickup Location</label>
-						    					<div class="controls">
-						    						
-													<sw:FormField type="select" name="orderFulfillments[#orderFulfillmentIndex#].pickupLocation.locationID" valueObject="#orderFulfillment#" valueObjectProperty="pickupLocation" valueOptions="#orderFulfillment.getPickupLocationOptions()#" class="span4" />
-													<sw:ErrorDisplay object="#orderFulfillment#" errorName="pickupLocation" />
-													
-						    					</div>
-						  					</div>
+											<div class="span8">
+												<!--- Pickup Location --->
+												<div class="control-group">
+							    					<label class="control-label" for="rating">Pickup Location</label>
+							    					<div class="controls">
+							    						
+														<sw:FormField type="select" name="orderFulfillments[#orderFulfillmentIndex#].pickupLocation.locationID" valueObject="#orderFulfillment#" valueObjectProperty="pickupLocation" valueOptions="#orderFulfillment.getPickupLocationOptions()#" class="span4" />
+														<sw:ErrorDisplay object="#orderFulfillment#" errorName="pickupLocation" />
+														
+							    					</div>
+							  					</div>
+											</div>
 										
 										<!--- SHIPPING --->
 										<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
 											
-											<input type="hidden" name="orderFulfillments[#orderFulfillmentIndex#].orderFulfillmentID" value="#orderFulfillment.getOrderFulfillmentID()#" />
-											
 											<div class="span4">
 												<h5>Shipping Address</h5>
 												
+												<!--- Get the options that the person can choose from --->
+												<cfset accountAddressOptions = orderFulfillment.getAccountAddressOptions() />
+												
+												<!--- Add a 'New' Attribute so that we can drive the new form below --->
+												<cfset arrayAppend(accountAddressOptions, {name='New', value=''}) />
+												
+												<!--- As long as there are no errors for the orderFulfillment, we can setup the default accountAddress value to be selected --->
+												<cfset accountAddressID = "" />
+												
+												<cfif !isNull(orderFulfillment.getAccountAddress())>
+													<cfset accountAddressID = orderFulfillment.getAccountAddress().getAccountAddressID() />
+												<cfelseif isNull(orderFulfillment.getShippingAddress())>
+													<cfset accountAddressID = $.slatwall.cart().getAccount().getPrimaryAddress().getAccountAddressID() />
+												</cfif>							
+
 												<!--- If there are existing account addresses, then we can allow the user to select one of those --->
-												<cfif arrayLen(orderFulfillment.getAccountAddressOptions())>
-													
-													<!--- Get the options that the person can choose from --->
-													<cfset accountAddressOptions = orderFulfillment.getAccountAddressOptions() />
-													
-													<!--- Add a 'New' Attribute so that we can drive the new form below --->
-													<cfset arrayAppend(accountAddressOptions, {name='New', value=''}) />
-													
-													<!--- As long as there are no errors for the orderFulfillment, we can setup the default accountAddress value to be selected --->
-													<cfset accountAddressID = "" />
-													<cfif orderFulfillment.getAddress().getNewFlag() and !orderFulfillment.hasErrors() and !isNull(orderFulfillment.getAccountAddress())>
-														<cfset accountAddressID = orderFulfillment.getAccountAddress().getAccountAddressID() />
-													<cfelseif orderFulfillment.getAddress().getNewFlag() and !orderFulfillment.hasErrors()>
-														<cfset accountAddressID = $.slatwall.cart().getAccount().getPrimaryAddress().getAccountAddressID() />
-													</cfif>
+												<cfif arrayLen(accountAddressOptions) gt 1>
 													
 													<!--- Account Address --->
 													<div class="control-group">
-								    					<label class="control-label" for="rating">Select Existing Address</label>
+								    					<label class="control-label" for="rating">Select Address</label>
 								    					<div class="controls">
 								    						
 															<sw:FormField type="select" name="orderFulfillments[#orderFulfillmentIndex#].accountAddress.accountAddressID" valueObject="#orderFulfillment#" valueObjectProperty="accountAddress" valueOptions="#accountAddressOptions#" value="#accountAddressID#" class="span4" />
@@ -461,11 +466,15 @@ Notes:
 												</cfif>
 												
 												<!--- New Shipping Address --->
-												<div id="new-shipping-address#orderFulfillmentIndex#"<cfif arrayLen(orderFulfillment.getAccountAddressOptions()) and orderFulfillment.getAddress().getNewFlag()> class="hide"</cfif>>
-													<sw:AddressForm id="newShippingAddress" address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#orderFulfillmentIndex#].shippingAddress." fieldClass="span4" />
+												<div id="new-shipping-address#orderFulfillmentIndex#"<cfif len(accountAddressID)> class="hide"</cfif>>
+													<cfif isNull(orderFulfillment.getAccountAddress())>
+														<sw:AddressForm id="newShippingAddress" address="#orderFulfillment.getAddress()#" fieldNamePrefix="orderFulfillments[#orderFulfillmentIndex#].shippingAddress." fieldClass="span4" />
+													<cfelse>
+														<sw:AddressForm id="newShippingAddress" address="#orderFulfillment.getNewPropertyEntity( 'shippingAddress' )#" fieldNamePrefix="orderFulfillments[#orderFulfillmentIndex#].shippingAddress." fieldClass="span4" />
+													</cfif>
 													
 													<!--- As long as the account is not a guest account, and this is truely new address we are adding, then we can offer to save as an account address for use on later purchases --->
-													<cfif orderFulfillment.getAddress().getNewFlag() and not $.slatwall.getCart().getAccount().getGuestAccountFlag()>
+													<cfif not $.slatwall.getCart().getAccount().getGuestAccountFlag()>
 														
 														<!--- Save As Account Address --->
 														<div class="control-group">
@@ -490,6 +499,7 @@ Notes:
 														</div>
 														
 													</cfif>
+													
 												</div>
 												
 												<!--- SCRIPT IMPORTANT: This jQuery is just here for example purposes to show/hide the new address field if there are account addresses --->
@@ -514,8 +524,10 @@ Notes:
 														});
 													})( jQuery )
 												</script>
+												
 													
 											</div>
+											
 											
 											<!--- START: Shipping Method Selection --->
 											<div class="span4">

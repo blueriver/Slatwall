@@ -75,8 +75,8 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// Non-Persistent Properties
 	
 	property name="accountAddressOptions" type="array" persistent="false";
-	property name="saveAccountAddressFlag" persistent="false";
-	property name="saveAccountAddressName" persistent="false";
+	property name="saveAccountAddressFlag" hb_populateEnabled="public" persistent="false";
+	property name="saveAccountAddressName" hb_populateEnabled="public" persistent="false";
 	
 	property name="chargeAfterDiscount" type="numeric" persistent="false" hb_formatType="currency";
 	property name="discountAmount" type="numeric" persistent="false" hb_formatType="currency";
@@ -134,14 +134,22 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	}
     }
     
-    public void function confirmShippingAddressAndAccountAddress() {
-    	if( isNull(getAccountAddress()) && !isNull(getShippingAddress()) && !getShippingAddress().hasErrors() && getSaveAccountAddressFlag() && !getOrder().getAccount().getGuestAccountFlag()) {
-			var accountAddress = getService('accountService').newAccountAddress();
+    public void function checkNewAccountAddressSave() {
+    	
+		// If this isn't a guest, there isn't an accountAddress, save is on - copy over an account address
+    	if(!getOrder().getAccount().getGuestAccountFlag() && isNull(getAccountAddress()) && !isNull(getShippingAddress()) && !getShippingAddress().hasErrors() && getSaveAccountAddressFlag()) {
+    		
+    		// Create a New Account Address, Copy over Shipping Address, and save
+    		var accountAddress = getService('accountService').newAccountAddress();
 			accountAddress.setAccountAddressName( getSaveAccountAddressName() );
-			accountAddress.setAddress( getAddress().copyAddress( true ) );
+			accountAddress.setAddress( getShippingAddress().copyAddress( true ) );
 			accountAddress.setAccount( getOrder().getAccount() );
 			accountAddress = getService('accountService').saveAccountAddress( accountAddress );
+			
+			// Set the accountAddress
+			setAccountAddress( accountAddress );
 		}
+    	
 	}
 	
 	// ====================  END: Logical Methods ==========================
@@ -389,13 +397,6 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		return variables.manualFulfillmentChargeFlag;
 	}
 	
-	// sets it up so that if an accountAddressID is passed in, then we will automatically copy it as the billing address
-	public void function setAccountAddress(required any accountAddress) {
-		variables.accountAddress = arguments.accountAddress;
-		
-		setShippingAddress( variables.accountAddress.getAddress().copyAddress( true ) );
-	}
-	
 	// sets it up so that the charge for the shipping method is pulled out of the shippingMethodOptions
 	public void function setShippingMethod( any shippingMethod ) {
 		if(structKeyExists(arguments, "shippingMethod")) {
@@ -441,22 +442,36 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		return rep;
 	}
 	
+	public any function populate() {
+		super.populate( argumentcollection=arguments );
+		
+		// If after populating, there is an account address, and shipping address then we update the shipping address
+		if ( !isNull(getAccountAddress()) && !isNull(getShippingAddress()) ) {
+    		
+    		getShippingAddress().setName( getAccountAddress().getAddress().getName() );
+			getShippingAddress().setCompany( getAccountAddress().getAddress().getCompany() );
+			getShippingAddress().setPhone( getAccountAddress().getAddress().getPhone() );
+			getShippingAddress().setStreetAddress( getAccountAddress().getAddress().getStreetAddress() );
+			getShippingAddress().setStreet2Address( getAccountAddress().getAddress().getStreet2Address() );
+			getShippingAddress().setLocality( getAccountAddress().getAddress().getLocality() );
+			getShippingAddress().setCity( getAccountAddress().getAddress().getCity() );
+			getShippingAddress().setStateCode( getAccountAddress().getAddress().getStateCode() );
+			getShippingAddress().setPostalCode( getAccountAddress().getAddress().getPostalCode() );
+			getShippingAddress().setCountryCode( getAccountAddress().getAddress().getCountryCode() );
+		
+		// If there is an accountAddress, and no shippingAddress, then create a shipping address
+		} else if ( !isNull(getAccountAddress()) && isNull(getShippingAddress()) ) {
+			
+			setShippingAddress( getAccountAddress().getAddress().copyAddress( true ) );
+			
+    	}
+		
+		return this;
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
-	
-	public void function preInsert(){
-		super.preInsert();
-		
-		confirmShippingAddressAndAccountAddress();
-	}
-	
-	public void function preUpdate(Struct oldData){
-		super.preUpdate();
-		
-		confirmShippingAddressAndAccountAddress();
-	}
-	
 	
 	// ===================  END:  ORM Event Hooks  =========================
 	

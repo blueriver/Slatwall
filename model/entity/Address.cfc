@@ -92,6 +92,30 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		return address;
 	}
 	
+	public boolean function getAddressMatchFlag( required any address ) {
+		if(
+			nullReplace(getCountryCode(),"") != nullReplace(arguments.address.getCountryCode(),"")
+			||
+			nullReplace(getName(),"") != nullReplace(arguments.address.getName(),"")
+			||
+			nullReplace(getStreetAddress(),"") != nullReplace(arguments.address.getStreetAddress(),"")
+			||
+			nullReplace(getStreet2Address(),"") != nullReplace(arguments.address.getStreet2Address(),"")
+			||
+			nullReplace(getLocality(),"") != nullReplace(arguments.address.getLocality(),"")
+			||
+			nullReplace(getCity(),"") != nullReplace(arguments.address.getCity(),"")
+			||
+			nullReplace(getStateCode(),"") != nullReplace(arguments.address.getStateCode(),"")
+			||
+			nullReplace(getPostalCode(),"") != nullReplace(arguments.address.getPostalCode(),"")
+		) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 
 	// ============ START: Non-Persistent Property Methods =================
 	
