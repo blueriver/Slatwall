@@ -73,19 +73,21 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
 		
 		// Account Setup Logic
-		if ( isNull(rc.$.slatwall.cart().getAccount()) ) {
-			// When no account is in the order then just set a new account in the rc so it works
-			// We don't need to put account in the rc.orderRequirementsList because it will already be there
-			rc.account = getAccountService().newAccount();
-		} else {
-			// If the account on cart is the same as the one logged in then set the rc.account from cart
-			// OR If the cart is using a guest account, and this method was called from a different controller that says guest accounts are ok, then pass in the cart account
-			if( rc.$.slatwall.cart().getAccount().getAccountID() == rc.$.slatwall.account().getAccountID() || (rc.$.slatwall.cart().getAccount().isGuestAccount() && rc.guestAccountOK) ) {
-				rc.account = rc.$.slatwall.cart().getAccount();
-			} else {
+		if(!structKeyExists(rc, "account")) {
+			if ( isNull(rc.$.slatwall.cart().getAccount()) ) {
+				// When no account is in the order then just set a new account in the rc so it works
+				// We don't need to put account in the rc.orderRequirementsList because it will already be there
 				rc.account = getAccountService().newAccount();
-				// Here we need to add it to the requirements list because the cart might have already had an account
-				rc.orderRequirementsList = listPrepend(rc.orderRequirementsList,"account");
+			} else {
+				// If the account on cart is the same as the one logged in then set the rc.account from cart
+				// OR If the cart is using a guest account, and this method was called from a different controller that says guest accounts are ok, then pass in the cart account
+				if( rc.$.slatwall.cart().getAccount().getAccountID() == rc.$.slatwall.account().getAccountID() || (rc.$.slatwall.cart().getAccount().isGuestAccount() && rc.guestAccountOK) ) {
+					rc.account = rc.$.slatwall.cart().getAccount();
+				} else {
+					rc.account = getAccountService().newAccount();
+					// Here we need to add it to the requirements list because the cart might have already had an account
+					rc.orderRequirementsList = listPrepend(rc.orderRequirementsList,"account");
+				}
 			}
 		}
 		
@@ -110,9 +112,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.forgotPasswordEmail" default="";
 		
 		if(rc.forgotPasswordEmail != "") {
-			rc.forgotPasswordResult = getUserUtility().sendLoginByEmail(email=rc.forgotPasswordEmail, siteid=rc.$.event('siteID'));
+			rc.forgotPasswordResult = rc.$.getBean('userUtility').sendLoginByEmail(email=rc.forgotPasswordEmail, siteid=rc.$.event('siteID'));
 		} else {
-			var loginSuccess = getAccountService().loginCmsUser(username=arguments.rc.username, password=arguments.rc.password, siteID=rc.$.event('siteid'));
+			var loginSuccess = rc.$.getBean('userUtility').login(username=arguments.rc.username, password=arguments.rc.password, siteID=rc.$.event('siteid'));
 			
 			if(!loginSuccess) {
 				request.status = "failed";
@@ -124,10 +126,55 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function saveOrderAccount(required struct rc) {
+		
+		// Format the account data to work
+		var accountData = {};
+		if(structKeyExists(rc, "account") && isStruct(rc.account)) {
+			var accountData = structCopy(rc.account);
+			if(structKeyExists(accountData, "password") && !structKeyExists(accountData, "passwordConfirm")) {
+				accountData.passwordConfirm = accountData.password;
+			}
+			if(structKeyExists(accountData, "emailAddress") && !structKeyExists(accountData, "emailAddressConfirm")) {
+				accountData.emailAddressConfirm = accountData.emailAddress;
+			}
+		}
+		
+		// Call the new processing methods
+		if(rc.$.slatwall.getAccount().getNewFlag()) {
+			
+			arguments.rc.account = getAccountService().processAccount( rc.$.slatwall.getAccount(), accountData, 'create');
+			
+			// If there were errors creating an account
+			if(arguments.rc.account.getProcessObject('create').hasErrors()) {
+				arguments.rc.account.addErrors(arguments.rc.account.getProcessObject('create').getErrors());
+				
+				if(!isNull(arguments.rc.account.getProcessObject('create').getFirstName())) {
+					arguments.rc.account.setFirstName(arguments.rc.account.getProcessObject('create').getFirstName());	
+				}
+				if(!isNull(arguments.rc.account.getProcessObject('create').getLastName())) {
+					arguments.rc.account.setLastName(arguments.rc.account.getProcessObject('create').getLastName());	
+				}
+				if(!isNull(arguments.rc.account.getProcessObject('create').getEmailAddress())) {
+					arguments.rc.account.getPrimaryEmailAddress().setEmailAddress(arguments.rc.account.getProcessObject('create').getEmailAddress());	
+				}
+				if(!isNull(arguments.rc.account.getProcessObject('create').getPhoneNumber())) {
+					arguments.rc.account.getPrimaryPhoneNumber().setPhoneNumber(arguments.rc.account.getProcessObject('create').getPhoneNumber());	
+				}
+			}	
+		} else {
+			arguments.rc.account = getAccountService().saveAccount( rc.$.slatwall.getAccount(), accountData );
+		}
+		
+		// Get the response in order
+		if( !arguments.rc.account.hasErrors() ) {
+			rc.$.slatwall.getCart().setAccount( arguments.rc.account );
+			arguments.rc.$.slatwall.addActionResult( "public:cart.guestCheckout", false );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:cart.guestCheckout", true );	
+		}
+		
+		
 		rc.guestAccountOK = true;
-		
-		getOrderService().updateAndVerifyOrderAccount(order=rc.$.slatwall.cart(), data=rc);
-		
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");
 	}
@@ -135,7 +182,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function saveOrderFulfillments(required struct rc) {
 		rc.guestAccountOK = true;
 		
-		getOrderService().updateAndVerifyOrderFulfillments(order=rc.$.slatwall.cart(), data=rc);
+		getOrderService().saveOrder(rc.$.slatwall.cart(), rc);
 		
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");

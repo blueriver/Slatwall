@@ -596,6 +596,9 @@ component extends="HibachiService" accessors="true" output="false" {
 				arguments.accountAddress.getAccount().setPrimaryAddress(javaCast("null",""));
 			}
 			
+			// Remove from all orderFulfillments
+			getAccountDAO().removeAccountAddressFromOrderFulfillments( accountAddressID = arguments.accountAddress.getAccountAddressID() );
+			
 			return delete(arguments.accountAddress);
 		}
 		

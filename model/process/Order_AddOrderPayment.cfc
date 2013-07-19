@@ -15,12 +15,14 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	property name="paymentMethodIDOptions";
 	property name="accountAddressIDOptions";
 	
+	public any function setupDefaults() {
+		variables.accountAddressID = getAccountAddressIDOptions()[1]['value'];
+		variables.accountPaymentMethodID = getAccountPaymentMethodIDOptions()[1]['value'];
+	}
+	
 	public string function getAccountPaymentMethodID() {
 		if(!structKeyExists(variables, "accountPaymentMethodID")) {
 			variables.accountPaymentMethodID = "";
-			if(!getPopulatedFlag()) {
-				variables.accountPaymentMethodID = getAccountPaymentMethodIDOptions()[1]['value'];	
-			}
 		}
 		return variables.accountPaymentMethodID;
 	}
@@ -42,9 +44,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	public string function getAccountAddressID() {
 		if(!structKeyExists(variables, "accountAddressID")) {
 			variables.accountAddressID = "";
-			if(!getPopulatedFlag()) {
-				variables.accountPaymentMethodID = getAccountAddressIDOptions()[1]['value'];	
-			}
 		}
 		return variables.accountAddressID;
 	}

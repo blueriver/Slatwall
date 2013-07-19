@@ -44,12 +44,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="paymentService" type="any";
 	property name="subscriptionService" type="any";
 	
-	public any function init(required any fw) {
-		setUserUtility( getCMSBean("userUtility") );
-		
-		return super.init(arguments.fw);
-	}
-	
 	public void function create(required struct rc) {
 		rc.account = rc.$.slatwall.getCurrentAccount();
 		if(!rc.account.isNew()){
@@ -82,7 +76,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(wasNew){
 			currentAction = "frontend:account.create";
 		}
-		rc.account = getAccountService().saveAccount(account=rc.$.slatwall.getCurrentAccount(), data=rc, siteID=rc.$.event('siteID'));
+		rc.account = getAccountService().saveAccount(rc.$.slatwall.getCurrentAccount(), rc);
 		if(rc.account.hasErrors()) {
 			prepareEditData(rc);
 			getFW().setView(currentAction);
@@ -100,9 +94,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.forgotPasswordEmail" default="";
 		
 		if(rc.forgotPasswordEmail != "") {
-			rc.forgotPasswordResult = getUserUtility().sendLoginByEmail(email=rc.forgotPasswordEmail, siteid=rc.$.event('siteID'));
+			rc.forgotPasswordResult = rc.$.getBean('userUtility').sendLoginByEmail(email=rc.forgotPasswordEmail, siteid=rc.$.event('siteID'));
 		} else {
-			var loginSuccess = getAccountService().loginCmsUser(username=rc.username, password=rc.password, siteID=rc.$.event('siteID'));
+			var loginSuccess = rc.$.getBean('userUtility').login(username=rc.username, password=rc.password, siteID=rc.$.event('siteID'));
 		
 			if(!loginSuccess) {
 				request.status = "failed";
@@ -205,9 +199,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	private void function redirectToView(string view="") {
 		if(view == ""){
-			getFW().redirectExact( $.createHREF(filename=setting('globalPageMyAccount')) );
+			getFW().redirectExact( request.muraScope.createHREF(filename=request.slatwallScope.setting('globalPageMyAccount')) );
 		} else {
-			getFW().redirectExact( $.createHREF(filename=setting('globalPageMyAccount'), queryString='showItem=#arguments.view#'));
+			getFW().redirectExact( request.muraScope.createHREF(filename=request.slatwallScope.setting('globalPageMyAccount'), queryString='showItem=#arguments.view#'));
 		}
 	}
 	

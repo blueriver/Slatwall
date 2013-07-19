@@ -90,13 +90,23 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 	// @hint checks a one-to-many property for the first entity with errors, if one isn't found then it returns a new one
 	public any function getNewPropertyEntity( required string propertyName ) {
 		if(!structKeyExists(variables, "requestNewPropertyEntity#arguments.propertyName#")) {
-			var entities = this.invokeMethod("get#arguments.propertyName#");
-			for(var e=1; e<=arrayLen(entities); e++) {
-				if(entities[e].hasErrors()) {
-					variables[ "requestNewPropertyEntity#arguments.propertyName#" ] = entities[e];
-					break;
+			
+			// Get Property Value
+			var propertyValue = this.invokeMethod("get#arguments.propertyName#");
+			
+			// Find in an array
+			if(isArray(propertyValue)) {
+				for(var entity in propertyValue) {
+					if(entity.hasErrors() && entity.getNewFlag()) {
+						variables[ "requestNewPropertyEntity#arguments.propertyName#" ] = entity;
+						break;
+					}
 				}
+			// Property is Object
+			} else if (isObject(propertyValue) && propertyValue.hasErrors() && propertyValue.getNewFlag()) {
+				variables[ "requestNewPropertyEntity#arguments.propertyName#" ] = entity;
 			}
+			
 			if(!structKeyExists(variables, "requestNewPropertyEntity#arguments.propertyName#")) {
 				var entityName =  getPropertyMetaData(arguments.propertyName).cfc;
 				variables[ "requestNewPropertyEntity#arguments.propertyName#" ] = getService("hibachiService").getServiceByEntityName( entityName ).invokeMethod("new#entityName#");
@@ -163,6 +173,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		if(!structKeyExists(variables.processObjects, arguments.context)) {
 			variables.processObjects[ arguments.context ] = getTransient("#getClassName()#_#arguments.context#");
 			variables.processObjects[ arguments.context ].invokeMethod("set#getClassName()#", {1=this});
+			variables.processObjects[ arguments.context ].setupDefaults();
 		}
 		return variables.processObjects[ arguments.context ];
 	}

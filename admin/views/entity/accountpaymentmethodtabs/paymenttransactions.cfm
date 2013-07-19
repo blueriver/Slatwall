@@ -36,23 +36,19 @@
 Notes:
 
 --->
-<cfparam name="rc.account" type="any" />
+<cfparam name="rc.accountPaymentMethod" type="any" />
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
-							  recordEditAction="admin:entity.editaccountpaymentmethod"
-							  recordEditQueryString="accountID=#rc.account.getAccountID()#"
-							  recordDetailAction="admin:entity.detailaccountpaymentmethod"
-							  recordDetailQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount##tabaccountPaymentMethods"
-							  selectFieldName="primaryPaymentMethod.accountPaymentMethodID"
-							  selectValue="#rc.account.getPrimaryPaymentMethod().getAccountPaymentMethodID()#"
-							  selectTitle="#$.slatwall.rbKey('define.primary')#"
-							  edit="#rc.edit#">
+	<cf_HibachiListingDisplay smartList="#rc.accountPaymentMethod.getPaymentTransactionsSmartList()#"
+			recordDetailAction="admin:entity.detailpaymenttransaction"
+			recordDetailModal="true">
 		
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="simpleRepresentation" title="#$.slatwall.rbKey('entity.accountPaymentMethod')#" />
-		<cf_HibachiListingColumn propertyIdentifier="paymentMethod.paymentMethodName" />					    
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />		
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="transactionType" />
+		<cf_HibachiListingColumn propertyIdentifier="amountAuthorized" />
+		<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
+		<cf_HibachiListingColumn propertyIdentifier="amountCredited" />
+		
+		
 	</cf_HibachiListingDisplay>
-	
-	<cf_HibachiActionCaller action="admin:entity.createaccountpaymentmethod" class="btn" icon="plus" querystring="sRedirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal=true />
 </cfoutput>

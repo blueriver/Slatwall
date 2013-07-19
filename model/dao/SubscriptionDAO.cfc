@@ -101,7 +101,7 @@ Notes:
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
 				FROM SlatwallSubscriptionUsage su
-				WHERE (su.nextReminderEmailDate IS NULL OR su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
+				WHERE (su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
 					AND 'sstActive' = (SELECT systemCode FROM SlatwallSubscriptionStatus 
 								INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
 								WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
@@ -112,7 +112,7 @@ Notes:
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
 				FROM SlatwallSubscriptionUsage su
-				WHERE (su.nextReminderEmailDate IS NULL OR su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
+				WHERE (su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
 					AND 'sstActive' = (SELECT TOP 1 systemCode FROM SlatwallSubscriptionStatus 
 								INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
 								WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID

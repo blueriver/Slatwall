@@ -208,8 +208,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			setOrderOpenIPAddress( CGI.REMOTE_ADDR );
 			
 			// Loop over the order payments to setAmount = getAmount so that any null payments get explicitly defined
-			for(var i = 1; i <= arrayLen(getOrderPayments()); i++) {
-				getOrderPayments()[i].setAmount( getOrderPayments()[i].getAmount() );
+			for(var orderPayment in getOrderPayments()) {
+				orderPayment.setAmount( orderPayment.getAmount() );
+			}
+			
+			// Loop over the order fulfillments to remove and accountAddresses
+			for(var orderFulfillment in getOrderFulfillments()) {
+				orderFulfillment.setAccountAddress( javaCast("null", "") );
 			}
 		}
 		
@@ -394,7 +399,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public any function getDynamicChargeOrderPayment() {
 		var returnOrderPayment = javaCast("null", "");
 		for(var orderPayment in getOrderPayments()) {
-			if(orderPayment.getOrderPaymentType().getSystemCode() eq 'optCharge' && orderPayment.getDynamicAmountFlag()) {
+			if(orderPayment.getStatusCode() eq "opstActive" && orderPayment.getOrderPaymentType().getSystemCode() eq 'optCharge' && orderPayment.getDynamicAmountFlag()) {
 				if(!orderPayment.getNewFlag() || isNull(returnOrderPayment)) {
 					returnOrderPayment = orderPayment;
 				}
@@ -408,7 +413,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public any function getDynamicCreditOrderPayment() {
 		var returnOrderPayment = javaCast("null", "");
 		for(var orderPayment in getOrderPayments()) {
-			if(orderPayment.getOrderPaymentType().getSystemCode() eq 'optCredit' && orderPayment.getDynamicAmountFlag()) {
+			if(orderPayment.getStatusCode() eq "opstActive" && orderPayment.getOrderPaymentType().getSystemCode() eq 'optCredit' && orderPayment.getDynamicAmountFlag()) {
 				if(!orderPayment.getNewFlag() || isNull(returnOrderPayment)) {
 					returnOrderPayment = orderPayment;
 				}
@@ -445,7 +450,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		var totalPayments = 0;
 		
 		for(var orderPayment in getOrderPayments()) {
-			if(!orderPayment.hasErrors()) {
+			if(orderPayment.getStatusCode() eq "opstActive" && !orderPayment.hasErrors()) {
 				if(orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
 					totalPayments = precisionEvaluate(totalPayments + orderPayment.getAmount());
 				} else {
@@ -460,8 +465,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getPaymentAmountAuthorizedTotal() {
 		var totalPaymentsAuthorized = 0;
 		
-		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			totalPaymentsAuthorized = precisionEvaluate(totalPaymentsAuthorized + getOrderPayments()[i].getAmountAuthorized());
+		for(var orderPayment in getOrderPayments()) {
+			if(orderPayment.getStatusCode() eq "opstActive") {
+				totalPaymentsAuthorized = precisionEvaluate(totalPaymentsAuthorized + orderPayment.getAmountAuthorized());	
+			}
 		}
 		
 		return totalPaymentsAuthorized;
@@ -470,8 +477,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getPaymentAmountReceivedTotal() {
 		var totalPaymentsReceived = 0;
 		
-		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			totalPaymentsReceived = precisionEvaluate(totalPaymentsReceived + getOrderPayments()[i].getAmountReceived());
+		for(var orderPayment in getOrderPayments()) {
+			if(orderPayment.getStatusCode() eq "opstActive") {
+				totalPaymentsReceived = precisionEvaluate(totalPaymentsReceived + orderPayment.getAmountReceived());
+			}
 		}
 		
 		return totalPaymentsReceived;
@@ -480,8 +489,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getPaymentAmountCreditedTotal() {
 		var totalPaymentsCredited = 0;
 		
-		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			totalPaymentsCredited = precisionEvaluate(totalPaymentsCredited + getOrderPayments()[i].getAmountCredited());
+		for(var orderPayment in getOrderPayments()) {
+			if(orderPayment.getStatusCode() eq "opstActive") {
+				totalPaymentsCredited = precisionEvaluate(totalPaymentsCredited + orderPayment.getAmountCredited());
+			}
 		}
 		
 		return totalPaymentsCredited;
@@ -490,9 +501,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getReferencingPaymentAmountCreditedTotal() {
 		var totalReferencingPaymentsCredited = 0;
 		
-		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			for(var r=1; r<=arrayLen(getOrderPayments()[i].getReferencingOrderPayments()); r++) {
-				totalReferencingPaymentsCredited = precisionEvaluate(totalReferencingPaymentsCredited + getOrderPayments()[i].getReferencingOrderPayments()[r].getAmountCredited());
+		for(var orderPayment in getOrderPayments()) {
+			for(var referencingOrderPayment in orderPayment.getReferencingOrderPayments()) {
+				if(referencingOrderPayment.getStatusCode() eq "opstActive") {
+					totalReferencingPaymentsCredited = precisionEvaluate(totalReferencingPaymentsCredited + referencingOrderPayment.getAmountCredited());	
+				}
 			}
 		}
 		
@@ -510,8 +523,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public array function getOrderPaymentRefundOptions() {
 		if(!structKeyExists(variables, "orderPaymentRefundOptions")) {
 			variables.orderPaymentRefundOptions = [];
-			for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-				arrayAppend(variables.orderPaymentRefundOptions, {name=getOrderPayments()[i].getSimpleRepresentation(), value=getOrderPayments()[i].getOrderPaymentID()});
+			for(var orderPayment in getOrderPayments()) {
+				if(orderPayment.getStatusCode() eq 'opstActive') {
+					arrayAppend(variables.orderPaymentRefundOptions, {name=orderPayment.getSimpleRepresentation(), value=orderPayment.getOrderPaymentID()});	
+				}
 			}
 			arrayAppend(variables.orderPaymentRefundOptions, {name=rbKey('define.none'), value=''});
 		}
