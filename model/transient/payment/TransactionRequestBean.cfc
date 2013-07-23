@@ -42,12 +42,12 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	// Process Info
 	property name="transactionID" type="string" ;
 	property name="transactionType" type="string" ;
-	property name="transactionAmount" ormtype="float";
-	property name="transactionCurrency" ormtype="float";
+	property name="transactionAmount" type="float";
+	property name="transactionCurrency" type="string";
 	property name="isDuplicateFlag" type="boolean";
 	
 	// Credit Card Info
-	property name="nameOnCreditCard" ormType="string";
+	property name="nameOnCreditCard" type="string";
 	property name="creditCardNumber" type="string"; 
 	property name="creditCardType" type="string"; 
 	property name="expirationMonth" type="numeric";   
