@@ -51,7 +51,15 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	}
 
 	public struct function getSettings() {
-		var settings = {};
+		var settings = {
+			username = {fieldType="text"},
+			password = {fieldType="password", encryptValue=true},
+			merchantID = {fieldType="text"},
+			BIN = {fieldType="text"},
+			terminalID = {fieldType="text"},
+			industryType = {fieldType="text"},
+			liveModeFlag = {fieldType="yesno", defaultValue="0"}
+		};
 		
 		return settings;
 	}

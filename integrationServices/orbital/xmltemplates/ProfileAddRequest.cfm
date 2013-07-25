@@ -39,15 +39,33 @@ Notes:
 <?xml version="1.0" encoding="UTF-8"?>
 <cfoutput>
 <Request>
-	<MarkForCapture>
+	<Profile>
 		<OrbitalConnectionUsername>#setting('username')#</OrbitalConnectionUsername>
 		<OrbitalConnectionPassword>#setting('password')#</OrbitalConnectionPassword>
-		<BIN>#setting('bin')#</BIN>
-		<MerchantID>#setting('merchantID')#</MerchantID>
-		<TerminalID>#setting('terminalID')#</TerminalID>
-		<OrderID>#arguments.requestBean.getOrderID()#</OrderID>
-		<Amount>#arguments.requestBean.getTransactionAmount()*100#</Amount>
-		<TxRefNum>#arguments.requestBean.getProviderTransactionID()#</TxRefNum>
-	</MarkForCapture>
+		<CustomerBin>#setting('bin')#</CustomerBin>
+		<CustomerMerchantID>#setting('merchantID')#</CustomerMerchantID>
+		<CustomerName>#arguments.requestBean.getNameOnCreditCard()#</CustomerName>
+		<CustomerRefNum>#arguments.requestBean.getAccountID()#</CustomerRefNum>
+		<CustomerAddress1>#arguments.requestBean.getBillingStreetAddress()#</CustomerAddress1>
+		<CustomerAddress2>#arguments.requestBean.getBillingStreet2Address()#</CustomerAddress2>
+		<CustomerCity>#arguments.requestBean.getBillingCity()#</CustomerCity>
+		<CustomerState>#arguments.requestBean.getBillingStateCode()#</CustomerState>
+		<CustomerZIP>#arguments.requestBean.getBillingPostalCode()#</CustomerZIP>
+		<CustomerEmail>#arguments.requestBean.getAccountPrimaryEmailAddress()#</CustomerEmail>
+		<CustomerPhone>#arguments.requestBean.getAccountPrimaryPhoneNumber()#</CustomerPhone>
+		<CustomerCountryCode>#arguments.requestBean.getBillingCountryCode()#</CustomerCountryCode>
+		<CustomerProfileAction>C</CustomerProfileAction>
+		<CustomerProfileOrderOverrideInd>NO</CustomerProfileOrderOverrideInd>
+		<CustomerProfileFromOrderInd>A</CustomerProfileFromOrderInd>
+		<CustomerAccountType>CC</CustomerAccountType>
+		<Status>A</Status>
+		<CCAccountNum>#arguments.requestBean.getCreditCardNumber()#</CCAccountNum>
+		<cfif !isNull(arguments.requestBean.getExpirationMonth()) && !isNull(arguments.requestBean.getExpirationYear())>
+			<CCExpireDate>#left(arguments.requestBean.getExpirationMonth(),2)##right(arguments.requestBean.getExpirationYear(),2)#</CCExpireDate>
+		<cfelse>
+			<CCExpireDate/>
+		</cfif>
+		<MBType></MBType>
+	</Profile>
 </Request>
 </cfoutput>

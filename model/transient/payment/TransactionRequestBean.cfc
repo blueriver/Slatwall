@@ -44,7 +44,6 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	property name="transactionType" type="string" ;
 	property name="transactionAmount" type="float";
 	property name="transactionCurrency" type="string";
-	property name="transactionCurrencyISONumber" type="integer";
 	property name="isDuplicateFlag" type="boolean";
 	
 	// Credit Card Info
@@ -81,6 +80,7 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	property name="accountID" type="string";
 	property name="providerTransactionID" type="string";
 	property name="referencedPaymentTransactionID" type="string";
+	property name="transactionCurrencyISONumber" type="string";
 	
 	/*
 	Process Types
@@ -154,6 +154,7 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		// Populate relavent Misc Info
 		setAccountPaymentID(arguments.accountPayment.getAccountPaymentID());
 		setAccountID(arguments.accountPayment.getAccount().getAccountID());
+		setTransactionCurrencyISONumber(getService("currencyService").getCurrency(getTransactionCurrency(),true).getCurrencyISONumber());
 	}
 	
 	public void function populatePaymentInfoWithOrderPayment(required any orderPayment) {
@@ -220,6 +221,7 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		setOrderPaymentID(arguments.orderPayment.getOrderPaymentID());
 		setOrderID(arguments.orderPayment.getOrder().getOrderID());
 		setAccountID(arguments.orderPayment.getOrder().getAccount().getAccountID());
+		setTransactionCurrencyISONumber(getService("currencyService").getCurrency(getTransactionCurrency(),true).getCurrencyISONumber());
 	}
 	
 	public void function populatePaymentInfoWithAccountPaymentMethod(required any accountPaymentMethod) {
@@ -282,6 +284,7 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		// Populate relavent Misc Info
 		setAccountPaymentMethodID( arguments.accountPaymentMethod.getAccountPaymentMethodID() );
 		setAccountID( arguments.accountPaymentMethod.getAccount().getAccountID() );
+		setTransactionCurrencyISONumber(getService("currencyService").getCurrency(getTransactionCurrency(),true).getCurrencyISONumber());
 	}
 
 }

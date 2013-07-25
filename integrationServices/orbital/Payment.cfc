@@ -44,6 +44,13 @@ Notes:
 
 component accessors="true" output="false" displayname="PayFlowPro" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
+	//Global variables
+	variables.liveGatewayURL = "https://orbital1.paymentech.net/authorize";
+	variables.testGatewayURL = "https://orbitalvar1.paymentech.net/authorize";
+	variables.version = "5.7";
+	variables.timeout = "30";
+	variables.transactionCodes = {};
+
 	public any function init(){
 		// Set Defaults
 		variables.transactionCodes = {
@@ -66,8 +73,6 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	public any function processCreditCard(required any requestBean){
 		
 		var requestXML = "";
-		var responseXML = "";
-		var httpRequest = new Http();
 		var responseBean = getTransient("CreditCardTransactionResponseBean");
 		
 		if(listFindNoCase("authorize,authorizeAndCharge,credit", arguments.requestBean.getTransactionType())) {
@@ -78,26 +83,142 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			savecontent variable="requestXML" {
 				include "xmltemplates/MarkForCapture.cfm"; // This template needs to be made dynamic
 			}
+		} else if(listFindNoCase("generateToken", arguments.requestBean.getTransactionType())) {
+			savecontent variable="requestXML" {
+				include "xmltemplates/ProfileAddRequest.cfm"; // This template needs to be made dynamic
+			}
 		}
 		
-		/*
-		Configure this to post correctly
-		
-		httpRequest.setMethod("POST");
-		httpRequest.setURL(variables.liveURL);
-		httpRequest.addParam(type="xml", name="XMLRequest", value="#requestXML#");
-		*/
 
 		// Get the response from Orbital
-		try {
-			responseXML = XmlParse(httpRequest.send().getPrefix().fileContent);
-		} catch(any e) {
+		//try {
+			var response = postRequest(requestXML);
+			responseBean = getResponseBean(response.fileContent, requestXML, requestBean);
+		//} catch(any e) {
 			/* An unexpected error happened, handled below */
-		}
-		
-		// TODO: Translate Response into response bean here
+			//responseBean.addError("Processing error", e.message);
+		//}
 		
 		return responseBean;
 	}
 	
+	private any function postRequest(required string requestXML) {
+		var httpRequest = new Http();
+		httpRequest.setMethod("POST");
+		if( setting('liveModeFlag') ) {
+			httpRequest.setUrl( variables.liveGatewayURL );
+		} else {
+			httpRequest.setUrl( variables.testgatewayURL );	
+		}
+		httpRequest.setPort("443");
+		httpRequest.setTimeout(variables.timeout);
+		httpRequest.setResolveurl(false);
+		
+		httpRequest.addParam(type="header",name="MIME-Version",VALUE="1.0");
+		httpRequest.addParam(type="header",name="Content-type",VALUE="application/PTI57");
+		httpRequest.addParam(type="header",name="Content-length",VALUE="#Len(trim(requestXML))#");
+		httpRequest.addParam(type="header",name="Content-transfer-encoding",VALUE="text");
+		httpRequest.addParam(type="header",name="Request-number",VALUE="1");
+		httpRequest.addParam(type="header",name="Document-type",VALUE="Request");
+		//httpRequest.addParam(type="header",name="Trace-number",VALUE="");
+		httpRequest.addParam(type="header",name="Interface-Version",VALUE="Slatwall #getApplicationValue('version')#");
+		httpRequest.addParam(type="header",name="Accept",VALUE="application/xml");
+		httpRequest.addParam(type="body",value="#trim(requestXML)#");
+		
+		var response = httpRequest.send().getPrefix();
+		
+		return response;
+	}
+	
+	private any function getResponseBean(required string rawResponse, required any requestData, required any requestBean) {
+		var response = getTransient("CreditCardTransactionResponseBean");
+		
+		var responseData = {};
+		var responseNode = "";
+		if(listFindNoCase("authorize,authorizeAndCharge,credit", arguments.requestBean.getTransactionType())) {
+			responseNode = "NewOrderResp";
+		} else if(listFindNoCase("chargePreAuthorization", arguments.requestBean.getTransactionType())) {
+			responseNode = "MarkForCaptureResp";
+		} else if(listFindNoCase("generateToken", arguments.requestBean.getTransactionType())) {
+			responseNode = "ProfileResp";
+		}
+
+		// Parse The Raw Response Data Into a Struct
+		// normalize the response first
+		var xmlResponse = rawResponse;
+		var xmlResponse = replaceNoCase(xmlResponse,"ProfileProcStatus","ProcStatus","all");
+		var xmlResponse = replaceNoCase(xmlResponse,"CustomerProfileMessage","StatusMsg","all");
+		var xmlResponse = XmlParse(REReplace(xmlResponse, "^[^<]*", "", "one"));
+		if(structKeyExists(xmlResponse.response, "QuickResponse")) {
+			responseData = xmlResponse.response["QuickResponse"];
+		} else if(structKeyExists(xmlResponse.response, "QuickResp")) {
+			responseData = xmlResponse.response["QuickResp"];
+		} else if(structKeyExists(xmlResponse.response, responseNode)) {
+			responseData = xmlResponse.response[responseNode];
+		} else {
+			responseData["ProcStatus"] = {xmlText="0"};
+			responseData["StatusMsg"] = {xmlText="Unknown Response"};
+		}
+						
+		// Populate the data with the raw response & request
+		var data = {
+			responseData = arguments.rawResponse,
+			requestData = arguments.requestData
+		};
+		
+		response.setData(data);
+		
+		// Add message for what happened
+		response.addMessage(messageName=responseData.ProcStatus.xmlText, message=responseData.StatusMsg.xmlText);
+		
+		// Set the response Code
+		response.setStatusCode( responseData.ProcStatus.xmlText );
+		
+		// Check to see if it was successful
+		if(response.getStatusCode() != 0 ) {
+			// Transaction did not go through
+			response.addError(responseData.ProcStatus.xmlText, responseData.StatusMsg.xmlText);
+		} else if(structKeyExists(responseData,"ApprovalStatus") && responseData.ApprovalStatus.xmlText != 1) {
+			// Transaction was not approved
+			response.addError(responseData.RespCode.xmlText, responseData.StatusMsg.xmlText);
+		} else {
+			if(requestBean.getTransactionType() == "authorize") {
+				response.setAmountAuthorized( requestBean.getTransactionAmount() );
+			} else if(requestBean.getTransactionType() == "authorizeAndCharge") {
+				response.setAmountAuthorized(  requestBean.getTransactionAmount() );
+				response.setAmountCharged(  requestBean.getTransactionAmount()  );
+			} else if(requestBean.getTransactionType() == "chargePreAuthorization") {
+				response.setAmountCharged(  requestBean.getTransactionAmount()  );
+			} else if(requestBean.getTransactionType() == "credit") {
+				response.setAmountCredited(  requestBean.getTransactionAmount()  );
+			}
+		}
+		
+		if( structKeyExists(responseData,"TxRefNum") ) {
+			response.setTransactionID( responseData.TxRefNum.xmlText );
+		}
+		
+		if( structKeyExists(responseData,"AuthCode") ) {
+			response.setAuthorizationCode( responseData.AuthCode );
+		}
+		
+		// TODO: Add more codes here
+		var avsCodeMAP = {
+			M2 = "V",
+			M4 = "O",
+			X  = "D"
+		};
+		
+		if( structKeyExists(responseData,"AVSRespCode") && structKeyExists(avsCodeMAP,responseData.AVSRespCode) ) {
+			response.setAVSCode( avsCodeMAP[responseData.AVSRespCode] );
+		}
+		
+		if( structKeyExists(responseData,"CVV2RespCode") && responseData.CVV2RespCode == 'M') {
+			response.setSecurityCodeMatch(true);
+		} else {
+			response.setSecurityCodeMatch(false);
+		}
+		
+		return response;
+	}
 }

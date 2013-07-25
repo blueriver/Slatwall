@@ -36,30 +36,45 @@
 Notes:
 
 --->
-<cfparam name="arguments.requestBean" type="any" />
-
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
+<cfoutput>
 <Request>
 	<NewOrder>
-		<OrbitalConnectionUsername>TESTUSER123</OrbitalConnectionUsername>
-		<OrbitalConnectionPassword>abcd1234</OrbitalConnectionPassword>
-		<IndustryType>EC</IndustryType>
-		<MessageType>AC</MessageType>
-		<BIN>000001</BIN>
-		<MerchantID>123456</MerchantID>
-		<TerminalID>001</TerminalID>
+		<OrbitalConnectionUsername>#setting('username')#</OrbitalConnectionUsername>
+		<OrbitalConnectionPassword>#setting('password')#</OrbitalConnectionPassword>
+		<IndustryType>#setting('industryType')#</IndustryType>
+		<MessageType>#variables.transactionCodes[arguments.requestBean.getTransactionType()]#</MessageType>
+		<BIN>#setting('bin')#</BIN>
+		<MerchantID>#setting('merchantID')#</MerchantID>
+		<TerminalID>#setting('terminalID')#</TerminalID>
 		<CardBrand></CardBrand>
-		<AccountNum>5454545454545454</AccountNum>
-		<Exp>0112</Exp>
-		<CurrencyCode>840</CurrencyCode>
+		<!---<CustomerRefNum>#arguments.requestBean.getAccountID()#</CustomerRefNum>--->
+		<AccountNum>#arguments.requestBean.getCreditCardNumber()#</AccountNum>
+		<cfif !isNull(arguments.requestBean.getExpirationMonth()) && !isNull(arguments.requestBean.getExpirationYear())>
+			<Exp>#left(arguments.requestBean.getExpirationMonth(),2)##right(arguments.requestBean.getExpirationYear(),2)#</Exp>
+		<cfelse>
+			<Exp/>
+		</cfif>
+		<CurrencyCode>#arguments.requestBean.getTransactionCurrencyISONumber()#</CurrencyCode>
 		<CurrencyExponent>2</CurrencyExponent>
-		<AVSzip>25541</AVSzip>
-		<AVSaddress1>123 Test Street</AVSaddress1>
-		<AVSaddress2>Suite 350</AVSaddress2>
-		<AVScity>Test City</AVScity>
-		<AVSstate>FL</AVSstate>
-		<AVSphoneNum>8004564512</AVSphoneNum>
-		<OrderID>8316384413</OrderID>
-		<Amount>2500</Amount>
+		<cfif !isNull(requestBean.getSecurityCode())>
+			<CardSecValInd>1</CardSecValInd>
+			<CardSecVal>#arguments.requestBean.getSecurityCode()#</CardSecVal>
+		</cfif>
+		<!---<CustomerEmail>#arguments.requestBean.getAccountPrimaryEmailAddress()#</CustomerEmail>--->
+		<AVSzip>#arguments.requestBean.getBillingPostalCode()#</AVSzip>
+		<AVSaddress1>#arguments.requestBean.getBillingStreetAddress()#</AVSaddress1>
+		<AVSaddress2>#arguments.requestBean.getBillingStreet2Address()#</AVSaddress2>
+		<AVScity>#arguments.requestBean.getBillingCity()#</AVScity>
+		<AVSstate>#arguments.requestBean.getBillingStateCode()#</AVSstate>
+		<AVSphoneNum>#arguments.requestBean.getAccountPrimaryPhoneNumber()#</AVSphoneNum>
+		<!---<AVSName>#arguments.requestBean.getNameOnCreditCard()#</AVSName>--->
+		<OrderID>#arguments.requestBean.getOrderID()#</OrderID>
+		<Amount>#arguments.requestBean.getTransactionAmount()*100#</Amount>
+		<cfif arguments.requestBean.getTransactionType() EQ "credit">
+			<TxRefNum>#arguments.requestBean.getProviderTransactionID()#</TxRefNum>
+		</cfif>
+		<CustomerIpAddress>#CGI.REMOTE_ADDR#</CustomerIpAddress>
 	</NewOrder>
 </Request>
+</cfoutput>
