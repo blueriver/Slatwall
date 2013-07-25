@@ -61,14 +61,14 @@ Notes:
 			<CardSecValInd>1</CardSecValInd>
 			<CardSecVal>#arguments.requestBean.getSecurityCode()#</CardSecVal>
 		</cfif>
-		<!---<CustomerEmail>#arguments.requestBean.getAccountPrimaryEmailAddress()#</CustomerEmail>--->
+		<CustomerEmail>#arguments.requestBean.getAccountPrimaryEmailAddress()#</CustomerEmail>
 		<AVSzip>#arguments.requestBean.getBillingPostalCode()#</AVSzip>
 		<AVSaddress1>#arguments.requestBean.getBillingStreetAddress()#</AVSaddress1>
 		<AVSaddress2>#arguments.requestBean.getBillingStreet2Address()#</AVSaddress2>
 		<AVScity>#arguments.requestBean.getBillingCity()#</AVScity>
 		<AVSstate>#arguments.requestBean.getBillingStateCode()#</AVSstate>
 		<AVSphoneNum>#arguments.requestBean.getAccountPrimaryPhoneNumber()#</AVSphoneNum>
-		<!---<AVSName>#arguments.requestBean.getNameOnCreditCard()#</AVSName>--->
+		<AVSname>#arguments.requestBean.getNameOnCreditCard()#</AVSname>
 		<OrderID>#arguments.requestBean.getOrderID()#</OrderID>
 		<Amount>#arguments.requestBean.getTransactionAmount()*100#</Amount>
 		<cfif arguments.requestBean.getTransactionType() EQ "credit">
