@@ -62,11 +62,14 @@ Notes:
 		
 		<cf_HibachiTabGroup object="#rc.productType#">
 			<cf_HibachiTab view="admin:entity/producttypetabs/producttypedescription" />
-			<!---<cf_HibachiTab view="admin:entity/producttypetabs/attributesets" />--->
 			<cf_HibachiTab view="admin:entity/producttypetabs/products" />
 			<cf_HibachiTab view="admin:entity/producttypetabs/producttypesettings" />
 			<cf_HibachiTab view="admin:entity/producttypetabs/productsettings" />
 			<cf_HibachiTab view="admin:entity/producttypetabs/skusettings" />
+			<!--- Custom Attributes --->
+			<cfloop array="#rc.productType.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+				<cf_SlatwallAdminTabCustomAttributes object="#rc.productType#" attributeSet="#attributeSet#" />
+			</cfloop>
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>
