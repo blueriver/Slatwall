@@ -91,13 +91,13 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		
 
 		// Get the response from Orbital
-		//try {
+		try {
 			var response = postRequest(requestXML);
 			responseBean = getResponseBean(response.fileContent, requestXML, requestBean);
-		//} catch(any e) {
+		} catch(any e) {
 			/* An unexpected error happened, handled below */
-			//responseBean.addError("Processing error", e.message);
-		//}
+			responseBean.addError("Processing error", e.message);
+		}
 		
 		return responseBean;
 	}
