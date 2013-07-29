@@ -543,8 +543,12 @@ Notes:
 															<!--- OPTIONAL: You can use this formField display to show options as a select box
 															<sw:FormField type="select" name="orderFulfillments[#orderFulfillmentIndex#].shippingMethod.shippingMethodID" valueObject="#orderFulfillment#" valueObjectProperty="shippingMethod" valueOptions="#orderFulfillment.getShippingMethodOptions()#" class="span4" />
 															--->
+															<cfset shippingMethodID = "" />
+															<cfif not isNull(orderFulfillment.getShippingMethod())>
+																<cfset shippingMethodID = orderFulfillment.getShippingMethod().getShippingMethodID() />	
+															</cfif>
 															
-															<sw:FormField type="radiogroup" name="orderFulfillments[#orderFulfillmentIndex#].shippingMethod.shippingMethodID" valueObject="#orderFulfillment#" valueObjectProperty="shippingMethod" valueOptions="#orderFulfillment.getShippingMethodOptions()#" />
+															<sw:FormField type="radiogroup" name="orderFulfillments[#orderFulfillmentIndex#].shippingMethod.shippingMethodID" value="#shippingMethodID#" valueOptions="#orderFulfillment.getShippingMethodOptions()#" />
 															<sw:ErrorDisplay object="#orderFulfillment#" errorName="shippingMethod" />
 															
 								    					</div>
@@ -1098,37 +1102,11 @@ Notes:
 									
 								<!--- SHIPPING --->
 								<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
-									<cfif not isNull(orderFulfillment.getAddress().getName())>
-										#orderFulfillment.getAddress().getName()#<br />
+									<sw:AddressDisplay address="#orderFulfillment.getAddress()#" />
+									<cfif not isNull(orderFulfillment.getShippingMethod())>
+										<strong>Shipping Method:</strong> #orderFulfillment.getShippingMethod().getShippingMethodName()#<br />
 									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getCompany())>
-										#orderFulfillment.getAddress().getCompany()#<br />
-									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getStreetAddress())>
-										#orderFulfillment.getAddress().getStreetAddress()#<br />
-									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getStreet2Address())>
-										#orderFulfillment.getAddress().getStreet2Address()#<br />
-									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getLocality())>
-										#orderFulfillment.getAddress().getLocality()#<br />
-									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getCity()) and not isNull(orderFulfillment.getAddress().getStateCode()) and not isNull(orderFulfillment.getAddress().getPostalCode())>
-										#orderFulfillment.getAddress().getCity()#, #orderFulfillment.getAddress().getStateCode()# #orderFulfillment.getAddress().getPostalCode()#<br />
-									<cfelse>
-										<cfif not isNull(orderFulfillment.getAddress().getCity())>
-											#orderFulfillment.getAddress().getCity()#<br />
-										</cfif>
-										<cfif not isNull(orderFulfillment.getAddress().getStateCode())>
-											#orderFulfillment.getAddress().getStateCode()#<br />
-										</cfif>
-										<cfif not isNull(orderFulfillment.getAddress().getPostalCode())>
-											#orderFulfillment.getAddress().getPostalCode()#<br />
-										</cfif>
-									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getCountryCode())>
-										#orderFulfillment.getAddress().getCountryCode()#<br />
-									</cfif>
+									
 								</cfif>
 							</p>
 							
