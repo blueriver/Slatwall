@@ -834,7 +834,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			
 			var wc = "(";
 			wc &= " aslatwallattributeset.globalFlag = 1";
-			wc &= " OR aslatwallproducttype.productTypeID IN ('#replace(getProductType().getProductTypeIDPath(),",","','","all")#')";
+			if(!isNull(getProductType())) {
+				wc &= " OR aslatwallproducttype.productTypeID IN ('#replace(getProductType().getProductTypeIDPath(),",","','","all")#')";	
+			}
 			wc &= " OR aslatwallproduct.productID = '#getProductID()#'";
 			if(!isNull(getBrand())) {
 				wc &= " OR aslatwallbrand.brandID = '#getBrand().getBrandID()#'";	
