@@ -180,7 +180,7 @@ component extends="SlatwallUnitTestBase" {
 		
 		var product  = request.slatwallScope.newEntity("Product");
 		
-		product.validate();
+		product.validate( context="save" );
 		
 		if(!product.hasErrors()){
 			request.slatwallScope.saveEntity( product );
