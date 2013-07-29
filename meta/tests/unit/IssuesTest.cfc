@@ -186,5 +186,10 @@ component extends="SlatwallUnitTestBase" {
 			request.slatwallScope.saveEntity( product );
 		}
 	}
+	
+	public void function issue_1690_2() {
+		var product  = request.slatwallScope.newEntity("Product");
+		request.slatwallScope.saveEntity( product );
+	}
 }
 
