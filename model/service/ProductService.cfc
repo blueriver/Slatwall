@@ -286,12 +286,11 @@ component extends="HibachiService" accessors="true" {
 	
 	public any function saveProductType(required any productType, required struct data) {
 		if( (isNull(arguments.productType.getURLTitle()) || !len(arguments.productType.getURLTitle())) && (!structKeyExists(arguments.data, "urlTitle") || !len(arguments.data.urlTitle)) ) {
-			if(!isNull(arguments.productType.getProductTypeName())) {
-				param name="arguments.data.productTypeName" default="#arguments.productType.getProductTypeName()#";
-			} else {
-				param name="arguments.data.productTypeName" default="";
+			if(structKeyExists(arguments.data, "productTypeName") && len(arguments.data.productTypeName)) {
+				data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.productTypeName, tableName="SlatwallProductType");	
+			} else if (!isNull(arguments.productType.getProductTypeName()) && len(arguments.productType.getProductTypeName())) {
+				data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.productType.getProductTypeName(), tableName="SlatwallProductType");
 			}
-			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.productTypeName, tableName="SlatwallProduct");
 		}
 		
 		arguments.productType = super.save(arguments.productType, arguments.data);
