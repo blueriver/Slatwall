@@ -112,7 +112,7 @@ Notes:
 				<h3>Checkout Example (4 Step)</h3>
 				
 				<!--- Display any errors associated with actually placing the order, and running those transactions --->
-				<sw:ErrorDisplay object="#$.slatwall.cart()#" errorName="runPlaceOrderTransaction" />
+				<sw:ErrorDisplay object="#$.slatwall.cart()#" errorName="runPlaceOrderTransaction" displayType="p" />
 			</div>
 		</div>
 		

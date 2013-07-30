@@ -65,7 +65,7 @@ Notes:
 			<!--- LABEL Display --->
 			<cfcase value="label">
 				<cfloop array="#attributes.errors#" index="error">
-					<cfoutput><label for="#attributes.for#" generated="true" class="text-error error">#error#</label></cfoutput>
+					<cfoutput><label <cfif len(attributes.for)>for="#attributes.for#"</cfif> class="text-error error">#error#</label></cfoutput>
 				</cfloop>
 			</cfcase>
 			<!--- DIV Display --->
