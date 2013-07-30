@@ -1394,6 +1394,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// If the paymentTransaction has errors, then add those errors to the orderPayment itself
 		if(paymentTransaction.hasError('runTransaction')) {
+			
 			arguments.orderPayment.addError('createTransaction', paymentTransaction.getError('runTransaction'), true);
 			
 			// If this order payment has never had and amount Authorize, Received or Credited... then we can set it as invalid
@@ -1436,18 +1437,25 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// If there was expected authorize, receive, or credit
 			if( 
-				(arguments.orderPayment.hasErrors() || (listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthorized() lt arguments.orderPayment.getAmount()))
+				arguments.orderPayment.hasErrors()
+					|| 
+				(listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthorized() lt arguments.orderPayment.getAmount())
 					||
-				(arguments.orderPayment.hasErrors() || (listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount()))
+				(listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount())
 					||
-				(arguments.orderPayment.hasErrors() || (listFindNoCase("credit", processData.transactionType) && arguments.orderPayment.getAmountCredited() lt arguments.orderPayment.getAmount()))
+				(listFindNoCase("credit", processData.transactionType) && arguments.orderPayment.getAmountCredited() lt arguments.orderPayment.getAmount())
 			) {
 				
 				// Add a generic payment processing error and make it persistable
 				arguments.orderPayment.getOrder().addError('runPlaceOrderTransaction', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
 				
+				// Add the actual message
+				if(arguments.orderPayment.hasError('createTransaction')) {
+					arguments.orderPayment.getOrder().addError('runPlaceOrderTransaction', arguments.orderPayment.getError('createTransaction'), true);	
+				}
+				
 			}
-
+			
 		}
 		
 		return arguments.orderPayment;
