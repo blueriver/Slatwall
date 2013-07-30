@@ -1043,6 +1043,32 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
+	public any function processOrder_removeOrderPayment(required any order, required struct data) {
+		// Make sure that an orderItemID was passed in
+		if(structKeyExists(arguments.data, "orderPaymentID")) {
+			
+			// Loop over all of the items in this order
+			for(var orderPayment in arguments.order.getOrderPayments())	{
+			
+				// Check to see if this item is the same ID as the one passed in to remove
+				if(orderPayment.getOrderPaymentID() == arguments.data.orderPaymentID) {
+				
+					if(orderPayment.isDeletable()) {
+						arguments.order.removeOrderPayment( orderPayment );
+						this.deleteOrderPayment( orderPayment );
+					} else {
+						orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstRemoved') );
+					}
+					
+					break;
+				}
+			}
+			
+		}
+		
+		return arguments.order;
+	}
+	
 	public any function processOrder_removePromotionCode(required any order, required struct data) {
 		
 		if(structKeyExists(arguments.data, "promotionCodeID")) {

@@ -981,10 +981,14 @@ Notes:
 								<div class="span12">
 									<h5>Payment Details <a href="?step=payment">edit</a></h5>
 									
+									<!--- Get the applied payments smart list, and filter by only payments that are active --->
+									<cfset appliedPaymentsSmartList = $.slatwall.cart().getOrderPaymentsSmartList() />
+									<cfset appliedPaymentsSmartList.addFilter('orderPaymentStatusType.systemCode', 'opstActive') />
+									
 									<cfset orderPaymentReviewIndex = 0 />
 									
 									<!--- List the payment methods applied to this order --->
-									<cfloop array="#$.slatwall.cart().getOrderPayments()#" index="orderPayment">
+									<cfloop array="#appliedPaymentsSmartList.getRecords()#" index="orderPayment">
 										
 										<cfset orderPaymentReviewIndex++ />
 										
