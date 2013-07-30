@@ -58,8 +58,13 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	}
 		
 	// @hint helper method to add an error to the error bean	
-	public void function addError( required string errorName, required string errorMessage) {
+	public void function addError( required string errorName, required any errorMessage) {
 		getHibachiErrors().addError(argumentCollection=arguments);
+	}
+	
+	// @hint helper method to add an array of errors to the error bean
+	public void function addErrors( required struct errors ) {
+		getHibachiErrors().addErrors(argumentCollection=arguments);
 	}
 	
 	// @hint helper method that returns all error messages as <p> html tags
@@ -425,6 +430,10 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 			}
 		}
 		
+		if(this.isPersistent() && this.hasErrors()) {
+			getHibachiScope().setORMHasErrors( true );
+		}
+		
 		return getHibachiErrors();
 	}
 	
@@ -481,8 +490,8 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 		// This is the null format option
 		if(isNull(arguments.value)) {
 			var propertyMeta = getPropertyMetaData( arguments.propertyName );
-			if(structKeyExists(propertyMeta, "nullRBKey")) {
-				return rbKey(propertyMeta.nullRBKey);
+			if(structKeyExists(propertyMeta, "hb_nullRBKey")) {
+				return rbKey(propertyMeta.hb_nullRBKey);
 			}
 			
 			return "";
@@ -791,7 +800,7 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 	// ========================= START: DELIGATION HELPERS ==========================================
 	
 	// @hint helper function to pass this entity along with a template to the string replace function
-	public string function stringReplace( required string templateString, boolean formatValues=false ) {
-		return getService("hibachiUtilityService").replaceStringTemplate(arguments.templateString, this, arguments.formatValues);
+	public string function stringReplace( required string templateString, boolean formatValues=false, boolean removeMissingKeys=false ) {
+		return getService("hibachiUtilityService").replaceStringTemplate(arguments.templateString, this, arguments.formatValues, arguments.removeMissingKeys);
 	}
 }	

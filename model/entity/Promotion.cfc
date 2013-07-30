@@ -65,22 +65,9 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	// Non-persistent properties
 	property name="currentFlag" type="boolean" persistent="false";
 	property name="currentPromotionPeriodFlag" type="boolean" persistent="false";
-	property name="currentPromotionCodeFlag" type="boolean" persistent="false"; 
+	property name="currentPromotionCodeFlag" type="boolean" persistent="false";
+	property name="promotionCodesDeletableFlag" type="boolean" persistent="false"; 
 	
-	// @hint this method validates that promotion codes are unique
-	public any function hasUniquePromotionCodes() {
-		var promotionCodeList = "";
-		
-		for(var promotionCode in getPromotionCodes()){
-			if(listFindNoCase(promotionCodeList, promotionCode.getPromotionCode())) {
-				return false;
-			} else {
-				promotionCodeList = listAppend(promotionCodeList, promotionCode.getPromotionCode());
-			}
-		}
-		return true;
-	}
-
 	// ============ START: Non-Persistent Property Methods =================
 
 	public boolean function getCurrentFlag() {
@@ -121,6 +108,19 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 		}
 		
 		return variables.currentPromotionCodeFlag;
+	}
+	
+	public boolean function getPromotionCodesDeletableFlag() {
+		if(!structKeyExists(variables,"promotionCodeDeletableFlag")) {
+			variables.promotionCodeDeleteableFlag = true;
+			for(var promotionCode in getPromotionCodes()) {
+				if(!promotionCode.isDeletable()) {
+					variables.promotionCodeDeleteableFlag = false;
+					break;		
+				}
+			}
+		}
+		return variables.promotionCodeDeleteableFlag;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

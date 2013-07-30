@@ -36,31 +36,12 @@
 Notes:
 
 --->
-<cfparam name="rc.redirectAction" type="string" default="admin:entity.listorderfulfillment" />
-<cfparam name="rc.processOrderReturnSmartList" type="any" />
-<cfparam name="rc.multiProcess" type="boolean" />
+<cfparam name="rc.subscriptionUsage" type="any" />
 
 <cfoutput>
-	<cf_SlatwallProcessForm>
-		<cf_HibachiEntityActionBar type="process" />
-		
-		<cf_SlatwallProcessOptionBar>
-			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
-			<cf_SlatwallProcessOption data="boxCount" fieldType="text" fieldClass="number" value=0 />
-			<cf_SlatwallProcessOption data="packingSlipNumber" fieldType="text" />
-			<cf_SlatwallProcessOption data="autoProcessReturnPaymentFlag" fieldType="yesno" value=1 />
-		</cf_SlatwallProcessOptionBar>
-		
-		<div style="width:700px;">
-			<cf_SlatwallProcessListing processSmartList="#rc.processOrderReturnSmartList#" processRecordsProperty="orderReturnItems" processHeaderString="Order: ${order.orderNumber}, Order Return - ${returnLocation.locationName}">
-				<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="sku.product.title" />
-				<cf_SlatwallProcessColumn propertyIdentifier="sku.skuCode" />
-				<cf_SlatwallProcessColumn propertyIdentifier="sku.optionsDisplay" />
-				<cf_SlatwallProcessColumn propertyIdentifier="quantity" />
-				<cf_SlatwallProcessColumn propertyIdentifier="quantityUnreceived" />
-				<cf_SlatwallProcessColumn data="receiveQuantity" fieldType="text" fieldClass="span1 number" />
-			</cf_SlatwallProcessListing>
-		</div>
-		
-	</cf_SlatwallProcessForm>
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="subscriptionUsageAutoRetryPaymentDays" settingObject="#rc.subscriptionUsage#" />
+		<cf_SlatwallSetting settingName="subscriptionUsageRenewalReminderDays" settingObject="#rc.subscriptionUsage#" />
+		<cf_SlatwallSetting settingName="subscriptionUsageRenewalReminderEmailTemplate" settingObject="#rc.subscriptionUsage#" />
+	</cf_SlatwallSettingTable>
 </cfoutput>

@@ -53,8 +53,9 @@ component displayname="Category" entityname="SlatwallCategory" table="SlatwallCa
 	// Related Object Properties (one-to-many)
 	property name="childCategories" singularname="childCategory" cfc="Category" type="array" fieldtype="one-to-many" fkcolumn="parentCategoryID" cascade="all-delete-orphan" inverse="true";
 	
-	// Related Object Properties (many-to-many)
+	// Related Object Properties (many-to-many - inverse)
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="categoryID" inversejoincolumn="productID" inverse="true";
+	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallContentCategory" fkcolumn="categoryID" inversejoincolumn="contentID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -102,13 +103,21 @@ component displayname="Category" entityname="SlatwallCategory" table="SlatwallCa
 		structDelete(variables, "parentCategory");
 	}
 	
-	// products (many-to-many)
+	// Products (many-to-many - inverse)
 	public void function addProduct(required any product) {
 	   arguments.product.addCategory(this);
 	}
 	
 	public void function removeProduct(required any product) {
 	   arguments.product.removeCategory(this);
+	}
+	
+	// Contents (many-to-many - inverse)    
+	public void function addContent(required any content) {    
+		arguments.content.addCategory( this );    
+	}    
+	public void function removeContent(required any content) {    
+		arguments.content.removeCategory( this );    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

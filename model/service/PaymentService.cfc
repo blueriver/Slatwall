@@ -49,60 +49,70 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var paymentMethodMaxAmount = {};
 		var eligiblePaymentMethodDetails = [];
 		
-		var paymentMethodSmartList = this.getPaymentMethodSmartList();
-		paymentMethodSmartList.addFilter('activeFlag', 1);
-		paymentMethodSmartList.addOrder('sortOrder|ASC');
-		if(!isNull(arguments.order.getAccount())) {
-			paymentMethodSmartList.addInFilter('paymentMethodID', arguments.order.getAccount().setting('accountEligiblePaymentMethods'));	
-		}
-		var activePaymentMethods = paymentMethodSmartList.getRecords();
-		
-		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
-			var epmList = arguments.order.getOrderItems()[i].getSku().setting("skuEligiblePaymentMethods");
-			for(var x=1; x<=listLen( epmList ); x++) {
-				var thisPaymentMethodID = listGetAt(epmList, x);
-				if(!structKeyExists(paymentMethodMaxAmount, thisPaymentMethodID)) {
-					paymentMethodMaxAmount[thisPaymentMethodID] = arguments.order.getFulfillmentChargeAfterDiscountTotal();
-				}
-				paymentMethodMaxAmount[thisPaymentMethodID] = precisionEvaluate(paymentMethodMaxAmount[thisPaymentMethodID] + precisionEvaluate(arguments.order.getOrderItems()[i].getExtendedPriceAfterDiscount() + arguments.order.getOrderItems()[i].getTaxAmount()));
+		// Verify that this account has eligiblePaymentMethods
+		if(!isNull(arguments.order.getAccount()) && len(arguments.order.getAccount().setting('accountEligiblePaymentMethods'))) {
+			
+			// Get the smartList for all the eligible payment methods for this account
+			var paymentMethodSmartList = this.getPaymentMethodSmartList();
+			paymentMethodSmartList.addFilter('activeFlag', 1);
+			paymentMethodSmartList.addOrder('sortOrder|ASC');
+			if(!isNull(arguments.order.getAccount())) {
+				paymentMethodSmartList.addInFilter('paymentMethodID', arguments.order.getAccount().setting('accountEligiblePaymentMethods'));	
 			}
-		}
-		
-		// Loop over and update the maxAmounts on these payment methods based on the skus for each
-		for(var i=1; i<=arrayLen(activePaymentMethods); i++) {
-			if( structKeyExists(paymentMethodMaxAmount, activePaymentMethods[i].getPaymentMethodID()) && paymentMethodMaxAmount[ activePaymentMethods[i].getPaymentMethodID() ] gt 0 ) {
-				
-				// Define the maximum amount
-				var maximumAmount = paymentMethodMaxAmount[ activePaymentMethods[i].getPaymentMethodID() ];
-				
-				var maxOrderPercentage = activePaymentMethods[i].setting('paymentMethodMaximumOrderTotalPercentageAmount');
-				var maxAmountViaOrderPercentage = arguments.order.getTotal() * (maxOrderPercentage / 100);
-				if(maxOrderPercentage lt 100 && maximumAmount > maxAmountViaOrderPercentage) {
-					maximumAmount = maxAmountViaOrderPercentage;
-				}
-				
-				// If this is a termPayment type, then we need to check the account on the order to verify the max that it can use.
-				if(activePaymentMethods[i].getPaymentMethodType() eq "termPayment") {
-					
-					// Make sure that we have enough credit limit on the account
-					if(!isNull(arguments.order.getAccount()) && arguments.order.getAccount().getTermAccountAvailableCredit() > 0) {
-						
-						var paymentTerm = this.getPaymentTerm(arguments.order.getAccount().setting('accountPaymentTerm'));
-						
-						if(!isNull(paymentTerm)) {
-							if(arguments.order.getAccount().getTermAccountAvailableCredit() < maximumAmount) {
-								maximumAmount = arguments.order.getAccount().getTermAccountAvailableCredit();
-							}
-							
-							arrayAppend(eligiblePaymentMethodDetails, {paymentMethod=activePaymentMethods[i], maximumAmount=maximumAmount, paymentTerm=paymentTerm});	
-						}
+			var activePaymentMethods = paymentMethodSmartList.getRecords();
+			
+			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+				var epmList = arguments.order.getOrderItems()[i].getSku().setting("skuEligiblePaymentMethods");
+				for(var x=1; x<=listLen( epmList ); x++) {
+					var thisPaymentMethodID = listGetAt(epmList, x);
+					if(!structKeyExists(paymentMethodMaxAmount, thisPaymentMethodID)) {
+						paymentMethodMaxAmount[thisPaymentMethodID] = arguments.order.getFulfillmentChargeAfterDiscountTotal();
 					}
-				} else {
-					arrayAppend(eligiblePaymentMethodDetails, {paymentMethod=activePaymentMethods[i], maximumAmount=maximumAmount});
+					paymentMethodMaxAmount[thisPaymentMethodID] = precisionEvaluate(paymentMethodMaxAmount[thisPaymentMethodID] + precisionEvaluate(arguments.order.getOrderItems()[i].getExtendedPriceAfterDiscount() + arguments.order.getOrderItems()[i].getTaxAmount()));
+				}
+			}
+			
+			// Loop over and update the maxAmounts on these payment methods based on the skus for each
+			for(var i=1; i<=arrayLen(activePaymentMethods); i++) {
+				if( structKeyExists(paymentMethodMaxAmount, activePaymentMethods[i].getPaymentMethodID()) && paymentMethodMaxAmount[ activePaymentMethods[i].getPaymentMethodID() ] gt 0 ) {
+					
+					// Define the maximum amount
+					var maximumAmount = paymentMethodMaxAmount[ activePaymentMethods[i].getPaymentMethodID() ];
+					
+					var maxOrderPercentage = activePaymentMethods[i].setting('paymentMethodMaximumOrderTotalPercentageAmount');
+					var maxAmountViaOrderPercentage = arguments.order.getTotal() * (maxOrderPercentage / 100);
+					if(maxOrderPercentage lt 100 && maximumAmount > maxAmountViaOrderPercentage) {
+						maximumAmount = maxAmountViaOrderPercentage;
+					}
+					
+					// If the maximumAmount is more than we need for this order, then just set it to the amount needed
+					if(maximumAmount > arguments.order.getOrderPaymentChargeAmountNeeded()) {
+						maximumAmount = arguments.order.getOrderPaymentChargeAmountNeeded();
+					}
+					
+					// If this is a termPayment type, then we need to check the account on the order to verify the max that it can use.
+					if(activePaymentMethods[i].getPaymentMethodType() eq "termPayment") {
+						
+						// Make sure that we have enough credit limit on the account
+						if(!isNull(arguments.order.getAccount()) && arguments.order.getAccount().getTermAccountAvailableCredit() > 0) {
+							
+							var paymentTerm = this.getPaymentTerm(arguments.order.getAccount().setting('accountPaymentTerm'));
+							
+							if(!isNull(paymentTerm)) {
+								if(arguments.order.getAccount().getTermAccountAvailableCredit() < maximumAmount) {
+									maximumAmount = arguments.order.getAccount().getTermAccountAvailableCredit();
+								}
+								
+								arrayAppend(eligiblePaymentMethodDetails, {paymentMethod=activePaymentMethods[i], maximumAmount=maximumAmount, paymentTerm=paymentTerm});	
+							}
+						}
+					} else {
+						arrayAppend(eligiblePaymentMethodDetails, {paymentMethod=activePaymentMethods[i], maximumAmount=maximumAmount});
+					}
 				}
 			}
 		}
-
+		
 		return eligiblePaymentMethodDetails;
 	}
 	
@@ -144,6 +154,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return returnList;
 	}
 	
+	public string function getAllActivePaymentTermIDList() {
+		var returnList = "";
+		var apmSL = this.getPaymentTermSmartList();
+		apmSL.addFilter('activeFlag', 1);
+		apmSL.addSelect('paymentTermID', 'paymentTermID');
+		var records = apmSL.getRecords();
+		for(var i=1; i<=arrayLen(records); i++) {
+			returnList = listAppend(returnList, records[i]['paymentTermID']);
+		}
+		return returnList;
+	}
+	
 	// =====================  END: Logical Methods ============================
 	
 	// ===================== START: DAO Passthrough ===========================
@@ -169,7 +191,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				// Add the duplicate error to the payment, if this was
 				if(isDuplicateTransaction) {
 					
-					arguments.paymentTransaction.getPayment().addError('processing', "This transaction is duplicate of an already processed transaction.", true);
+					arguments.paymentTransaction.addError('runTransaction', "This transaction is duplicate of an already processed transaction.", true);
 					
 				// Otherwise continue with processing
 				} else {
@@ -200,13 +222,17 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						requestBean.setTransactionID( arguments.paymentTransaction.getPaymentTransactionID() );
 						requestBean.setTransactionType( arguments.data.transactionType );
 						requestBean.setTransactionAmount( arguments.data.amount );
-						requestBean.setTransactionCurrency( arguments.paymentTransaction.getPayment().getCurrencyCode() );
+						if(listFindNoCase("OrderPayment,AccountPayment", arguments.paymentTransaction.getPayment().getClassName())) {
+							requestBean.setTransactionCurrency( arguments.paymentTransaction.getPayment().getCurrencyCode() );	
+						}
 						
 						// Move all of the info into the new request bean
 						if(arguments.paymentTransaction.getPayment().getClassName() eq "OrderPayment") {
 							requestBean.populatePaymentInfoWithOrderPayment( arguments.paymentTransaction.getPayment() );	
 						} else if (arguments.paymentTransaction.getPayment().getClassName() eq "AccountPayment") {
 							requestBean.populatePaymentInfoWithAccountPayment( arguments.paymentTransaction.getPayment() );
+						} else if (arguments.paymentTransaction.getPayment().getClassName() eq "AccountPaymentMethod") {
+							requestBean.populatePaymentInfoWithAccountPaymentMethod( arguments.paymentTransaction.getPayment() );
 						}
 						
 						// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
@@ -271,13 +297,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							
 							// If the response had errors then add them to the payment
 							if(response.hasErrors()) {
-								arguments.paymentTransaction.getPayment().addError('processing', response.getAllErrorsHTML(), true);
+								arguments.paymentTransaction.addError('runTransaction', response.getErrors(), true);
 							}
 							
 						} catch (any e) {
 							
 							// Populate the orderPayment with the processing error and make it persistable
-							arguments.paymentTransaction.getPayment().addError('processing', rbKey('error.unexpected.checklog'), true);
+							arguments.paymentTransaction.addError('runTransaction', rbKey('error.unexpected.checklog'), true);
 							
 							// Log the exception
 							logHibachiException(e);

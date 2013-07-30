@@ -53,11 +53,11 @@ Notes:
 					<input type="hidden" name="skuID" value="#rc.processObject.getSkuID()#" />
 					<input type="hidden" name="orderItemTypeSystemCode" value="#rc.processObject.getOrderItemTypeSystemCode()#" />
 					
-					<h4>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.itemDetails')#</h4>
+					<h5>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.itemDetails')#</h5>
 					<!--- Sku Properties --->
 					<cf_HibachiPropertyDisplay object="#rc.processObject.getSku()#" property="skuCode" edit="false">
 					<cf_HibachiPropertyDisplay object="#rc.processObject.getSku().getProduct()#" property="productName" edit="false">
-					<cf_HibachiPropertyDisplay object="#rc.processObject.getSku()#" property="optionsDisplay" edit="false">
+					<cf_HibachiPropertyDisplay object="#rc.processObject.getSku()#" property="skuDefinition" edit="false">
 					
 					<!--- Order Item Details --->
 					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="quantity" edit="#rc.edit#">
@@ -66,24 +66,31 @@ Notes:
 					<!--- Order Item Custom Attributes --->
 					<cfloop array="#rc.processObject.getAssignedOrderItemAttributeSets()#" index="attributeSet">
 						<hr />
-						<h4>#attributeSet.getAttributeSetName()#</h4>
+						<h5>#attributeSet.getAttributeSetName()#</h5>
 						<cf_SlatwallAdminAttributeSetDisplay attributeSet="#attributeSet#" edit="#rc.edit#" />
 					</cfloop>
 					
 					<!--- Order Fulfillment --->
 					<cfif rc.processObject.getOrderItemTypeSystemCode() eq "oitSale">
 						<hr />
-						<h4>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.fulfillmentDetails')#</h4>
+						<h5>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.fulfillmentDetails')#</h5>
 						<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderFulfillmentID" edit="#rc.edit#">
 						
 						<!--- New Order Fulfillment --->
-						<cf_HibachiDisplayToggle selector="select[name='orderFulfillmentID']" showValues="">
+						<cf_HibachiDisplayToggle selector="select[name='orderFulfillmentID']" showValues="" loadVisable="#!len(rc.processObject.getOrderFulfillmentID())#">
 							
 							<!--- Fulfillment Method --->
 							<cf_HibachiPropertyDisplay object="#rc.processObject#" property="fulfillmentMethodID" edit="#rc.edit#">
 							
+							<cfset loadFulfillmentMethodType = rc.processObject.getFulfillmentMethodIDOptions()[1]['fulfillmentMethodType'] />
+							<cfloop array="#rc.processObject.getFulfillmentMethodIDOptions()#" index="option">
+								<cfif option['value'] eq rc.processObject.getOrderFulfillmentID()>
+									<cfset loadFulfillmentMethodType = option['fulfillmentMethodType'] />
+								</cfif> 	
+							</cfloop>
+							
 							<!--- Shipping Fulfillment Details --->
-							<cf_HibachiDisplayToggle selector="select[name='fulfillmentMethodID']" valueAttribute="fulfillmentmethodtype" showValues="shipping">
+							<cf_HibachiDisplayToggle selector="select[name='fulfillmentMethodID']" valueAttribute="fulfillmentmethodtype" showValues="shipping" loadVisable="#loadFulfillmentMethodType eq 'shipping'#">
 								
 								<!--- Setup the primary address as the default account address --->
 								<cfset defaultValue = "" />
@@ -97,7 +104,7 @@ Notes:
 								<cf_HibachiPropertyDisplay object="#rc.processObject#" property="shippingAccountAddressID" edit="#rc.edit#" value="#defaultValue#" />
 								
 								<!--- New Address --->
-								<cf_HibachiDisplayToggle selector="select[name='shippingAccountAddressID']" showValues="new">
+								<cf_HibachiDisplayToggle selector="select[name='shippingAccountAddressID']" showValues="" loadVisable="#!len(defaultValue)#">
 									
 									<!--- Address Display --->
 									<cf_SlatwallAdminAddressDisplay address="#rc.processObject.getShippingAddress()#" fieldNamePrefix="shippingAddress." />
@@ -106,7 +113,7 @@ Notes:
 									<cf_HibachiPropertyDisplay object="#rc.processObject#" property="saveShippingAccountAddressFlag" edit="#rc.edit#" />
 									
 									<!--- Save New Address Name --->
-									<cf_HibachiDisplayToggle selector="input[name='saveShippingAccountAddressFlag']">
+									<cf_HibachiDisplayToggle selector="input[name='saveShippingAccountAddressFlag']" loadVisable="#rc.processObject.getSaveShippingAccountAddressFlag()#">
 										<cf_HibachiPropertyDisplay object="#rc.processObject#" property="saveShippingAccountAddressName" edit="#rc.edit#" />
 									</cf_HibachiDisplayToggle>
 									
@@ -118,11 +125,11 @@ Notes:
 					<cfelse>
 						<!--- Order Return --->
 						<hr />
-						<h4>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.returnDetails')#</h4>
+						<h5>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.returnDetails')#</h5>
 						<cf_HibachiPropertyDisplay object="#rc.processObject#" property="orderReturnID" edit="#rc.edit#">
 						
 						<!--- New Order Return --->
-						<cf_HibachiDisplayToggle selector="select[name='orderReturnID']" showValues="">
+						<cf_HibachiDisplayToggle selector="select[name='orderReturnID']" showValues="" loadVisable="#!len(rc.processObject.getOrderReturnID())#">
 							
 							<!--- Return Location --->
 							<cf_HibachiPropertyDisplay object="#rc.processObject#" property="returnLocationID" edit="#rc.edit#">

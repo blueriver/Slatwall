@@ -43,11 +43,11 @@ Notes:
 
 <cfoutput>
 	<div class="span6">
-		<h4>#$.slatwall.rbKey('entity.promotionreward.products')#</h4>
+		<h5>#$.slatwall.rbKey('entity.promotionreward.products')#</h5>
 		<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="products" edit="#rc.edit#" displaytype="plain" />
 	</div>
 	<div class="span6">
-		<h4>#$.slatwall.rbKey('entity.promotionreward.excludedproducts')#</h4>
+		<h5>#$.slatwall.rbKey('entity.promotionreward.excludedproducts')#</h5>
 		<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="excludedProducts" edit="#rc.edit#" displaytype="plain" />	
 	</div>
 </cfoutput>

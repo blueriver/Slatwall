@@ -41,7 +41,7 @@ component entityname="SlatwallTaskSchedule" table="SlatwallTaskSchedule" persist
 	// Persistent Properties
 	property name="taskScheduleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="startDateTime" ormtype="timestamp";
-	property name="endDateTime" ormtype="timestamp";
+	property name="endDateTime" ormtype="timestamp" hb_nullRBKey="define.forever";
 	property name="nextRunDateTime" ormtype="timestamp";
 	property name="failureEmailList" ormtype="string" ;
 	property name="successEmailList" ormtype="string" ;

@@ -48,7 +48,9 @@ Notes:
 						   recordEditModal="true"
 						   recordDeleteAction="admin:entity.deleteterm"
 						   sortProperty="sortOrder">
+						      
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="termName" />
+	
 </cf_HibachiListingDisplay>
 
 </cfoutput>

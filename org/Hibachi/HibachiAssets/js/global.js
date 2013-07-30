@@ -35,11 +35,18 @@ jQuery(document).ready(function() {
 
 function initUIElements( scopeSelector ) {
 	
+	var convertedDateFormat = convertCFMLDateFormat( hibachiConfig.dateFormat );
+	var convertedTimeFormat = convertCFMLTimeFormat( hibachiConfig.timeFormat );
+	var ampm = true;
+	if(convertedTimeFormat.slice(-2) != 'TT') {
+		ampm = false;
+	}
+	
 	// Datetime Picker
 	jQuery( scopeSelector ).find(jQuery('.datetimepicker')).datetimepicker({
-		dateFormat: convertCFMLDateFormat( hibachiConfig.dateFormat ),
-		timeFormat: convertCFMLTimeFormat( hibachiConfig.timeFormat ),
-		ampm: true,
+		dateFormat: convertedDateFormat,
+		timeFormat: convertedTimeFormat,
+		ampm: ampm,
 		onSelect: function(dateText, inst) {
 			
 			// Listing Display Updates
@@ -62,11 +69,14 @@ function initUIElements( scopeSelector ) {
 	
 	// Date Picker
 	jQuery( scopeSelector ).find(jQuery('.datepicker')).datepicker({
-		dateFormat: convertCFMLDateFormat( hibachiConfig.dateFormat )
+		dateFormat: convertedDateFormat
 	});
 	
 	// Time Picker
-	jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker({});
+	jQuery( scopeSelector ).find(jQuery('.timepicker')).timepicker({
+		timeFormat: convertedTimeFormat,
+		ampm: ampm
+	});
 	
 	// Dragable
 	jQuery( scopeSelector ).find(jQuery('.draggable')).draggable();
@@ -93,23 +103,27 @@ function initUIElements( scopeSelector ) {
 			id : jQuery(this).attr('id')
 		}
 		
+		/*
 		// Open the correct sections
-		var loadValue = jQuery( jQuery(this).data('hibachi-selector') + ':checked' ).val() || jQuery( jQuery(this).data('hibachi-selector') ).children(":selected").val();
+		var loadValue = jQuery( jQuery(this).data('hibachi-selector') + ':checked' ).val() || jQuery( jQuery(this).data('hibachi-selector') ).children(":selected").val() || '';
 		if(bindData.valueAttribute.length) {
 			var loadValue = jQuery( jQuery(this).data('hibachi-selector') ).children(":selected").data(bindData.valueAttribute);
 		}
-		if( jQuery( this ).hasClass('hide') && bindData.showValues.toString().indexOf( loadValue ) > -1 ) {
+		if( jQuery( this ).hasClass('hide') && (bindData.showValues.toString().indexOf( loadValue ) > -1 || bindData.showValues === '*' && loadValue.length) ) {
 			jQuery( this ).removeClass('hide');
 		}
+		*/
 		
 		jQuery( jQuery(this).data('hibachi-selector') ).on('change', bindData, function(e) {
-			var selectedValue = jQuery(this).val();
+			
+			var selectedValue = jQuery(this).val() || '';
 			if(bindData.valueAttribute.length) {
-				var selectedValue = jQuery(this).children(":selected").data(bindData.valueAttribute);
+				var selectedValue = jQuery(this).children(":selected").data(bindData.valueAttribute) || '';
 			}
-			if( jQuery( '#' + bindData.id ).hasClass('hide') && bindData.showValues.toString().indexOf( selectedValue ) > -1 ) {
+			
+			if( jQuery( '#' + bindData.id ).hasClass('hide') && (bindData.showValues.toString().indexOf( selectedValue ) > -1 || bindData.showValues === '*' && selectedValue.length) ) {
 				jQuery( '#' + bindData.id ).removeClass('hide');
-			} else if ( !jQuery( '#' + bindData.id ).hasClass('hide') && bindData.showValues.toString().indexOf( selectedValue ) === -1 ) {
+			} else if ( !jQuery( '#' + bindData.id ).hasClass('hide') && ((bindData.showValues !== '*' && bindData.showValues.toString().indexOf( selectedValue ) === -1) || (bindData.showValues === '*' && !selectedValue.length)) ) {
 				jQuery( '#' + bindData.id ).addClass('hide');
 			}
 		});
@@ -175,7 +189,7 @@ function initUIElements( scopeSelector ) {
 function setupEventHandlers() {
 	
 	// Hide Alerts
-	jQuery('.alert-success').delay(2000).fadeOut(500);
+	jQuery('.alert-success').delay(3000).fadeOut(500);
 	
 	// Global Search
 	jQuery('body').on('keyup', '#global-search', function(e){
@@ -193,7 +207,6 @@ function setupEventHandlers() {
 			jQuery('#search-results').animate({
 				'margin-top': '-500px'
 			}, 150);
-			jQuery('#search-results .result-bucket .nav').html('');
 		}
 	});
 	jQuery('body').on('click', '.search-close', function(e){
@@ -589,6 +602,9 @@ function setupEventHandlers() {
 				if(r.success) {
 					listingDisplayUpdate(updateTableID, {});
 				} else {
+					jQuery.each(r.messages, function(i, v){
+						jQuery('#' + updateTableID).after('<div class="alert alert-error"><a class="close" data-dismiss="alert">x</a>' + v.MESSAGE + '</div>');
+					});
 					if(("preProcessView" in r)) {
 						jQuery('#adminModal').html(r.preProcessView);
 						jQuery('#adminModal').modal();
@@ -599,6 +615,8 @@ function setupEventHandlers() {
 					            return -(jQuery('#adminModal').width() / 2);
 					        }
 						});
+					} else {
+						
 					}
 				}
 				
@@ -921,7 +939,7 @@ function listingDisplayUpdate( tableID, data, afterRowID ) {
 								
 						} else if ( jQuery(cv).hasClass('admin') ){
 							
-							newtd += '<td>' + jQuery.trim(rv[ 'admin' ]) + '</td>';
+							newtd += '<td class="admin">' + jQuery.trim(rv[ 'admin' ]) + '</td>';
 							
 						}
 						
@@ -1189,6 +1207,17 @@ function updateGlobalSearchResults() {
 		};
 		data[ hibachiConfig.action ] = 'admin:ajax.updateGlobalSearchResults';
 		
+		var buckets = {
+			product: {primaryIDProperty:'productID', listAction:'admin:entity.listproduct', detailAction:'admin:entity.detailproduct'},
+			productType: {primaryIDProperty:'productTypeID', listAction:'admin:entity.listproducttype', detailAction:'admin:entity.detailproducttype'},
+			brand: {primaryIDProperty:'brandID', listAction:'admin:entity.listbrand', detailAction:'admin:entity.detailbrand'},
+			promotion: {primaryIDProperty:'promotionID', listAction:'admin:entity.listpromotion', detailAction:'admin:entity.detailpromotion'},
+			order: {primaryIDProperty:'orderID', listAction:'admin:entity.listorder', detailAction:'admin:entity.detailorder'},
+			account: {primaryIDProperty:'accountID', listAction:'admin:entity.listaccount', detailAction:'admin:entity.detailaccount'},
+			vendorOrder: {primaryIDProperty:'vendorOrderID', listAction:'admin:entity.listvendororder', detailAction:'admin:entity.detailvendororder'},
+			vendor: {primaryIDProperty:'vendorID', listAction:'admin:entity.listvendor', detailAction:'admin:entity.detailvendor'}
+		};
+		
 		jQuery.ajax({
 			url: hibachiConfig.baseURL + '/',
 			method: 'post',
@@ -1202,27 +1231,23 @@ function updateGlobalSearchResults() {
 			},
 			success: function(result) {
 				
-				var buckets = {
-					product: {primaryIDProperty:'productID', listAction:'admin:product.listproduct', detailAction:'admin:product.detailproduct'},
-					productType: {primaryIDProperty:'productTypeID', listAction:'admin:product.listproducttype', detailAction:'admin:product.detailproducttype'},
-					brand: {primaryIDProperty:'brandID', listAction:'admin:product.listbrand', detailAction:'admin:product.detailbrand'},
-					promotion: {primaryIDProperty:'promotionID', listAction:'admin:pricing.listpromotion', detailAction:'admin:pricing.detailpromotion'},
-					order: {primaryIDProperty:'orderID', listAction:'admin:order.listorder', detailAction:'admin:order.detailorder'},
-					account: {primaryIDProperty:'accountID', listAction:'admin:account.listaccount', detailAction:'admin:account.detailaccount'},
-					vendorOrder: {primaryIDProperty:'vendorOrderID', listAction:'admin:order.listvendororder', detailAction:'admin:order.detailvendororder'},
-					vendor: {primaryIDProperty:'vendorID', listAction:'admin:vendor.listvendor', detailAction:'admin:vendor.detailvendor'}
-				};
 				for (var key in buckets) {
-					jQuery('#golbalsr-' + key).html('');
-					var records = result[key]['records'];
-				    for(var r=0; r < records.length; r++) {
-				    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachiConfig.baseURL + '/?' + hibachiConfig.action + '=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
-				    }
-				    if(result[key]['recordCount'] > 10) {
-				    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachiConfig.baseURL + '/?' + hibachiConfig.action + '=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
-				    } else if (result[key]['recordCount'] == 0) {
-				    	jQuery('#golbalsr-' + key).append('<li><em>none</em></li>');
-				    }
+					if(result.hasOwnProperty(key)) {
+						
+						jQuery('#golbalsr-' + key).html('');
+						
+						var records = result[key]['records'];
+						
+					    for(var r=0; r < records.length; r++) {
+					    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachiConfig.baseURL + '/?' + hibachiConfig.action + '=' + buckets[key]['detailAction'] + '&' + buckets[key]['primaryIDProperty'] + '=' + records[r]['value'] + '">' + records[r]['name'] + '</a></li>');
+					    }
+					    
+					    if(result[key]['recordCount'] > 10) {
+					    	jQuery('#golbalsr-' + key).append('<li><a href="' + hibachiConfig.baseURL + '/?' + hibachiConfig.action + '=' + buckets[key]['listAction'] + '&keywords=' + jQuery('#global-search').val() + '">...</a></li>');
+					    } else if (result[key]['recordCount'] == 0) {
+					    	jQuery('#golbalsr-' + key).append('<li><em>none</em></li>');
+					    }
+					}
 				}
 				
 				removeLoadingDiv( 'search-results' );

@@ -45,16 +45,17 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 	property name="currencyCode" ormtype="string" length="3";
 	property name="autoRenewFlag" ormtype="boolean" hb_formatType="yesno";
 	property name="autoPayFlag" ormtype="boolean" hb_formatType="yesno";
-	property name="nextBillDate" ormtype="timestamp";
-	property name="nextReminderEmailDate" ormtype="timestamp";
-	property name="expirationDate" ormtype="timestamp";
+	property name="nextBillDate" ormtype="timestamp" hb_formatType="date" hb_formFieldType="date";
+	property name="nextReminderEmailDate" ormtype="timestamp" hb_formatType="date" hb_formFieldType="date";
+	property name="expirationDate" ormtype="timestamp" hb_formatType="date" hb_formFieldType="date";
 	
 	// Related Object Properties (many-to-one)
-	property name="initialTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="initialTermID";
-	property name="renewalTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="renewalTermID";
-	property name="gracePeriodTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="gracePeriodTermID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="accountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="accountPaymentMethodID";
+	property name="gracePeriodTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="gracePeriodTermID";
+	property name="initialTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="initialTermID";
+	property name="renewalTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="renewalTermID";
+	property name="subscriptionTerm" cfc="SubscriptionTerm" fieldtype="many-to-one" fkcolumn="subscriptionTermID";
 	
 	// Related Object Properties (one-to-many)
 	property name="subscriptionUsageBenefits" singularname="subscriptionUsageBenefit" cfc="SubscriptionUsageBenefit" type="array" fieldtype="one-to-many" fkcolumn="subscriptionUsageID" cascade="all-delete-orphan";
@@ -75,10 +76,9 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 	
 	// Non-Persistent Properties
 	property name="currentStatus" persistent="false";
+	property name="currentStatusCode" persistent="false";
 	property name="currentStatusType" persistent="false";
 	property name="subscriptionOrderItemName" persistent="false";
-
-	
 	
 	public boolean function isActive() {
 		if(!isNull(getCurrentStatus())) {
@@ -88,17 +88,38 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 		}
 	}
 	
+	public void function setFirstReminderEmailDateBasedOnNextBillDate() {
+		// Setup the next Reminder email 
+		if( len(this.setting('subscriptionUsageRenewalReminderDays')) ) {
+			// Find the first reminder day
+			var firstReminder = listFirst(this.setting('subscriptionUsageRenewalReminderDays'));
+			// Make sure it is numeric
+			if(isNumeric(firstReminder)) {
+				// Setup teh next reminder emailDate
+				this.setNextReminderEmailDate( dateAdd("d", firstReminder, this.getNextBillDate()) );	
+			}
+		}
+	}
+	
+	public array function getUniquePreviousSubscriptionOrderPayments() {
+		return getService("subscriptionService").getUniquePreviousSubscriptionOrderPayments( getSubscriptionUsageID() );
+	}
+	
 	public void function copyOrderItemInfo(required any orderItem) {
+		
 		setRenewalPrice( arguments.orderItem.getSku().getRenewalPriceByCurrencyCode( arguments.orderItem.getCurrencyCode() ) );
 		setCurrencyCode( arguments.orderItem.getCurrencyCode() );
-		//copy all the info from subscription term
+		
+		// Copy all the info from subscription term
 		var subscriptionTerm = orderItem.getSku().getSubscriptionTerm();
-		setInitialTerm(subscriptionTerm.getInitialTerm());
-		setRenewalTerm(subscriptionTerm.getRenewalTerm());
-		setGracePeriodTerm(subscriptionTerm.getGracePeriodTerm());
-		setAllowProrateFlag(subscriptionTerm.getAllowProrateFlag());
-		setAutoRenewFlag(subscriptionTerm.getAutoRenewFlag());
-		setAutoPayFlag(subscriptionTerm.getAutoPayFlag());
+		setSubscriptionTerm( subscriptionTerm );
+		setInitialTerm( subscriptionTerm.getInitialTerm() );
+		setRenewalTerm( subscriptionTerm.getRenewalTerm() );
+		setGracePeriodTerm( subscriptionTerm.getGracePeriodTerm() );
+		setAllowProrateFlag( subscriptionTerm.getAllowProrateFlag() );
+		setAutoRenewFlag( subscriptionTerm.getAutoRenewFlag() );
+		setAutoPayFlag( subscriptionTerm.getAutoPayFlag() );
+		
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -187,13 +208,14 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 	
     public any function getAccountPaymentMethodOptions() {
 		if(!structKeyExists(variables, "accountPaymentMethodOptions")) {
-			var smartList = getService("accountService").getAccountPaymentSmartList();
-			smartList.addSelect(propertyIdentifier="accountPaymentMethodName", alias="name");
-			smartList.addSelect(propertyIdentifier="accountPaymentMethodID", alias="value");
-			smartList.addFilter(propertyIdentifier="account_accountID", value="#getAccount().getAccountID()#");
+			variables.accountPaymentMethodOptions = [];
+			var smartList = getService("accountService").getAccountPaymentMethodSmartList();
+			smartList.addFilter(propertyIdentifier="account.accountID", value=getAccount().getAccountID());
 			smartList.addOrder("accountPaymentMethodName|ASC");
-			variables.accountPaymentMethodOptions = smartList.getRecords();
-			arrayPrepend(variables.accountPaymentMethodOptions,{name=rbKey("define.select"),value=""});
+			for(var apm in smartList.getRecords()) {
+				arrayAppend(variables.accountPaymentMethodOptions,{name=apm.getSimpleRepresentation(),value=apm.getAccountPaymentMethodID()});
+			}
+			arrayPrepend(variables.accountPaymentMethodOptions,{name=rbKey("define.none"),value=""});
 		}
 		return variables.accountPaymentMethodOptions;
     }

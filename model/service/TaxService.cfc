@@ -41,8 +41,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	property name="addressService" type="any";
 
 	public void function updateOrderAmountsWithTaxes(required any order) {
-		for(var i=1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
-			var orderItem = arguments.order.getOrderItems()[i];
+		
+		for(var orderItem in arguments.order.getOrderItems()) {
 			
 			// Remove all existing tax calculations
 			for(var ta=arrayLen(orderItem.getAppliedTaxes()); ta >= 1; ta--) {
@@ -60,14 +60,16 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					var taxCategory = this.getTaxCategory(orderItem.getSku().setting('skuTaxCategory'));
 					var address = fulfillment.getAddress();
 					
-					for(var r=1; r<= arrayLen(taxCategory.getTaxCategoryRates()); r++) {
-						if(isNull(taxCategory.getTaxCategoryRates()[r].getAddressZone()) || (!isNull(address) && getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[r].getAddressZone()))) {
-							var newAppliedTax = this.newTaxApplied();
-							newAppliedTax.setAppliedType("orderItem");
-							newAppliedTax.setTaxAmount(round(orderItem.getExtendedPriceAfterDiscount() * taxCategory.getTaxCategoryRates()[r].getTaxRate()) / 100);
-							newAppliedTax.setTaxRate(taxCategory.getTaxCategoryRates()[r].getTaxRate());
-							newAppliedTax.setTaxCategoryRate(taxCategory.getTaxCategoryRates()[r]);
-							newAppliedTax.setOrderItem(orderItem);
+					if(!isNull(taxCategory)) {
+						for(var r=1; r<= arrayLen(taxCategory.getTaxCategoryRates()); r++) {
+							if(isNull(taxCategory.getTaxCategoryRates()[r].getAddressZone()) || (!isNull(address) && getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[r].getAddressZone()))) {
+								var newAppliedTax = this.newTaxApplied();
+								newAppliedTax.setAppliedType("orderItem");
+								newAppliedTax.setTaxAmount(round(orderItem.getExtendedPriceAfterDiscount() * taxCategory.getTaxCategoryRates()[r].getTaxRate()) / 100);
+								newAppliedTax.setTaxRate(taxCategory.getTaxCategoryRates()[r].getTaxRate());
+								newAppliedTax.setTaxCategoryRate(taxCategory.getTaxCategoryRates()[r]);
+								newAppliedTax.setOrderItem(orderItem);
+							}
 						}
 					}
 				}
@@ -75,13 +77,17 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			} else if (orderItem.getOrderItemType().getSystemCode() == "oitReturn") {
 				
 				if(!isNull(orderItem.getReferencedOrderItem())) {
+					
 					var originalAppliedTaxes = orderItem.getReferencedOrderItem().getAppliedTaxes();
-					for(var i=1; i<=arrayLen(originalAppliedTaxes); i++) {
+					
+					for(var originalAppliedTax in orderItem.getReferencedOrderItem().getAppliedTaxes()) {
+						
 						var newAppliedTax = this.newTaxApplied();
+						
 						newAppliedTax.setAppliedType("orderItem");
-						newAppliedTax.setTaxAmount(round(orderItem.getExtendedPriceAfterDiscount() * originalAppliedTaxes[i].getTaxRate()) / 100);
-						newAppliedTax.setTaxRate( originalAppliedTaxes[i].getTaxRate() );
-						newAppliedTax.setTaxCategoryRate( originalAppliedTaxes[i].getTaxCategoryRate() );
+						newAppliedTax.setTaxAmount( round(orderItem.getExtendedPriceAfterDiscount() * originalAppliedTax.getTaxRate()) / 100 );
+						newAppliedTax.setTaxRate( originalAppliedTax.getTaxRate() );
+						newAppliedTax.setTaxCategoryRate( originalAppliedTax.getTaxCategoryRate() );
 						newAppliedTax.setOrderItem( orderItem );
 					}
 				}

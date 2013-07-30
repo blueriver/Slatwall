@@ -49,14 +49,17 @@ Notes:
 		<cf_HibachiTab view="admin:entity/settingstabs/globaladvanced" />
 		<cf_HibachiTab view="admin:entity/settingstabs/account" />
 		<cf_HibachiTab view="admin:entity/settingstabs/brand" />
+		<cf_HibachiTab view="admin:entity/settingstabs/email" />
+		<cf_HibachiTab view="admin:entity/settingstabs/fulfillmentmethod" />
+		<cf_HibachiTab view="admin:entity/settingstabs/image" />
+		<cf_HibachiTab view="admin:entity/settingstabs/paymentmethod" />
 		<cf_HibachiTab view="admin:entity/settingstabs/producttype" />
 		<cf_HibachiTab view="admin:entity/settingstabs/product" />
-		<cf_HibachiTab view="admin:entity/settingstabs/sku" />
+		<cf_HibachiTab view="admin:entity/settingstabs/site" />
 		<cf_HibachiTab view="admin:entity/settingstabs/shippingmethod" />
 		<cf_HibachiTab view="admin:entity/settingstabs/shippingmethodrate" />
-		<cf_HibachiTab view="admin:entity/settingstabs/fulfillmentmethod" />
-		<cf_HibachiTab view="admin:entity/settingstabs/paymentmethod" />
-		<cf_HibachiTab view="admin:entity/settingstabs/email" />
-		<cf_HibachiTab view="admin:entity/settingstabs/image" />
+		<cf_HibachiTab view="admin:entity/settingstabs/sku" />
+		<cf_HibachiTab view="admin:entity/settingstabs/subscriptionusage" />
+		<cf_HibachiTab view="admin:entity/settingstabs/task" />
 	</cf_HibachiTabGroup>
 </cfoutput>

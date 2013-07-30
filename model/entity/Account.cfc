@@ -87,6 +87,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
+	property name="primaryEmailAddressNotInUseFlag" persistent="false";
 	property name="activeSubscriptionUsageBenefitsSmartList" persistent="false";
 	property name="address" persistent="false";
 	property name="adminIcon" persistent="false";
@@ -97,6 +98,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="guestAccountFlag" persistent="false" hb_formatType="yesno";
 	property name="ordersPlacedSmartList" persistent="false";
 	property name="ordersNotPlacedSmartList" persistent="false";
+	property name="passwordResetID" persistent="false";
 	property name="phoneNumber" persistent="false";
 	property name="slatwallAuthenticationExistsFlag" persistent="false";
 	property name="termAccountAvailableCredit" persistent="false" hb_formatType="currency";
@@ -108,11 +110,26 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
+	public any function getPrimaryEmailAddressesNotInUseFlag() {
+		if(!structKeyExists(variables, "primaryEmailAddressNotInUseFlag")) {
+			variables.primaryEmailAddressNotInUseFlag = true;
+			if(len(getEmailAddress())) {
+				if(getNewFlag()) {
+					variables.primaryEmailAddressNotInUseFlag = getService("accountService").getPrimaryEmailAddressNotInUseFlag( emailAddress=getEmailAddress() );	
+				} else {
+					variables.primaryEmailAddressNotInUseFlag = getService("accountService").getPrimaryEmailAddressNotInUseFlag( emailAddress=getEmailAddress(), accountID=getAccountID() );
+				}	
+			}
+		}
+		return variables.primaryEmailAddressNotInUseFlag;
+	}
+	
 	public any function getActiveSubscriptionUsageBenefitsSmartList() {
 		if(!structKeyExists(variables, "activeSubscriptionUsageBenefitsSmartList")) {
 			variables.activeSubscriptionUsageBenefitsSmartList = getService("subscriptionService").getSubscriptionUsageBenefitSmartList();
-			variables.activeSubscriptionUsageBenefitsSmartList.addRange('subscriptionUsageBenefitAccounts.endDateTime', '#now()#^');
+			variables.activeSubscriptionUsageBenefitsSmartList.addRange('subscriptionUsage.expirationDate', '#now()#^');
 			variables.activeSubscriptionUsageBenefitsSmartList.addFilter('subscriptionUsageBenefitAccounts.account.accountID', getAccountID());
+			variables.activeSubscriptionUsageBenefitsSmartList.addWhereCondition(" ( aslatwallsubscriptionusagebenefitaccount.endDateTime is null OR aslatwallsubscriptionusagebenefitaccount.endDateTime >= :now ) ", {now=now()});
 		}
 		return variables.activeSubscriptionUsageBenefitsSmartList;
 	}
@@ -176,6 +193,12 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return variables.ordersNotPlacedSmartList;	
 	}
 	
+	public string function getPasswordResetID() {
+		if(!structKeyExists(variables, "passwordResetID")) {
+			variables.passwordResetID = getService("accountService").getPasswordResetID(account=this);
+		}
+		return variables.passwordResetID;
+	}
 	
 	public string function getPhoneNumber() {
 		return getPrimaryPhoneNumber().getPhoneNumber();
@@ -460,11 +483,15 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(!isNull(variables.primaryEmailAddress)) {
 			return variables.primaryEmailAddress;
 		} else if (arrayLen(getAccountEmailAddresses())) {
-			variables.primaryEmailAddress = getAccountEmailAddresses()[1];
-			return variables.primaryEmailAddress;
-		} else {
-			return getService("accountService").newAccountEmailAddress();
+			for(var accountEmailAddress in getAccountEmailAddresses()) {
+				if(getService("accountService").getPrimaryEmailAddressNotInUseFlag( emailAddress=accountEmailAddress.getEmailAddress(), accountID=getAccountID() )) {
+					variables.primaryEmailAddress = getAccountEmailAddresses()[1];
+					return variables.primaryEmailAddress;				
+				}
+			}
 		}
+		
+		return getService("accountService").newAccountEmailAddress();
 	}
 	
 	public any function getPrimaryPhoneNumber() {

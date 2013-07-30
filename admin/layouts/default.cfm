@@ -48,16 +48,19 @@ Notes:
 		<link rel="shortcut icon" href="#request.slatwallScope.getBaseURL()#/assets/images/favicon.png" type="image/png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		
-		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/bootstrap.min.css" rel="stylesheet">
+		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/bootstrap.2.3.2.min.css" rel="stylesheet">
+		<!---<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/bootstrap.min.css" rel="stylesheet">--->
 		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/jquery-ui-1.8.16.custom.css" rel="stylesheet">
 		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/global.css" rel="stylesheet">
 		
 		<cfif arrayLen($.slatwall.getPrintQueue()) and request.context.slatAction neq "admin:print.default">
 			<script type="text/javascript">
 				var printWindow = window.open('#request.slatwallScope.getBaseURL()#?slatAction=admin:print.default', '_blank');
-				printWindow.print();
 			</script>
 		</cfif>
+		<style type="text/css">
+			.navbar .brand {margin-left:0px;}
+		</style>
 	</head>
 	<body>
 		<div class="navbar navbar-fixed-top navbar-inverse">
@@ -67,7 +70,10 @@ Notes:
 					<cfif not len(homeLink)>
 						<cfset homeLink = "/" />
 					</cfif>
-					<a href="#homeLink#" class="brand brand-two"><img src="#request.slatwallScope.getBaseURL()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
+					<a href="#homeLink#" class="brand" style="margin-left:-20px;"><img src="#request.slatwallScope.getBaseURL()#/assets/images/admin.logo.png" style="width:100px;heigh:16px;" title="Slatwall" /></a>
+					<cfloop array="#$.slatwall.getService('integrationService').getAdminNavbarHTMLArray()#" index="navbarHTML">
+						#navbarHTML#
+					</cfloop>
 					<ul class="nav">
 						<li class="divider-vertical"></li>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.products_nav')#" icon="tags icon-white" type="nav">
@@ -95,6 +101,7 @@ Notes:
 								<cf_HibachiActionCaller action="admin:entity.listorderitem" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listorderfulfillment" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listorderpayment" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listorderdelivery" type="list">
 								<li class="divider"></li>
 								<cf_HibachiActionCaller action="admin:entity.listvendororder" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listvendororderitem" type="list">
@@ -182,51 +189,86 @@ Notes:
 				</div>
 			</div>
 		</div>
+		
 		<div id="search-results" class="search-results">
 			<div class="container-fluid">
 				<div class="row-fluid">
+				
 					<div class="span3 result-bucket">
-						<h4>#$.slatwall.rbKey('entity.product_plural')#</h4>
+						<h5>#$.slatwall.rbKey('entity.product_plural')#</h5>
 						<ul class="nav" id="golbalsr-product">
+							<cfif not $.slatwall.authenticateEntity("Read", "Product")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3 result-bucket">
-						<h4>#$.slatwall.rbKey('entity.productType_plural')#</h4>
+						<h5>#$.slatwall.rbKey('entity.productType_plural')#</h5>
 						<ul class="nav" id="golbalsr-productType">
+							<cfif not $.slatwall.authenticateEntity("Read", "ProductType")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3  result-bucket">
-						<h4>#$.slatwall.rbKey('entity.brand_plural')#</h4>
+						<h5>#$.slatwall.rbKey('entity.brand_plural')#</h5>
 						<ul class="nav" id="golbalsr-brand">
+							<cfif not $.slatwall.authenticateEntity("Read", "Brand")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3 result-bucket">
-						<h4>#$.slatwall.rbKey('entity.promotion_plural')#</h4>
+						<h5>#$.slatwall.rbKey('entity.promotion_plural')#</h5>
 						<ul class="nav" id="golbalsr-promotion">
+							<cfif not $.slatwall.authenticateEntity("Read", "Promotion")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 				</div>
 				<div class="row-fluid">
+					
 					<div class="span3 result-bucket">
-						<h4>#$.slatwall.rbKey('entity.order_plural')#</h4>
+						<h5>#$.slatwall.rbKey('entity.order_plural')#</h5>
 						<ul class="nav" id="golbalsr-order">
+							<cfif not $.slatwall.authenticateEntity("Read", "Order")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3 result-bucket">
-						<h4>#$.slatwall.rbKey('entity.account_plural')#</h4>
+						<h5>#$.slatwall.rbKey('entity.account_plural')#</h5>
 						<ul class="nav" id="golbalsr-account">
+							<cfif not $.slatwall.authenticateEntity("Read", "Account")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3 result-bucket">
-						<h4>#$.slatwall.rbKey('entity.vendorOrder_plural')#</h4>
+						<h5>#$.slatwall.rbKey('entity.vendorOrder_plural')#</h5>
 						<ul class="nav" id="golbalsr-vendorOrder">
+							<cfif not $.slatwall.authenticateEntity("Read", "VendorOrder")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+				
 					<div class="span3 result-bucket">
-						<h4>#$.slatwall.rbKey('entity.vendor_plural')#</h4>
+						<h5>#$.slatwall.rbKey('entity.vendor_plural')#</h5>
 						<ul class="nav" id="golbalsr-vendor">
+							<cfif not $.slatwall.authenticateEntity("Read", "Vendor")>
+								<li><em>#$.slatwall.rbKey('define.noAccess')#</em></li>
+							</cfif>
 						</ul>
 					</div>
+					
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
@@ -235,6 +277,7 @@ Notes:
 				</div>
 			</div>
 		</div>
+		
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span12">
@@ -265,7 +308,7 @@ Notes:
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-validate-1.9.0.min.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-hashchange-1.3.min.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-typewatch-2.0.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/bootstrap.2.3.2.min.js"></script>
 		#request.slatwallScope.renderJSObject()#
 		<script type="text/javascript">
 			var hibachiConfig = $.slatwall.getConfig();

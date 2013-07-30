@@ -86,12 +86,6 @@ component extends="HibachiService" accessors="true" {
 		return arguments.storage;
 	}
 	
-	public any function updateImageFileNameForProductSkus( required any product ) {
-		for(var i=1; i<=arrayLen(arguments.product.getSkus()); i++) {
-			arguments.product.getSkus()[i].setImageFile( arguments.product.getSkus()[i].generateImageFileName() );	
-		}
-	}
-	
 	
 	// =====================  END: Logical Methods ============================
 	
@@ -109,28 +103,8 @@ component extends="HibachiService" accessors="true" {
 	
 	// ===================== START: Process Methods ===========================
 	
-	//Process: Product Context: updateSkus 
-	public any function processProduct_updateSkus(required any product, required any processObject) {
-
-		var skus = 	arguments.product.getSkus();
-		if(arrayLen(skus)){
-			for(i=1; i <= arrayLen(skus); i++){
-				// Update Price
-				if(arguments.processObject.getUpdatePriceFlag()) {
-					skus[i].setPrice(arguments.processObject.getPrice());	
-				}
-				// Update List Price
-				if(arguments.processObject.getUpdateListPriceFlag()) {
-					skus[i].setListPrice(arguments.processObject.getListPrice());	
-				}
-			}
-		}		
-	
-	}
-	
-	//Process: Product Context: addOptionGroup 
+	// Process: Product
 	public any function processProduct_addOptionGroup(required any product, required any processObject) {
-		
 		var skus = 	arguments.product.getSkus();
 		var options = getOptionService().getOptionGroup(arguments.processObject.getOptionGroup()).getOptions();
 		
@@ -140,11 +114,11 @@ component extends="HibachiService" accessors="true" {
 			}
 		}
 		
-		updateImageFileNameForProductSkus( arguments.product );		
-	
+		arguments.product = this.processProduct(arguments.product, {}, 'updateDefaultImageFileNames');
+		
+		return arguments.product;
 	}
 	
-	//Process: Product Context: addOption 
 	public any function processProduct_addOption(required any product, required any processObject) {
 		
 		var newOption = getOptionService().getOption(arguments.processObject.getOption());
@@ -169,11 +143,27 @@ component extends="HibachiService" accessors="true" {
 		
 		getSkuService().createSkus(arguments.product, newOptionsData);
 		
-		updateImageFileNameForProductSkus( arguments.product );	
-	
+		arguments.product = this.processProduct(arguments.product, {}, 'updateDefaultImageFileNames');
+		
+		return arguments.product;
 	}
 	
-	//Process: Product Context: addSubscriptionTerm 
+	public any function processProduct_addProductReview(required any product, required any processObject) {
+		// Check if the review should be automatically approved
+		if(arguments.product.setting('productAutoApproveReviewsFlag')) {
+			arguments.processObject.getNewProductReview().setActiveFlag(1);
+		} else {
+			arguments.processObject.getNewProductReview().setActiveFlag(0);
+		}
+		
+		// Check to see if there is a current user logged in, if so attach to this review
+		if(getHibachiScope().getLoggedInFlag()) {
+			arguments.processObject.getNewProductReview().setAccount( getHibachiScope().getAccount() );
+		}
+		
+		return arguments.product;
+	}
+	
 	public any function processProduct_addSubscriptionTerm(required any product, required any processObject) {
 		
 		var newSubscriptionTerm = getSubscriptionService().getSubscriptionTerm(arguments.processObject.getSubscriptionTermID());
@@ -194,8 +184,9 @@ component extends="HibachiService" accessors="true" {
 		}
 		newSku.setProduct( arguments.product );
 		
-		updateImageFileNameForProductSkus( arguments.product );
-	
+		arguments.product = this.processProduct(arguments.product, {}, 'updateDefaultImageFileNames');
+		
+		return arguments.product;
 	}
 	
 	public any function processProduct_deleteDefaultImage(required any product, required struct data) {
@@ -204,6 +195,32 @@ component extends="HibachiService" accessors="true" {
 				fileDelete(getHibachiScope().setting('globalAssetsImageFolderPath') & '/product/default/#imageFile#');	
 			}
 		}
+	}
+	
+	public any function processProduct_updateDefaultImageFileNames( required any product ) {
+		for(var sku in arguments.product.getSkus()) {
+			sku.setImageFile( sku.generateImageFileName() );
+		}
+		
+		return arguments.product;
+	}
+	
+	public any function processProduct_updateSkus(required any product, required any processObject) {
+
+		var skus = 	arguments.product.getSkus();
+		if(arrayLen(skus)){
+			for(i=1; i <= arrayLen(skus); i++){
+				// Update Price
+				if(arguments.processObject.getUpdatePriceFlag()) {
+					skus[i].setPrice(arguments.processObject.getPrice());	
+				}
+				// Update List Price
+				if(arguments.processObject.getUpdateListPriceFlag()) {
+					skus[i].setListPrice(arguments.processObject.getListPrice());	
+				}
+			}
+		}		
+	
 	}
 	
 	public any function processProduct_uploadDefaultImage(required any product, required any processObject) {
@@ -224,26 +241,12 @@ component extends="HibachiService" accessors="true" {
 			fileMove("#getHibachiTempDirectory()#/#uploadData.serverFile#", fullFilePath);
 			
 		} catch(any e) {
-			this.addError(currentProperty.name, getHibachiScope().rbKey('validate.fileUpload'));
-		}
-	}
-	
-	
-	public any function processProduct_addProductReview(required any product, required any processObject) {
-		// Check if the review should be automatically approved
-		if(arguments.product.setting('productAutoApproveReviewsFlag')) {
-			arguments.processObject.getNewProductReview().setActiveFlag(1);
-		} else {
-			arguments.processObject.getNewProductReview().setActiveFlag(0);
-		}
-		
-		// Check to see if there is a current user logged in, if so attach to this review
-		if(getHibachiScope().getLoggedInFlag()) {
-			arguments.processObject.getNewProductReview().setAccount( getHibachiScope().getAccount() );
+			processObject.addError('imageFile', getHibachiScope().rbKey('validate.fileUpload'));
 		}
 		
 		return arguments.product;
 	}
+	
 	
 	// =====================  END: Process Methods ============================
 	
@@ -263,10 +266,9 @@ component extends="HibachiService" accessors="true" {
 			// Create Skus
 			getSkuService().createSkus(arguments.product, arguments.data);
 			
+			// Generate Image Files
+			arguments.product = this.processProduct(arguments.product, {}, 'updateDefaultImageFileNames');
 		}
-		
-		// Update the Image FileName for all the skus
-		updateImageFileNameForProductSkus( arguments.product );
 		
 		// validate the product
 		arguments.product.validate( context="save" );
@@ -274,8 +276,6 @@ component extends="HibachiService" accessors="true" {
 		// If the product passed validation then call save in the DAO, otherwise set the errors flag
         if(!arguments.product.hasErrors()) {
         	arguments.product = getHibachiDAO().save(target=arguments.product);
-        } else {
-            getSlatwallScope().setORMHasErrors( true );
         }
         
         // Return the product

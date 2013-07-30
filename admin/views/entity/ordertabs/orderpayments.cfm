@@ -48,30 +48,30 @@ Notes:
 </cfsilent>
 
 <cfoutput>
-	<h4>#$.slatwall.rbKey('admin.entity.ordertabs.orderpayments.charges')#</h4>
+	<h5>#$.slatwall.rbKey('admin.entity.ordertabs.orderpayments.charges')#</h5>
 	<cf_HibachiListingDisplay smartList="#local.chargeList#" 
 			recordDetailAction="admin:entity.detailorderpayment"
 			recordEditAction="admin:entity.editorderpayment">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="dynamicAmountFlag" search="false" range="false" sort="false" filter="false" />
 		<cf_HibachiListingColumn propertyIdentifier="amount" />
 		<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
 		<cf_HibachiListingColumn propertyIdentifier="amountCredited" />
 	</cf_HibachiListingDisplay>
 	
-	<h4>#$.slatwall.rbKey('admin.entity.ordertabs.orderpayments.credits')#</h4>
+	<h5>#$.slatwall.rbKey('admin.entity.ordertabs.orderpayments.credits')#</h5>
 	<cf_HibachiListingDisplay smartList="#local.creditList#" 
 			recordDetailAction="admin:entity.detailorderpayment"
 			recordEditAction="admin:entity.editorderpayment">
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="paymentMethod.paymentMethodName" />
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="orderPaymentType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="dynamicAmountFlag" search="false" range="false" sort="false" filter="false" />
 		<cf_HibachiListingColumn propertyIdentifier="amount" />
 		<cf_HibachiListingColumn propertyIdentifier="amountReceived" />
 		<cf_HibachiListingColumn propertyIdentifier="amountCredited" />
 	</cf_HibachiListingDisplay>
 	
-	<cfif rc.order.getPaymentAmountTotal() neq rc.order.getTotal()>
-		<cf_HibachiProcessCaller action="admin:entity.preprocessorder" entity="#rc.order#" processContext="addOrderPayment" class="btn" icon="plus" modal="true" />
-	</cfif>
+	<cf_HibachiProcessCaller action="admin:entity.preprocessorder" entity="#rc.order#" processContext="addOrderPayment" class="btn" icon="plus" modal="true" />
 	
 </cfoutput>

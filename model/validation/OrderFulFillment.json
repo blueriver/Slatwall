@@ -1,7 +1,11 @@
 {
 	"conditions":{
 	    "fulfillmentTypeShipping":{
-	        "fulfillmentMethodType":{"eq":"shipping"}
+	        "fulfillmentMethodType":	{"eq":"shipping"}
+	    },
+	    "fulfillmentTypeShippingNoAccountAddress":{
+	        "fulfillmentMethodType":	{"eq":"shipping"},
+	        "accountAddress":			{"null":true}
 	    }
 	},
 	"properties":{
@@ -17,6 +21,11 @@
 			{"contexts":"edit,manualFulfillmentCharge","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"},
 			{"contexts":"fulfillItems","inList":"ostNew,ostProcessing"}
 		]
+	},
+	"populatedPropertyValidation":{
+		"shippingAddress":[
+			{"conditions":"fulfillmentTypeShippingNoAccountAddress","validate":"full"}
+	    ]
 	}
 }
 

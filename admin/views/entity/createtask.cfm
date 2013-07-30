@@ -52,7 +52,7 @@ Notes:
 				<!--- Loop over all the taskMethods and get their processObjects if one exists --->
 				<cfloop array="#rc.task.getTaskMethodOptions()#" index="tmo">
 					<cfif rc.task.hasProcessObject( tmo.value )>
-						<cf_HibachiDisplayToggle selector="select[name='taskMethod']" showValues="#tmo.value#">
+						<cf_HibachiDisplayToggle selector="select[name='taskMethod']" showValues="#tmo.value#" loadVisable="#rc.task.getValueByPropertyIdentifier( 'taskMethod' ) eq tmo.value#">
 							<cfset tmoProcessObject = rc.task.getProcessObject( tmo.value ) />
 							<cfloop array="#tmoProcessObject.getProperties()#" index="property">
 								<cfif structKeyExists(property, "sw_taskConfig") and property.sw_taskConfig>

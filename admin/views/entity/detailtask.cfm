@@ -79,6 +79,7 @@ Notes:
 		<cf_HibachiTabGroup object="#rc.task#">
 			<cf_HibachiTab property="taskschedules" />
 			<cf_HibachiTab property="taskhistories" />
+			<cf_HibachiTab view="admin:entity/tasktabs/tasksettings" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

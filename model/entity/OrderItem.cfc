@@ -77,14 +77,14 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 	// Non persistent properties
 	property name="discountAmount" persistent="false" hb_formatType="currency" hint="This is the discount amount after quantity (talk to Greg if you don't understand)" ;
 	property name="extendedPrice" persistent="false" hb_formatType="currency";
-	property name="extendedPriceAfterDiscount" persistent="false" hb_formatType="currency" ; 
+	property name="extendedPriceAfterDiscount" persistent="false" hb_formatType="currency";
+	property name="orderStatusCode" persistent="false"; 
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
 	property name="quantityReceived" persistent="false";
 	property name="quantityUnreceived" persistent="false";
-	property name="taxAmount" persistent="false" hb_formatType="currency" ;
-	property name="itemTotal" persistent="false" hb_formatType="currency" ; 
-
+	property name="taxAmount" persistent="false" hb_formatType="currency";
+	property name="itemTotal" persistent="false" hb_formatType="currency";
 
 	public numeric function getMaximumOrderQuantity() {
 		var maxQTY = 0;
@@ -106,6 +106,14 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 	
 	public boolean function hasQuantityWithinMaxOrderQuantity() {
 		return getQuantity() <= getMaximumOrderQuantity();
+	}
+	
+	public boolean function hasQuantityWithinMinOrderQuantity() {
+		return getQuantity() >= getSku().setting('skuOrderMinimumQuantity');
+	}
+	
+	public string function getOrderStatusCode(){
+		return getOrder().getStatusCode();
 	}
 	
 	public string function getStatus(){
@@ -174,7 +182,7 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 	}
 	
 	public numeric function getExtendedPrice() {
-		return precisionEvaluate(getPrice() * getQuantity());
+		return precisionEvaluate(getPrice() * val(getQuantity()));
 	}
 	
 	public numeric function getExtendedSkuPrice() {
@@ -397,6 +405,35 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 	
 	public string function getSimpleRepresentation() {
 		return getSku().getProduct().getTitle() & " - " & getSku().getSimpleRepresentation(); 
+	}
+	
+	public any function getAssignedAttributeSetSmartList(){
+		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
+			
+			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
+			
+			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
+			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astOrderItem');
+			
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "products", "left");
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "brands", "left");
+			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "skus", "left");
+			
+			var wc = "(";
+			wc &= " aslatwallattributeset.globalFlag = 1";
+			wc &= " OR aslatwallproducttype.productTypeID IN ('#replace(getSku().getProduct().getProductType().getProductTypeIDPath(),",","','","all")#')";
+			wc &= " OR aslatwallproduct.productID = '#getSku().getProduct().getProductID()#'";
+			if(!isNull(getSku().getProduct().getBrand())) {
+				wc &= " OR aslatwallbrand.brandID = '#getSku().getProduct().getBrand().getBrandID()#'";	
+			}
+			wc &= " OR aslatwallsku.skuID = '#getSku().getSkuID()#'";
+			wc &= ")";
+			
+			variables.assignedAttributeSetSmartList.addWhereCondition( wc );
+		}
+		
+		return variables.assignedAttributeSetSmartList;
 	}
 	
 	// ==================  END:  Overridden Methods ========================

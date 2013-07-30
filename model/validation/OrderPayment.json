@@ -1,5 +1,9 @@
 {
 	"conditions":{
+	    "newPaymentTypeCreditCard": {
+		    "orderPaymentID":{"eq":""},
+		    "paymentMethodType":{"eq":"creditCard"}
+		},
 	    "paymentTypeCreditCard":{
 	        "paymentMethodType":{"eq":"creditCard"}
 	    },
@@ -17,10 +21,18 @@
 		"expirationMonth":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
 		"expirationYear":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
 		"nameOnCreditCard":		[{"contexts":"save","conditions":"paymentTypeCreditCard","required":true}],
+		"creditCardNumber":		[{"contexts":"save","conditions":"newPaymentTypeCreditCard","required":true}],
+		"securityCode":			[{"contexts":"save","conditions":"newPaymentTypeCreditCard","required":true}],
 		"orderStatusCode":		[
 		    {"contexts":"createTransaction","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"},
 			{"contexts":"edit","inList":"ostNotPlaced,ostNew,ostProcessing,ostOnHold"}
 		],
 		"termPaymentAccount":	[{"contexts":"save","required":true,"conditions":"paymentTypeTermPayment"}]
+	},
+	"populatedPropertyValidation":{
+	    "billingAddress":[
+	    	{"conditions":"paymentTypeCreditCard,paymentTypeTermPayment","validate":"full"}
+	    ]
 	}
+	
 }

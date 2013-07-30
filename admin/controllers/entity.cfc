@@ -48,6 +48,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	property name="paymentService" type="any";
 	property name="permissionService" type="any";
 	property name="promotionService" type="any";
+	property name="scheduleService" type="any";
 	property name="settingService" type="any";
 	property name="skuService" type="any";
 	

@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,5 +35,12 @@
 
 Notes:
 
---->
-<cfoutput>#body#</cfoutput>
+*/
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
+
+	public void function getEntity_works() {
+		assert(!isNull(request.slatwallScope.getEntity('SlatwallCountry', 'US')));
+	}
+	
+}
+

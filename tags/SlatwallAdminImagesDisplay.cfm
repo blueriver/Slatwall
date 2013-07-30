@@ -7,9 +7,11 @@
 				<cfloop array="#attributes.object.getImages()#" index="image">
 				<li class="span3">
     				<div class="thumbnail">
-    					<a href="#image.getResizedImagePath(width=210, height=210)#" target="_blank">
-							#image.getResizedImage(width=210, height=210)#
-						</a>
+    					<div class="img-container">
+	    					<a href="#image.getResizedImagePath(width=210, height=210)#" target="_blank">
+								#image.getResizedImage(width=210, height=210)#
+							</a>
+						</div>
 						<hr />
 						<div class="small em image-caption">#image.getImagePath()#</div>
 						<cf_HibachiActionCaller action="admin:entity.detailImage" querystring="imageID=#image.getImageID()#" class="btn" iconOnly="true" icon="eye-open" />

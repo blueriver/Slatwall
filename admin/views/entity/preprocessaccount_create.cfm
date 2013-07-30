@@ -58,7 +58,7 @@ Notes:
 				
 				<!--- Authentication --->
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="createAuthenticationFlag" edit="#rc.edit#" fieldType="yesno">
-				<cf_HibachiDisplayToggle selector="input[name='createAuthenticationFlag']">
+				<cf_HibachiDisplayToggle selector="input[name='createAuthenticationFlag']" loadVisable="#rc.processObject.getCreateAuthenticationFlag()#">
 					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="password" edit="#rc.edit#">
 					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="passwordConfirm" edit="#rc.edit#">
 				</cf_HibachiDisplayToggle>
@@ -66,7 +66,7 @@ Notes:
 				<!--- Account Custom Attributes --->
 				<cfloop array="#rc.account.getAttributeSets()#" index="attributeSet">
 					<hr />
-					<h4>#attributeSet.getAttributeSetName()#</h4>
+					<h5>#attributeSet.getAttributeSetName()#</h5>
 					<cf_SlatwallAdminAttributeSetDisplay attributeSet="#attributeSet#" edit="#rc.edit#" />
 				</cfloop>
 			</cf_HibachiPropertyList>

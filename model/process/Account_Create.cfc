@@ -21,9 +21,9 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		return variables.createAuthenticationFlag;
 	}
 	
-	public boolean function getEmailAddressNotInUseFlag() {
+	public boolean function getPrimaryEmailAddressNotInUseFlag() {
 		if(!isNull(getEmailAddress())) {
-			return getService("accountService").getEmailAddressNotInUseFlag( emailAddress=getEmailAddress() );	
+			return getService("accountService").getPrimaryEmailAddressNotInUseFlag( emailAddress=getEmailAddress() );	
 		}
 		return true;
 	}

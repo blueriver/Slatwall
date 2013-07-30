@@ -41,10 +41,10 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	// Persistent Properties
 	property name="promotionCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="promotionCode" ormtype="string";
-	property name="startDateTime" ormtype="timestamp" hb_formatType="custom";
-	property name="endDateTime" ormtype="timestamp" hb_formatType="custom";
-	property name="maximumUseCount" ormtype="integer" notnull="false" hb_formatType="custom";
-	property name="maximumAccountUseCount" ormtype="integer" notnull="false" hb_formatType="custom";
+	property name="startDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
+	property name="endDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
+	property name="maximumUseCount" ormtype="integer" notnull="false" hb_nullRBKey="define.unlimited";
+	property name="maximumAccountUseCount" ormtype="integer" notnull="false" hb_nullRBKey="define.unlimited";
 
 	// Related Object Properties (many-to-one)
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
@@ -55,7 +55,7 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	property name="accounts" singularname="account" cfc="Account" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionCodeAccount" fkcolumn="promotionCodeID" inversejoincolumn="accountID";
 	
 	// Related Object Properties (many-to-many - inverse)
-	property name="orders" singularname="order" cfc="Order" type="array" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="promotionCodeID" inversejoincolumn="orderID" inverse="true";
+	property name="orders" singularname="order" cfc="Order" type="array" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="promotionCodeID" inversejoincolumn="orderID" inverse="true" lazy="extra";
 
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -149,34 +149,6 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	// ===============  END: Custom Validation Methods =====================
 	
 	// =============== START: Custom Formatting Methods ====================
-	
-	public any function getStartDateTimeFormatted() {
-		if(isNull(getStartDateTime())) {
-			return rbKey('define.any');
-		}
-		return formatValue(getStartDateTime(), "datetime");
-	}
-	
-	public any function getEndDateTimeFormatted() {
-		if(isNull(getEndDateTime())) {
-			return rbKey('define.any');
-		}
-		return formatValue(getEndDateTime(), "datetime");
-	}
-	
-	public any function getMaximumUseCountFormatted() {
-		if(isNull(getMaximumUseCount()) || !isNumeric(getMaximumUseCount()) || getMaximumUseCount() == 0) {
-			return rbKey('define.unlimited');
-		}
-		return getMaximumUseCount();
-	}
-	
-	public any function getMaximumAccountUseCountFormatted() {
-		if(isNull(getMaximumAccountUseCount()) || !isNumeric(getMaximumAccountUseCount()) || getMaximumAccountUseCount() == 0) {
-			return rbKey('define.unlimited');
-		}
-		return getMaximumAccountUseCount();
-	}
 	
 	// ===============  END: Custom Formatting Methods =====================
 	

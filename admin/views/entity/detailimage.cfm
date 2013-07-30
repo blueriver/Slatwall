@@ -68,7 +68,7 @@ Notes:
 				#rc.image.getImage()#
 			</cf_HibachiPropertyList>
 			<cf_HibachiPropertyList divclass="span2">
-				<h4>Resize Preview</h4>
+				<h5>Resize Preview</h5>
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		

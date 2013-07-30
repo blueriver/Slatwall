@@ -38,21 +38,70 @@ Notes:
 --->
 <cfcomponent extends="HibachiDAO">
 	
-	<cffunction name="getEmailAddressNotInUseFlag" returntype="boolean" access="public">
+	<cffunction name="getPrimaryEmailAddressNotInUseFlag" returntype="boolean" access="public">
 		<cfargument name="emailAddress" required="true" type="string" />
+		<cfargument name="accountID" type="string" />
 		
-		<cfreturn not arrayLen(ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.accountEmailAddresses aea WHERE aea.emailAddress=:emailAddress", {emailAddress=arguments.emailAddress})) />
+		<cfif structKeyExists(arguments, "accountID")>
+			<cfreturn not arrayLen(ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.primaryEmailAddress pea WHERE pea.emailAddress=:emailAddress AND a.accountID <> :accountID", {emailAddress=arguments.emailAddress, accountID=arguments.accountID})) />
+		</cfif>
+		<cfreturn not arrayLen(ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.primaryEmailAddress pea WHERE pea.emailAddress=:emailAddress", {emailAddress=arguments.emailAddress})) />
 	</cffunction>
 	
 	<cffunction name="getInternalAccountAuthenticationsByEmailAddress" returntype="any" access="public">
 		<cfargument name="emailAddress" required="true" type="string" />
 		
-		<cfreturn ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.accountEmailAddresses aea WHERE aa.password is not null AND aa.integration.integrationID is null AND aea.emailAddress=:emailAddress", {emailAddress=arguments.emailAddress}) />
+		<cfreturn ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa INNER JOIN FETCH aa.account a INNER JOIN a.primaryEmailAddress pea WHERE aa.password is not null AND aa.integration.integrationID is null AND pea.emailAddress=:emailAddress", {emailAddress=arguments.emailAddress}) />
 	</cffunction>
 	
 	<cffunction name="getAccountAuthenticationExists" returntype="any" access="public">
 		<cfset var aaCount = ormExecuteQuery("SELECT count(aa.accountAuthenticationID) FROM SlatwallAccountAuthentication aa") />
 		<cfreturn aaCount[1] gt 0 />
+	</cffunction>
+	
+	<cffunction name="getAccountWithAuthenticationByEmailAddress" returntype="any" access="public">
+		<cfargument name="emailAddress" required="true" type="string" />
+		
+		<cfset var accounts = ormExecuteQuery("SELECT a FROM SlatwallAccount a INNER JOIN a.primaryEmailAddress pea WHERE pea.emailAddress = :emailAddress AND EXISTS(SELECT aa.accountAuthenticationID FROM SlatwallAccountAuthentication aa WHERE aa.account.accountID = a.accountID)", {emailAddress=arguments.emailAddress}) />
+		<cfif arrayLen(accounts)>
+			<cfreturn accounts[1] />
+		</cfif>
+	</cffunction>
+	
+	<cffunction name="getPasswordResetAccountAuthentication">
+		<cfargument name="accountID" type="string" required="true" />
+		
+		<cfset var aaArray = ormExecuteQuery("SELECT aa FROM SlatwallAccountAuthentication aa LEFT JOIN aa.integration i WHERE aa.account.accountID = :accountID and aa.expirationDateTime >= :now and aa.password is null and i.integrationID is null", {accountID=arguments.accountID, now=now()}) />
+		
+		<cfif arrayLen(aaArray)>
+			<cfreturn aaArray[1] />
+		</cfif>
+	</cffunction>
+	
+	<cffunction name="removeAccountFromAuditProperties" returntype="void" access="public">
+		<cfargument name="accountID" type="string" required="true" />
+		
+		<cfset var allTables = "" />
+		<cfset var auditColumns = "" />
+		<cfset var rs = "" />
+		
+		<cfdbinfo type="Tables" name="allTables" pattern="Slatwall%" />
+		
+		<cfloop query="allTables">
+			<cfdbinfo type="Columns" table="#allTables.TABLE_NAME#" name="auditColumns" pattern="%ByAccountID" />
+			
+			<cfloop query="auditColumns">
+				<cfquery name="rs">
+					UPDATE
+						#allTables.TABLE_NAME#
+					SET
+						#auditColumns.COLUMN_NAME# = null 
+					WHERE
+						#auditColumns.COLUMN_NAME# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.accountID#" /> 
+				</cfquery>
+			</cfloop>
+		</cfloop>
+		
 	</cffunction>
 	
 	<cffunction name="removeAccountFromAllSessions" returntype="void" access="public">

@@ -47,7 +47,6 @@ Notes:
 		<cf_SlatwallSetting settingName="globalAssetsImageFolderPath" />
 		<cf_SlatwallSetting settingName="globalAssetsFileFolderPath" />
 		<cf_SlatwallSetting settingName="globalMissingImagePath" />
-		<cf_SlatwallSetting settingName="globalImageExtension" />
 		<cf_SlatwallSetting settingName="globalOrderNumberGeneration" />
 		<cf_SlatwallSetting settingName="globalURLKeyBrand" />
 		<cf_SlatwallSetting settingName="globalURLKeyProduct" />

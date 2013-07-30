@@ -67,7 +67,9 @@ component entityname="$${EntityName}" table="$${EntityName}" persistent="true" a
 	// Non-Persistent Properties
 
 
-
+	// ==================== START: Logical Methods =========================
+	
+	// ====================  END: Logical Methods ==========================
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -104,6 +106,7 @@ component entityname="$${EntityName}" table="$${EntityName}" persistent="true" a
 	// ================== START: Deprecated Methods ========================
 	
 	// ==================  END:  Deprecated Methods ========================
+	
 }]]></starttext>
 <endtext><![CDATA[]]></endtext>
 </snippet>

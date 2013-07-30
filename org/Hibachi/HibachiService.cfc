@@ -75,9 +75,6 @@
 				
 			}
 			
-			// Setup ormHasErrors because it didn't pass validation
-			getHibachiScope().setORMHasErrors( true );
-			
 			// Announce After Events for Failure
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Delete", arguments);
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#DeleteFailure", arguments);
@@ -115,9 +112,13 @@
 			
 			// if the entity still has no errors then we call call the process method
 			if(!arguments.entity.hasErrors()) {
-				this.invokeMethod("process#arguments.entity.getClassName()#_#arguments.processContext#", invokeArguments);
+				var methodName = "process#arguments.entity.getClassName()#_#arguments.processContext#";
+				arguments.entity = this.invokeMethod(methodName, invokeArguments);
+				if(isNull(arguments.entity)) {
+					throw("You have created a process method: #methodName# that does not return an entity.  All process methods should return an entity.");
+				}
 			}	
-			
+
 			// Announce the after events
 			getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Process_#arguments.processContext#", invokeArguments);
 			if(arguments.entity.hasErrors()) {
@@ -158,7 +159,6 @@
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Save", arguments);
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#SaveSuccess", arguments);
 	        } else {
-	            getHibachiScope().setORMHasErrors( true );
 	            
 	            // Announce After Events for Failure
 				getHibachiEventService().announceEvent("after#arguments.entity.getClassName()#Save", arguments);
@@ -748,7 +748,11 @@
 		
 		// @hint leverages the getEntityHasPropertyByEntityName() by traverses a propertyIdentifier first using getLastEntityNameInPropertyIdentifier()
 		public boolean function getHasPropertyByEntityNameAndPropertyIdentifier( required string entityName, required string propertyIdentifier ) {
-			return getEntityHasPropertyByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), propertyName=listLast(arguments.propertyIdentifier, "._") );
+			try {
+				return getEntityHasPropertyByEntityName( entityName=getLastEntityNameInPropertyIdentifier(arguments.entityName, arguments.propertyIdentifier), propertyName=listLast(arguments.propertyIdentifier, "._") );	
+			} catch(any e) {
+				return false;	
+			}
 		}
 		
 		// @hint traverses a propertyIdentifier to find the last entityName in the list... this is then used by the hasProperty and hasAttribute methods()
@@ -765,6 +769,10 @@
 		}
 		
 			
+		public any function getTableTopSortOrder(required string tableName, string contextIDColumn, string contextIDValue) {
+			return getHibachiDAO().getTableTopSortOrder(argumentcollection=arguments);
+		}
+	
 		public any function updateRecordSortOrder(required string recordIDColumn, required string recordID, required string tableName, required numeric newSortOrder) {
 			getHibachiDAO().updateRecordSortOrder(argumentcollection=arguments);
 		}

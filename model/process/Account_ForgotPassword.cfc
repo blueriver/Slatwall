@@ -5,5 +5,12 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Data Properties
 	property name="emailAddress";
+	property name="siteID";
 	
+	public string function getSiteID() {
+		if(!structKeyExists(variables, "siteID")) {
+			variables.siteID = getHibachiScope().getSite().getSiteID();
+		}
+		return variables.siteID;
+	}
 }

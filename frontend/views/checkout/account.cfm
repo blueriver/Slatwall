@@ -59,7 +59,7 @@ Notes:
 						<input type="hidden" name="slatAction" value="frontend:checkout.saveorderaccount" />
 						<input type="hidden" name="siteID" value="#$.event('siteID')#" />
 						<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
-						<cfif rc.edit eq "account"><h4>Edit Account Details</h4><cfelse><h4>New Customer</h4></cfif>
+						<cfif rc.edit eq "account"><h5>Edit Account Details</h5><cfelse><h5>New Customer</h5></cfif>
 						<dl>
 							<cf_SlatwallErrorDisplay object="#rc.account#" errorName="cmsError" />
 							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.firstName" property="firstName" edit="true">

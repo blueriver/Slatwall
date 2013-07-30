@@ -46,6 +46,10 @@ component entityname="SlatwallTaxCategory" table="SlatwallTaxCategory" persisten
 	// Related Object Properties (one-to-many)
 	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" type="array" fieldtype="one-to-many" fkcolumn="taxCategoryID" inverse="true" cascade="all-delete-orphan";
 	
+	// Related Object Properties (many-to-many - owner)
+	
+	// Related Object Properties (many-to-many - inverse)
+	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
@@ -55,9 +59,23 @@ component entityname="SlatwallTaxCategory" table="SlatwallTaxCategory" persisten
 	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	
+	// Non-persistent properties
+	property name="taxCategoryRatesDeletableFlag" type="boolean" persistent="false";
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public boolean function getTaxCategoryRatesDeletableFlag() {
+		if(!structKeyExists(variables,"taxCategoryRatesDeletableFlag")) {
+			variables.taxCategoryRatesDeletableFlag = true;
+			for(var taxCategoryRate in getTaxCategoryRates()) {
+				if(!taxCategoryRate.isDeletable()) {
+					variables.taxCategoryRatesDeletableFlag = false;
+					break;
+				}
+			}
+		}
+		return variables.taxCategoryRatesDeletableFlag;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

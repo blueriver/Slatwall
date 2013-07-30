@@ -60,7 +60,8 @@ Notes:
 				</cfif>
 			</cf_HibachiPropertyList>
 			<cf_HibachiPropertyList divClass="span6">
-				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit#" />
+				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="dynamicAmountFlag" edit="false" />
+				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amount" edit="#rc.edit and not rc.orderPayment.getDynamicAmountFlag()#" />
 				<hr />
 				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amountAuthorized" />
 				<cf_HibachiPropertyDisplay object="#rc.orderPayment#" property="amountReceived" />

@@ -43,6 +43,8 @@ component extends="mxunit.framework.TestCase" output="false" {
 		variables.slatwallFW1Application = createObject("component", "Slatwall.Application");
 		variables.slatwallFW1Application.bootstrap();
 		
+		variables.helper = createObject("component", "Helper");
+		
 		request.slatwallScope.getAccount().setSuperUserFlag(1);
 	}
 	

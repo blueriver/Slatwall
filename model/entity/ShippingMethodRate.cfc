@@ -45,7 +45,7 @@ component entityname="SlatwallShippingMethodRate" table="SlatwallShippingMethodR
 	property name="maximumShipmentWeight" ormtype="int";
 	property name="minimumShipmentItemPrice" ormtype="big_decimal";
 	property name="maximumShipmentItemPrice" ormtype="big_decimal";
-	property name="defaultAmount" ormtype="big_decimal" hb_formatType="custom";
+	property name="defaultAmount" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.none";
 	property name="shippingIntegrationMethod" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
@@ -214,13 +214,6 @@ component entityname="SlatwallShippingMethodRate" table="SlatwallShippingMethodR
 	// ===============  END: Custom Validation Methods =====================
 	
 	// =============== START: Custom Formatting Methods ====================
-	
-	public string function getDefaultAmountFormatted() {
-		if(isNull(getDefaultAmount())) {
-			return rbKey('define.none');
-		}
-		return formatValue(getDefaultAmount(), "currency");
-	}
 	
 	// ===============  END: Custom Formatting Methods =====================
 	

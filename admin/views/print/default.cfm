@@ -36,11 +36,26 @@
 Notes:
 
 --->
-<cfoutput>
+<html>
+<head>
+	<cfoutput><script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-1.7.1.min.js"></script></cfoutput>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			window.print();
+			setTimeout(function(){
+				onmousemove = function() {
+					close();
+				}	
+			}, 10);
+		});
+	</script>
+	
+</head>
+<body>
 <cfif arrayLen($.slatwall.getPrintQueue())>
 <cfloop from="1" to="#arrayLen($.slatwall.getPrintQueue())#" index="i">
 <div style="<cfif i gt 1>page-break-before: always;</cfif>">
-#$.slatwall.getPrintQueue()[i].getPrintContent()#
+<cfoutput>#$.slatwall.getPrintQueue()[i].getPrintContent()#</cfoutput>
 </div>
 <cfsilent>
 <cfif $.slatwall.getPrintQueue()[i].getLogPrintFlag()>
@@ -53,9 +68,5 @@ Notes:
 <cfelse>
 <p class="error">There are no documents in the queue to print</p>
 </cfif>
-</cfoutput>
-<script type="text/javascript">
-setTimeout(function(){
-	window.close();
-},500);
-</script>
+</body>
+</html>

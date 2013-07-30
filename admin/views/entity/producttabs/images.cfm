@@ -39,26 +39,8 @@ Notes:
 <cfparam name="rc.product" type="any" />
 
 <cfoutput>
-	<h4>#$.slatwall.rbKey('admin.entity.producttabs.images.defaultImages')#</h4>
-	<ul class="thumbnails">
-		<cfloop array="#rc.product.getDefaultProductImageFiles()#" index="imageFile">
-			<li class="span3">
-				<div class="thumbnail">
-					<cfset thisImagePath = "#$.slatwall.getBaseImageURL()#/product/default/#imageFile#" />
-					<a href="#$.slatwall.getResizedImagePath(imagePath=thisImagePath, width=210, height=210)#" target="_blank">
-						#$.slatwall.getResizedImage(imagePath=thisImagePath, width=210, height=210)#
-					</a>
-					<hr />
-					<div class="small em image-caption">#imageFile#</div>
-					<cf_HibachiProcessCaller entity="#rc.product#" processContext="uploadDefaultImage" action="admin:entity.preprocessproduct" queryString="imageFile=#imageFile#" class="btn" iconOnly="true" icon="upload" modal="true" />
-					<cfif fileExists(expandPath(thisImagePath))>
-						<cf_HibachiProcessCaller entity="#rc.product#" processContext="deleteDefaultImage" action="admin:entity.processproduct" queryString="imageFile=#imageFile#" class="btn" iconOnly="true" icon="trash" />
-					</cfif>
-				</div>
-				</li>
-		</cfloop>
-	</ul>
-	<hr />
-	<h4>#$.slatwall.rbKey('admin.entity.producttabs.images.alternateImages')#</h4>
-	<cf_SlatwallAdminImagesDisplay object="#rc.product#" />
+	<cf_HibachiTabGroup tabLocation="top">
+		<cf_HibachiTab view="admin:entity/producttabs/defaultimages" text="#$.slatwall.rbKey('admin.entity.producttabs.images.defaultImages')#" />
+		<cf_HibachiTab view="admin:entity/producttabs/alternateimages" text="#$.slatwall.rbKey('admin.entity.producttabs.images.alternateImages')#" />
+	</cf_HibachiTabGroup>
 </cfoutput>

@@ -87,6 +87,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="addPaymentRequirementDetails" persistent="false";
 	property name="deliveredItemsAmountTotal" persistent="false";
 	property name="discountTotal" persistent="false" hb_formatType="currency";
+	property name="dynamicChargeOrderPayment" persistent="false";
+	property name="dynamicCreditOrderPayment" persistent="false";
+	property name="dynamicChargeOrderPaymentAmount" persistent="false" hb_formatType="currency";
+	property name="dynamicCreditOrderPaymentAmount" persistent="false" hb_formatType="currency";
 	property name="eligiblePaymentMethodDetails" persistent="false";
 	property name="itemDiscountAmountTotal" persistent="false" hb_formatType="currency";
 	property name="fulfillmentDiscountAmountTotal" persistent="false" hb_formatType="currency";
@@ -94,20 +98,23 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="fulfillmentRefundTotal" persistent="false" hb_formatType="currency";
 	property name="fulfillmentChargeAfterDiscountTotal" persistent="false" hb_formatType="currency";
 	property name="orderDiscountAmountTotal" persistent="false" hb_formatType="currency";
-	property name="paymentAmountTotal" persistent="false" hb_formatType="currency";
-	property name="paymentAmountReceivedTotal" persistent="false" hb_formatType="currency";
-	property name="paymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
-	property name="referencingPaymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
-	property name="paymentMethodOptionsSmartList" persistent="false";
+	property name="orderPaymentAmountNeeded" persistent="false" hb_formatType="currency";
+	property name="orderPaymentChargeAmountNeeded" persistent="false" hb_formatType="currency";
+	property name="orderPaymentCreditAmountNeeded" persistent="false" hb_formatType="currency";
 	property name="orderPaymentRefundOptions" persistent="false";
 	property name="orderRequirementsList" persistent="false";
 	property name="orderTypeOptions" persistent="false";
+	property name="paymentAmountTotal" persistent="false" hb_formatType="currency";
+	property name="paymentAmountReceivedTotal" persistent="false" hb_formatType="currency";
+	property name="paymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
+	property name="paymentMethodOptionsSmartList" persistent="false";
 	property name="promotionCodeList" persistent="false";
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
 	property name="quantityReceived" persistent="false";
 	property name="quantityUnreceived" persistent="false";
 	property name="returnItemSmartList" persistent="false";
+	property name="referencingPaymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
 	property name="saleItemSmartList" persistent="false";
 	property name="statusCode" persistent="false";
 	property name="subTotal" persistent="false" hb_formatType="currency";
@@ -118,7 +125,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="totalQuantity" persistent="false";
 	property name="totalSaleQuantity" persistent="false";
 	property name="totalReturnQuantity" persistent="false";
-	
 	
 	public string function getStatus() {
 		return getOrderStatusType().getType();
@@ -200,16 +206,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			
 			setOrderOpenDateTime( now() );
 			setOrderOpenIPAddress( CGI.REMOTE_ADDR );
-		}
-		
-		// If the order is closed, and has no close dateTime
-		if(!isNull(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() == "ostClosed" && isNull(getOrderCloseDateTime())) {
-			setOrderCloseDateTime( now() );
 			
 			// Loop over the order payments to setAmount = getAmount so that any null payments get explicitly defined
 			for(var i = 1; i <= arrayLen(getOrderPayments()); i++) {
 				getOrderPayments()[i].setAmount( getOrderPayments()[i].getAmount() );
 			}
+		}
+		
+		// If the order is closed, and has no close dateTime
+		if(!isNull(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() == "ostClosed" && isNull(getOrderCloseDateTime())) {
+			setOrderCloseDateTime( now() );
 		}
 	}
 	
@@ -354,14 +360,97 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return getService("orderService").getOrderRequirementsList(order=this);
 	}
 	
+	public numeric function getOrderPaymentAmountNeeded() {
+		
+		var nonNullPayments = getService("orderService").getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
+		var orderPaymentAmountNeeded = precisionEvaluate( getTotal() - nonNullPayments );
+		
+		if(orderPaymentAmountNeeded gt 0 && isNull(getDynamicChargeOrderPayment())) {
+			return orderPaymentAmountNeeded;
+		} else if (orderPaymentAmountNeeded lt 0 && isNull(getDynamicCreditOrderPayment())) {
+			return orderPaymentAmountNeeded;
+		}
+		
+		return 0;
+		
+	}
+	
+	public numeric function getOrderPaymentChargeAmountNeeded() {
+		var orderPaymentAmountNeeded = getOrderPaymentAmountNeeded();
+		if(orderPaymentAmountNeeded lt 0) {
+			return 0;
+		}
+		return orderPaymentAmountNeeded;
+	}
+	
+	public numeric function getOrderPaymentCreditAmountNeeded() {
+		var orderPaymentAmountNeeded = getOrderPaymentAmountNeeded();
+		if(orderPaymentAmountNeeded gt 0) {
+			return 0;
+		}
+		return orderPaymentAmountNeeded * -1;
+	}
+	
+	public any function getDynamicChargeOrderPayment() {
+		var returnOrderPayment = javaCast("null", "");
+		for(var orderPayment in getOrderPayments()) {
+			if(orderPayment.getOrderPaymentType().getSystemCode() eq 'optCharge' && orderPayment.getDynamicAmountFlag()) {
+				if(!orderPayment.getNewFlag() || isNull(returnOrderPayment)) {
+					returnOrderPayment = orderPayment;
+				}
+			}
+		}
+		if(!isNull(returnOrderPayment)) {
+			return returnOrderPayment;
+		}
+	}
+	
+	public any function getDynamicCreditOrderPayment() {
+		var returnOrderPayment = javaCast("null", "");
+		for(var orderPayment in getOrderPayments()) {
+			if(orderPayment.getOrderPaymentType().getSystemCode() eq 'optCredit' && orderPayment.getDynamicAmountFlag()) {
+				if(!orderPayment.getNewFlag() || isNull(returnOrderPayment)) {
+					returnOrderPayment = orderPayment;
+				}
+			}
+		}
+		if(!isNull(returnOrderPayment)) {
+			return returnOrderPayment;
+		}
+	}
+	
+	public any function getDynamicChargeOrderPaymentAmount() {
+		var nonNullPayments = getService("orderService").getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
+		var orderPaymentAmountNeeded = precisionEvaluate( getTotal() - nonNullPayments );
+		
+		if(orderPaymentAmountNeeded gt 0) {
+			return orderPaymentAmountNeeded;
+		}
+		
+		return 0;
+	}
+	
+	public any function getDynamicCreditOrderPaymentAmount() {
+		var nonNullPayments = getService("orderService").getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
+		var orderPaymentAmountNeeded = precisionEvaluate( getTotal() - nonNullPayments );
+		
+		if(orderPaymentAmountNeeded lt 0) {
+			return orderPaymentAmountNeeded * -1;
+		}
+		
+		return 0;
+	}
+	
 	public numeric function getPaymentAmountTotal() {
 		var totalPayments = 0;
 		
-		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			if(getOrderPayments()[i].getOrderPaymentType().getSystemCode() == "optCharge") {
-				totalPayments = precisionEvaluate(totalPayments + getOrderPayments()[i].getAmount());
-			} else {
-				totalPayments = precisionEvaluate(totalPayments - getOrderPayments()[i].getAmount());	
+		for(var orderPayment in getOrderPayments()) {
+			if(!orderPayment.hasErrors()) {
+				if(orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
+					totalPayments = precisionEvaluate(totalPayments + orderPayment.getAmount());
+				} else {
+					totalPayments = precisionEvaluate(totalPayments - orderPayment.getAmount());	
+				}	
 			}
 		}
 		

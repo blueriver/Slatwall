@@ -106,15 +106,16 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				accessDetails.subscribedAccessFlag = true;
 				accessDetails.subscribedByContentFlag = true;
 				
-				logAccess(content=arguments.content, accountContentAccess=activeAccountBenefitsViaContentSmartList.getRecords()[1]);
+				logAccess(content=arguments.content, subscriptionUsageBenefit=activeAccountBenefitsViaContentSmartList.getRecords()[1]);
 				
 				return accessDetails;
 			}
 			
 			// If there was not acess via content, then we can check via category or parent category... but only if this content has been categorized
-			if(len(arguments.content.getAllCategoryIDPaths())) {
+			if(len(arguments.content.getCategoryIDList())) {
+				
 				var activeAccountBenefitsViaCategorySmartList = duplicate(arguments.account.getActiveSubscriptionUsageBenefitsSmartList());
-				activeAccountBenefitsViaCategorySmartList.addInFilter('categories.categoryID', arguments.content.getAllCategoryIDPaths());
+				activeAccountBenefitsViaCategorySmartList.addInFilter('categories.categoryID', arguments.content.getCategoryIDList());
 				
 				if(arrayLen(activeAccountBenefitsViaCategorySmartList.getRecords())) {
 					
@@ -122,7 +123,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					accessDetails.subscribedAccessFlag = true;
 					accessDetails.subscribedByCategoryFlag = true;
 					
-					logAccess(content=arguments.content, accountContentAccess=activeAccountBenefitsViaCategorySmartList.getRecords()[1]);
+					logAccess(content=arguments.content, subscriptionUsageBenefit=activeAccountBenefitsViaCategorySmartList.getRecords()[1]);
 					
 					return accessDetails;
 				}

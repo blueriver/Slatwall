@@ -65,7 +65,7 @@ Notes:
 <cfoutput>
 	<div class="svocheckoutfulfillmentshipping">
 		<div class="shippingAddress">
-			<h4>Shipping Address</h4>
+			<h5>Shipping Address</h5>
 			
 			<!--- If In Edit Mode, show the different Shipping Address Form Fields --->
 			<cfif params.edit>
@@ -132,7 +132,7 @@ Notes:
 		
 		<cfif arrayLen(params.orderFulfillment.getShippingMethodOptions())>
 			<div class="shippingMethod">
-				<h4>Shipping Method</h4>
+				<h5>Shipping Method</h5>
 				<cf_SlatwallShippingMethodDisplay orderFulfillmentIndex="#params.orderFulfillmentIndex#" orderFulfillmentShipping="#params.orderFulfillment#" edit="#local.edit#">
 			</div>
 		</cfif>

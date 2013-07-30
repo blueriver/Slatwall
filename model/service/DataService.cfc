@@ -62,7 +62,7 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public boolean function loadDataFromXMLDirectory(required string xmlDirectory) {
 		var dirList = directoryList(arguments.xmlDirectory);
-				
+		
 		// Because some records might depend on other records already being in the DB (fk constraints) we catch errors and re-loop over records
 		var retryCount=0;
 		var runPopulation = true;
@@ -73,7 +73,7 @@ component output="false" accessors="true" extends="HibachiService" {
 			
 			// Loop over files, read them, and send to loadData function 
 			for(var i=1; i<= arrayLen(dirList); i++) {
-				if(listLast(dirList[i],".") == "xml"){
+				if(len(dirList[i]) gt 7 && right(dirList[i],7) == "xml.cfm"){
 					var xmlRaw = FileRead(dirList[i]);
 					
 					try{
@@ -138,7 +138,18 @@ component output="false" accessors="true" extends="HibachiService" {
 					updateData[ thisColumnName ] = columnRecord;
 				}
 			}
-			getDataDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumns, updateData, insertData);
+			
+			var idKey = "";
+			for(var l=1; l<=listLen(idColumns); l++) {
+				idKey = listAppend(idKey, insertData[listGetAt(idColumns, l)].value, "~");
+			}
+			
+			var insertedData = getDataDAO().getInsertedDataFile();
+			
+			if(!listFindNoCase(insertedData, idKey)) {
+				getDataDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumns, updateData, insertData);
+				getDataDAO().updateInsertedDataFile( idKey );
+			}
 		}
 	}
 	
@@ -152,10 +163,6 @@ component output="false" accessors="true" extends="HibachiService" {
 	
 	public any function fromBundle(required any bundle, required string tableList) {
 		getDataDAO().toBundle(argumentcollection=arguments);
-	}
-	
-	public any function getTableTopSortOrder(required string tableName, string contextIDColumn, string contextIDValue) {
-		return getDataDAO().getTableTopSortOrder(argumentcollection=arguments);
 	}
 	
 	

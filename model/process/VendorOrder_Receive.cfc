@@ -6,8 +6,9 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	// Data Properties
 	property name="locationID" hb_formFieldType="select" hb_rbKey="entity.location";
 	property name="vendorOrderID";
-	property name="packingSlipNumber";
-	property name="boxCount";
+	property name="packingSlipNumber" hb_rbKey="entity.stockReceiver.packingSlipNumber";
+	property name="boxCount" hb_rbKey="entity.stockReceiver.boxCount";
+	property name="vendorOrderItems" type="array" hb_populateArray="true";
 	
 	public any function getLocationIDOptions() {
 		if(!structKeyExists(variables, "locationIDOptions")) {

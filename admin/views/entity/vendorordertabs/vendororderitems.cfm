@@ -44,6 +44,7 @@ Notes:
 		
 		<cf_HibachiListingDisplay smartlist="#rc.vendorOrder.getVendorOrderItemsSmartList()#" 
 		                           recordeditaction="admin:entity.editVendorOrderItem" 
+								   recordEditQueryString="redirectAction=admin:entity.detailVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#"
 		                           recordeditmodal="true"
 								   recorddetailaction="admin:entity.detailvendororderitem"
 								   recorddetailmodal="true"
@@ -64,7 +65,7 @@ Notes:
 		</cf_HibachiListingDisplay>
 		
 		<cfif rc.edit and listFindNoCase("vostNew", rc.vendorOrder.getVendorOrderStatusType().getSystemCode())>
-			<h4>#$.slatwall.rbKey('define.add')#</h4>
+			<h5>#$.slatwall.rbKey('define.add')#</h5>
 			<cf_HibachiListingDisplay smartList="#rc.vendorOrder.getAddVendorOrderItemSkuOptionsSmartList()#"
 									  recordProcessAction="admin:entity.processVendorOrder"
 									  recordProcessContext="addVendorOrderItem"
@@ -85,7 +86,8 @@ Notes:
 	<!--- Purchase Items --->
 	<cfif listFindNoCase("votPurchaseOrder", rc.vendorOrder.getVendorOrderType().getSystemCode())>
 		<cf_HibachiListingDisplay smartlist="#rc.vendorOrder.getVendorOrderItemsSmartList()#" 
-		                           recordeditaction="admin:entity.editVendorOrderItem" 
+		                           recordeditaction="admin:entity.editVendorOrderItem"
+								   recordEditQueryString="redirectAction=admin:entity.detailVendorOrder&vendorOrderID=#rc.vendorOrder.getVendorOrderID()#"
 		                           recordeditmodal="true"
 								   recorddetailaction="admin:entity.detailvendororderitem"
 								   recorddetailmodal="true"
@@ -106,7 +108,7 @@ Notes:
 		</cf_HibachiListingDisplay>
 		
 		<cfif rc.edit and listFindNoCase("vostNew", rc.vendorOrder.getVendorOrderStatusType().getSystemCode())>
-			<h4>#$.slatwall.rbKey('define.add')#</h4>
+			<h5>#$.slatwall.rbKey('define.add')#</h5>
 			
 			<cf_HibachiListingDisplay smartList="#rc.vendorOrder.getAddVendorOrderItemSkuOptionsSmartList()#"
 									  recordProcessAction="admin:entity.processVendorOrder"

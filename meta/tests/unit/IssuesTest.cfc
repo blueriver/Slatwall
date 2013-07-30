@@ -60,6 +60,21 @@ component extends="SlatwallUnitTestBase" {
 		ormFlush();
 	}
 	
+	public void function issue_1296() {
+		
+		var smartList = request.slatwallScope.getService("productService").getProductSmartList();
+		
+		smartList.setPageRecordsShow(1);
+		
+		var productOne = smartList.getPageRecords( true )[1];
+		
+		smartList.setCurrentPageDeclaration( 2 );
+		
+		var productTwo = smartList.getPageRecords( true )[1];
+		
+		assert(productOne.getProductID() neq productTwo.getProductID());
+	}
+	
 	public void function issue_1329() {
 		
 		var smartList = request.slatwallScope.getService("productService").getProductSmartList();
@@ -152,6 +167,13 @@ component extends="SlatwallUnitTestBase" {
 		assert(account2HasErrors);
 	}
 	
-
+	public void function issue_1604() {
+		
+		var order = request.slatwallScope.getCart();
+		
+		order = request.slatwallScope.getService('orderService').processOrder(order, {}, 'clear');
+			
+		assert(!isNull(order));
+	}
 }
 

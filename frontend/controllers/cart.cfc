@@ -72,52 +72,18 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function addItem(required struct rc) {
-		param name="rc.stockID" default="";
-		param name="rc.skuID" default="";
-		param name="rc.productID" default="";
-		param name="rc.locationID" default="";
-		param name="rc.selectedOptions" default="";
-		param name="rc.quantity" default=1;
-				
-		if(isNumeric(rc.quantity) && rc.quantity > 0) {
-			
-			var stock = getStockService().getStock(rc.stockID);
-			
-			if(!isNull(stock)) {
-				var sku = stock.getSku();
-			} else {
-				var sku = getSkuService().getSku(rc.skuID);
-				if(isNull(sku)) {
-					var product = getProductService().getProduct(rc.productID);
-					if(!isNull(product)) {
-						if(rc.selectedOptions != "") {
-							sku = product.getSkuBySelectedOptions(rc.selectedOptions);
-						} else if (arrayLen(product.getSkus()) == 1) {
-							sku = product.getSkus()[1];
-						}	
-					}
-				}
-				
-				var location = getLocationService().getLocation(rc.locationID);
-				if(!isNull(sku) && !isNull(location)) {
-					stock = getStockService().getStockBySkuAndLocation(sku=sku, location=location);
-				}	
-			}
-			
-			if(!isNull(sku)) {
-				// Persist the Current Order by setting it in the session
-				rc.$.slatwall.session().setOrder(rc.$.slatwall.cart());
-				
-				// Build up any possible product customizations
-				var customizationData = getUtilityFormService().buildFormCollections(rc);
-				
-				// Add to the cart() order the new sku with quantity and shipping id
-				if(!isNull(stock)) {
-					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, stock=stock, quantity=rc.quantity, customizationData=customizationData, data=rc);	
-				} else {
-					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, customizationData=customizationData, data=rc);
-				}
-			}
+		// Setup the frontend defaults
+		param name="rc.preProcessDisplayedFlag" default="true";
+		param name="rc.saveShippingAccountAddressFlag" default="false";
+		param name="rc.orderFulfillmentID" default="";
+		param name="rc.fulfillmentMethodID" default="";
+		
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addOrderItem');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.addOrderItem", cart.hasErrors() );
+		
+		if(!cart.hasErrors()) {
+			cart.clearProcessObject("addOrderItem");
 		}
 		
 		getFW().setView("frontend:cart.detail");
@@ -135,7 +101,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.promotionCode" default="";
 		param name="rc.promotionCodeOK" default="true";
 		
-		getOrderService().addPromotionCode(order=rc.$.slatwall.cart(), promotionCode=rc.promotionCode);
+		getOrderService().processOrder( rc.$.slatwall.cart(), rc, 'addPromotionCode');
 		
 		getFW().setView("frontend:cart.detail");
 	}

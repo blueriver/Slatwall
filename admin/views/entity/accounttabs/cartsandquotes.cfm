@@ -41,7 +41,7 @@ Notes:
 
 <cf_HibachiListingDisplay smartList="#rc.ordersNotPlacedSmartList#"
 						  recordDetailAction="admin:entity.detailorder"
-						  recordDetailQueryString="accountID=#rc.account.getAccountID()#">
+						  recordEditAction="admin:entity.editorder">
 
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
 	<cf_HibachiListingColumn propertyIdentifier="orderStatusType.type" />

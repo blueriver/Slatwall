@@ -241,6 +241,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if( !structKeyExists(variables, "optionGroups") ) {
 			variables.optionGroups = [];
 			var smartList = getService("OptionService").getOptionGroupSmartList();
+			smartList.setSelectDistinctFlag(1);
 			smartList.addFilter("options.skus.product.productID",this.getProductID());
 			smartList.addOrder("sortOrder|ASC");
 			variables.optionGroups = smartList.getRecords();
@@ -327,8 +328,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public array function getOptionsByOptionGroup(required string optionGroupID) {
 		var smartList = getService("optionService").getOptionSmartList();
-		smartList.addFilter("optionGroup_optionGroupID",arguments.optionGroupID);
-		smartList.addFilter("skus_product_productID",this.getProductID());
+		smartList.setSelectDistinctFlag(1);
+		smartList.addFilter("optionGroup.optionGroupID",arguments.optionGroupID);
+		smartList.addFilter("skus.product.productID",this.getProductID());
 		smartList.addOrder("sortOrder|ASC");
 		return smartList.getRecords();
 	}
@@ -490,10 +492,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			sl.addSelect('imageFile', 'imageFile');
 			sl.setSelectDistinctFlag( true );
 			
-			var r = sl.getRecords();
+			var records = sl.getRecords();
 			
-			for(var i=1; i<=arrayLen(r); i++) {
-				arrayAppend(variables.defaultProductImageFiles, r[i]['imageFile']);
+			for(var record in records) {
+				if(structKeyExists(record, "imageFile")) {
+					arrayAppend(variables.defaultProductImageFiles, record["imageFile"]);	
+				}
 			} 
 		}
 		return variables.defaultProductImageFiles;
@@ -544,6 +548,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public any function getPrice() {
+		if( structKeyExists(variables, "price") ) {
+			return variables.price;
+		}
 		if( structKeyExists(variables, "defaultSku") ) {
 			return getDefaultSku().getPrice();
 		}

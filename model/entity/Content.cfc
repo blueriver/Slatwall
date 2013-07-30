@@ -57,6 +57,9 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	// Related Object Properties (one-to-many)
 	property name="childContents" singularname="childContent" cfc="Content" type="array" fieldtype="one-to-many" fkcolumn="parentContentID" cascade="all-delete-orphan" inverse="true";
 	
+	// Related Object Properties (many-to-many - owner)
+	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallContentCategory" fkcolumn="contentID" inversejoincolumn="categoryID";
+	
 	// Related Object Properties (many-to-many - inverse)
 	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SlatwallSkuAccessContent" fkcolumn="contentID" inversejoincolumn="skuID" inverse="true";
 	property name="listingProducts" singularname="listingProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallProductListingPage" fkcolumn="contentID" inversejoincolumn="productID" inverse="true";
@@ -71,7 +74,7 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
-	property name="allCategoryIDPaths" persistent="false";
+	property name="categoryIDList" persistent="false";
 	
 	// Deprecated Properties
 	property name="disableProductAssignmentFlag" ormtype="boolean";			// no longer needed because the listingPageFlag is defined for all objects
@@ -82,8 +85,20 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public string function getAllCategoryIDPaths() {
-		return '';
+	public string function getCategoryIDList() {
+		if(!structKeyExists(variables, "categoryIDList")) {
+			variables.categoryIDList = "";
+			for(var category in getCategories()) {
+				for(var l=1; l<=listLen(category.getCategoryIDPath()); l++) {
+					var thisCatID = listGetAt(category.getCategoryIDPath(), l);
+					if(!listFindNoCase(variables.categoryIDList, thisCatID)) {
+						variables.categoryIDList = listAppend(variables.categoryIDList, thisCatID);
+					}
+				}
+			}	
+		}
+		
+		return variables.categoryIDList;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -132,6 +147,26 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	}    
 	public void function removeChildContent(required any childContent) {    
 		arguments.childContent.removeParentContent( this );    
+	}
+	
+	// Categories (many-to-many - owner)    
+	public void function addCategory(required any category) {    
+		if(arguments.category.isNew() or !hasCategory(arguments.category)) {    
+			arrayAppend(variables.categories, arguments.category);    
+		}    
+		if(isNew() or !arguments.category.hasContent( this )) {    
+			arrayAppend(arguments.category.getContents(), this);    
+		}    
+	}    
+	public void function removeCategory(required any category) {    
+		var thisIndex = arrayFind(variables.categories, arguments.category);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.categories, thisIndex);    
+		}    
+		var thatIndex = arrayFind(arguments.category.getContents(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.category.getContents(), thatIndex);    
+		}    
 	}
 	
 	// Skus (many-to-many - inverse)

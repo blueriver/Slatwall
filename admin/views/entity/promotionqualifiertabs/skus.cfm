@@ -41,11 +41,11 @@ Notes:
 
 <cfoutput>
 	<div class="span6">
-		<h4>#$.slatwall.rbKey('entity.promotionQualifier.skus')#</h4>
+		<h5>#$.slatwall.rbKey('entity.promotionQualifier.skus')#</h5>
 		<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="skus" edit="#rc.edit#" displayType="plain" />
 	</div>
 	<div class="span6">
-		<h4>#$.slatwall.rbKey('entity.promotionQualifier.excludedskus')#</h4>
+		<h5>#$.slatwall.rbKey('entity.promotionQualifier.excludedskus')#</h5>
 		<cf_HibachiPropertyDisplay object="#rc.promotionQualifier#" property="excludedSkus" edit="#rc.edit#" displayType="plain" />
 	</div>
 </cfoutput>

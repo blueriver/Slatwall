@@ -42,16 +42,16 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	property name="promotionQualifierID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="qualifierType" ormtype="string" hb_formatType="rbKey";
 	
-	property name="minimumOrderQuantity" ormtype="integer" hb_formatType="custom";
-	property name="maximumOrderQuantity" ormtype="integer" hb_formatType="custom";
-	property name="minimumOrderSubtotal" ormtype="big_decimal" hb_formatType="custom";
-	property name="maximumOrderSubtotal" ormtype="big_decimal" hb_formatType="custom";
-	property name="minimumItemQuantity" ormtype="integer" hb_formatType="custom";
-	property name="maximumItemQuantity" ormtype="integer" hb_formatType="custom";
-	property name="minimumItemPrice" ormtype="big_decimal" hb_formatType="custom";
-	property name="maximumItemPrice" ormtype="big_decimal" hb_formatType="custom";
-	property name="minimumFulfillmentWeight" ormtype="big_decimal" hb_formatType="custom";
-	property name="maximumFulfillmentWeight" ormtype="big_decimal" hb_formatType="custom";
+	property name="minimumOrderQuantity" ormtype="integer" hb_nullRBKey="define.0";
+	property name="maximumOrderQuantity" ormtype="integer" hb_nullRBKey="define.unlimited";
+	property name="minimumOrderSubtotal" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.0";
+	property name="maximumOrderSubtotal" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.none";
+	property name="minimumItemQuantity" ormtype="integer" hb_nullRBKey="define.0";
+	property name="maximumItemQuantity" ormtype="integer" hb_nullRBKey="define.unlimited";
+	property name="minimumItemPrice" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.0";
+	property name="maximumItemPrice" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.unlimited";
+	property name="minimumFulfillmentWeight" ormtype="big_decimal" hb_formatType="weight" hb_nullRBKey="define.0";
+	property name="maximumFulfillmentWeight" ormtype="big_decimal" hb_formatType="weight" hb_nullRBKey="define.unlimited";
 	property name="rewardMatchingType" ormtype="string" hb_formatType="rbKey" hb_formFieldType="select";
 	
 	// Related Entities (many-to-one)
@@ -87,6 +87,10 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 
 	// Non-persistent entities
 	property name="qualifierApplicationTypeOptions" type="array" persistent="false";
+	
+	public string function getSimpleRepresentation() {
+		return "#rbKey('entity.promotionQualifier')# - #getFormattedValue('qualifierType')#";
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -329,76 +333,6 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	// ===============  END: Custom Validation Methods =====================
 	
 	// =============== START: Custom Formatting Methods ====================
-	
-	public any function getMinimumOrderQuantityFormatted() {
-		if(isNull(getMinimumOrderQuantity()) || !isNumeric(getMinimumOrderQuantity()) || getMinimumOrderQuantity() == 0) {
-			return 0;
-		}
-		return getMinimumOrderQuantity();
-	}
-	
-	public any function getMaximumOrderQuantityFormatted() {
-		if(isNull(getMaximumOrderQuantity()) || !isNumeric(getMaximumOrderQuantity()) || getMaximumOrderQuantity() == 0) {
-			return rbKey('define.unlimited');
-		}
-		return getMaximumOrderQuantity();
-	}
-	
-	public any function getMinimumOrderSubtotalFormatted() {
-		if(isNull(getMinimumOrderSubtotal()) || !isNumeric(getMinimumOrderSubtotal()) || getMinimumOrderSubtotal() == 0) {
-			return formatValue(0, "currency");
-		}
-		return formatValue(getMinimumOrderSubtotal(), "currency");
-	}
-	
-	public any function getMaximumOrderSubtotalFormatted() {
-		if(isNull(getMaximumOrderSubtotal()) || !isNumeric(getMaximumOrderSubtotal()) || getMaximumOrderSubtotal() == 0) {
-			return rbKey('define.unlimited');
-		}
-		return formatValue(getMaximumOrderSubtotal(), "currency");
-	}
-
-	public any function getMinimumItemQuantityFormatted() {
-		if(isNull(getMinimumItemQuantity()) || !isNumeric(getMinimumItemQuantity()) || getMinimumItemQuantity() == 0) {
-			return 0;
-		}
-		return getMinimumItemQuantity();
-	}
-	
-	public any function getMaximumItemQuantityFormatted() {
-		if(isNull(getMaximumItemQuantity()) || !isNumeric(getMaximumItemQuantity()) || getMaximumItemQuantity() == 0) {
-			return rbKey('define.unlimited');
-		}
-		return getMaximumItemQuantity();
-	}
-
-	public any function getMinimumItemPriceFormatted() {
-		if(isNull(getMinimumItemPrice()) || !isNumeric(getMinimumItemPrice()) || getMinimumItemPrice() == 0) {
-			return formatValue(0, "currency");
-		}
-		return formatValue(getMinimumItemPrice(), "currency");
-	}
-	
-	public any function getMaximumItemPriceFormatted() {
-		if(isNull(getMaximumItemPrice()) || !isNumeric(getMaximumItemPrice()) || getMaximumItemPrice() == 0) {
-			return rbKey('define.unlimited');
-		}
-		return formatValue(getMaximumItemPrice(), "currency");
-	}
-	
-	public any function getMinimumFulfillmentWeightFormatted() {
-		if(isNull(getMinimumFulfillmentWeight()) || !isNumeric(getMinimumFulfillmentWeight()) || getMinimumFulfillmentWeight() == 0) {
-			return formatValue(0, "weight");
-		}
-		return formatValue(getMinimumFulfillmentWeight(), "weight");
-	}
-	
-	public any function getMaximumFulfillmentWeightFormatted() {
-		if(isNull(getMaximumFulfillmentWeight()) || !isNumeric(getMaximumFulfillmentWeight()) || getMaximumFulfillmentWeight() == 0) {
-			return rbKey('define.unlimited');
-		}
-		return formatValue(getMaximumFulfillmentWeight(), "weight");
-	}
 	
 	// ===============  END: Custom Formatting Methods =====================
 	

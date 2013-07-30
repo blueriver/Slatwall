@@ -62,7 +62,7 @@ Notes:
 			<!--- Place Order --->
 			<cfif rc.order.getOrderStatusType().getSystemCode() eq "ostNotPlaced">
 				<cfif len(rc.order.getOrderRequirementsList())>
-					<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="placeOrder" type="list" modal="true" />
+					<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="placeOrder" queryString="sRedirectAction=admin:entity.detailorder" type="list" modal="true" />
 				<cfelse>
 					<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="placeOrder" type="list" />
 				</cfif>
@@ -72,10 +72,10 @@ Notes:
 			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="placeOnHold" type="list" modal="true" />
 			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="takeOffHold" type="list" modal="true" />
 			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="cancelOrder" type="list" modal="true" />
-			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="closeOrder" type="list" />
+			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="updateStatus" type="list" />
 			
 			<!--- Create Return --->
-			<cf_HibachiProcessCaller action="admin:entity.processOrder" entity="#rc.order#" processContext="createReturn" queryString="orderID=#rc.order.getOrderID()#" type="list" />
+			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="createReturn" type="list" modal="true" />
 			
 			<li class="divider"></li>
 			
@@ -84,8 +84,6 @@ Notes:
 			<cf_HibachiProcessCaller action="admin:entity.preProcessOrder" entity="#rc.order#" processContext="addPromotionCode" type="list" modal="true" />
 			<cf_HibachiActionCaller action="admin:entity.createcomment" querystring="orderID=#rc.order.getOrderID()#&redirectAction=#request.context.slatAction#" modal="true" type="list" />
 		</cf_HibachiEntityActionBar>
-		
-		
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList divclass="span6">
@@ -177,21 +175,21 @@ Notes:
 				<cf_HibachiTab view="admin:entity/ordertabs/referencingOrders" count="#rc.order.getReferencingOrdersCount()#" />
 			</cfif>
 			
+			<!--- Account Details --->
+			<cfif not isNull(rc.order.getAccount()) and not rc.order.getAccount().getNewFlag()>
+				<cf_HibachiTab view="admin:entity/ordertabs/accountdetails" />
+			</cfif>
+			
 			<!--- Custom Attributes --->
 			<cfloop array="#rc.order.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
 				<cf_SlatwallAdminTabCustomAttributes object="#rc.order#" attributeSet="#attributeSet#" />
 			</cfloop>
 			
-			<!--- Account Details --->
-			<cfif !isNull(rc.order.getAccount())>
-				<cf_HibachiTab view="admin:entity/ordertabs/accountdetails" count="#rc.order.getPromotionCodesCount()#" />
-			</cfif>
-			
 			<!--- Comments --->
 			<cf_SlatwallAdminTabComments object="#rc.order#" />
 			
 		</cf_HibachiTabGroup>
-		
+
 	</cf_HibachiEntityDetailForm>
 
 </cfoutput>

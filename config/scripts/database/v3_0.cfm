@@ -239,6 +239,32 @@ Notes:
 	</cfcatch>
 </cftry>
 
+<!--- Remove old email templates --->
+<cftry>
+	<cfquery name="local.updateTemplate">
+		UPDATE
+			SlatwallEmailTemplate
+		SET
+			emailTemplateObject = 'Order',
+			emailTemplateFile = 'confirmation.cfm'
+		WHERE
+			emailTemplateID = 'dbb327e506090fde08cc4855fa14448d'
+	</cfquery>
+	<cfquery name="local.updateTemplate">
+		UPDATE
+			SlatwallEmailTemplate
+		SET
+			emailTemplateObject = 'OrderDelivery',
+			emailTemplateFile = 'confirmation.cfm'
+		WHERE
+			emailTemplateID = 'dbb327e694534908c60ea354766bf0a8'
+	</cfquery>
+	<cfcatch>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Deleting old emails and email templates">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
 <cfif local.scriptHasErrors>
 	<cflog file="Slatwall" text="General Log - Part of Script v3_0 had errors when running">
 	<cfthrow detail="Part of Script v3_0 had errors when running">

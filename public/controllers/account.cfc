@@ -70,6 +70,29 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.$.slatwall.addActionResult( "public:account.forgotPassword", account.hasErrors() );
 	}
 	
+	// Reset Password
+	public void function resetPassword( required struct rc ) {
+		param name="rc.accountID" default="";
+		
+		var account = getAccountService().getAccount( rc.accountID );
+		
+		if(!isNull(account)) {
+			var account = getAccountService().processAccount(account, rc, "resetPassword");
+			
+			arguments.rc.$.slatwall.addActionResult( "public:account.resetPassword", account.hasErrors() );
+				
+			// As long as there were no errors resetting the password, then we can set the email address in the form scope so that a chained login action will work
+			if(!account.hasErrors() && !structKeyExists(form, "emailAddress") && !structKeyExists(url, "emailAddress")) {
+				form.emailAddress = account.getEmailAddress();
+			}
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:account.resetPassword", true );
+		}
+		
+		// Populate the current account with this processObject so that any errors, ect are there.
+		arguments.rc.$.slatwall.account().setProcessObject( account.getProcessObject( "resetPassword" ) );
+	}
+	
 	// Change Password
 	public void function changePassword( required struct rc ) {
 		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'changePassword');

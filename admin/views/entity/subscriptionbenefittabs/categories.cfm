@@ -39,13 +39,33 @@ Notes:
 <cfparam name="rc.subscriptionBenefit" type="any">
 <cfparam name="rc.edit" type="boolean">
 
+<cfset selectedCategories = rc.subscriptionBenefit.getCategories() />
+<cfset selectedCategoryIDs = "" />
+<cfloop array="#selectedCategories#" index="i">
+	<cfset selectedCategoryIDs = listAppend(selectedCategoryIDs, i.getCategoryID()) />
+</cfloop>
+
+<cfset selectedExcludedCategories = rc.subscriptionBenefit.getExcludedCategories() />
+<cfset selectedExcludedCategoryIDs = "" />
+
+<cfloop array="#selectedExcludedCategories#" index="i">
+	<cfset selectedExcludedCategoryIDs = listAppend(selectedExcludedCategoryIDs, i.getCategoryID()) />
+</cfloop>
+
 <cfoutput>
 	<div class="span6">
-		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.categories')#</h4>
-		<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="categories" edit="#rc.edit#" displaytype="plain" />
+		<h5>#$.slatwall.rbKey('entity.subscriptionBenefit.categories')#</h5>
+		<cf_HibachiListingDisplay smartList="#rc.subscriptionBenefit.getCategoriesOptionsSmartList()#" multiselectFieldName="categories" multiselectValues="#selectedCategoryIDs#" edit="#rc.edit#">
+			<cf_HibachiListingColumn propertyIdentifier="categoryName" tdclass="primary" />
+			<cf_HibachiListingColumn propertyIdentifier="site.siteName" />
+		</cf_HibachiListingDisplay>
 	</div>
+	
 	<div class="span6">
-		<h4>#$.slatwall.rbKey('entity.subscriptionBenefit.excludedcategories')#</h4>
-		<cf_HibachiPropertyDisplay object="#rc.subscriptionBenefit#" property="excludedcategories" edit="#rc.edit#" displaytype="plain" />	
+		<h5>#$.slatwall.rbKey('entity.subscriptionBenefit.excludedcategories')#</h5>
+		<cf_HibachiListingDisplay smartList="#rc.subscriptionBenefit.getExcludedCategoriesOptionsSmartList()#" multiselectFieldName="excludedCategories" multiselectValues="#selectedExcludedCategoryIDs#" edit="#rc.edit#">
+			<cf_HibachiListingColumn propertyIdentifier="categoryName" tdclass="primary" />
+			<cf_HibachiListingColumn propertyIdentifier="site.siteName" />
+		</cf_HibachiListingDisplay>	
 	</div>
 </cfoutput>

@@ -64,7 +64,7 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 				if(structKeyExists(arguments.data, attributes[at].getAttributeCode())) {
 					
 					// Get the attribute value object, and update it
-					var av = getAttributeValue( attributes[at].getAttributeCode, true);
+					var av = getAttributeValue( attributes[at].getAttributeCode(), true);
 					av.setAttributeValue( data[ attributes[at].getAttributeCode() ]);
 					av.setAttribute( attributes[at] );
 					av.invokeMethod("set#attributeType#", {1=this});
@@ -174,6 +174,7 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 	public any function getAssignedAttributeSetSmartList(){
 		if(!structKeyExists(variables, "assignedAttributeSetSmartList")) {
 			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
+			variables.assignedAttributeSetSmartList.setSelectDistinctFlag( true );
 			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "attributes", "INNER", true);
 			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
 			variables.assignedAttributeSetSmartList.addFilter('globalFlag', 1);

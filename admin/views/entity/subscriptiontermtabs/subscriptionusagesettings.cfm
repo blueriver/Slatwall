@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -36,30 +36,12 @@
 Notes:
 
 --->
-
-<cfparam name="rc.redirectAction" type="string" default="admin:entity.listsubscriptionusage" />
-<cfparam name="rc.processSubscriptionUsageSmartList" type="any" />
-<cfparam name="rc.multiProcess" type="boolean" />
-<cfset rc.processContextOptions = [
-	{name="#rc.$.slatwall.rbkey('define.select')#", value=""},
-	{name="#rc.$.slatwall.rbkey('admin.account.processsubscriptionusage.processOption.renewSubscription')#", value="manualRenew"},
-	{name="#rc.$.slatwall.rbkey('admin.account.processsubscriptionusage.processOption.cancelSubscription')#", value="cancel"},
-	{name="#rc.$.slatwall.rbkey('admin.account.processsubscriptionusage.processOption.updateSubscription')#", value="update"}
-] />
+<cfparam name="rc.subscriptionTerm" type="any" />
 
 <cfoutput>
-	<cf_SlatwallProcessForm>
-		
-		<cf_HibachiEntityActionBar type="process" />
-		
-		<cf_HibachiFieldDisplay fieldName="processcontext" title="#rc.$.slatwall.rbkey('admin.account.processsubscriptionusage.processContext')#" fieldType="select" valueOptions="#rc.processContextOptions#" value="#rc.processcontext#" edit="true" />
-		
-		<cf_SlatwallProcessListing processSmartList="#rc.processSubscriptionUsageSmartList#">
-			<cf_SlatwallProcessColumn propertyIdentifier="subscriptionOrderItemName" />
-			<cf_SlatwallProcessColumn propertyIdentifier="renewalPrice" />
-			<cf_SlatwallProcessColumn propertyIdentifier="nextBillDate" />
-			<cf_SlatwallProcessColumn propertyIdentifier="expirationDate" />
-		</cf_SlatwallProcessListing>
-		
-	</cf_SlatwallProcessForm>
+	<cf_SlatwallSettingTable>
+		<cf_SlatwallSetting settingName="subscriptionUsageAutoRetryPaymentDays" settingObject="#rc.subscriptionTerm#" />
+		<cf_SlatwallSetting settingName="subscriptionUsageRenewalReminderDays" settingObject="#rc.subscriptionTerm#" />
+		<cf_SlatwallSetting settingName="subscriptionUsageRenewalReminderEmailTemplate" settingObject="#rc.subscriptionTerm#" />
+	</cf_SlatwallSettingTable>
 </cfoutput>

@@ -43,7 +43,11 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.orderItem#" edit="#rc.edit#" >
-		<cf_HibachiEntityActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#" backaction="admin:entity.detailorder" backquerystring="orderID=#rc.order.getOrderID()#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.orderItem#" edit="#rc.edit#"
+								   backaction="admin:entity.detailorder"
+								   backquerystring="orderID=#rc.order.getOrderID()#"
+								   deleteQueryString="redirectAction=admin:entity.detailorder&orderID=#rc.order.getOrderID()#">
+								      
 			<cf_HibachiActionCaller action="admin:entity.createcomment" querystring="orderID=#rc.orderItem.getOrderItemID()#&redirectAction=#request.context.slatAction#" modal="true" type="list" />
 		</cf_HibachiEntityActionBar>
 		<cfif rc.edit>
@@ -100,7 +104,7 @@ Notes:
 		</cf_HibachiPropertyRow>
 		
 		<!--- Tabs --->
-		<cf_HibachiTabGroup object="#rc.orderItem#" allowComments="true" allowCustomAttributes="true">
+		<cf_HibachiTabGroup object="#rc.orderItem#">
 			<cf_HibachiTab view="admin:entity/orderitemtabs/taxes" />
 			<cf_HibachiTab view="admin:entity/orderitemtabs/promotions" />
 			

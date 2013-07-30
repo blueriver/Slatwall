@@ -46,39 +46,68 @@ Notes:
 	<cffunction name="sendEmail" returntype="void" access="public">
 		<cfargument name="email" type="any" required="true" />
 		
-		<!--- Send the actual E-mail --->
-		<cfmail to="#arguments.email.getEmailTo()#"
+		<!--- Send Multipart E-mail --->
+		<cfif len(arguments.email.getEmailBodyHTML()) && len(arguments.email.getEmailBodyText())>
+			<cfmail to="#arguments.email.getEmailTo()#"
 				from="#arguments.email.getEmailFrom()#"
 				subject="#arguments.email.getEmailSubject()#"
 				cc="#arguments.email.getEmailCC()#"
 				bcc="#arguments.email.getEmailBCC()#"
 				charset="utf-8">
-			
-			<!--- If a Text Body exists --->
-			<cfif len(arguments.email.getEmailBodyText())>
 				<cfmailpart type="text/plain">
-					#arguments.email.getEmailBodyText()#
+					<cfoutput>#arguments.email.getEmailBodyText()#</cfoutput>
 				</cfmailpart>
-			</cfif>
-			
-			<cfmailpart type="text/html">
+				<cfmailpart type="text/html">
+					<html>
+						<body><cfoutput>#arguments.email.getEmailBodyHTML()#</cfoutput></body>
+					</html>
+				</cfmailpart>
+			</cfmail>
+		<!--- Send HTML Only E-mail --->
+		<cfelseif len(arguments.email.getEmailBodyHTML())>
+			<cfmail to="#arguments.email.getEmailTo()#"
+				from="#arguments.email.getEmailFrom()#"
+				subject="#arguments.email.getEmailSubject()#"
+				cc="#arguments.email.getEmailCC()#"
+				bcc="#arguments.email.getEmailBCC()#"
+				charset="utf-8"
+				type="text/html">
 				<html>
-					<body>#arguments.email.getEmailBodyHTML()#</body>
+					<body><cfoutput>#arguments.email.getEmailBodyHTML()#</cfoutput></body>
 				</html>
-			</cfmailpart>
-		</cfmail>
+			</cfmail>
+		<!--- Send Text Only E-mail --->
+		<cfelseif len(arguments.email.getEmailBodyText())>
+			<cfmail to="#arguments.email.getEmailTo()#"
+				from="#arguments.email.getEmailFrom()#"
+				subject="#arguments.email.getEmailSubject()#"
+				cc="#arguments.email.getEmailCC()#"
+				bcc="#arguments.email.getEmailBCC()#"
+				charset="utf-8"
+				type="text/plain">
+				<cfoutput>#arguments.email.getEmailBodyText()#</cfoutput>
+			</cfmail>
+		</cfif>
 		
 		<!--- If the email is set to be saved, then we persist to the DB --->
-		<cfif(arguments.email.getLogEmailFlag()) >
+		<cfif arguments.email.getLogEmailFlag()>
 			<cfset getHibachiDAO().save(arguments.email) />
 		</cfif>
 	</cffunction>
 		
 	<cffunction name="sendEmailQueue" returntype="void" access="public">
+		
 		<cfset var email = "" />
+		
+		<!--- Loop over the queue --->
 		<cfloop array="#getHibachiScope().getEmailQueue()#" index="email">
+			
+			<!--- Send the email --->
 			<cfset sendEmail(email) />
 		</cfloop>
+		
+		<!--- Clear out the queue --->
+		<cfset getHibachiScope().setEmailQueue( [] ) />
 	</cffunction>
 		
 	<cffunction name="getEmailTemplateFileOptions" output="false" access="public">
@@ -106,7 +135,32 @@ Notes:
 		<cfreturn fileOptions />
 	</cffunction>
 	
+	<cffunction name="getEmailTemplateOptions" access="public" returntype="array">
+		<cfargument name="emailTemplateObject" type="string" required="true">
+		
+		<cfset var sl = this.getEmailTemplateSmartList() />
+		<cfset sl.addFilter('emailTemplateObject', arguments.emailTemplateObject) />
+		<cfset sl.addSelect('emailTemplateName', 'name') />
+		<cfset sl.addSelect('emailTemplateID', 'value') />
+		
+		<cfreturn sl.getRecords() />
+	</cffunction>
+	
 	<!--- =====================  END: Logical Methods ============================ --->
+	
+	<cfscript>
+		
+	public void function generateAndSendFromEntityAndEmailTemplateID( required any entity, required any emailTemplateID ) {
+		var email = this.newEmail();
+		var emailData = {
+			emailTemplateID = arguments.emailTemplateID
+		};
+		emailData[ arguments.entity.getPrimaryIDPropertyName() ] = arguments.entity.getPrimaryIDValue();
+		email = this.processEmail(email, emailData, 'createFromTemplate');
+		email = this.processEmail(email, {}, 'addToQueue');
+	}
+	
+	</cfscript>
 	
 	<!--- ===================== START: DAO Passthrough =========================== --->
 	
@@ -131,11 +185,11 @@ Notes:
 					if(!isNull(templateObject)) {
 						
 						// Setup the email values
-						arguments.email.setEmailTo( templateObject.stringReplace( emailTemplate.setting('emailToAddress') ) );
-						arguments.email.setEmailFrom( templateObject.stringReplace( emailTemplate.setting('emailFromAddress') ) );
-						arguments.email.setEmailCC( templateObject.stringReplace( emailTemplate.setting('emailCCAddress') ) );
-						arguments.email.setEmailBCC( templateObject.stringReplace( emailTemplate.setting('emailBCCAddress') ) );
-						arguments.email.setEmailSubject( templateObject.stringReplace( emailTemplate.setting('emailSubject') ) );
+						arguments.email.setEmailTo( templateObject.stringReplace( emailTemplate.setting('emailToAddress'), false, true ) );
+						arguments.email.setEmailFrom( templateObject.stringReplace( emailTemplate.setting('emailFromAddress'), false, true ) );
+						arguments.email.setEmailCC( templateObject.stringReplace( emailTemplate.setting('emailCCAddress'), false, true ) );
+						arguments.email.setEmailBCC( templateObject.stringReplace( emailTemplate.setting('emailBCCAddress'), false, true ) );
+						arguments.email.setEmailSubject( templateObject.stringReplace( emailTemplate.setting('emailSubject'), false, true ) );
 						arguments.email.setEmailBodyHTML( templateObject.stringReplace( emailTemplate.getEmailBodyHTML() ) );
 						arguments.email.setEmailBodyText( templateObject.stringReplace( emailTemplate.getEmailBodyText() ) );
 						
@@ -153,7 +207,7 @@ Notes:
 						}
 						
 						if(len(templateFileResponse) && !structKeyExists(local.emailData, "bodyHTML")) {
-							local.emailData.bodyHTML = templateFileRespone;
+							local.emailData.bodyHTML = templateFileResponse;
 						}
 						
 						arguments.email.populate( local.emailData );

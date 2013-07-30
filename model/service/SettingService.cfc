@@ -46,6 +46,8 @@ globalEncryptionKeySize
 	
 	<cfproperty name="contentService" type="any" />
 	<cfproperty name="currencyService" type="any" />
+	<cfproperty name="emailService" type="any" />
+	<cfproperty name="fulfillmentService" type="any" />
 	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="locationService" type="any" />
 	<cfproperty name="measurementService" type="any" />
@@ -70,6 +72,8 @@ globalEncryptionKeySize
 			"accountAuthentication",
 			"shippingMethodRate",
 			"fulfillmentMethod",
+			"subscriptionUsage",
+			"subscriptionTerm",
 			"shippingMethod",
 			"paymentMethod",
 			"productType",
@@ -80,6 +84,8 @@ globalEncryptionKeySize
 			"brand",
 			"email",
 			"stock",
+			"site",
+			"task",
 			"sku"
 		];
 		
@@ -91,18 +97,18 @@ globalEncryptionKeySize
 			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
 			email = ["emailTemplate.emailTemplateID"],
 			shippingMethodRate = ["shippingMethod.shippingMethodID"],
-			accountAuthentication = [ "integration.integrationID" ]
+			accountAuthentication = [ "integration.integrationID" ],
+			subscriptionUsage = [ "subscriptionTerm.subscriptionTermID" ]
 		};
 		
 		public any function getSettingMetaData(required string settingName) {
 			
 			if(!structKeyExists(variables, 'settingMetaData')) {
-				
 				var smd = {
 					
 					// Account
 					accountEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod", defaultValue=getPaymentService().getAllActivePaymentMethodIDList()},
-					accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
+					accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm", defaultValue=getPaymentService().getAllActivePaymentTermIDList()},
 					accountPaymentTerm = {fieldType="select"},
 					accountTermCreditLimit = {fieldType="text", formatType="currency",defaultValue=0},
 					
@@ -126,11 +132,11 @@ globalEncryptionKeySize
 					contentMetaKeywordsString = {fieldType="textarea"},
 					
 					// Email
-					emailFromAddress = {fieldType="text",defaultValue="info@myslatwallStore.com"},
-					emailToAddress = {fieldType="text",defaultValue="info@myslatwallStore.com"},
+					emailFromAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
+					emailToAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
 					emailCCAddress = {fieldType="text"},
 					emailBCCAddress = {fieldType="text"},
-					emailSubject = {fieldType="text",defaultValue="Message From MySlatwallStore"},
+					emailSubject = {fieldType="text", defaultValue="Notification From Slatwall"},
 					
 					// Fulfillment Method
 					fulfillmentMethodEmailFrom = {fieldType="text"},
@@ -152,13 +158,8 @@ globalEncryptionKeySize
 					globalEncryptionKeyLocation = {fieldType="text"},
 					globalEncryptionKeySize = {fieldType="select",defaultValue="128"},
 					globalEncryptionService = {fieldType="select",defaultValue="internal"},
-					globalImageExtension = {fieldType="text",defaultValue="jpg"},
 					globalLogMessages = {fieldType="select",defaultValue="General"},
 					globalMissingImagePath = {fieldType="text", defaultValue=getURLFromPath(getApplicationValue('applicationRootMappingPath')) & '/custom/assets/images/missingimage.jpg'},
-					globalOrderPlacedEmailFrom = {fieldType="text",defaultValue="info@mySlatwallStore.com"},
-					globalOrderPlacedEmailCC = {fieldType="text",defaultValue=""},
-					globalOrderPlacedEmailBCC = {fieldType="text",defaultValue=""},
-					globalOrderPlacedEmailSubjectString = {fieldType="text",defaultValue="Order Confirmation - Order Number: ${orderNumber}"},
 					globalOrderNumberGeneration = {fieldType="select",defaultValue="Internal"},
 					globalRemoteIDShowFlag = {fieldType="yesno",defaultValue=0},
 					globalRemoteIDEditFlag = {fieldType="yesno",defaultValue=0},
@@ -177,6 +178,7 @@ globalEncryptionKeySize
 					
 					// Product
 					productDisplayTemplate = {fieldType="select"},
+					productImageDefaultExtension = {fieldType="text",defaultValue="jpg"},
 					productImageOptionCodeDelimiter = {fieldType="select", defaultValue="-"},
 					productTitleString = {fieldType="text", defaultValue="${brand.brandName} ${productName}"},
 					productHTMLTitleString = {fieldType="text"},
@@ -191,14 +193,26 @@ globalEncryptionKeySize
 					productTypeMetaDescriptionString = {fieldType="textarea"},
 					productTypeMetaKeywordsString = {fieldType="textarea"},
 					
+					// Site
+					siteForgotPasswordEmailTemplate = {fieldType="select", defaultValue="dbb327e796334dee73fb9d8fd801df91"},
+					
+					// Shipping Method
+					shippingMethodQualifiedRateSelection = {fieldType="select", defaultValue="lowest"},
+					
+					// Shipping Method Rate
+					shippingMethodRateAdjustmentType = {fieldType="select", defaultValue="increasePercentage"},
+					shippingMethodRateAdjustmentAmount = {fieldType="text", defaultValue=0},
+					shippingMethodRateMinimumAmount = {fieldType="text", defaultValue=0},
+					shippingMethodRateMaximumAmount = {fieldType="text", defaultValue=1000},
+					
 					// Sku
 					skuAllowBackorderFlag = {fieldType="yesno", defaultValue=0},
 					skuAllowPreorderFlag = {fieldType="yesno", defaultValue=0},
 					skuCurrency = {fieldType="select", defaultValue="USD"},
-					skuEligibleCurrencies = {fieldType="listingMultiselect", defaultValue="USD", listingMultiselectEntityName="Currency"},
-					skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
-					skuEligibleOrderOrigins = {fieldType="listingMultiselect", defaultValue="", listingMultiselectEntityName="OrderOrigin"},
-					skuEligiblePaymentMethods = {fieldType="listingMultiselect", defaultValue="", listingMultiselectEntityName="PaymentMethod"},
+					skuEligibleCurrencies = {fieldType="listingMultiselect", listingMultiselectEntityName="Currency", defaultValue=getCurrencyService().getAllActiveCurrencyIDList()},
+					skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod", defaultValue=getFulfillmentService().getAllActiveFulfillmentMethodIDList()},
+					skuEligibleOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin", defaultValue=this.getAllActiveOrderOriginIDList()},
+					skuEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod", defaultValue=getPaymentService().getAllActivePaymentMethodIDList()},
 					skuHoldBackQuantity = {fieldType="text", defaultValue=0},
 					skuOrderMinimumQuantity = {fieldType="text", defaultValue=1},
 					skuOrderMaximumQuantity = {fieldType="text", defaultValue=1000},
@@ -210,16 +224,27 @@ globalEncryptionKeySize
 					skuTaxCategory = {fieldType="select", defaultValue="444df2c8cce9f1417627bd164a65f133"},
 					skuTrackInventoryFlag = {fieldType="yesno", defaultValue=0},
 					
-					// Shipping Method
-					shippingMethodQualifiedRateSelection = {fieldType="select", defaultValue="lowest"},
+					// Subscription Term
+					subscriptionUsageAutoRetryPaymentDays = {fieldType="text", defaultValue=""},
+					subscriptionUsageRenewalReminderDays = {fieldType="text", defaultValue=""},
+					subscriptionUsageRenewalReminderEmailTemplate = {fieldType="select", defaultValue=""},
 					
-					// Shipping Method Rate
-					shippingMethodRateAdjustmentType = {fieldType="select", defaultValue="increasePercentage"},
-					shippingMethodRateAdjustmentAmount = {fieldType="text", defaultValue=0},
-					shippingMethodRateMinimumAmount = {fieldType="text", defaultValue=0},
-					shippingMethodRateMaximumAmount = {fieldType="text", defaultValue=1000},
+					// Task
+					taskFailureEmailTemplate = {fieldType="select", defaultValue=""},
+					taskSuccessEmailTemplate = {fieldType="select", defaultValue=""},
 					
-					// DEPRECATED
+					// DEPRECATED***
+					globalImageExtension = {fieldType="text",defaultValue="jpg"},
+					globalOrderPlacedEmailFrom = {fieldType="text",defaultValue="info@mySlatwallStore.com"},
+					globalOrderPlacedEmailCC = {fieldType="text",defaultValue=""},
+					globalOrderPlacedEmailBCC = {fieldType="text",defaultValue=""},
+					globalOrderPlacedEmailSubjectString = {fieldType="text",defaultValue="Order Confirmation - Order Number: ${orderNumber}"},
+					globalPageShoppingCart = {fieldType="text", defaultValue="shopping-cart"},
+					globalPageOrderStatus = {fieldType="text", defaultValue="order-status"},
+					globalPageOrderConfirmation = {fieldType="text", defaultValue="order-confirmation"},
+					globalPageMyAccount = {fieldType="text", defaultValue="my-account"},
+					globalPageCreateAccount = {fieldType="text", defaultValue="create-account"},
+					globalPageCheckout = {fieldType="text", defaultValue="checkout"},
 					paymentMethodStoreCreditCardNumberWithOrder = {fieldType="yesno", defaultValue=0},
 					paymentMethodStoreCreditCardNumberWithAccount = {fieldType="yesno", defaultValue=0},
 					paymentMethodCheckoutTransactionType = {fieldType="select", defaultValue="none"},
@@ -273,8 +298,8 @@ globalEncryptionKeySize
 						return getContentService().getDisplayTemplateOptions( "barrierPage", arguments.settingObject.getSite().getSiteID() );	
 					}
 					return getContentService().getDisplayTemplateOptions( "barrierPage" );
-				case "productImageOptionCodeDelimiter":
-					return ['-','_'];
+				case "fulfillmentMethodAutoLocation" :
+					return getLocationService().getLocationOptions();
 				case "globalDefaultSite":
 					var optionSL = getSiteService().getSiteSmartList();
 					optionSL.addSelect('siteName', 'name');
@@ -306,6 +331,12 @@ globalEncryptionKeySize
 					optionSL.addSelect('unitName', 'name');
 					optionSL.addSelect('unitCode', 'value');
 					return optionSL.getRecords();
+				case "paymentMethodCheckoutTransactionType" :
+					return [{name='None', value='none'}, {name='Authorize Only', value='authorize'}, {name='Authorize And Charge', value='authorizeAndCharge'}];
+				case "productImageOptionCodeDelimiter":
+					return ['-','_'];
+				case "siteForgotPasswordEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "account" );
 				case "shippingMethodQualifiedRateSelection" :
 					return [{name='Sort Order', value='sortOrder'}, {name='Lowest Rate', value='lowest'}, {name='Highest Rate', value='highest'}];
 				case "shippingMethodRateAdjustmentType" :
@@ -317,10 +348,12 @@ globalEncryptionKeySize
 					optionSL.addSelect('taxCategoryName', 'name');
 					optionSL.addSelect('taxCategoryID', 'value');
 					return optionSL.getRecords();
-				case "paymentMethodCheckoutTransactionType" :
-					return [{name='None', value='none'}, {name='Authorize Only', value='authorize'}, {name='Authorize And Charge', value='authorizeAndCharge'}];
-				case "fulfillmentMethodAutoLocation" :
-					return getLocationService().getLocationOptions();
+				case "subscriptionUsageRenewalReminderEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "subscriptionUsage" );
+				case "taskFailureEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "task" );
+				case "taskSuccessEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "task" );
 			}
 			
 			if(structKeyExists(getSettingMetaData(arguments.settingName), "valueOptions")) {
@@ -328,6 +361,38 @@ globalEncryptionKeySize
 			}
 							
 			throw("The setting '#arguments.settingName#' doesn't have any valueOptions configured.  Either add them in the setting metadata or in the SettingService.cfc")
+		}
+		
+		public void function setupDefaultValues( required struct data ) {
+			
+			// Default Values Based on Email Address
+			if(structKeyExists(arguments.data, "emailAddress")) {
+				
+				// SETUP - emailFromAddress
+				var fromEmailSL = this.getSettingSmartList();
+				fromEmailSL.addFilter( 'settingName', 'emailFromAddress' );
+				if(!fromEmailSL.getRecordsCount()) {
+					var setting = this.newSetting();
+					setting.setSettingName( 'emailFromAddress' );
+					setting.setSettingValue( arguments.data.emailAddress );
+					this.saveSetting( setting );
+				}
+				
+				// SETUP - emailToAddress
+				var toEmailSL = this.getSettingSmartList();
+				toEmailSL.addFilter( 'settingName', 'emailToAddress' );
+				if(!toEmailSL.getRecordsCount()) {
+					var setting = this.newSetting();
+					setting.setSettingName( 'emailToAddress' );
+					setting.setSettingValue( arguments.data.emailAddress );
+					this.saveSetting( setting );
+				}
+				
+			}
+			
+			// Clear out the setting Cached
+			clearAllSettingsCache();
+				
 		}
 		
 		public array function getCustomIntegrationOptions() {
@@ -356,7 +421,11 @@ globalEncryptionKeySize
 		
 		public any function clearAllSettingsCache() {
 			structDelete(variables, "allSettingsQuery");
+			structDelete(variables, "settingMetaData");
 			variables.settingDetailsCache = {};
+			if(!getHibachiScope().getORMHasErrors()) {
+				getHibachiDAO().flushORMSession();
+			}
 			writeLog(file="Slatwall", text="General Log - All settings cache was cleared");
 		}
 		
@@ -649,6 +718,18 @@ globalEncryptionKeySize
 			} 
 		}
 		
+		public string function getAllActiveOrderOriginIDList() {
+			var returnList = "";
+			var apmSL = this.getOrderOriginSmartList();
+			apmSL.addFilter('activeFlag', 1);
+			apmSL.addSelect('orderOriginID', 'orderOriginID');
+			var records = apmSL.getRecords();
+			for(var i=1; i<=arrayLen(records); i++) {
+				returnList = listAppend(returnList, records[i]['orderOriginID']);
+			}
+			return returnList;
+		}
+		
 	</cfscript>
 	
 	<cffunction name="getSettingRecordCount" output="false">
@@ -706,31 +787,6 @@ globalEncryptionKeySize
 					<cfelseif structKeyExists(allSettings, "cmsContentID")>
 						AND allSettings.cmsContentID IS NULL
 					</cfif>
-				  	<cfif structKeyExists(settingRelationships, "paymentMethodID") and structKeyExists(allSettings, "paymentMethodID")>
-						AND LOWER(allSettings.paymentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.paymentMethodID)#" > 
-					<cfelseif structKeyExists(allSettings, "paymentMethodID")>
-						AND allSettings.paymentMethodID IS NULL
-					</cfif>
-				  	<cfif structKeyExists(settingRelationships, "productTypeID") and structKeyExists(allSettings, "productTypeID")>
-						AND LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
-					<cfelseif structKeyExists(allSettings, "productTypeID")>
-						AND allSettings.productTypeID IS NULL
-					</cfif>
-					<cfif structKeyExists(settingRelationships, "productID") and structKeyExists(allSettings, "productID")>
-						AND LOWER(allSettings.productID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productID)#" > 
-					<cfelseif structKeyExists(allSettings, "productID")>
-						AND allSettings.productID IS NULL
-					</cfif>
-					<cfif structKeyExists(settingRelationships, "siteID") and structKeyExists(allSettings, "siteID")>
-						AND LOWER(allSettings.siteID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.siteID)#" > 
-					<cfelseif structKeyExists(allSettings, "siteID")>
-						AND allSettings.siteID IS NULL
-					</cfif>
-					<cfif structKeyExists(settingRelationships, "skuID") and structKeyExists(allSettings, "skuID")>
-						AND LOWER(allSettings.skuID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.skuID)#" > 
-					<cfelseif structKeyExists(allSettings, "skuID")>
-						AND allSettings.skuID IS NULL
-					</cfif>
 					<cfif structKeyExists(settingRelationships, "brandID") and structKeyExists(allSettings, "brandID")>
 						AND LOWER(allSettings.brandID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.brandID)#" > 
 					<cfelseif structKeyExists(allSettings, "brandID")>
@@ -746,6 +802,26 @@ globalEncryptionKeySize
 					<cfelseif structKeyExists(allSettings, "emailTemplateID")>
 						AND allSettings.emailTemplateID IS NULL
 					</cfif>
+				  	<cfif structKeyExists(settingRelationships, "fulfillmentMethodID") and structKeyExists(allSettings, "fulfillmentMethodID")>
+						AND LOWER(allSettings.fulfillmentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.fulfillmentMethodID)#" > 
+					<cfelseif structKeyExists(allSettings, "fulfillmentMethodID")>
+						AND allSettings.fulfillmentMethodID IS NULL
+					</cfif>
+				  	<cfif structKeyExists(settingRelationships, "paymentMethodID") and structKeyExists(allSettings, "paymentMethodID")>
+						AND LOWER(allSettings.paymentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.paymentMethodID)#" > 
+					<cfelseif structKeyExists(allSettings, "paymentMethodID")>
+						AND allSettings.paymentMethodID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "productID") and structKeyExists(allSettings, "productID")>
+						AND LOWER(allSettings.productID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productID)#" > 
+					<cfelseif structKeyExists(allSettings, "productID")>
+						AND allSettings.productID IS NULL
+					</cfif>
+				  	<cfif structKeyExists(settingRelationships, "productTypeID") and structKeyExists(allSettings, "productTypeID")>
+						AND LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
+					<cfelseif structKeyExists(allSettings, "productTypeID")>
+						AND allSettings.productTypeID IS NULL
+					</cfif>
 				  	<cfif structKeyExists(settingRelationships, "shippingMethodID") and structKeyExists(allSettings, "shippingMethodID")>
 						AND LOWER(allSettings.shippingMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.shippingMethodID)#" > 
 					<cfelseif structKeyExists(allSettings, "shippingMethodID")>
@@ -756,10 +832,30 @@ globalEncryptionKeySize
 					<cfelseif structKeyExists(allSettings, "shippingMethodRateID")>
 						AND allSettings.shippingMethodRateID IS NULL
 					</cfif>
-				  	<cfif structKeyExists(settingRelationships, "fulfillmentMethodID") and structKeyExists(allSettings, "fulfillmentMethodID")>
-						AND LOWER(allSettings.fulfillmentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.fulfillmentMethodID)#" > 
-					<cfelseif structKeyExists(allSettings, "fulfillmentMethodID")>
-						AND allSettings.fulfillmentMethodID IS NULL
+					<cfif structKeyExists(settingRelationships, "siteID") and structKeyExists(allSettings, "siteID")>
+						AND LOWER(allSettings.siteID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.siteID)#" > 
+					<cfelseif structKeyExists(allSettings, "siteID")>
+						AND allSettings.siteID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "skuID") and structKeyExists(allSettings, "skuID")>
+						AND LOWER(allSettings.skuID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.skuID)#" > 
+					<cfelseif structKeyExists(allSettings, "skuID")>
+						AND allSettings.skuID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "subscriptionTermID") and structKeyExists(allSettings, "subscriptionTermID")>
+						AND LOWER(allSettings.subscriptionTermID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.subscriptionTermID)#" > 
+					<cfelseif structKeyExists(allSettings, "subscriptionTermID")>
+						AND allSettings.subscriptionTermID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "subscriptionUsageID") and structKeyExists(allSettings, "subscriptionUsageID")>
+						AND LOWER(allSettings.subscriptionUsageID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.subscriptionUsageID)#" > 
+					<cfelseif structKeyExists(allSettings, "subscriptionUsageID")>
+						AND allSettings.subscriptionUsageID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "taskID") and structKeyExists(allSettings, "taskID")>
+						AND LOWER(allSettings.taskID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.taskID)#" > 
+					<cfelseif structKeyExists(allSettings, "taskID")>
+						AND allSettings.taskID IS NULL
 					</cfif>
 		</cfquery>
 		
