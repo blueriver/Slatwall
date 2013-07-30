@@ -148,7 +148,7 @@ Notes:
 									
 									<!--- Email Address --->
 									<div class="control-group">
-				    					<label class="control-label" for="rating">Email Address</label>
+				    					<label class="control-label" for="emailAddress">Email Address</label>
 				    					<div class="controls">
 				    						
 											<sw:FormField type="text" valueObject="#accountLoginObj#" valueObjectProperty="emailAddress" class="span4" />
@@ -159,7 +159,7 @@ Notes:
 									
 									<!--- Password --->
 									<div class="control-group">
-				    					<label class="control-label" for="rating">Password</label>
+				    					<label class="control-label" for="password">Password</label>
 				    					<div class="controls">
 				    						
 											<sw:FormField type="password" valueObject="#accountLoginObj#" valueObjectProperty="password" class="span4" />

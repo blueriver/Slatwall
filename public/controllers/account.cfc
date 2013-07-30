@@ -40,6 +40,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 
 	property name="fw" type="any";
 	property name="accountService" type="any";
+	property name="subscriptionService" type="any";
 	
 	public void function init( required any fw ) {
 		setFW( arguments.fw );
@@ -49,28 +50,28 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		getFW().setView("public:main.blank");
 	}
 	
-	// Login
+	// Account - Login
 	public void function login( required struct rc ) {
 		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'login' );
 		
 		arguments.rc.$.slatwall.addActionResult( "public:account.login", account.hasErrors() );
 	}
 	
-	// Logout
+	// Account - Logout
 	public void function logout( required struct rc ) {
 		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'logout' );
 		
 		arguments.rc.$.slatwall.addActionResult( "public:account.logout", false );
 	}
 	
-	// Forgot Password
+	// Account - Forgot Password
 	public void function forgotPassword( required struct rc ) {
 		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'forgotPassword');
 		
 		arguments.rc.$.slatwall.addActionResult( "public:account.forgotPassword", account.hasErrors() );
 	}
 	
-	// Reset Password
+	// Account - Reset Password
 	public void function resetPassword( required struct rc ) {
 		param name="rc.accountID" default="";
 		
@@ -93,28 +94,28 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.$.slatwall.account().setProcessObject( account.getProcessObject( "resetPassword" ) );
 	}
 	
-	// Change Password
+	// Account - Change Password
 	public void function changePassword( required struct rc ) {
 		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'changePassword');
 		
 		arguments.rc.$.slatwall.addActionResult( "public:account.changePassword", account.hasErrors() );
 	}
 	
-	// Create - Account
+	// Account - Create
 	public void function create( required struct rc ) {
 		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'create');
 		
 		arguments.rc.$.slatwall.addActionResult( "public:account.create", account.hasErrors() );
 	}
 	
-	// Update - Account
+	// Account - Update
 	public void function update( required struct rc ) {
 		var account = getAccountService().saveAccount( rc.$.slatwall.getAccount(), arguments.rc );
 		
 		arguments.rc.$.slatwall.addActionResult( "public:account.update", account.hasErrors() );
 	}
 	
-	// Delete - Account Email Address
+	// Account Email Address - Delete
 	public void function deleteAccountEmailAddress() {
 		param name="rc.accountEmailAddressID" default="";
 		
@@ -128,7 +129,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 	}
 	
-	// Delete - Account Phone Number
+	// Account Phone Number - Delete
 	public void function deleteAccountPhoneNumber() {
 		param name="rc.accountPhoneNumberID" default="";
 		
@@ -142,7 +143,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 	}
 	
-	// Delete - Account Address
+	// Account Address - Delete
 	public void function deleteAccountAddress() {
 		param name="rc.accountAddressID" default="";
 		
@@ -156,7 +157,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 	}
 	
-	// Delete - Account Payment Method
+	// Account Payment Method - Delete
 	public void function deleteAccountPaymentMethod() {
 		param name="rc.accountAddressID" default="";
 		
@@ -167,6 +168,36 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountPaymentMethod", !deleteOK );
 		} else {
 			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountPaymentMethod", true );	
+		}
+	}
+	
+	// Subscription Usage - Update
+	public void function updateSubscriptionUsage() {
+		param name="rc.subscriptionUsageID" default="";
+		
+		var subscriptionUsage = getSubscriptionService().getSubscriptionUsage( rc.subscriptionUsageID );
+		
+		if(!isNull(subscriptionUsage) && subscriptionUsage.getAccount().getAccountID() == arguments.rc.$.slatwall.getAccount().getAccountID() ) {
+			var subscriptionUsage = getSubscriptionService().saveSubscriptionUsage( subscriptionUsage, arguments.rc );
+			arguments.rc.$.slatwall.addActionResult( "public:account.updateSubscriptionUsage", subscriptionUsage.hasErrors() );
+			
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:account.updateSubscriptionUsage", true );
+		}
+	}
+	
+	// Subscription Usage - Renew
+	public void function renewSubscriptionUsage() {
+		param name="rc.subscriptionUsageID" default="";
+		
+		var subscriptionUsage = getSubscriptionService().getSubscriptionUsage( rc.subscriptionUsageID );
+		
+		if(!isNull(subscriptionUsage) && subscriptionUsage.getAccount().getAccountID() == arguments.rc.$.slatwall.getAccount().getAccountID() ) {
+			var subscriptionUsage = getSubscriptionService().processSubscriptionUsage( subscriptionUsage, arguments.rc, 'renew' );
+			arguments.rc.$.slatwall.addActionResult( "public:account.updateSubscriptionUsage", subscriptionUsage.hasErrors() );
+			
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:account.updateSubscriptionUsage", true );
 		}
 	}
 	

@@ -103,6 +103,14 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		return variables.renewalPaymentType;
 	}
 	
+	public any function getAccountPaymentMethod() {
+		if(!isNull(variables.accountPaymentMethod)) {
+			return variables.accountPaymentMethod;
+		} else if(!isNull(getSubscriptionUsage().getAccountPaymentMethod()))  {
+			return getSubscriptionUsage().getAccountPaymentMethod();
+		}
+	}
+	
 	public array function getRenewalPaymentTypeOptions() {
 		var options = [];
 		
