@@ -36,15 +36,20 @@
 Notes:
 
 --->
-<cfparam name="rc.taskschedule" type="any">
-<cfparam name="rc.task" type="any" default="">
+<cfparam name="rc.taskSchedule" type="any">
+<cfparam name="rc.task" type="any" default="#rc.taskSchedule.getTask()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.taskschedule#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.taskschedule#" />
+	<cf_HibachiEntityDetailForm object="#rc.taskSchedule#" edit="#rc.edit#" 
+								saveActionQueryString="taskID=#rc.task.getTaskID()#">
+								
+		<cf_HibachiEntityActionBar type="detail" object="#rc.taskSchedule#" 
+								backAction="admin:entity.detailTask" 
+								backQueryString="taskID=#rc.task.getTaskID()#"
+								deleteQueryString="redirectAction=admin:entity.detailTask&taskID=#rc.task.getTaskID()#"/>
+		
 		<input type="hidden" name="task.taskID" value="#rc.task.getTaskID()#"/>
-		<input type="hidden" name="redirectAction" value="admin:entity.edittask&taskID=#rc.task.getTaskID()###tabtaskschedule" />
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>

@@ -36,18 +36,10 @@
 Notes:
 
 --->
-
-<cfparam name="rc.redirectAction" type="string" default="admin:entity.liststockreceiver" />
-<cfparam name="rc.processStockReceiverSmartList" type="any" />
-<cfparam name="rc.multiProcess" type="boolean" />
-
 <cfoutput>
-	<cf_SlatwallProcessForm>
-		<cf_HibachiEntityActionBar type="process" />
-		
-		<cf_SlatwallProcessOptionBar>
-			<cf_SlatwallProcessOption data="locationID" fieldType="select" valueOptions="#$.slatwall.getService("locationService").getLocationOptions()#" />
-		</cf_SlatwallProcessOptionBar>
-		
-	</cf_SlatwallProcessForm>
+	<cf_SlatwallSettingTable showInheritance="false">
+		<cf_SlatwallSetting settingName="subscriptionUsageAutoRetryPaymentDays" />
+		<cf_SlatwallSetting settingName="subscriptionUsageRenewalReminderDays" />
+		<cf_SlatwallSetting settingName="subscriptionUsageRenewalReminderEmailTemplate" />
+	</cf_SlatwallSettingTable>
 </cfoutput>

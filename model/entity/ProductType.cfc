@@ -48,21 +48,13 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="productTypeDescription" ormtype="string" length="4000";
 	property name="systemCode" ormtype="string";
 	
-	// Remote properties
-	property name="remoteID" ormtype="string";
-	
-	// Audit properties
-	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
-	property name="createdByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
-	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
 	// Related Object Properties (Many-To-One)
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
 	
 	// Related Object Properties (One-To-Many)
 	property name="childProductTypes" singularname="childProductType" cfc="ProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
 	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (Many-To-Many - inverse)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" inverse="true";
@@ -72,6 +64,15 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
 	property name="attributeSets" singularname="attributeSet" cfc="AttributeSet" type="array" fieldtype="many-to-many" linktable="SlatwallAttributeSetProductType" fkcolumn="productTypeID" inversejoincolumn="attributeSetID" inverse="true";
 	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SlatwallPhysicalProductType" fkcolumn="productTypeID" inversejoincolumn="physicalID" inverse="true";
+	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit properties
+	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
+	property name="createdByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
+	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="parentProductTypeOptions" type="array" persistent="false";
@@ -215,6 +216,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		arguments.attributeSet.removeProductType( this );
 	}
 	
+	// Attribute Values (one-to-many)
+	public void function addAttributeValue(required any attributeValue) {
+		arguments.attributeValue.setProductType( this );
+	}
+	public void function removeAttributeValue(required any attributeValue) {
+		arguments.attributeValue.removeProductType( this );
+	}
+	
 	// Physicals (many-to-many - inverse)    
 	public void function addPhysical(required any physical) {    
 		arguments.physical.addProductType( this );    
@@ -263,7 +272,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
 			
 			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
-			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astProduct');
+			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astProductType');
 			
 			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
 			

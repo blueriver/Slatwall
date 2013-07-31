@@ -39,8 +39,8 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cf_HibachiListingDisplay smartList="#rc.account.getSubscriptionUsagesSmartList()#"
-						   recordEditAction="admin:entity.editsubscriptionUsage"
-						   recordEditQueryString="redirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#">
+						  recordDetailAction="admin:entity.detailsubscriptionusage"
+						  recordEditAction="admin:entity.editsubscriptionusage">
 
 	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionOrderItemName" />
 	<cf_HibachiListingColumn propertyIdentifier="currentStatusType" />

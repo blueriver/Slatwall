@@ -45,7 +45,7 @@ Notes:
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.country#" property="countryCode" edit="false">
+				<cf_HibachiPropertyDisplay object="#rc.country#" property="countryCode" edit="#rc.country.getNewFlag()#">
 				<cf_HibachiPropertyDisplay object="#rc.country#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.country#" property="countryName" edit="#rc.edit#">
 				<hr />

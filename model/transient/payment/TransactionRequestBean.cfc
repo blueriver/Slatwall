@@ -74,6 +74,7 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	
 	// Pertinent Reference Information
 	property name="accountPaymentID" type="string";
+	property name="accountPaymentMethodID" type="string";
 	property name="orderPaymentID" type="string";
 	property name="orderID" type="string";
 	property name="accountID" type="string";
@@ -93,16 +94,22 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	*/
 	
 	public void function populatePaymentInfoWithAccountPayment(required any accountPayment) {
+		
 		// Populate Credit Card Info
-		setNameOnCreditCard(arguments.accountPayment.getNameOnCreditCard());
-		setCreditCardNumber(arguments.accountPayment.getCreditCardNumber());
-		setCreditCardType(arguments.accountPayment.getCreditCardType());
-		setExpirationMonth(arguments.accountPayment.getExpirationMonth());
-		setExpirationYear(arguments.accountPayment.getExpirationYear());
-		setSecurityCode(arguments.accountPayment.getSecurityCode());
+		if(!isNull(arguments.accountPayment.getCreditCardNumber())) {
+			setCreditCardNumber(arguments.accountPayment.getCreditCardNumber());	
+		}
+		if(!isNull(arguments.accountPayment.getSecurityCode())) {
+			setSecurityCode(arguments.accountPayment.getSecurityCode());	
+		}
 		if(!isNull(arguments.accountPayment.getProviderToken())) {
 			setProviderToken(arguments.accountPayment.getProviderToken());	
 		}
+		setNameOnCreditCard(arguments.accountPayment.getNameOnCreditCard());
+		setCreditCardType(arguments.accountPayment.getCreditCardType());
+		setExpirationMonth(arguments.accountPayment.getExpirationMonth());
+		setExpirationYear(arguments.accountPayment.getExpirationYear());
+		
 		
 		// Populate Account Info
 		setAccountFirstName(arguments.accountPayment.getAccount().getFirstName());
@@ -151,15 +158,20 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	public void function populatePaymentInfoWithOrderPayment(required any orderPayment) {
 		
 		// Populate Credit Card Info
-		setNameOnCreditCard(arguments.orderPayment.getNameOnCreditCard());
-		setCreditCardNumber(arguments.orderPayment.getCreditCardNumber());
-		setCreditCardType(arguments.orderPayment.getCreditCardType());
-		setExpirationMonth(arguments.orderPayment.getExpirationMonth());
-		setExpirationYear(arguments.orderPayment.getExpirationYear());
-		setSecurityCode(arguments.orderPayment.getSecurityCode());
+		if(!isNull(arguments.orderPayment.getCreditCardNumber())) {
+			setCreditCardNumber(arguments.orderPayment.getCreditCardNumber());
+		}
+		if(!isNull(arguments.orderPayment.getSecurityCode())) {
+			setSecurityCode(arguments.orderPayment.getSecurityCode());	
+		}
 		if(!isNull(arguments.orderPayment.getProviderToken())) {
 			setProviderToken(arguments.orderPayment.getProviderToken());	
 		}
+		setNameOnCreditCard(arguments.orderPayment.getNameOnCreditCard());
+		setCreditCardType(arguments.orderPayment.getCreditCardType());
+		setExpirationMonth(arguments.orderPayment.getExpirationMonth());
+		setExpirationYear(arguments.orderPayment.getExpirationYear());
+		
 		
 		// Populate Account Info
 		setAccountFirstName(arguments.orderPayment.getOrder().getAccount().getFirstName());
@@ -207,6 +219,68 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		setOrderPaymentID(arguments.orderPayment.getOrderPaymentID());
 		setOrderID(arguments.orderPayment.getOrder().getOrderID());
 		setAccountID(arguments.orderPayment.getOrder().getAccount().getAccountID());
+	}
+	
+	public void function populatePaymentInfoWithAccountPaymentMethod(required any accountPaymentMethod) {
+		
+		// Populate Credit Card Info
+		if(!isNull(arguments.accountPaymentMethod.getCreditCardNumber())) {
+			setCreditCardNumber(arguments.accountPaymentMethod.getCreditCardNumber());
+		}
+		if(!isNull(arguments.accountPaymentMethod.getSecurityCode())) {
+			setSecurityCode(arguments.accountPaymentMethod.getSecurityCode());	
+		}
+		if(!isNull(arguments.accountPaymentMethod.getProviderToken())) {
+			setProviderToken(arguments.accountPaymentMethod.getProviderToken());	
+		}
+		setNameOnCreditCard(arguments.accountPaymentMethod.getNameOnCreditCard());
+		setCreditCardType(arguments.accountPaymentMethod.getCreditCardType());
+		setExpirationMonth(arguments.accountPaymentMethod.getExpirationMonth());
+		setExpirationYear(arguments.accountPaymentMethod.getExpirationYear());
+		
+		
+		// Populate Account Info
+		setAccountFirstName(arguments.accountPaymentMethod.getAccount().getFirstName());
+		setAccountLastName(arguments.accountPaymentMethod.getAccount().getLastName());
+		if(!isNull(arguments.accountPaymentMethod.getAccount().getPrimaryPhoneNumber())) {
+			setAccountPrimaryPhoneNumber(arguments.accountPaymentMethod.getAccount().getPrimaryPhoneNumber().getPhoneNumber());	
+		}
+		if(!isNull(arguments.accountPaymentMethod.getAccount().getPrimaryEmailAddress())) {
+			setAccountPrimaryEmailAddress(arguments.accountPaymentMethod.getAccount().getPrimaryEmailAddress().getEmailAddress());	
+		}
+		
+		// Populate Billing Address Info
+		if(!isNull(arguments.accountPaymentMethod.getBillingAddress().getName())) {
+			setBillingName(arguments.accountPaymentMethod.getBillingAddress().getName());
+		}
+		if(!isNull(arguments.accountPaymentMethod.getBillingAddress().getCompany())) {
+			setBillingCompany(arguments.accountPaymentMethod.getBillingAddress().getCompany());
+		}
+		if(!isNull(arguments.accountPaymentMethod.getBillingAddress().getStreetAddress())) {
+			setBillingStreetAddress(arguments.accountPaymentMethod.getBillingAddress().getStreetAddress());
+		}
+		if(!isNull(arguments.accountPaymentMethod.getBillingAddress().getStreet2Address())) {
+			setBillingStreet2Address(arguments.accountPaymentMethod.getBillingAddress().getStreet2Address());
+		}
+		if(!isNull(arguments.accountPaymentMethod.getBillingAddress().getLocality())) {
+			setBillingLocality(arguments.accountPaymentMethod.getBillingAddress().getLocality());
+		}
+		if(!isNull(arguments.accountPaymentMethod.getBillingAddress().getCity())) {
+			setBillingCity(arguments.accountPaymentMethod.getBillingAddress().getCity());
+		}
+		if(!isNull(arguments.accountPaymentMethod.getBillingAddress().getStateCode())) {
+			setBillingStateCode(arguments.accountPaymentMethod.getBillingAddress().getStateCode());
+		}
+		if(!isNull(arguments.accountPaymentMethod.getBillingAddress().getPostalCode())) {
+			setBillingPostalCode(arguments.accountPaymentMethod.getBillingAddress().getPostalCode());
+		}
+		if(!isNull(arguments.accountPaymentMethod.getBillingAddress().getCountryCode())) {
+			setBillingCountryCode(arguments.accountPaymentMethod.getBillingAddress().getCountryCode());
+		}
+		
+		// Populate relavent Misc Info
+		setAccountPaymentMethodID( arguments.accountPaymentMethod.getAccountPaymentMethodID() );
+		setAccountID( arguments.accountPaymentMethod.getAccount().getAccountID() );
 	}
 
 }

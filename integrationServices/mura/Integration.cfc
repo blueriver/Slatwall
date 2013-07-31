@@ -37,6 +37,8 @@ Notes:
 
 */
 component accessors="true" output="false" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
+
+	property name="adminNavbarHTML";
 	
 	public string function getIntegrationTypes() {
 		return "authentication,fw1";
@@ -71,7 +73,10 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	}
 	
 	public string function getAdminNavbarHTML() {
-		return '<a href="/admin" class="brand" style="margin-left:-10px;"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/mura.logo.png" style="width:25px;heigh:26px;" title="Mura" /></a>';
+		if(!structKeyExists(variables, "adminNavbarHTML")) {
+			variables.adminNavbarHTML = '<a href="#replace(request.slatwallScope.getSlatwallRootURL(), '/Slatwall', '')#/admin" class="brand"><img src="#request.slatwallScope.getSlatwallRootPath()#/assets/images/mura.logo.png" style="width:25px;heigh:26px;" title="Mura" /></a>'; 
+		}
+		return variables.adminNavbarHTML;
 	}
 	
 }

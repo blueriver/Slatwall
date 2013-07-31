@@ -54,35 +54,94 @@ Notes:
 				<!--- Add a hidden field for the orderID --->
 				<input type="hidden" name="newOrderPayment.order.orderID" value="#rc.order.getOrderID()#" />
 				
-				<!--- Display the amount that is going to be used, but allow for override --->				
-				<cfif not arrayLen(rc.order.getOrderPayments()) || (arrayLen(rc.order.getOrderPayments()) eq 1 && rc.order.getOrderPayments()[1].hasErrors())>
-					<div class="control-group">
-						<label class="control-label">#$.slatwall.rbKey('define.amount')#</label>
-						<div class="controls">
-							#$.slatwall.rbKey('admin.entity.detailOrderPayment.entireOrderTotal')#l - #rc.order.getFormattedValue('total')#<br />
-							<a href="##" id='changeAmount'>#$.slatwall.rbKey('admin.entity.detailOrderPayment.changeAmount')#</a>
+				<cfset orderPaymentTypeID = rc.addOrderPaymentProcessObject.getNewOrderPayment().getOrderPaymentType().getTypeID() />
+				<cfif not rc.addOrderPaymentProcessObject.hasErrors() && not rc.addOrderPaymentProcessObject.getNewOrderPayment().hasErrors() && rc.order.getOrderPaymentAmountNeeded() lt 0>
+					<cfset orderPaymentTypeID = "444df2f1cc40d0ea8a2de6f542ab4f1d" />	
+				</cfif>
+				<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="orderPaymentType" value="#orderPaymentTypeID#" fieldName="newOrderPayment.orderPaymentType.typeID" edit="#rc.edit#">
+				
+				<div class="control-group">
+					<label class="control-label">#$.slatwall.rbKey('define.amount')#</label>
+					<div class="controls">
+						<div id="dynamic-charge-amount" class="hide">
+							#$.slatwall.rbKey('admin.entity.detailOrderPayment.dynamicCharge')#: #rc.order.getFormattedValue('orderPaymentChargeAmountNeeded')#<br />
+							<a href="##" id='changeChargeAmount'>#$.slatwall.rbKey('admin.entity.detailOrderPayment.changeAmount')#</a>
 						</div>
-						<script type="text/javascript">
-							(function($){
-								$(document).ready(function(e){
+						<div id="dynamic-credit-amount" class="hide">
+							#$.slatwall.rbKey('admin.entity.detailOrderPayment.dynamicCredit')#: <span class="negative">( #rc.order.getFormattedValue('orderPaymentCreditAmountNeeded')# )<span></span><br />
+							<a href="##" id='changeCreditAmount'>#$.slatwall.rbKey('admin.entity.detailOrderPayment.changeAmount')#</a>
+						</div>
+						<div id="charge-amount" class="hide">
+							<input type="text" name="newOrderPayment.amountplaceholder" value="#rc.order.getOrderPaymentChargeAmountNeeded()#" class="required numeric" />
+						</div>
+						<div id="credit-amount" class="hide">
+							<input type="text" name="newOrderPayment.amountplaceholder" value="#rc.order.getOrderPaymentCreditAmountNeeded()#" class="required numeric" />
+						</div>
+					</div>
+					<script type="text/javascript">
+						(function($){
+							$(document).ready(function(e){
+								
+								var paymentDetails = {
+									dynamicChargeOK : '#UCASE(isNull(rc.order.getDynamicChargeOrderPayment()) && rc.order.getStatusCode() eq "ostNotPlaced")#',
+									dynamicCreditOK : '#UCASE(isNull(rc.order.getDynamicCreditOrderPayment()) && rc.order.getStatusCode() eq "ostNotPlaced")#'
+								};
+								
+								$('body').on('change', 'select[name="newOrderPayment.orderPaymentType.typeID"]', function(e) {
+									var value = $(this).val();
 									
-									// Bind to split button
-									$('body').on('click', '##changeAmount', function(e){
-										e.preventDefault();
-										$(this).closest('div').html('<input type="text" name="newOrderPayment.amount" value="#rc.order.getTotal()#" class="span3 required numeric" />');
-									});
+									$('input[name="newOrderPayment.amount"]').attr('name', 'newOrderPayment.amountplaceholder');
+									$('##dynamic-credit-amount').hide();
+									$('##dynamic-charge-amount').hide();
+									$('##credit-amount').hide();
+									$('##charge-amount').hide();
+									
+									if(value === '444df2f1cc40d0ea8a2de6f542ab4f1d' && paymentDetails.dynamicCreditOK === 'YES') {
+										$('##dynamic-credit-amount').show();
+										
+									} else if (value === '444df2f1cc40d0ea8a2de6f542ab4f1d') {
+										$('##credit-amount').show();
+										$('##credit-amount').find('input').attr('name', 'newOrderPayment.amount');
+										
+									} else if (paymentDetails.dynamicChargeOK === 'YES') {
+										$('##dynamic-charge-amount').show();
+										
+									} else {
+										$('##charge-amount').show();
+										$('##charge-amount').find('input').attr('name', 'newOrderPayment.amount');
+										
+									}
 									
 								});
-							})( jQuery );
-						</script>
-					</div>
-					
-				<!--- Only Show Payment Amount if this is the second account payment --->
-				<cfelse>
-					<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="amount" fieldName="newOrderPayment.amount" edit="#rc.edit#">
-				</cfif>
+								
+								$('body').on('click', '##changeChargeAmount', function(e){
+									e.preventDefault();
+									$('input[name="newOrderPayment.amount"]').attr('name', 'newOrderPayment.amountplaceholder');
+									$('##dynamic-charge-amount').hide();
+									$('##charge-amount').show();
+									$('##charge-amount input').attr('name', 'newOrderPayment.amount');
+									paymentDetails.dynamicChargeOK = 'NO';
+									
+								});
+								
+								$('body').on('click', '##changeCreditAmount', function(e){
+									e.preventDefault();
+									$('input[name="newOrderPayment.amount"]').attr('name', 'newOrderPayment.amountplaceholder');
+									$('##dynamic-credit-amount').hide();
+									$('##credit-amount').show();
+									$('##credit-amount input').attr('name', 'newOrderPayment.amount');
+									paymentDetails.dynamicCreditOK = 'NO';
+									
+								});
+								
+								$('select[name="newOrderPayment.orderPaymentType.typeID"]').change();
+								
+							});
+						})( jQuery );
+					</script>
+				</div>
 				
-				<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="orderPaymentType" fieldName="newOrderPayment.orderPaymentType.typeID" edit="#rc.edit#">
+				<hr />
 				
 				<cfinclude template="preprocessorder_include/addorderpayment.cfm" />
 				
@@ -92,3 +151,38 @@ Notes:
 		
 	</cf_HibachiEntityProcessForm>
 </cfoutput>
+
+
+<!---
+<!--- Display the amount that is going to be used, but allow for override --->				
+<cfif not arrayLen(rc.order.getOrderPayments()) || (arrayLen(rc.order.getOrderPayments()) eq 1 && rc.order.getOrderPayments()[1].hasErrors())>
+	<div class="control-group">
+		<label class="control-label">#$.slatwall.rbKey('define.amount')#</label>
+		<div class="controls">
+			#$.slatwall.rbKey('admin.entity.detailOrderPayment.entireOrderTotal')#: <span <cfif rc.order.getTotal() lt 0>class="negative"</cfif>>#rc.order.getFormattedValue('total')#</span><br />
+			<a href="##" id='changeAmount'>#$.slatwall.rbKey('admin.entity.detailOrderPayment.changeAmount')#</a>
+		</div>
+		<script type="text/javascript">
+			(function($){
+				$(document).ready(function(e){
+					
+					// Bind to split button
+					$('body').on('click', '##changeAmount', function(e){
+						e.preventDefault();
+						$(this).closest('div').html('<input type="text" name="newOrderPayment.amount" value="#rc.order.getTotal()#" class="span3 required numeric" />');
+					});
+					
+				});
+			})( jQuery );
+		</script>
+	</div>
+	
+<!--- Only Show Payment Amount if this is the second account payment --->
+<cfelse>
+	<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="amount" fieldName="newOrderPayment.amount" edit="#rc.edit#">
+</cfif>
+
+<cf_HibachiDisplayToggle selector="select[name='newOrderPayment.paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard" loadVisable="#loadPaymentMethodType eq 'creditCard'#">
+	
+</cf_HibachiDisplayToggle>
+--->

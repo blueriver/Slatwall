@@ -87,6 +87,7 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	// Non-Persistent Properties
 	property name="adminIcon" persistent="false";
 	property name="assignedOrderItemAttributeSetSmartList" persistent="false";
+	property name="baseProductType" persistent="false";
 	property name="currentAccountPrice" type="numeric" hb_formatType="currency" persistent="false";
 	property name="currencyCode" type="string" persistent="false";
 	property name="currencyDetails" type="struct" persistent="false";
@@ -95,6 +96,7 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	property name="imageExistsFlag" type="boolean" persistent="false";
 	property name="livePrice" type="numeric" hb_formatType="currency" persistent="false";
 	property name="nextEstimatedAvailableDate" type="string" persistent="false";
+	property name="optionsIDList" persistent="false";
 	property name="optionsDisplay" persistent="false";
 	property name="qats" type="numeric" persistent="false";
 	property name="salePriceDetails" type="struct" persistent="false";
@@ -102,6 +104,7 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	property name="salePriceDiscountType" type="string" persistent="false";
 	property name="salePriceDiscountAmount" type="string" persistent="false";
 	property name="salePriceExpirationDateTime" type="date" hb_formatType="datetime" persistent="false";
+	property name="skuDefinition" persistent="false";
 	property name="stocksDeletableFlag" persistent="false" type="boolean";
 	
 	
@@ -176,6 +179,17 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 		}
 		return reReplaceNoCase(getProduct().getProductCode(), "[^a-z0-9\-\_]","","all") & optionString & ".#getProduct().setting('productImageDefaultExtension')#";
 	}
+	
+	public string function getOptionsIDList() {
+    	if(!structKeyExists(variables, "optionsIDList")) {
+    		variables.optionsIDList = "";
+    		for(var option in getOptions()) {
+	    		variables.optionsIDList = listAppend(variables.optionsIDList, option.getOptionID());
+	    	}	
+    	}
+    	
+		return variables.optionsIDList;
+    }
 	
 	public string function getOptionsDisplay(delimiter=" ") {
     	var dspOptions = "";
@@ -309,11 +323,6 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	
 	// END: Image Methods
 	
-	//get BaseProductType 
-	public any function getBaseProductType() {
-		return getProduct().getBaseProductType();
-	}
-	
 	// START: Price Methods
 	public numeric function getPriceByPromotion( required any promotion) {
 		return getService("promotionService").calculateSkuPriceBasedOnPromotion(sku=this, promotion=arguments.promotion);
@@ -390,6 +399,10 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 		}
 		
 		return variables.assignedOrderItemAttributeSetSmartList;
+	}
+	
+	public any function getBaseProductType() {
+		return getProduct().getBaseProductType();
 	}
 	
 	public string function getCurrencyCode() {
@@ -564,6 +577,24 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 		return variables.eligibleFulfillmentMethods;
 	}
 	
+	public string function getSkuDefinition() {
+		if(!structKeyExists(variables, "skuDefinition")) {
+			variables.skuDefinition = "";
+			if(getBaseProductType() eq "contentAccess") {
+				
+			} else if (getBaseProductType() eq "merchandise") {
+				for(var option in getOptions()) {
+		    		variables.skuDefinition = listAppend(variables.skuDefinition, " #option.getOptionGroup().getOptionGroupName()#: #option.getOptionName()#", ",");
+		    	}
+		    	trim(variables.skuDefinition);
+			} else if (getBaseProductType() eq "subscription") {
+				variables.skuDefinition = "#rbKey('entity.subscriptionTerm')#: #getSubscriptionTerm().getSubscriptionTermName()#";
+			}
+			
+		}
+		return variables.skuDefinition;
+	}
+	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
@@ -719,6 +750,13 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
+	
+	public string function getImageName() {
+		if(!structKeyExists(variables, "imageName")) {
+			variables.imageName = generateImageFileName();
+		}
+		return variables.imageName;
+	}
 	
 	public string function getSimpleRepresentationPropertyName() {
     	return "skuCode";

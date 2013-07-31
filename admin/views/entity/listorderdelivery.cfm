@@ -36,27 +36,20 @@
 Notes:
 
 --->
-<cfcomponent extends="HibachiDAO">
+<cfparam name="rc.orderDeliverySmartList" type="any" />
+
+<cfoutput>
+	<cf_HibachiEntityActionBar type="listing" object="#rc.orderDeliverySmartList#" showCreate="false" />
 	
-	<cffunction name="getMissingUserAccounts" returntype="any" access="public">
-		<cfquery name="accounts">
-			SELECT
-				accountID
-			FROM	
-				SlatwallAccount
-			INNER JOIN
-				tusers on SlatwallAccount.cmsAccountID = tusers.userID
-			WHERE
-				tusers.s2 = 1
-			AND
-				accountID NOT IN (
-					SELECT
-						accountID
-					FROM
-						SlatwallAccountPermissionGroup
-				)
-		</cfquery>	
-		<cfreturn accounts />
-	</cffunction>
-	
-</cfcomponent>
+	<cf_HibachiListingDisplay smartList="#rc.orderDeliverySmartList#"
+			recorddetailaction="admin:entity.detailorderdelivery">
+		<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" />
+		<cf_HibachiListingColumn propertyIdentifier="order.orderOpenDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />	
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="order.account.fullName" />
+		<cf_HibachiListingColumn propertyIdentifier="location.locationName" />
+		<cf_HibachiListingColumn propertyIdentifier="fulfillmentMethod.fulfillmentMethodType" />
+		<cf_HibachiListingColumn propertyIdentifier="shippingMethod.shippingMethodName" />
+		<cf_HibachiListingColumn propertyIdentifier="trackingNumber" />
+	</cf_HibachiListingDisplay>
+</cfoutput>

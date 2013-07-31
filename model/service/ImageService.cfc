@@ -61,7 +61,7 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 	
 	
 	// Image File Methods
-	public string function getResizedImagePath(required string imagePath, numeric width, numeric height, string resizeMethod="scale", string cropLocation="center", numeric cropX, numeric cropY, numeric scaleWidth, numeric scaleHeight, string missingImagePath, string canvasColor="FFFFFF") {
+	public string function getResizedImagePath(required string imagePath, numeric width, numeric height, string resizeMethod="scale", string cropLocation="center", numeric cropX, numeric cropY, numeric scaleWidth, numeric scaleHeight, string missingImagePath, string canvasColor="") {
 		var resizedImagePath = "";
 		
 		// If the image can't be found default to a missing image
@@ -135,7 +135,7 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 			// Figure out the image extension
 			var imageExt = listLast(arguments.imagePath,".");
 			
-			var cacheDirectory = replaceNoCase(expandPath(arguments.imagePath), listLast(arguments.imagePath, "/\"), "cache/");
+			var cacheDirectory = replaceNoCase(replaceNoCase(expandPath(arguments.imagePath), '\', '/', 'all'), listLast(arguments.imagePath, "/"), "cache/");
 			
 			if(!directoryExists(cacheDirectory)) {
 				directoryCreate(cacheDirectory);
@@ -240,7 +240,7 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 		return resizedImagePath;
 	}
 	
-	private any function scaleImage(required any image, numeric height, numeric width, string canvasColor="FFFFFF") {
+	private any function scaleImage(required any image, numeric height, numeric width, string canvasColor="") {
 		
 		// Scale Height And Widht - If Height and Width was defined then we need to add whitespace
 		if(structKeyExists(arguments, "width") && structKeyExists(arguments, "height")) {
@@ -269,7 +269,14 @@ component persistent="false" extends="HibachiService" output="false" accessors="
 				}
 				
 				// Create New Canvis
-				var imgBG = imageNew("", arguments.width, arguments.height, "rgb", arguments.canvasColor);
+				if(listFindNoCase('png,gif',listLast(image.source, '.')) && !len(arguments.canvasColor)) {
+					var imgBG = imageNew("", arguments.width, arguments.height, "argb");
+				} else {
+					if(!len(arguments.canvasColor)) {
+						arguments.canvasColor = "FFFFFF";
+					}
+					var imgBG = imageNew("", arguments.width, arguments.height, "rgb", arguments.canvasColor);	
+				}
 				
 				// Place resized image in center of canvis
 				imagePaste(imgBG, arguments.image, pasteX, pasteY);

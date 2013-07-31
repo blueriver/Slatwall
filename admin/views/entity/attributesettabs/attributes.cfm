@@ -42,7 +42,7 @@ Notes:
 
 	<cf_HibachiListingDisplay smartList="#rc.attributeSet.getAttributesSmartList()#" 
 							   recordEditAction="admin:entity.editattribute" 
-							   recordEditQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
+							   recordEditQueryString="redirectAction=admin:entity.detailattributeset&attributeSetID=#rc.attributeSet.getAttributeSetID()#"
 							   recordDetailAction="admin:entity.detailattribute"
 							   recordDetailQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
 							   sortProperty="sortOrder"
@@ -55,6 +55,6 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="attributeType.type" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createattribute" class="btn" icon="plus" queryString="attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
+	<cf_HibachiActionCaller action="admin:entity.createattribute" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailattributeset&attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
 	
 </cfoutput>

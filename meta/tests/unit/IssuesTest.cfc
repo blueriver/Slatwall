@@ -167,18 +167,29 @@ component extends="SlatwallUnitTestBase" {
 		assert(account2HasErrors);
 	}
 	
-	public void function issue_1386() {
-		var promotion = entityNew("SlatwallPromotion");
-
-		promotion.setPromotionName( "only two" );
+	public void function issue_1604() {
 		
-		promotion.validate(context="save");
+		var order = request.slatwallScope.getCart();
 		
-		//debug( promotion.hasError('promotionName') );
-		
-		assert( promotion.hasError('promotionName') );
-		//assert( right( promotion.getError('promotionName')[1], 8) neq "_missing");
-	}	
+		order = request.slatwallScope.getService('orderService').processOrder(order, {}, 'clear');
+			
+		assert(!isNull(order));
+	}
 	
+	public void function issue_1690() {
+		
+		var product  = request.slatwallScope.newEntity("Product");
+		
+		product.validate( context="save" );
+		
+		if(!product.hasErrors()){
+			request.slatwallScope.saveEntity( product );
+		}
+	}
+	
+	public void function issue_1690_2() {
+		var product  = request.slatwallScope.newEntity("Product");
+		request.slatwallScope.saveEntity( product );
+	}
 }
 

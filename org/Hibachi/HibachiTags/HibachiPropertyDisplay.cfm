@@ -158,7 +158,7 @@
 					</cfloop>
 					<cfset attributes.value = trim(thisValueList) />
 				<cfelse>
-					<cfif not attributes.edit or (attributes.edit and attributes.object.getPropertyFormatType( attributes.property ) eq "datetime" and not isNull(attributes.object.invokeMethod( "get#attributes.property#" )))>
+					<cfif not attributes.edit or (attributes.edit and listFindNoCase("datetime,time,date", attributes.object.getPropertyFormatType( attributes.property )) and not isNull(attributes.object.invokeMethod( "get#attributes.property#" )))>
 						<cfif isNumeric(attributes.value) and attributes.value lt 0>
 							<cfset attributes.valueClass &= " negative" />
 						</cfif>

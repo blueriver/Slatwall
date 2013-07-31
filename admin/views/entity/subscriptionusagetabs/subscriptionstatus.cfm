@@ -1,6 +1,6 @@
-﻿<!---
+<!---
 
-    Slatwall - An Open Source eCommerce Platform
+    Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
 
     This program is free software: you can redistribute it and/or modify
@@ -36,30 +36,12 @@
 Notes:
 
 --->
-
-<cfparam name="rc.redirectAction" type="string" default="admin:entity.editStockAdjustment&stockAdjustmentID=#rc.stockAdjustmentID#" />
-<cfparam name="rc.processStockAdjustmentSmartList" type="any" />
-<cfparam name="rc.multiProcess" type="boolean" />
+<cfparam name="rc.subscriptionUsage" type="any" />
 
 <cfoutput>
-	<cf_SlatwallProcessForm>
-		
-		<cf_HibachiEntityActionBar type="process" />
-		
-		<cfswitch expression="#rc.processcontext#" >
-			<cfcase value="addItems">
-				
-				<cf_SlatwallProcessListing processSmartList="#rc.processStockAdjustmentSmartList#" processRecordsProperty="adjustmentSkuOptions">
-					<cf_SlatwallProcessColumn propertyIdentifier="product.brand.brandName" />
-					<cf_SlatwallProcessColumn tdClass="primary" propertyIdentifier="product.productName" />
-					<cf_SlatwallProcessColumn propertyIdentifier="skucode" />
-					<cf_SlatwallProcessColumn propertyIdentifier="optionsdisplay" />
-					<cf_SlatwallProcessColumn data="quantity" fieldType="text" fieldClass="span1 number" />
-				</cf_SlatwallProcessListing>
-				
-			</cfcase> 
-				
-		</cfswitch>
-		
-	</cf_SlatwallProcessForm>
+	<cf_HibachiListingDisplay smartList="#rc.subscriptionUsage.getSubscriptionStatusSmartList()#">
+		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionStatusType.type" />
+		<cf_HibachiListingColumn propertyIdentifier="changeDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="effectiveDateTime" />
+	</cf_HibachiListingDisplay>
 </cfoutput>

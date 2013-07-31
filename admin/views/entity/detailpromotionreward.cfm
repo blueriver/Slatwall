@@ -66,7 +66,7 @@ Notes:
 				
 				<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="amountType" fieldType="select" edit="#rc.edit#" />
 				<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="amount" edit="#rc.edit#" />
-				<cf_HibachiDisplayToggle selector="select[name=amountType]" showValues="percentageOff">
+				<cf_HibachiDisplayToggle selector="select[name=amountType]" showValues="percentageOff" loadVisable="#rc.promotionReward.getNewFlag() || rc.promotionReward.getValueByPropertyIdentifier('amountType') eq 'percentageOff'#">
 					<cf_HibachiPropertyDisplay object="#rc.promotionreward#" property="roundingRule" edit="#rc.edit#" />
 				</cf_HibachiDisplayToggle>
 				<cfif listFindNoCase("merchandise,subscription,contentaccess", rc.rewardType)>

@@ -92,7 +92,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function removeItem(required struct rc) {
 		param name="rc.orderItemID" default="";
 		
-		getOrderService().removeOrderItem(order=rc.$.slatwall.cart(), orderItemID=rc.orderItemID);
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removeOrderItem');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.removeOrderItem", cart.hasErrors() );
 		
 		getFW().setView("frontend:cart.detail");
 	}
@@ -101,7 +103,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.promotionCode" default="";
 		param name="rc.promotionCodeOK" default="true";
 		
-		getOrderService().addPromotionCode(order=rc.$.slatwall.cart(), promotionCode=rc.promotionCode);
+		getOrderService().processOrder( rc.$.slatwall.cart(), rc, 'addPromotionCode');
 		
 		getFW().setView("frontend:cart.detail");
 	}

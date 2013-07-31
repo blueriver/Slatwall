@@ -52,6 +52,7 @@ Notes:
 				<cf_HibachiListingColumn propertyIdentifier="orderNumber" />
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
 				<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime" />
+				<cf_HibachiListingColumn propertyIdentifier="calculatedTotal" />
 			</cf_HibachiListingDisplay>
 		</div>
 		<div class="span6">

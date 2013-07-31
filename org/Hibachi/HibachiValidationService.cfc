@@ -160,6 +160,7 @@
 		
 		// If the context was 'false' then we don't do any validation
 		if(!isBoolean(arguments.context) || arguments.context) {
+			
 			// Get the valdiations for this context
 			var contextValidations = getValidationsByContext(object=arguments.object, context=arguments.context);
 			
@@ -238,7 +239,15 @@
 	
 	public boolean function validate_required(required any object, required string propertyIdentifier, boolean constraintValue=true) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		if(!isNull(propertyValue) && (isObject(propertyValue) || (isArray(propertyValue) && arrayLen(propertyValue)) || (isStruct(propertyValue) && structCount(propertyValue)) || (isSimpleValue(propertyValue) && len(propertyValue)))) {
+		if(!isNull(propertyValue) && (isObject(propertyValue) || (isArray(propertyValue) && arrayLen(propertyValue)) || (isStruct(propertyValue) && structCount(propertyValue)) || (isSimpleValue(propertyValue) && len(trim(propertyValue))))) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean function validate_null(required any object, required string propertyIdentifier, boolean constraintValue) {
+		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
+		if(isNull(propertyValue) && arguments.constraintValue) {
 			return true;
 		}
 		return false;
@@ -275,7 +284,7 @@
 	
 	public boolean function validate_minLength(required any object, required string propertyIdentifier, required numeric constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		if(isNull(propertyValue) || (isSimpleValue(propertyValue) && len(propertyValue) >= arguments.constraintValue) ) {
+		if(isNull(propertyValue) || (isSimpleValue(propertyValue) && len(trim(propertyValue)) >= arguments.constraintValue) ) {
 			return true;
 		}
 		return false;
@@ -283,7 +292,7 @@
 	
 	public boolean function validate_maxLength(required any object, required string propertyIdentifier, required numeric constraintValue) {
 		var propertyValue = arguments.object.getLastObjectByPropertyIdentifier( arguments.propertyIdentifier ).invokeMethod("get#listLast(arguments.propertyIdentifier,'._')#");
-		if(isNull(propertyValue) || (isSimpleValue(propertyValue) && len(propertyValue) <= arguments.constraintValue) ) {
+		if(isNull(propertyValue) || (isSimpleValue(propertyValue) && len(trim(propertyValue)) <= arguments.constraintValue) ) {
 			return true;
 		}
 		return false;

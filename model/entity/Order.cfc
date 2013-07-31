@@ -87,6 +87,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="addPaymentRequirementDetails" persistent="false";
 	property name="deliveredItemsAmountTotal" persistent="false";
 	property name="discountTotal" persistent="false" hb_formatType="currency";
+	property name="dynamicChargeOrderPayment" persistent="false";
+	property name="dynamicCreditOrderPayment" persistent="false";
+	property name="dynamicChargeOrderPaymentAmount" persistent="false" hb_formatType="currency";
+	property name="dynamicCreditOrderPaymentAmount" persistent="false" hb_formatType="currency";
 	property name="eligiblePaymentMethodDetails" persistent="false";
 	property name="itemDiscountAmountTotal" persistent="false" hb_formatType="currency";
 	property name="fulfillmentDiscountAmountTotal" persistent="false" hb_formatType="currency";
@@ -94,20 +98,23 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="fulfillmentRefundTotal" persistent="false" hb_formatType="currency";
 	property name="fulfillmentChargeAfterDiscountTotal" persistent="false" hb_formatType="currency";
 	property name="orderDiscountAmountTotal" persistent="false" hb_formatType="currency";
-	property name="paymentAmountTotal" persistent="false" hb_formatType="currency";
-	property name="paymentAmountReceivedTotal" persistent="false" hb_formatType="currency";
-	property name="paymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
-	property name="referencingPaymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
-	property name="paymentMethodOptionsSmartList" persistent="false";
+	property name="orderPaymentAmountNeeded" persistent="false" hb_formatType="currency";
+	property name="orderPaymentChargeAmountNeeded" persistent="false" hb_formatType="currency";
+	property name="orderPaymentCreditAmountNeeded" persistent="false" hb_formatType="currency";
 	property name="orderPaymentRefundOptions" persistent="false";
 	property name="orderRequirementsList" persistent="false";
 	property name="orderTypeOptions" persistent="false";
+	property name="paymentAmountTotal" persistent="false" hb_formatType="currency";
+	property name="paymentAmountReceivedTotal" persistent="false" hb_formatType="currency";
+	property name="paymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
+	property name="paymentMethodOptionsSmartList" persistent="false";
 	property name="promotionCodeList" persistent="false";
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
 	property name="quantityReceived" persistent="false";
 	property name="quantityUnreceived" persistent="false";
 	property name="returnItemSmartList" persistent="false";
+	property name="referencingPaymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
 	property name="saleItemSmartList" persistent="false";
 	property name="statusCode" persistent="false";
 	property name="subTotal" persistent="false" hb_formatType="currency";
@@ -118,7 +125,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="totalQuantity" persistent="false";
 	property name="totalSaleQuantity" persistent="false";
 	property name="totalReturnQuantity" persistent="false";
-	
 	
 	public string function getStatus() {
 		return getOrderStatusType().getType();
@@ -202,8 +208,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			setOrderOpenIPAddress( CGI.REMOTE_ADDR );
 			
 			// Loop over the order payments to setAmount = getAmount so that any null payments get explicitly defined
-			for(var i = 1; i <= arrayLen(getOrderPayments()); i++) {
-				getOrderPayments()[i].setAmount( getOrderPayments()[i].getAmount() );
+			for(var orderPayment in getOrderPayments()) {
+				orderPayment.setAmount( orderPayment.getAmount() );
+			}
+			
+			// Loop over the order fulfillments to remove and accountAddresses
+			for(var orderFulfillment in getOrderFulfillments()) {
+				orderFulfillment.setAccountAddress( javaCast("null", "") );
 			}
 		}
 		
@@ -262,17 +273,17 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.deliveredItemsAmountTotal = 0;
 			var fulfillmentChargeAddedList = "";
 			
-			for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			for(var orderItem in getOrderItems()) {
 				
-				if(getOrderItems()[i].getQuantityDelivered()) {
+				if(orderItem.getQuantityDelivered()) {
 					
-					variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + ((getOrderItems()[i].getQuantityDelivered() / thisQuantity) * getOrderItems()[i].getExtendedPriceAfterDiscount()));
+					variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + ((orderItem.getQuantityDelivered() / orderItem.getQuantity()) * orderItem.getExtendedPriceAfterDiscount()));
 					
-					if(!listFindNoCase(fulfillmentChargeAddedList, getOrderItems()[i].getOrderFulfillment().getOrderFulfillmentID())) {
+					if(!listFindNoCase(fulfillmentChargeAddedList, orderItem.getOrderFulfillment().getOrderFulfillmentID())) {
 						
-						listAppend(fulfillmentChargeAddedList, getOrderItems()[i].getOrderFulfillment().getOrderFulfillmentID());
+						listAppend(fulfillmentChargeAddedList, orderItem.getOrderFulfillment().getOrderFulfillmentID());
 						
-						variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + getOrderItems()[i].getOrderFulfillment().getChargeAfterDiscount());
+						variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + orderItem.getOrderFulfillment().getChargeAfterDiscount());
 					}
 				}
 			}
@@ -354,11 +365,92 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return getService("orderService").getOrderRequirementsList(order=this);
 	}
 	
+	public numeric function getOrderPaymentAmountNeeded() {
+		
+		var nonNullPayments = getService("orderService").getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
+		var orderPaymentAmountNeeded = precisionEvaluate( getTotal() - nonNullPayments );
+		
+		if(orderPaymentAmountNeeded gt 0 && isNull(getDynamicChargeOrderPayment())) {
+			return orderPaymentAmountNeeded;
+		} else if (orderPaymentAmountNeeded lt 0 && isNull(getDynamicCreditOrderPayment())) {
+			return orderPaymentAmountNeeded;
+		}
+		
+		return 0;
+		
+	}
+	
+	public numeric function getOrderPaymentChargeAmountNeeded() {
+		var orderPaymentAmountNeeded = getOrderPaymentAmountNeeded();
+		if(orderPaymentAmountNeeded lt 0) {
+			return 0;
+		}
+		return orderPaymentAmountNeeded;
+	}
+	
+	public numeric function getOrderPaymentCreditAmountNeeded() {
+		var orderPaymentAmountNeeded = getOrderPaymentAmountNeeded();
+		if(orderPaymentAmountNeeded gt 0) {
+			return 0;
+		}
+		return orderPaymentAmountNeeded * -1;
+	}
+	
+	public any function getDynamicChargeOrderPayment() {
+		var returnOrderPayment = javaCast("null", "");
+		for(var orderPayment in getOrderPayments()) {
+			if(orderPayment.getStatusCode() eq "opstActive" && orderPayment.getOrderPaymentType().getSystemCode() eq 'optCharge' && orderPayment.getDynamicAmountFlag()) {
+				if(!orderPayment.getNewFlag() || isNull(returnOrderPayment)) {
+					returnOrderPayment = orderPayment;
+				}
+			}
+		}
+		if(!isNull(returnOrderPayment)) {
+			return returnOrderPayment;
+		}
+	}
+	
+	public any function getDynamicCreditOrderPayment() {
+		var returnOrderPayment = javaCast("null", "");
+		for(var orderPayment in getOrderPayments()) {
+			if(orderPayment.getStatusCode() eq "opstActive" && orderPayment.getOrderPaymentType().getSystemCode() eq 'optCredit' && orderPayment.getDynamicAmountFlag()) {
+				if(!orderPayment.getNewFlag() || isNull(returnOrderPayment)) {
+					returnOrderPayment = orderPayment;
+				}
+			}
+		}
+		if(!isNull(returnOrderPayment)) {
+			return returnOrderPayment;
+		}
+	}
+	
+	public any function getDynamicChargeOrderPaymentAmount() {
+		var nonNullPayments = getService("orderService").getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
+		var orderPaymentAmountNeeded = precisionEvaluate( getTotal() - nonNullPayments );
+		
+		if(orderPaymentAmountNeeded gt 0) {
+			return orderPaymentAmountNeeded;
+		}
+		
+		return 0;
+	}
+	
+	public any function getDynamicCreditOrderPaymentAmount() {
+		var nonNullPayments = getService("orderService").getOrderPaymentNonNullAmountTotal(orderID=getOrderID());
+		var orderPaymentAmountNeeded = precisionEvaluate( getTotal() - nonNullPayments );
+		
+		if(orderPaymentAmountNeeded lt 0) {
+			return orderPaymentAmountNeeded * -1;
+		}
+		
+		return 0;
+	}
+	
 	public numeric function getPaymentAmountTotal() {
 		var totalPayments = 0;
 		
 		for(var orderPayment in getOrderPayments()) {
-			if(!orderPayment.hasErrors()) {
+			if(orderPayment.getStatusCode() eq "opstActive" && !orderPayment.hasErrors()) {
 				if(orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
 					totalPayments = precisionEvaluate(totalPayments + orderPayment.getAmount());
 				} else {
@@ -373,8 +465,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getPaymentAmountAuthorizedTotal() {
 		var totalPaymentsAuthorized = 0;
 		
-		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			totalPaymentsAuthorized = precisionEvaluate(totalPaymentsAuthorized + getOrderPayments()[i].getAmountAuthorized());
+		for(var orderPayment in getOrderPayments()) {
+			if(orderPayment.getStatusCode() eq "opstActive") {
+				totalPaymentsAuthorized = precisionEvaluate(totalPaymentsAuthorized + orderPayment.getAmountAuthorized());	
+			}
 		}
 		
 		return totalPaymentsAuthorized;
@@ -383,8 +477,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getPaymentAmountReceivedTotal() {
 		var totalPaymentsReceived = 0;
 		
-		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			totalPaymentsReceived = precisionEvaluate(totalPaymentsReceived + getOrderPayments()[i].getAmountReceived());
+		for(var orderPayment in getOrderPayments()) {
+			if(orderPayment.getStatusCode() eq "opstActive") {
+				totalPaymentsReceived = precisionEvaluate(totalPaymentsReceived + orderPayment.getAmountReceived());
+			}
 		}
 		
 		return totalPaymentsReceived;
@@ -393,8 +489,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getPaymentAmountCreditedTotal() {
 		var totalPaymentsCredited = 0;
 		
-		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			totalPaymentsCredited = precisionEvaluate(totalPaymentsCredited + getOrderPayments()[i].getAmountCredited());
+		for(var orderPayment in getOrderPayments()) {
+			if(orderPayment.getStatusCode() eq "opstActive") {
+				totalPaymentsCredited = precisionEvaluate(totalPaymentsCredited + orderPayment.getAmountCredited());
+			}
 		}
 		
 		return totalPaymentsCredited;
@@ -403,9 +501,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getReferencingPaymentAmountCreditedTotal() {
 		var totalReferencingPaymentsCredited = 0;
 		
-		for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-			for(var r=1; r<=arrayLen(getOrderPayments()[i].getReferencingOrderPayments()); r++) {
-				totalReferencingPaymentsCredited = precisionEvaluate(totalReferencingPaymentsCredited + getOrderPayments()[i].getReferencingOrderPayments()[r].getAmountCredited());
+		for(var orderPayment in getOrderPayments()) {
+			for(var referencingOrderPayment in orderPayment.getReferencingOrderPayments()) {
+				if(referencingOrderPayment.getStatusCode() eq "opstActive") {
+					totalReferencingPaymentsCredited = precisionEvaluate(totalReferencingPaymentsCredited + referencingOrderPayment.getAmountCredited());	
+				}
 			}
 		}
 		
@@ -423,8 +523,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public array function getOrderPaymentRefundOptions() {
 		if(!structKeyExists(variables, "orderPaymentRefundOptions")) {
 			variables.orderPaymentRefundOptions = [];
-			for(var i=1; i<=arrayLen(getOrderPayments()); i++) {
-				arrayAppend(variables.orderPaymentRefundOptions, {name=getOrderPayments()[i].getSimpleRepresentation(), value=getOrderPayments()[i].getOrderPaymentID()});
+			for(var orderPayment in getOrderPayments()) {
+				if(orderPayment.getStatusCode() eq 'opstActive') {
+					arrayAppend(variables.orderPaymentRefundOptions, {name=orderPayment.getSimpleRepresentation(), value=orderPayment.getOrderPaymentID()});	
+				}
 			}
 			arrayAppend(variables.orderPaymentRefundOptions, {name=rbKey('define.none'), value=''});
 		}

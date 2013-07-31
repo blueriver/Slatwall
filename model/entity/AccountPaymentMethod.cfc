@@ -60,6 +60,7 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	
 	// Related Object Properties (one-to-many)
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="accountPaymentMethodID" cascade="all" inverse="true" lazy="extra";
+	property name="paymentTransactions" singularname="paymentTransaction" cfc="PaymentTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountPaymentMethodID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -77,6 +78,7 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 	property name="giftCardNumber" persistent="false";
 	property name="bankRoutingNumber" persistent="false";
 	property name="bankAccountNumber" persistent="false";
+	property name="securityCode" persistent="false";
 	property name="paymentMethodOptions" persistent="false";
 	property name="paymentMethodOptionsSmartList" persistent="false";
 	
@@ -118,10 +120,14 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 		
 		// Credit Card
 		if(listFindNoCase("creditCard", arguments.orderPayment.getPaymentMethod().getPaymentMethodType())) {
+			if(!isNull(arguments.orderPayment.getCreditCardNumber())) {
+				setCreditCardNumber( arguments.orderPayment.getCreditCardNumber() );	
+			}
 			setNameOnCreditCard( arguments.orderPayment.getNameOnCreditCard() );
-			setCreditCardNumber( arguments.orderPayment.getCreditCardNumber() );
 			setExpirationMonth( arguments.orderPayment.getExpirationMonth() );
 			setExpirationYear( arguments.orderPayment.getExpirationYear() );
+			setCreditCardLastFour( arguments.orderPayment.getCreditCardLastFour() );
+			setCreditCardType( arguments.orderPayment.getCreditCardType() );
 		}
 		
 		// Gift Card
@@ -213,6 +219,14 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 		arguments.orderPayment.removeAccountPaymentMethod( this );    
 	}
 	
+	// Payment Transactions (one-to-many)    
+	public void function addPaymentTransaction(required any paymentTransaction) {    
+		arguments.paymentTransaction.setAccountPaymentMethod( this );    
+	}    
+	public void function removePaymentTransaction(required any paymentTransaction) {    
+		arguments.paymentTransaction.removeAccountPaymentMethod( this );    
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================
@@ -228,7 +242,7 @@ component displayname="Account Payment Method" entityname="SlatwallAccountPaymen
 		variables.creditCardNumber = arguments.creditCardNumber;
 		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
 		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
-		if(getCreditCardType() != "Invalid") {
+		if(getCreditCardType() != "Invalid" && !isNull(getPaymentMethod()) && !isNull(getPaymentMethod().getSaveAccountPaymentMethodEncryptFlag()) && getPaymentMethod().getSaveAccountPaymentMethodEncryptFlag()) {
 			setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
 		}
 	}

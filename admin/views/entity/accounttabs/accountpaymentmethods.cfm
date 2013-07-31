@@ -42,9 +42,8 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.account.getAccountPaymentMethodsSmartList()#"
 							  recordEditAction="admin:entity.editaccountpaymentmethod"
 							  recordEditQueryString="accountID=#rc.account.getAccountID()#"
-							  recordEditModal=true
-							  recordDeleteAction="admin:entity.deleteaccountpaymentmethod"
-							  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount##tabaccountPaymentMethods"
+							  recordDetailAction="admin:entity.detailaccountpaymentmethod"
+							  recordDetailQueryString="accountID=#rc.account.getAccountID()#&redirectAction=admin:entity.detailaccount##tabaccountPaymentMethods"
 							  selectFieldName="primaryPaymentMethod.accountPaymentMethodID"
 							  selectValue="#rc.account.getPrimaryPaymentMethod().getAccountPaymentMethodID()#"
 							  selectTitle="#$.slatwall.rbKey('define.primary')#"
@@ -55,5 +54,5 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createaccountpaymentmethod" class="btn" icon="plus" querystring="accountID=#rc.account.getAccountID()#" modal=true />
+	<cf_HibachiActionCaller action="admin:entity.createaccountpaymentmethod" class="btn" icon="plus" querystring="sRedirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal=true />
 </cfoutput>

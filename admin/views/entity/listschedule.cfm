@@ -42,10 +42,9 @@ Notes:
 
 	<cf_HibachiEntityActionBar type="listing" object="#rc.scheduleSmartList#" />
 
-	<cf_HibachiListingDisplay smartlist="#rc.scheduleSmartList#" 
-	                           recordeditaction="admin:entity.editschedule" 
-	                           recordeditquerystring="redirectAction=admin:entity.listschedule" 
-	                           recordeditmodal="false" recorddeleteaction="admin:entity.deleteschedule">
+	<cf_HibachiListingDisplay smartlist="#rc.scheduleSmartList#"
+							  recorddetailaction="admin:entity.detailschedule" 
+	                          recordeditaction="admin:entity.editschedule">
 		<cf_HibachiListingColumn tdclass="primary" propertyidentifier="scheduleName" search="true" />
 	</cf_HibachiListingDisplay>
 

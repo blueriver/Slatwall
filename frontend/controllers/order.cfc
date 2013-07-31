@@ -52,9 +52,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.order = getOrderService().getOrder(rc.orderID, true);
 		
 			// Check to make sure that the order being requested is actually the customers
-			if(isNull(rc.order.getAccount()) || rc.order.getAccount().getAccountID() != $.slatwall.account().getAccountID()) {
+			if(isNull(rc.order.getAccount()) || rc.order.getAccount().getAccountID() != rc.$.slatwall.account().getAccountID()) {
 				rc.order = getOrderService().newOrder();
-			}	
+			}
 		}
 		
 		if(rc.orderNumber != "") {

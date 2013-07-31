@@ -118,8 +118,15 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	public any function processVendorOrder_receive(required any vendorOrder, required any processObject){
 		
 		var stockReceiver = getStockService().newStockReceiver();
-		stockReceiver.setReceiverType("vendorOrder");
+		stockReceiver.setReceiverType( "vendorOrder" );
 		stockReceiver.setVendorOrder( arguments.vendorOrder );
+		
+		if(!isNull(processObject.getPackingSlipNumber())) {
+			stockReceiver.setPackingSlipNumber( processObject.getPackingSlipNumber() );
+		}
+		if(!isNull(processObject.getBoxCount())) {
+			stockReceiver.setBoxCount( processObject.getBoxCount() );
+		}
 		
 		var location = getLocationService().getLocation( arguments.processObject.getLocationID() );
 		
@@ -131,7 +138,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				var vendorOrderItem = this.getVendorOrderItem( thisRecord.vendorOrderItem.vendorOrderItemID );
 				var stock = getStockService().getStockBySkuAndLocation( vendorOrderItem.getStock().getSku(), location );
 				
-				var stockreceiverItem = getStockService().newStockReceiverItem();
+				var stockReceiverItem = getStockService().newStockReceiverItem();
 			
 				stockreceiverItem.setQuantity( thisRecord.quantity );
 				stockreceiverItem.setStock( stock );
@@ -140,6 +147,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				
 			}
 		}
+		
+		getStockService().saveStockReceiver( stockReceiver );
 		
 		return arguments.vendorOrder;
 	}

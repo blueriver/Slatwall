@@ -44,9 +44,9 @@ Notes:
 		<!--- Create --->
 		<cf_HibachiEntityActionBarButtonGroup>
 			<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('define.create')#" icon="plus" dropdownClass="pull-right">
-				<cf_HibachiActionCaller action="admin:entity.createstockadjustment" text="#rc.$.slatwall.rbKey('define.locationtransfer')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satLocationTransfer" createModal="true" />
-				<cf_HibachiActionCaller action="admin:entity.createstockadjustment" text="#rc.$.slatwall.rbKey('define.manualin')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satManualIn" createModal="true" />
-				<cf_HibachiActionCaller action="admin:entity.createstockadjustment" text="#rc.$.slatwall.rbKey('define.manualout')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satManualOut" createModal="true" />
+				<cf_HibachiActionCaller action="admin:entity.createstockadjustment" text="#rc.$.slatwall.rbKey('define.locationtransfer')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satLocationTransfer" type="list" createModal="true" />
+				<cf_HibachiActionCaller action="admin:entity.createstockadjustment" text="#rc.$.slatwall.rbKey('define.manualin')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satManualIn" type="list" createModal="true" />
+				<cf_HibachiActionCaller action="admin:entity.createstockadjustment" text="#rc.$.slatwall.rbKey('define.manualout')# #rc.$.slatwall.rbKey('entity.stockadjustment')#" querystring="stockAdjustmentType=satManualOut" type="list" createModal="true" />
 			</cf_HibachiActionCallerDropdown>
 		</cf_HibachiEntityActionBarButtonGroup>
 		

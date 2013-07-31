@@ -38,7 +38,7 @@ Notes:
 --->
 <cfcomponent extends="HibachiDAO">
 	
-	<cffunction name="removeOrderFromSessions" access="public" returntype="void">
+	<cffunction name="removeOrderFromAllSessions" access="public" returntype="void">
 		<cfargument name="orderID" type="string" required="true" />
 		
 		<cfset var rs = "" />
@@ -91,16 +91,6 @@ Notes:
 		public any function getMaxOrderNumber() {
 			return ormExecuteQuery("SELECT max(cast(aslatwallorder.orderNumber as int)) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
 		}
-	
-		public boolean function getPeerOrderPaymentNullAmountExistsFlag(required string orderID, string orderPaymentID) {
-			var result = ormExecuteQuery("SELECT orderPaymentID FROM SlatwallOrderPayment op WHERE op.order.orderID = ? AND op.amount IS NULL", [arguments.orderID]);
-			
-			if(arrayLen(result) && (!structKeyExists(arguments, "orderPaymentID") || result[1] neq arguments.orderPaymentID)) {
-				return true;
-			}
-			
-			return false;
-		}
 	</cfscript>
 	
 	<cffunction name="getOrderPaymentNonNullAmountTotal" access="public" returntype="Numeric">
@@ -121,6 +111,8 @@ Notes:
 				SlatwallOrderPayment.orderID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.orderID#" />
 			  AND
 			  	SlatwallOrderPayment.amount is not null
+			  AND
+			  	(SlatwallOrderPayment.orderPaymentStatusTypeID is null or SlatwallOrderPayment.orderPaymentStatusTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="5accbf57dcf5bb3eb71614febe83a31d" />)
 		</cfquery>
 		
 		<cfloop query="rs">

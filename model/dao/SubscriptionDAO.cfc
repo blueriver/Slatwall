@@ -38,6 +38,12 @@ Notes:
 --->
 <cfcomponent extends="HibachiDAO">
 	
+	<cffunction name="getUniquePreviousSubscriptionOrderPayments">
+		<cfargument name="subscriptionUsageID" type="string" required="true" />
+		
+		<cfreturn ormExecuteQuery("SELECT DISTINCT op FROM SlatwallSubscriptionOrderItem soi INNER JOIN soi.orderItem oi INNER JOIN oi.order o INNER JOIN o.orderPayments op WHERE soi.subscriptionUsage.subscriptionUsageID = :subscriptionUsageID AND op.referencedOrderPayment IS NULL", {subscriptionUsageID=arguments.subscriptionUsageID}) />
+	</cffunction>
+	
 	<cffunction name="getSubscriptionCurrentStatus">
 		<cfargument name="subscriptionUsageID" type="string" required="true" />
 		
@@ -95,7 +101,7 @@ Notes:
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
 				FROM SlatwallSubscriptionUsage su
-				WHERE (su.nextReminderEmailDate IS NULL OR su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
+				WHERE (su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
 					AND 'sstActive' = (SELECT systemCode FROM SlatwallSubscriptionStatus 
 								INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
 								WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID
@@ -106,7 +112,7 @@ Notes:
 			<cfquery name="getsu">
 				SELECT DISTINCT su.subscriptionUsageID
 				FROM SlatwallSubscriptionUsage su
-				WHERE (su.nextReminderEmailDate IS NULL OR su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
+				WHERE (su.nextReminderEmailDate <= <cfqueryparam value="#dateformat(now(),'mm-dd-yyyy 23:59')#" cfsqltype="cf_sql_timestamp" />)
 					AND 'sstActive' = (SELECT TOP 1 systemCode FROM SlatwallSubscriptionStatus 
 								INNER JOIN SlatwallType ON SlatwallSubscriptionStatus.subscriptionStatusTypeID = SlatwallType.typeID
 								WHERE SlatwallSubscriptionStatus.subscriptionUsageID = su.subscriptionUsageID

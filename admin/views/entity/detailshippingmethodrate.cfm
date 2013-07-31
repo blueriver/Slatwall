@@ -46,8 +46,11 @@ Notes:
 </cfif>
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.shippingMethodRate#" edit="#rc.edit#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.shippingMethodRate#" edit="#rc.edit#" backAction="admin:entity.detailShippingMethod" backQueryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"></cf_HibachiEntityActionBar>
+	<cf_HibachiEntityDetailForm object="#rc.shippingMethodRate#" edit="#rc.edit#" >
+		<cf_HibachiEntityActionBar type="detail" object="#rc.shippingMethodRate#" edit="#rc.edit#" 
+								backAction="admin:entity.detailShippingMethod" 
+								backQueryString="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#"
+								deleteQueryString="redirectAction=admin:entity.detailShippingMethod&shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" />
 		
 		<cfif rc.edit>
 			<input type="hidden" name="shippingMethod.shippingMethodID" value="#rc.shippingMethod.getShippingMethodID()#" />

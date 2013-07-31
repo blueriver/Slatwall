@@ -38,11 +38,12 @@ Notes:
 --->
 <cfparam name="rc.order" type="any" />
 <cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.addSkuAddStockType" type="string" />
 
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.order.getAddOrderItemStockOptionsSmartList()#"
 							  recordProcessAction="admin:entity.processOrder"
-							  recordProcessQueryString="orderItemTypeSystemCode=oitSale"
+							  recordProcessQueryString="orderItemTypeSystemCode=#rc.addSkuAddStockType#"
 							  recordProcessContext="addOrderItem"
 							  recordProcessEntity="#rc.order#"
 							  recordProcessUpdateTableID="LD#replace(rc.order.getSaleItemSmartList().getSavedStateID(),'-','','all')#">
@@ -53,9 +54,10 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="sku.product.brand.brandName" />
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="sku.product.productName" />
 		<cf_HibachiListingColumn propertyIdentifier="sku.product.productType.productTypeName" />
+		<cf_HibachiListingColumn propertyIdentifier="sku.skuDefinition" />
 		<cf_HibachiListingColumn propertyIdentifier="sku.calculatedQATS" />
 		<cf_HibachiListingColumn processObjectProperty="orderFulfillmentID" title="#$.slatwall.rbKey('entity.orderFulfillment')#" fieldClass="span2" />
-		<cf_HibachiListingColumn processObjectProperty="price" fieldClass="span1" />
+		<cf_HibachiListingColumn processObjectProperty="price" title="#$.slatwall.rbKey('define.price')#" fieldClass="span1" />
 		<cf_HibachiListingColumn processObjectProperty="quantity" title="#$.slatwall.rbKey('define.quantity')#" fieldClass="span1" />
 	</cf_HibachiListingDisplay>
 </cfoutput>

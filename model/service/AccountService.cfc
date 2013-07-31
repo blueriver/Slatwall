@@ -44,6 +44,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="paymentService" type="any";
 	property name="permissionService" type="any";
 	property name="priceGroupService" type="any";
+	property name="settingService" type="any";
 	property name="siteService" type="any";
 	property name="validationService" type="any";
 	
@@ -73,8 +74,8 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// ===================== START: DAO Passthrough ===========================
 	
-	public boolean function getEmailAddressNotInUseFlag( required string emailAddress ) {
-		return getAccountDAO().getEmailAddressNotInUseFlag(argumentcollection=arguments);
+	public boolean function getPrimaryEmailAddressNotInUseFlag( required string emailAddress, string accountID ) {
+		return getAccountDAO().getPrimaryEmailAddressNotInUseFlag(argumentcollection=arguments);
 	}
 	
 	public any function getInternalAccountAuthenticationsByEmailAddress(required string emailAddress) {
@@ -176,6 +177,8 @@ component extends="HibachiService" accessors="true" output="false" {
 				authArray[i].setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), authArray[i].getAccountAuthenticationID()) );		
 			}
 		}
+		
+		return arguments.account;
 	}
 	
 	public any function processAccount_create(required any account, required any processObject) {
@@ -229,7 +232,9 @@ component extends="HibachiService" accessors="true" output="false" {
 		getHibachiDAO().save(accountAuthentication);
 	
 		// Set the password
-		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );	
+		accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );
+		
+		return account;	
 	}
 	
 	public any function processAccount_login(required any account, required any processObject) {
@@ -344,6 +349,12 @@ component extends="HibachiService" accessors="true" output="false" {
 		// Call save on the account now that it is all setup
 		arguments.account = this.saveAccount(arguments.account);
 		
+		// Setup the Default to & from emails in the system to this users account
+		var defaultSetupData = {
+			emailAddress = processObject.getEmailAddress() 
+		};
+		getSettingService().setupDefaultValues( defaultSetupData );
+		
 		// Login the new account
 		if(!arguments.account.hasErrors()) {
 			getHibachiSessionService().loginAccount(account=arguments.account, accountAuthentication=accountAuthentication);	
@@ -351,7 +362,6 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		return arguments.account;
 	}
-	
 	
 	
 	// Account Payment
@@ -380,6 +390,32 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.accountPayment;	
 	}
 	
+	// Account Payment Method
+	public any function processAccountPaymentMethod_createTransaction(required any accountPaymentMethod, required any processObject) {
+		
+		// Create a new payment transaction
+		var paymentTransaction = getPaymentService().newPaymentTransaction();
+		
+		// Setup the accountPayment in the transaction to be used by the 'runTransaction'
+		paymentTransaction.setAccountPaymentMethod( arguments.accountPaymentMethod );
+		
+		// Setup the transaction data
+		transactionData = {
+			transactionType = processObject.getTransactionType(),
+			amount = processObject.getAmount()
+		};
+		
+		// Run the transaction
+		paymentTransaction = getPaymentService().processPaymentTransaction(paymentTransaction, transactionData, 'runTransaction');
+		
+		// If the paymentTransaction has errors, then add those errors to the orderPayment itself
+		if(paymentTransaction.hasError('runTransaction')) {
+			arguments.accountPaymentMethod.addError('createTransaction', paymentTransaction.getError('runTransaction'), true);
+		}
+		
+		return arguments.accountPaymentMethod;	
+	}
+	
 	// =====================  END: Process Methods ============================
 	
 	// ====================== START: Save Overrides ===========================
@@ -403,7 +439,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			// Clear out any previous 'createTransaction' process objects
 			arguments.accountPaymentMethod.clearProcessObject( 'createTransaction' );
 			
-			arguments.accountPaymentMethod = this.processAccountPayment(arguments.accountPaymentMethod, transactionData, 'createTransaction');
+			arguments.accountPaymentMethod = this.processAccountPaymentMethod(arguments.accountPaymentMethod, transactionData, 'createTransaction');
 		}
 		
 		return arguments.accountPaymentMethod;
@@ -509,8 +545,8 @@ component extends="HibachiService" accessors="true" output="false" {
 			arguments.account.setPrimaryPhoneNumber(javaCast("null", ""));
 			arguments.account.setPrimaryAddress(javaCast("null", ""));
 			
-			getAccountDAO().removeAccountFromAllSessions( accountID );
-			getAccountDAO().removeAccountFromAuditProperties( accountID );
+			getAccountDAO().removeAccountFromAllSessions( arguments.account.getAccountID() );
+			getAccountDAO().removeAccountFromAuditProperties( arguments.account.getAccountID() );
 			
 			return delete( arguments.account );
 		}
@@ -559,6 +595,9 @@ component extends="HibachiService" accessors="true" output="false" {
 			if(arguments.accountAddress.getAccount().getPrimaryAddress().getAccountAddressID() eq arguments.accountAddress.getAccountAddressID()) {
 				arguments.accountAddress.getAccount().setPrimaryAddress(javaCast("null",""));
 			}
+			
+			// Remove from all orderFulfillments
+			getAccountDAO().removeAccountAddressFromOrderFulfillments( accountAddressID = arguments.accountAddress.getAccountAddressID() );
 			
 			return delete(arguments.accountAddress);
 		}

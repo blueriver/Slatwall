@@ -59,6 +59,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="billingAddress" hb_populateEnabled="public" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderPaymentTypeID" hb_optionsSmartListData="f:parentType.systemCode=orderPaymentType" fetch="join";
+	property name="orderPaymentStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderPaymentStatusTypeID" hb_optionsSmartListData="f:parentType.systemCode=orderPaymentStatusType" fetch="join";
 	property name="paymentMethod" hb_populateEnabled="public" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" fetch="join";
 	property name="referencedOrderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="referencedOrderPaymentID";
 	property name="termPaymentAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="termPaymentAccountID";
@@ -100,8 +101,8 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="paymentMethodType" persistent="false";
 	property name="paymentMethodOptions" persistent="false";
 	property name="orderStatusCode" persistent="false";
+	property name="statusCode" persistent="false";
 	property name="securityCode" persistent="false" hb_populateEnabled="public";
-	property name="peerOrderPaymentNullAmountExistsFlag" persistent="false";
 	property name="orderAmountNeeded" persistent="false";
 	property name="creditCardOrProviderTokenExistsFlag" persistent="false";
 	property name="dynamicAmountFlag" persistent="false" hb_formatType="yesno";
@@ -129,10 +130,14 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		
 		// Credit Card
 		if(listFindNoCase("creditCard", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
+			if(!isNull(arguments.accountPaymentMethod.getCreditCardNumber())) {
+				setCreditCardNumber( arguments.accountPaymentMethod.getCreditCardNumber() );
+			}
 			setNameOnCreditCard( arguments.accountPaymentMethod.getNameOnCreditCard() );
-			setCreditCardNumber( arguments.accountPaymentMethod.getCreditCardNumber() );
 			setExpirationMonth( arguments.accountPaymentMethod.getExpirationMonth() );
 			setExpirationYear( arguments.accountPaymentMethod.getExpirationYear() );
+			setCreditCardLastFour( arguments.accountPaymentMethod.getCreditCardLastFour() );
+			setCreditCardType( arguments.accountPaymentMethod.getCreditCardType() );
 		}
 		
 		// Gift Card
@@ -144,18 +149,57 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		if(listFindNoCase("creditCard,giftCard", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
 			setProviderToken( arguments.accountPaymentMethod.getProviderToken() );
 		}
-		
+			
 		// Credit Card & Term Payment
 		if(listFindNoCase("creditCard,termPayment", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
 			setBillingAddress( arguments.accountPaymentMethod.getBillingAddress().copyAddress( true ) );
 		}
 		
-	}	
+	}
+	
+	public void function copyFromOrderPayment(required any orderPayment) {
+		
+		// Make sure the payment method matches
+		setPaymentMethod( arguments.orderPayment.getPaymentMethod() );
+		
+		// Check for a relational Account Payment Method
+		if(!isNull(arguments.orderPayment.getAccountPaymentMethod())) {
+			setAccountPaymentMethod(arguments.orderPayment.getAccountPaymentMethod());
+		}
+		
+		// Credit Card
+		if(listFindNoCase("creditCard", arguments.orderPayment.getPaymentMethod().getPaymentMethodType())) {
+			if(!isNull(arguments.orderPayment.getCreditCardNumber())) {
+				setCreditCardNumber( arguments.orderPayment.getCreditCardNumber() );
+			}
+			setNameOnCreditCard( arguments.orderPayment.getNameOnCreditCard() );
+			setExpirationMonth( arguments.orderPayment.getExpirationMonth() );
+			setExpirationYear( arguments.orderPayment.getExpirationYear() );
+			setCreditCardLastFour( arguments.orderPayment.getCreditCardLastFour() );
+			setCreditCardType( arguments.orderPayment.getCreditCardType() );
+		}
+		
+		// Gift Card
+		if(listFindNoCase("giftCard", arguments.orderPayment.getPaymentMethod().getPaymentMethodType())) {
+			setGiftCardNumber( arguments.orderPayment.getGiftCardNumber() );
+		}
+		
+		// Credit Card & Gift Card
+		if(listFindNoCase("creditCard,giftCard", arguments.orderPayment.getPaymentMethod().getPaymentMethodType())) {
+			setProviderToken( arguments.orderPayment.getProviderToken() );
+		}
+		
+		// Credit Card & Term Payment
+		if(listFindNoCase("creditCard,termPayment", arguments.orderPayment.getPaymentMethod().getPaymentMethodType())) {
+			setBillingAddress( arguments.orderPayment.getBillingAddress().copyAddress( true ) );
+		}
+		
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public boolean function getDynamicAmountFlag() {
-		if(isNull(variables.amount) && !getPeerOrderPaymentNullAmountExistsFlag()) {
+		if(isNull(variables.amount)) {
 			return true;
 		}
 		return false;
@@ -281,6 +325,10 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		return getOrder().getStatusCode();
 	}
 	
+	public any function getStatusCode() {
+		return getOrderPaymentStatusType().getSystemCode();
+	}
+	
 	public string function getExpirationDate() {
 		if(!structKeyExists(variables,"expirationDate")) {
 			variables.expirationDate = nullReplace(getExpirationMonth(),"") & "/" & nullReplace(getExpirationYear(), "");
@@ -301,20 +349,6 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 			variables.paymentMethodOptions = sl.getRecords();
 		}
 		return variables.paymentMethodOptions;
-	}
-	
-	public any function getPeerOrderPaymentNullAmountExistsFlag() {
-		if(!structKeyExists(variables, "peerOrderPaymentNullAmountExistsFlag")) {
-			variables.peerOrderPaymentNullAmountExistsFlag = false;
-			if(!isNull(getOrder())) {
-				if(!isNull(getOrderPaymentID())) {
-					variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").getPeerOrderPaymentNullAmountExistsFlag(orderID=getOrder().getOrderID(), orderPaymentID=getOrderPaymentID());	
-				} else {
-					variables.peerOrderPaymentNullAmountExistsFlag = getService("orderService").getPeerOrderPaymentNullAmountExistsFlag(orderID=getOrder().getOrderID());
-				}	
-			}
-		}
-		return variables.peerOrderPaymentNullAmountExistsFlag;
 	}
 	
 	// Important this can be a negative number
@@ -481,20 +515,16 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	public any function getAmount() {
 		// If an amount has not been explicity set, then we can return another value if needed
 		if( !structKeyExists(variables, "amount") ) {
-			
-			// If there is an order, it has not been placed and there is only 1 order payment with no explicit value set... then we can return the order total.
-			if(!isNull(getOrder()) && listFindNoCase("ostNotPlaced,ostNew,ostOnHold,ostProcessing", getOrder().getOrderStatusType().getSystemCode()) && !getPeerOrderPaymentNullAmountExistsFlag()) {
-				var orderAmountNeeded = getOrderAmountNeeded();
-				if(orderAmountNeeded gt 0 && getOrderPaymentType().getSystemCode() eq "optCharge") {
-					return orderAmountNeeded;
-				} else if (orderAmountNeeded gt 0 && getOrderPaymentType().getSystemCode() eq "optCredit") {
-					return orderAmountNeeded * -1;
-				}
+			if(!isNull(getOrder()) && !isNull(getOrder().getDynamicChargeOrderPayment()) && getOrderPaymentType().getSystemCode() eq 'optCharge' && getOrder().getDynamicChargeOrderPayment().getOrderPaymentID() eq getOrderPaymentID()) {
+				return getOrder().getDynamicChargeOrderPaymentAmount();
+			} else if (!isNull(getOrder()) && !isNull(getOrder().getDynamicCreditOrderPayment()) && getOrderPaymentType().getSystemCode() eq 'optCredit' && getOrder().getDynamicCreditOrderPayment().getOrderPaymentID() eq getOrderPaymentID()) {
+				return getOrder().getDynamicCreditOrderPaymentAmount(); 
+			} else if (!isNull(getOrder())) {
+				return 0;
 			}
 			
-			// If for some reson the above logic did not fire then just return null
+			// Return null to describe that it hasn't been defined yet, but it will need to.
 			return ;
-			
 		}
 		
 		return variables.amount;
@@ -512,6 +542,13 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 			variables.orderPaymentType = getService("settingService").getTypeBySystemCode("optCharge");
 		}
 		return variables.orderPaymentType;
+	}
+	
+	public any function getOrderPaymentStatusType() {
+		if( !structKeyExists(variables, "orderPaymentStatusType") ) {
+			variables.orderPaymentStatusType = getService("settingService").getTypeBySystemCode("opstActive");
+		}
+		return variables.orderPaymentStatusType;
 	}
 	
 	// ==============  END: Overridden Implicet Getters ====================

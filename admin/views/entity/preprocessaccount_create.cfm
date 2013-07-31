@@ -58,7 +58,7 @@ Notes:
 				
 				<!--- Authentication --->
 				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="createAuthenticationFlag" edit="#rc.edit#" fieldType="yesno">
-				<cf_HibachiDisplayToggle selector="input[name='createAuthenticationFlag']">
+				<cf_HibachiDisplayToggle selector="input[name='createAuthenticationFlag']" loadVisable="#rc.processObject.getCreateAuthenticationFlag()#">
 					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="password" edit="#rc.edit#">
 					<cf_HibachiPropertyDisplay object="#rc.processObject#" property="passwordConfirm" edit="#rc.edit#">
 				</cf_HibachiDisplayToggle>
