@@ -77,15 +77,15 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		
 		if(listFindNoCase("authorize,authorizeAndCharge,credit", arguments.requestBean.getTransactionType())) {
 			savecontent variable="requestXML" {
-				include "xmltemplates/NewOrderRequest.cfm"; // This template needs to be made dynamic
+				include "xmltemplates/NewOrderRequest.cfm"; 
 			}
 		} else if(listFindNoCase("chargePreAuthorization", arguments.requestBean.getTransactionType())) {
 			savecontent variable="requestXML" {
-				include "xmltemplates/MarkForCapture.cfm"; // This template needs to be made dynamic
+				include "xmltemplates/MarkForCapture.cfm"; 
 			}
 		} else if(listFindNoCase("generateToken", arguments.requestBean.getTransactionType())) {
 			savecontent variable="requestXML" {
-				include "xmltemplates/ProfileAddRequest.cfm"; // This template needs to be made dynamic
+				include "xmltemplates/ProfileAddRequest.cfm"; 
 			}
 		}
 		
