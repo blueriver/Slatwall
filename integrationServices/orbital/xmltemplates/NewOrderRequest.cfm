@@ -61,7 +61,7 @@ Notes:
 			<CardSecValInd>1</CardSecValInd>
 			<CardSecVal>#arguments.requestBean.getSecurityCode()#</CardSecVal>
 		</cfif>
-		<CustomerEmail>#arguments.requestBean.getAccountPrimaryEmailAddress()#</CustomerEmail>
+		<!---<CustomerEmail>#arguments.requestBean.getAccountPrimaryEmailAddress()#</CustomerEmail>--->
 		<AVSzip>#arguments.requestBean.getBillingPostalCode()#</AVSzip>
 		<AVSaddress1>#arguments.requestBean.getBillingStreetAddress()#</AVSaddress1>
 		<AVSaddress2>#arguments.requestBean.getBillingStreet2Address()#</AVSaddress2>

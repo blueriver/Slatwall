@@ -65,7 +65,6 @@ Notes:
 		<cfelse>
 			<CCExpireDate/>
 		</cfif>
-		<MBType></MBType>
 	</Profile>
 </Request>
 </cfoutput>
