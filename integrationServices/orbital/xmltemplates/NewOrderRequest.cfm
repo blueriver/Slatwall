@@ -48,7 +48,6 @@ Notes:
 		<MerchantID>#setting('merchantID')#</MerchantID>
 		<TerminalID>#setting('terminalID')#</TerminalID>
 		<CardBrand></CardBrand>
-		<!---<CustomerRefNum>#arguments.requestBean.getAccountID()#</CustomerRefNum>--->
 		<AccountNum>#arguments.requestBean.getCreditCardNumber()#</AccountNum>
 		<cfif !isNull(arguments.requestBean.getExpirationMonth()) && !isNull(arguments.requestBean.getExpirationYear())>
 			<Exp>#left(arguments.requestBean.getExpirationMonth(),2)##right(arguments.requestBean.getExpirationYear(),2)#</Exp>
@@ -61,7 +60,6 @@ Notes:
 			<CardSecValInd>1</CardSecValInd>
 			<CardSecVal>#arguments.requestBean.getSecurityCode()#</CardSecVal>
 		</cfif>
-		<!---<CustomerEmail>#arguments.requestBean.getAccountPrimaryEmailAddress()#</CustomerEmail>--->
 		<AVSzip>#arguments.requestBean.getBillingPostalCode()#</AVSzip>
 		<AVSaddress1>#arguments.requestBean.getBillingStreetAddress()#</AVSaddress1>
 		<AVSaddress2>#arguments.requestBean.getBillingStreet2Address()#</AVSaddress2>
@@ -69,8 +67,10 @@ Notes:
 		<AVSstate>#arguments.requestBean.getBillingStateCode()#</AVSstate>
 		<AVSphoneNum>#arguments.requestBean.getAccountPrimaryPhoneNumber()#</AVSphoneNum>
 		<AVSname>#arguments.requestBean.getNameOnCreditCard()#</AVSname>
+		<CustomerRefNum>#arguments.requestBean.getAccountID()#</CustomerRefNum>
 		<OrderID>#arguments.requestBean.getOrderID()#</OrderID>
 		<Amount>#arguments.requestBean.getTransactionAmount()*100#</Amount>
+		<CustomerEmail>#arguments.requestBean.getAccountPrimaryEmailAddress()#</CustomerEmail>
 		<cfif arguments.requestBean.getTransactionType() EQ "credit">
 			<TxRefNum>#arguments.requestBean.getProviderTransactionID()#</TxRefNum>
 		</cfif>
