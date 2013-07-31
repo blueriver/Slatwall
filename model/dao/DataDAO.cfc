@@ -121,11 +121,11 @@ Notes:
 	
 	<cffunction name="getInsertedDataFile">
 		<cfset var returnFile = "" />
-		<cfif !fileExists(expandPath("/Slatwall/config/insertedData.txt.cfm"))>
-			<cffile action="write" file="#expandPath("/Slatwall/config/insertedData.txt.cfm")#" output="" addnewline="false" /> 
+		<cfif !fileExists(expandPath("/Slatwall/custom/config/insertedData.txt.cfm"))>
+			<cffile action="write" file="#expandPath("/Slatwall/custom/config/insertedData.txt.cfm")#" output="" addnewline="false" /> 
 		</cfif>
 		
-		<cffile action="read" file="#expandPath("/Slatwall/config/insertedData.txt.cfm")#" variable="returnFile" >
+		<cffile action="read" file="#expandPath("/Slatwall/custom/config/insertedData.txt.cfm")#" variable="returnFile" >
 		
 		<cfreturn returnFile />
 	</cffunction>
@@ -133,7 +133,7 @@ Notes:
 	<cffunction name="updateInsertedDataFile">
 		<cfargument name="idKey" type="string" required="true" />
 		
-		<cffile action="append" file="#expandPath("/Slatwall/config/insertedData.txt.cfm")#" output=",#arguments.idKey#" addnewline="false" />
+		<cffile action="append" file="#expandPath("/Slatwall/custom/config/insertedData.txt.cfm")#" output=",#arguments.idKey#" addnewline="false" />
 	</cffunction>
 	
 </cfcomponent>

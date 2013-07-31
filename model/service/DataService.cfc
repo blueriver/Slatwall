@@ -139,7 +139,7 @@ component output="false" accessors="true" extends="HibachiService" {
 				}
 			}
 			
-			var idKey = "";
+			var idKey = xmlData.table.xmlAttributes.tableName;
 			for(var l=1; l<=listLen(idColumns); l++) {
 				idKey = listAppend(idKey, insertData[listGetAt(idColumns, l)].value, "~");
 			}

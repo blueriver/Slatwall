@@ -341,7 +341,7 @@ component extends="FW1.framework" {
 					getHibachiScope().getService("hibachiEventService").announceEvent("onApplicationSetup");
 					
 					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
-					if(!fileExists(expandPath('/#variables.framework.applicationKey#/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
+					if(!fileExists(expandPath('/#variables.framework.applicationKey#/custom/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - Full Update Initiated");
 						
 						// Set the request timeout to 360
@@ -355,7 +355,7 @@ component extends="FW1.framework" {
 						onUpdateRequest();
 						
 						// Write File
-						fileWrite(expandPath('/#variables.framework.applicationKey#') & '/config/lastFullUpdate.txt.cfm', now());				
+						fileWrite(expandPath('/#variables.framework.applicationKey#') & '/custom/config/lastFullUpdate.txt.cfm', now());				
 						
 						// Announce the applicationFullUpdate event
 						getHibachiScope().getService("hibachiEventService").announceEvent("onApplicationFullUpdate");
