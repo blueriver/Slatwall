@@ -40,7 +40,11 @@ Notes:
 	
 	<cfproperty name="reportDateTimeStart" />
 	<cfproperty name="reportDateTimeEnd" />
+	
 	<cfproperty name="data" />
+	<cfproperty name="chartDataQuery" />
+	<cfproperty name="chartData" />
+	<cfproperty name="tableDataQuery" />
 	
 	<cffunction name="getData" returnType="Query">
 		
@@ -58,6 +62,7 @@ Notes:
 					SlatwallOrderItem.quantity,
 					SlatwallOrderItem.price,
 					(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as extendedPrice,
+					SlatwallOrder.orderID,
 					#getReportDateTimeSelect('SlatwallOrder.orderOpenDateTime')#
 				FROM
 					SlatwallOrderItem
@@ -107,16 +112,17 @@ Notes:
 		<cfreturn reportDateTimeSelect />
 	</cffunction>
 	
-	<cffunction name="getChartData">
-		<cfif not structKeyExists(variables, "chartData")>
+	<cffunction name="getChartDataQuery">
+		<cfif not structKeyExists(variables, "chartDataQuery")>
 			
 			<cfset var data = getData() />
-			<cfset var chartDataQuery = "" />
-			<cfset var chartDataStruct = structNew() />
 			
-			<cfquery name="chartDataQuery" dbtype="query">
+			<cfquery name="variables.chartDataQuery" dbtype="query">
 				SELECT
 					SUM(data.extendedPrice) as series1,
+					AVG(data.price) as series2,
+					COUNT(quantity) as series3,
+					COUNT(data.orderID) as series4,
 					data.reportDateTimeYear,
 					data.reportDateTimeMonth,
 					data.reportDateTimeDay
@@ -129,45 +135,62 @@ Notes:
 					data.reportDateTimeMonth,
 					data.reportDateTimeDay
 			</cfquery>
+		</cfif>
+		
+		<cfreturn variables.chartDataQuery />
+	</cffunction>
+	
+	<cffunction name="getChartData">
+		<cfif not structKeyExists(variables, "chartData")>
 			
-			<cfset chartDataStruct = {} />
-			<cfset chartDataStruct["chart"] = {} />
-			<cfset chartDataStruct["chart"]["type"] = "line" />
-			<cfset chartDataStruct["title"] = {} />
-			<cfset chartDataStruct["title"]["text"] = "Sales Report" />
-			<cfset chartDataStruct["xAxis"] = {} />
-			<cfset chartDataStruct["xAxis"]["type"] = "datetime" />
-			<cfset chartDataStruct["xAxis"]["categories"] = [] />
-			<cfset chartDataStruct["yAxis"] = {} />
-			<cfset chartDataStruct["yAxis"]["title"] = {} />
-			<cfset chartDataStruct["yAxis"]["title"]["text"] = "Total Sales" />
-			<cfset chartDataStruct["series"] = [] />
-			<cfset arrayAppend(chartDataStruct["series"], {}) />
-			<cfset chartDataStruct["series"][1]["name"] = "Product Revenue" />
-			<cfset chartDataStruct["series"][1]["data"] = [] />
+			<cfset var chartDataQuery = getChartDataQuery() />
+			<cfset var chartDataStruct = structNew() />
 			
 			<cfset var thisDate = "" />
 			<cfset var firstDateTime = createDateTime(chartDataQuery['reportDateTimeYear'][1], chartDataQuery['reportDateTimeMonth'][1], chartDataQuery['reportDateTimeDay'][1], 0, 0, 0) />
 			<cfset var lastDateTime = createDateTime(chartDataQuery['reportDateTimeYear'][chartDataQuery.recordCount], chartDataQuery['reportDateTimeMonth'][chartDataQuery.recordCount], chartDataQuery['reportDateTimeDay'][chartDataQuery.recordCount], 0, 0, 0) />
 			<cfset var chartRow = 1 />
-			<cfloop index="thisDate" from="#firstDateTime#" to="#lastDateTime#" step="#CreateTimeSpan( 1, 0, 0, 0 )#">
-				<cfset arrayAppend(chartDataStruct["xAxis"]["categories"], dateFormat( thisDate, "mm/dd/yyyy" )) />
-				<cfif year(thisDate) eq chartDataQuery['reportDateTimeYear'][chartRow] and month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow] and day(thisDate) eq chartDataQuery['reportDateTimeDay'][chartRow]>
-					<cfset arrayAppend(chartDataStruct["series"][1]["data"], chartDataQuery['series1'][chartRow]) />
-					<cfset chartRow ++ />
-				<cfelse>
-					<cfset arrayAppend(chartDataStruct["series"][1]["data"], 0) />
-				</cfif>
-			</cfloop>
 			
-			<cfset variables.chartData = serializeJSON(chartDataStruct) />
+			<cfsavecontent variable="variables.chartData">
+				<cfoutput>
+				{
+					chart: {
+						type: 'line'
+					},
+					legend: {
+						enabled: false
+					},
+					title: {
+						text: 'Sales Report'
+					},
+					xAxis: {
+						type: 'datetime'
+					},
+					yAxis: {
+						title: {
+							text: ''
+						}
+					},
+					series: [
+						{
+							name: 'Extended Price', 
+							data: [
+							<cfloop index="thisDate" from="#firstDateTime#" to="#lastDateTime#" step="#CreateTimeSpan( 1, 0, 0, 0 )#">
+								[Date.UTC(#year(thisDate)#, #month(thisDate)#, #day(thisDate)#),<cfif year(thisDate) eq chartDataQuery['reportDateTimeYear'][chartRow] and month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow] and day(thisDate) eq chartDataQuery['reportDateTimeDay'][chartRow]>#chartDataQuery['series1'][chartRow]#<cfset chartRow ++ /><cfelse>0</cfif>]<cfif chartRow lt chartDataQuery.recordCount>,</cfif>
+							</cfloop>
+							]
+						}
+					]
+				}
+				</cfoutput>
+			</cfsavecontent>
 		</cfif>
 		
 		<cfreturn variables.chartData />
 	</cffunction>
 	
-	<cffunction name="getTableData">
-		<cfif not structKeyExists(variables, "tableData")>
+	<cffunction name="getTableDataQuery">
+		<cfif not structKeyExists(variables, "tableDataQuery")>
 			
 			<cfset var data = getData() />
 			<cfset var unsortedData = "" />
@@ -183,7 +206,7 @@ Notes:
 					data.productID, data.productName
 			</cfquery>
 			
-			<cfquery name="variables.tableData" dbtype="query">
+			<cfquery name="variables.tableDataQuery" dbtype="query">
 				SELECT
 					*
 				FROM
@@ -193,6 +216,6 @@ Notes:
 			</cfquery>
 		</cfif>
 		
-		<cfreturn variables.tableData />
+		<cfreturn variables.tableDataQuery />
 	</cffunction>
 </cfcomponent>

@@ -49,7 +49,12 @@ Notes:
 			</div>
 		</div>
 		<div class="span10">
-			
+			<!---
+			<cfset test = $.slatwall.getBean("nocacher") />
+			<cfset test2 = $.slatwall.getBean("nocachereport") />
+			#test.getTestValue()#<br />
+			#test2.getTestValue()#<br />
+			--->
 			<!--- Chart --->
 			<script src="http://code.highcharts.com/highcharts.js"></script>
 			<script type="text/javascript">
@@ -71,7 +76,7 @@ Notes:
 						Product Revenue
 					</th>
 				</tr>
-				<cfset tableData = salesReport.getTableData() /> 
+				<cfset tableData = salesReport.getTableDataQuery() /> 
 				<cfloop query="tableData">
 					<tr>
 						<td>#tableData.productName#</td>
