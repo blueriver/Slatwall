@@ -6,3 +6,4 @@ configCustomTags.cfm
 configFramework.cfm
 configMappings.cfm
 configORM.cfm
+.gitignore
