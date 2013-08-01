@@ -37,16 +37,42 @@ Notes:
 
 --->
 
+<cfset salesReport = $.slatwall.getBean("SalesReport") />
 
-<div class="row-fluid">
-	<div class="span2">
-		<div class="well">
-			<ul class="nav">
-				<li><a href="">Test</a></li>
-			</ul>
+<cfoutput>
+	<div class="row-fluid">
+		<div class="span2">
+			<div class="well">
+				<ul class="nav">
+					<li><a href="">Test</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="span10">
+			<script src="http://code.highcharts.com/highcharts.js"></script>
+			<script type="text/javascript">
+				jQuery(document).ready(function() { 
+				    jQuery('##report-chart').highcharts(#salesReport.getChartData()#);
+				});
+			</script>
+			<div id="report-chart" style="width:100%; height:400px;"></div>
+			<table class="table">
+				<tr>
+					<th>
+						Product
+					</th>
+					<th>
+						Product Revenue
+					</th>
+				</tr>
+				<cfset tableData = salesReport.getTableData() /> 
+				<cfloop query="tableData">
+					<tr>
+						<td>#tableData.productName#</td>
+						<td>#dollarFormat(tableData.series1)#</td>
+					</tr>
+				</cfloop>
+			</table>
 		</div>
 	</div>
-	<div class="span10">
-		
-	</div>
-</div>
+</cfoutput>
