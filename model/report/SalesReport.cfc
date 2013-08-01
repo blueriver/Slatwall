@@ -51,6 +51,12 @@ Notes:
 					SlatwallSku.skuCode,
 					SlatwallProduct.productID,
 					SlatwallProduct.productName,
+					SlatwallProductType.productTypeID,
+					SlatwallProductType.productTypeName,
+					SlatwallBrand.brandID,
+					SlatwallBrand.brandName,
+					SlatwallOrderItem.quantity,
+					SlatwallOrderItem.price,
 					(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as extendedPrice,
 					#getReportDateTimeSelect('SlatwallOrder.orderOpenDateTime')#
 				FROM
@@ -67,6 +73,10 @@ Notes:
 				  	SlatwallProduct on SlatwallSku.productID = SlatwallProduct.productID
 				  INNER JOIN
 				  	SlatwallProductType on SlatwallProduct.productTypeID = SlatwallProductType.productTypeID
+				  LEFT JOIN
+				  	SlatwallBrand on SlatwallProduct.brandID = SlatwallBrand.brandID
+				  LEFT JOIN
+				  	SlatwallAddress on SlatwallOrderFulfillment.shippingAddressID = SlatwallAddress.addressID
 				WHERE
 					SlatwallOrder.orderOpenDateTime is not null
 			</cfquery>
@@ -126,6 +136,7 @@ Notes:
 			<cfset chartDataStruct["title"] = {} />
 			<cfset chartDataStruct["title"]["text"] = "Sales Report" />
 			<cfset chartDataStruct["xAxis"] = {} />
+			<cfset chartDataStruct["xAxis"]["type"] = "datetime" />
 			<cfset chartDataStruct["xAxis"]["categories"] = [] />
 			<cfset chartDataStruct["yAxis"] = {} />
 			<cfset chartDataStruct["yAxis"]["title"] = {} />

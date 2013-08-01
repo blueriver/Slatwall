@@ -49,14 +49,20 @@ Notes:
 			</div>
 		</div>
 		<div class="span10">
+			
+			<!--- Chart --->
 			<script src="http://code.highcharts.com/highcharts.js"></script>
 			<script type="text/javascript">
 				jQuery(document).ready(function() { 
 				    jQuery('##report-chart').highcharts(#salesReport.getChartData()#);
 				});
 			</script>
-			<div id="report-chart" style="width:100%; height:400px;"></div>
-			<table class="table">
+			<div class="well">
+				<div id="report-chart" style="width:100%; height:400px;"></div>
+			</div>
+			
+			<!--- Table --->
+			<table class="table table-condensed table-bordered">
 				<tr>
 					<th>
 						Product
@@ -73,6 +79,7 @@ Notes:
 					</tr>
 				</cfloop>
 			</table>
+			
 		</div>
 	</div>
 </cfoutput>
