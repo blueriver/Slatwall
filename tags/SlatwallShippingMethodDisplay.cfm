@@ -53,7 +53,7 @@ Notes:
 				</cfif>
 				<cfloop array="#local.methodOptions#" index="option">
 					<cfset local.optionSelected = false />
-					<cfif !isNull(attributes.orderFulfillmentShipping.getShippingMethod()) and attributes.orderFulfillmentShipping.getShippingMethod().getShippingMethodID() eq option.getShippingMethodRate().getShippingMethod().getShippingMethodID()>
+					<cfif !isNull(attributes.orderFulfillmentShipping.getShippingMethod()) and attributes.orderFulfillmentShipping.getShippingMethod().getShippingMethodID() eq option['value']>
 						<cfset local.optionSelected = true />
 					<cfelseif local.noneSelected>
 						<cfset local.noneSelected = false />
