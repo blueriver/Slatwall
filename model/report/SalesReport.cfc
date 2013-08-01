@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent extends="Slatwall.org.Hibachi.HibachiReport">
+<cfcomponent accessors="true" persistent="false" output="false" extends="HibachiReport">
 	
 	<cfproperty name="reportDateTimeStart" />
 	<cfproperty name="reportDateTimeEnd" />
@@ -151,39 +151,33 @@ Notes:
 			<cfset var lastDateTime = createDateTime(chartDataQuery['reportDateTimeYear'][chartDataQuery.recordCount], chartDataQuery['reportDateTimeMonth'][chartDataQuery.recordCount], chartDataQuery['reportDateTimeDay'][chartDataQuery.recordCount], 0, 0, 0) />
 			<cfset var chartRow = 1 />
 			
-			<cfsavecontent variable="variables.chartData">
-				<cfoutput>
-				{
-					chart: {
-						type: 'line'
-					},
-					legend: {
-						enabled: false
-					},
-					title: {
-						text: 'Sales Report'
-					},
-					xAxis: {
-						type: 'datetime'
-					},
-					yAxis: {
-						title: {
-							text: ''
-						}
-					},
-					series: [
-						{
-							name: 'Extended Price', 
-							data: [
-							<cfloop index="thisDate" from="#firstDateTime#" to="#lastDateTime#" step="#CreateTimeSpan( 1, 0, 0, 0 )#">
-								[Date.UTC(#year(thisDate)#, #month(thisDate)#, #day(thisDate)#),<cfif year(thisDate) eq chartDataQuery['reportDateTimeYear'][chartRow] and month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow] and day(thisDate) eq chartDataQuery['reportDateTimeDay'][chartRow]>#chartDataQuery['series1'][chartRow]#<cfset chartRow ++ /><cfelse>0</cfif>]<cfif chartRow lt chartDataQuery.recordCount>,</cfif>
-							</cfloop>
-							]
-						}
-					]
-				}
-				</cfoutput>
-			</cfsavecontent>
+			<cfset variables.chartData = {} />
+			<cfset variables.chartData["chart"] = {} />
+			<cfset variables.chartData["chart"]["type"] = "line" />
+			<cfset variables.chartData["legend"] = {} />
+			<cfset variables.chartData["legend"]["enabled"] = false />
+			<cfset variables.chartData["title"] = {} />
+			<cfset variables.chartData["title"]["text"] = "Sales Report" />
+			<cfset variables.chartData["xAxis"] = {} />
+			<cfset variables.chartData["xAxis"]["type"] = "datetime" />
+			<cfset variables.chartData["yAxis"] = {} />
+			<cfset variables.chartData["yAxis"]["title"] = {} />
+			<cfset variables.chartData["yAxis"]["title"]["text"] = '' />
+			<cfset variables.chartData["series"] = [] />
+			<cfset arrayAppend(variables.chartData["series"], {})>
+			<cfset variables.chartData["series"][1]["name"] = "Extended Price" />
+			<cfset variables.chartData["series"][1]["data"] = [] />
+			<cfloop index="thisDate" from="#firstDateTime#" to="#lastDateTime#" step="#CreateTimeSpan( 1, 0, 0, 0 )#">
+				<cfset var thisData = [] />
+				<cfset arrayAppend(thisData, dateDiff("s", createdatetime( '1970','01','01','00','00','00' ), dateConvert("local2Utc", thisDate))*1000) />
+				<cfif year(thisDate) eq chartDataQuery['reportDateTimeYear'][chartRow] and month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow] and day(thisDate) eq chartDataQuery['reportDateTimeDay'][chartRow]>
+					<cfset arrayAppend(thisData, chartDataQuery['series1'][chartRow]) />
+					<cfset chartRow ++ />
+				<cfelse>
+					<cfset arrayAppend(thisData, 0) />
+				</cfif>
+				<cfset arrayAppend(variables.chartData["series"][1]["data"], thisData) />
+			</cfloop>
 		</cfif>
 		
 		<cfreturn variables.chartData />

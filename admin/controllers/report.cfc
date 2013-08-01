@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) 2011 ten24, LLC
@@ -35,8 +35,18 @@
 
 Notes:
 
---->
-<cfcomponent accessors="true" persistent="false" output="false" extends="Slatwall.org.Hibachi.HibachiReport">
-	
+*/
+component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiController" {
 
-</cfcomponent>
+	property name="hibachiReportService" type="any";
+
+	public void function default(required struct rc) {
+		
+		if(arguments.rc.ajaxRequest && structKeyExists(arguments.rc, "reportName")) {
+			var report = getHibachiReportService().getReportCFC(arguments.rc.reportName);
+			arguments.rc.ajaxResponse["report"] = {};
+			arguments.rc.ajaxResponse["report"]["chartData"] = report.getChartData();
+		}
+	}
+	
+}

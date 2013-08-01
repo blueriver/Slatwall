@@ -44,26 +44,27 @@ Notes:
 		<div class="span2">
 			<div class="well">
 				<ul class="nav">
-					<li><a href="">Test</a></li>
+					<li><a href="##SalesReport">Sales Report</a></li>
 				</ul>
 			</div>
 		</div>
 		<div class="span10">
-			<!---
-			<cfset test = $.slatwall.getBean("nocacher") />
-			<cfset test2 = $.slatwall.getBean("nocachereport") />
-			#test.getTestValue()#<br />
-			#test2.getTestValue()#<br />
-			--->
-			<!--- Chart --->
-			<script src="http://code.highcharts.com/highcharts.js"></script>
-			<script type="text/javascript">
-				jQuery(document).ready(function() { 
-				    jQuery('##report-chart').highcharts(#salesReport.getChartData()#);
-				});
-			</script>
 			<div class="well">
-				<div id="report-chart" style="width:100%; height:400px;"></div>
+				<div id="report-chart" style="width:100%; height:400px; margin-bottom:10px;"></div>
+				<div class="padding-top:10px;">
+					<div class="btn-group" style="vertical-align:top;">
+						<a href="" class="btn active">Line</a>
+						<a href="" class="btn">Bar</a>
+					</div>
+					<div class="pull-right">
+						<div class="btn-group" style="vertical-align:top;">
+							<a href="" class="btn active">Day</a>
+							<a href="" class="btn">Week</a>
+							<a href="" class="btn">Month</a>
+						</div>
+						<input type="text" name="reportStartDateTime" class="datepicker" style="width:100px;" value="#$.slatwall.formatValue(now()-30, 'date')#" /> - <input type="text" name="reportEndDateTime" class="datepicker" style="width:100px;" value="#$.slatwall.formatValue(now(), 'date')#" />
+					</div>
+				</div>
 			</div>
 			
 			<!--- Table --->
@@ -84,7 +85,33 @@ Notes:
 					</tr>
 				</cfloop>
 			</table>
-			
 		</div>
 	</div>
+	<!--- Chart --->
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function() {
+			var data = {
+				reportName: 'SalesReport'
+			};
+			
+			jQuery.ajax({
+				url: jQuery(this).attr('href'),
+				method: 'post',
+				data: data,
+				dataType: 'json',
+				beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
+				error: function( r ) {
+					console.log(r);
+				},
+				success: function( r ) {
+					console.log(r.report.chartData);
+					jQuery('##report-chart').highcharts(r.report.chartData);
+				}
+			});
+			
+		    
+		});
+	</script>
+	<!---jQuery('##report-chart').highcharts(#salesReport.getChartData()#);--->
 </cfoutput>
