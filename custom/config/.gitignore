@@ -1,4 +1,6 @@
 key.xml.cfm
+lastFullUpdate.txt.cfm
+insertedData.txt.cfm
 configApplication.cfm
 configCustomTags.cfm
 configFramework.cfm

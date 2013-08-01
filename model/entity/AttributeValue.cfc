@@ -58,6 +58,7 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
@@ -239,6 +240,24 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 			arrayDeleteAt(arguments.product.getAttributeValues(), index);
 		}
 		structDelete(variables, "product");
+	}
+	
+	// Product Type (many-to-one)
+	public void function setProductType(required any productType) {
+		variables.productType = arguments.productType;
+		if(isNew() or !arguments.productType.hasAttributeValue( this )) {
+			arrayAppend(arguments.productType.getAttributeValues(), this);
+		}
+	}
+	public void function removeProductType(any productType) {
+		if(!structKeyExists(arguments, "productType")) {
+			arguments.productType = variables.productType;
+		}
+		var index = arrayFind(arguments.productType.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.productType.getAttributeValues(), index);
+		}
+		structDelete(variables, "productType");
 	}
 	
 	// Sku (many-to-one)    

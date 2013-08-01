@@ -44,7 +44,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	public void function updateOrderFulfillmentShippingMethodOptions( required any orderFulfillment ) {
 		
 		// First we check to make sure that the getAddress() is not null
-		if(!isNull(arguments.orderFulfillment.getAddress())) {
+		if(!isNull(arguments.orderFulfillment.getShippingAddress())) {
 			
 			// Container to hold all shipping integrations that are in all the usable rates
 			var integrations = [];

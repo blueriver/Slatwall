@@ -52,6 +52,7 @@ Notes:
 				<cf_HibachiListingColumn propertyIdentifier="orderNumber" />
 				<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="account.fullName" />
 				<cf_HibachiListingColumn propertyIdentifier="orderOpenDateTime" />
+				<cf_HibachiListingColumn propertyIdentifier="calculatedTotal" />
 			</cf_HibachiListingDisplay>
 		</div>
 		<div class="span6">
@@ -86,11 +87,4 @@ Notes:
 			</cf_HibachiListingDisplay>
 		</div>
 	</div>
-	
-	
-		<dl class="dl-horizontal">
-			<dt>Testing Is the answer to this question whoever plus XYZ</dt>
-			<dd>Answer</dt>
-		</dl>
-	
 </cfoutput>

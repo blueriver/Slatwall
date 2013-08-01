@@ -87,6 +87,7 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	// Non-Persistent Properties
 	property name="adminIcon" persistent="false";
 	property name="assignedOrderItemAttributeSetSmartList" persistent="false";
+	property name="baseProductType" persistent="false";
 	property name="currentAccountPrice" type="numeric" hb_formatType="currency" persistent="false";
 	property name="currencyCode" type="string" persistent="false";
 	property name="currencyDetails" type="struct" persistent="false";
@@ -322,11 +323,6 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 	
 	// END: Image Methods
 	
-	//get BaseProductType 
-	public any function getBaseProductType() {
-		return getProduct().getBaseProductType();
-	}
-	
 	// START: Price Methods
 	public numeric function getPriceByPromotion( required any promotion) {
 		return getService("promotionService").calculateSkuPriceBasedOnPromotion(sku=this, promotion=arguments.promotion);
@@ -403,6 +399,10 @@ component entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors
 		}
 		
 		return variables.assignedOrderItemAttributeSetSmartList;
+	}
+	
+	public any function getBaseProductType() {
+		return getProduct().getBaseProductType();
 	}
 	
 	public string function getCurrencyCode() {

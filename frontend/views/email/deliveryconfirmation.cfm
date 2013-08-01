@@ -94,6 +94,7 @@ Notes:
 							<th style="background: ##f9f9f9; border: 1px solid ##d8d8d8; padding: 0px 5px;">Product</th>
 							<th style="background: ##f9f9f9; border: 1px solid ##d8d8d8; padding: 0px 5px;">Options</th>
 							<th style="background: ##f9f9f9; border: 1px solid ##d8d8d8; padding: 0px 5px;">Qty</th>
+							<th style="background: ##f9f9f9; border: 1px solid ##d8d8d8; padding: 0px 5px;">Total</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -103,6 +104,7 @@ Notes:
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#local.deliveryItem.getOrderItem().getSku().getProduct().getTitle()#</td>
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;"><cfif len(local.deliveryItem.getOrderItem().getSku().displayOptions())>#local.deliveryItem.getOrderItem().getSku().displayOptions()#</cfif></td>
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#NumberFormat(local.deliveryItem.getQuantity())# </td>
+								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#local.deliveryItem.getOrderItem().getFormattedValue('price', 'currency')#</td>
 							</tr>
 						</cfloop>
 					</tbody>

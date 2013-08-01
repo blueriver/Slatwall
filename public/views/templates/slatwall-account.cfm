@@ -248,9 +248,8 @@ Notes:
 														
 														<tr>
 															<td>
-																
 																<!--- Display Number --->
-																<div class="apn#accountPhoneNumberIndex#">
+																<div class="apn#accountPhoneNumberIndex#<cfif accountPhoneNumber.hasErrors()> hide</cfif>">
 																	<span>#accountPhoneNumber.getPhoneNumber()#</span>
 																	<span class="pull-right">
 																		<a href="##" onClick="$('.apn#accountPhoneNumberIndex#').toggle()" title="Edit Phone Number"><i class="icon-pencil"></i></a>
@@ -264,20 +263,21 @@ Notes:
 																</div>
 																
 																<!--- Edit Number --->
-																<div class="apn#accountPhoneNumberIndex# hide">
+																<div class="apn#accountPhoneNumberIndex#<cfif not accountPhoneNumber.hasErrors()> hide</cfif>">
 																	
 																	<!--- Start: Edit Phone Number --->
 																	<form action="?s=1" method="post">
 																		
 																		<input type="hidden" name="slatAction" value="public:account.update" />
+																		<input type="hidden" name="accountPhoneNumbers[1].accountPhoneNumberID" value="#accountPhoneNumber.getAccountPhoneNumberID()#" />
 																			
 																		<!--- Phone Number --->
 																		<div class="control-group">
 													    					<div class="controls">
 													    						
 																				<div class="input-append">
-																					<input type="hidden" name="accountPhoneNumbers[1].accountPhoneNumberID" value="#accountPhoneNumber.getAccountPhoneNumberID()#" />
-												    								<sw:FormField type="text" name="accountPhoneNumbers[1].phoneNumber" valueObject="#accountPhoneNumber#" valueObjectProperty="phoneNumber" class="span3" />
+																					<sw:FormField type="text" name="accountPhoneNumbers[1].phoneNumber" valueObject="#accountPhoneNumber#" valueObjectProperty="phoneNumber" class="span3" />
+																					<button type="button" class="btn" onClick="$('.apn#accountPhoneNumberIndex#').toggle()">x</button>
 																					<button type="submit" class="btn btn-primary">Save</button>
 																				</div>
 																				
@@ -338,8 +338,9 @@ Notes:
 														<tr>
 															<td>
 																
+
 																<!--- Display Email Address --->
-																<div class="aea#accountEmailAddressIndex#">
+																<div class="aea#accountEmailAddressIndex#<cfif accountEmailAddress.hasErrors()> hide</cfif>">
 																	
 																	<!--- Email Address --->
 																	<span>#accountEmailAddress.getEmailAddress()#</span>
@@ -361,20 +362,21 @@ Notes:
 																</div>
 																
 																<!--- Edit Email Address --->
-																<div class="aea#accountEmailAddressIndex# hide">
+																<div class="aea#accountEmailAddressIndex#<cfif not accountEmailAddress.hasErrors()> hide</cfif>">
 																	
 																	<!--- Start: Edit Email Address --->
 																	<form action="?s=1" method="post">
 																		
 																		<input type="hidden" name="slatAction" value="public:account.update" />
-																			
+																		<input type="hidden" name="accountEmailAddresses[1].accountEmailAddressID" value="#accountEmailAddress.getAccountEmailAddressID()#" />
+																		
 																		<!--- Email Address --->
 																		<div class="control-group">
 													    					<div class="controls">
 													    						
 																				<div class="input-append">
-																					<input type="hidden" name="accountEmailAddresses[1].emailAddress" value="#accountEmailAddress.getAccountEmailAddressID()#" />
-												    								<sw:FormField type="text" name="accountEmailAddresses[1].emailAddress" valueObject="#accountEmailAddress#" valueObjectProperty="emailAddress" class="span3" />
+																					<sw:FormField type="text" name="accountEmailAddresses[1].emailAddress" valueObject="#accountEmailAddress#" valueObjectProperty="emailAddress" class="span3" />
+																					<button type="button" class="btn" onClick="$('.aea#accountEmailAddressIndex#').toggle()">x</button>
 																					<button type="submit" class="btn btn-primary">Save</button>
 																				</div>
 																				
@@ -405,16 +407,16 @@ Notes:
 													<!--- Email Address --->
 													<div class="control-group">
 								    					<div class="controls">
-							    							<div class="input-append">
-							    								<cfset newAccountEmailAddress = $.slatwall.getAccount().getNewPropertyEntity( 'accountEmailAddresses' ) />
+								    						
+								    						<cfset newAccountEmailAddress = $.slatwall.getAccount().getNewPropertyEntity( 'accountEmailAddresses' ) />
 															
-								    							<div class="input-append">
-								    								<sw:FormField type="text" name="accountEmailAddresses[1].emailAddress" valueObject="#newAccountEmailAddress#" valueObjectProperty="emailAddress" fieldAttributes='placeholder="Add Email Address"' class="span3" />
-																	<button type="submit" class="btn btn-primary"><i class="icon-plus icon-white"></i></button>
-																</div>
-																
-																<sw:ErrorDisplay object="#newAccountEmailAddress#" errorName="emailAddress" />
+						    								<div class="input-append">
+							    								<sw:FormField type="text" name="accountEmailAddresses[1].emailAddress" valueObject="#newAccountEmailAddress#" valueObjectProperty="emailAddress" fieldAttributes='placeholder="Add Email Address"' class="span3" />
+																<button type="submit" class="btn btn-primary"><i class="icon-plus icon-white"></i></button>
 															</div>
+															
+															<sw:ErrorDisplay object="#newAccountEmailAddress#" errorName="emailAddress" />
+															
 								    					</div>
 								  					</div>
 													
@@ -449,7 +451,7 @@ Notes:
 													<div class="thumbnail">
 														
 														<!--- Display Address --->
-														<div class="aa#accountAddressIndex#">
+														<div class="aa#accountAddressIndex#<cfif accountAddress.hasErrors()> hide</cfif>">
 															<!--- Administration options --->
 															<div class="pull-right">
 																
@@ -477,7 +479,7 @@ Notes:
 														</div>
 														
 														<!--- Edit Address --->
-														<div class="aa#accountAddressIndex# hide">
+														<div class="aa#accountAddressIndex#<cfif not accountAddress.hasErrors()> hide</cfif>">
 															
 															<!--- Start: Edit Address Form --->
 															<form action="?s=1" method="post">
@@ -587,6 +589,7 @@ Notes:
 										
 										<!--- START: PAYMENT METHODS --->
 										<h5>Payment Methods</h5>
+										
 										<hr style="margin-top:10px;border-top-color:##ddd;" />
 										
 										<ul class="thumbnails">
@@ -602,9 +605,9 @@ Notes:
 													
 													<!--- Display payment method block --->	
 													<div class="thumbnail">
-														
+
 														<!--- Display Payment Method --->
-														<div class="apm#accountPaymentMethodIndex#">
+														<div class="apm#accountPaymentMethodIndex#<cfif accountPaymentMethod.hasErrors()> hide</cfif>">
 															
 															<!--- Administration options --->
 															<div class="pull-right">
@@ -647,7 +650,7 @@ Notes:
 														</div>
 														
 														<!--- Edit Payment Method --->
-														<div class="apm#accountPaymentMethodIndex# hide">
+														<div class="apm#accountPaymentMethodIndex#<cfif not accountPaymentMethod.hasErrors()> hide</cfif>">
 															
 															<!--- Start: Edit Payment Method Form --->
 															<form action="?s=1" method="post">
@@ -786,13 +789,13 @@ Notes:
 											<cfset newAccountPaymentMethod = $.slatwall.getAccount().getNewPropertyEntity( 'accountPaymentMethods' ) />
 											
 											<!--- verify that there are payment methods that can be saved --->
-											<cfif arrayLen(newAccountPaymentMethod.getPaymentMethodOptionsSmartList().getRecords())>
+											<cfif arrayLen($.slatwall.getAccount().getSaveablePaymentMethodsSmartList().getRecords())>
 												<li class="span4">
 													
 													<div class="accordion" id="add-account-payment-method">
 														
 														<!--- Loop over all of the potential payment methods that can be saved --->
-														<cfloop array="#newAccountPaymentMethod.getPaymentMethodOptionsSmartList().getRecords()#" index="paymentMethod">
+														<cfloop array="#$.slatwall.getAccount().getSaveablePaymentMethodsSmartList().getRecords()#" index="paymentMethod">
 															
 															<cfset pmID = "pm#lcase(createUUID())#" /> 
 															
@@ -957,7 +960,7 @@ Notes:
 								
 								<!--- Setup an accordian view for existing orders --->
 								<div class="accordion" id="order-history-acc">
-									
+									<!---
 									<!--- Loop over all of the orders that this account has placed --->
 									<cfloop array="#$.slatwall.account().getOrdersPlacedSmartList().getRecords()#" index="order">
 								  	
@@ -996,19 +999,7 @@ Notes:
 																</tr>
 															</table>
 														</div>
-														<div class="span3">
-															<div class="btn-group">
-															    <a class="btn btn-large" href="##"><i class="icon-phone"></i></a>
-															    <a class="btn btn-large" href="##"><i class="icon-envelope"></i></a>
-															    <a class="btn btn-large" href="##"><i class="icon-print"></i></a>
-															</div>
-															<br />
-															<br />
-															<p>
-																If you have questions about your order, please contact customer service <a href="tel:888.555.5555">888.555.5555</a>
-															</p>
-														</div>
-														<div class="span4 pull-right">
+														<div class="span4 offset3 pull-right">
 															<table class="table table-bordered table-condensed">
 																<tr>
 																	<td>Subtotal</td>
@@ -1122,10 +1113,12 @@ Notes:
 															<th>Amount</td>
 														</tr>
 														<cfloop array="#order.getOrderPayments()#" index="orderPayment">
-															<tr>
-																<td>#orderPayment.getSimpleRepresentation()#</td>
-																<td>#orderPayment.getFormattedValue('amount')#</td>
-															</tr>
+															<cfif orderPayment.getOrderPaymentStatusType().getSystemCode() EQ "opstActive">
+																<tr>
+																	<td>#orderPayment.getSimpleRepresentation()#</td>
+																	<td>#orderPayment.getFormattedValue('amount')#</td>
+																</tr>
+															</cfif>
 														</cfloop>
 													</table>
 													<!--- End: Order Payments --->
@@ -1195,7 +1188,7 @@ Notes:
 										</div> <!--- END: accordion-group --->
 											
 									</cfloop>
-									
+									--->
 								</div>
 								
 							</div>
@@ -1205,7 +1198,7 @@ Notes:
 								<h5>Shopping Carts & Quotes</h5>
 								
 								<div class="accordion" id="cart-and-quotes-acc">
-									
+									<!---
 									<cfset $.slatwall.account().getOrdersNotPlacedSmartList().addOrder('createdDateTime|DESC') />
 									
 									<!--- Loop over all of the 'notPlaced' orders --->
@@ -1370,14 +1363,133 @@ Notes:
 										</div> <!--- END: accordion-group --->
 											
 									</cfloop>
-									
+									--->
 			 					</div>
 							</div>
 							
 							<!--- ==================== SUBSCRIPTIONS ==================== --->
 							<div class="tab-pane" id="subscriptions">
 								<h5>Subscription Management</h5>
-								Show Subscriptions Here
+								
+								<div class="accordion" id="subscription-acc">
+									
+									<!--- Loop over all of the subscription usages for this account --->
+									<cfloop array="#$.slatwall.getAccount().getSubscriptionUsages()#" index="subscriptionUsage">
+										
+										<!--- Setup an orderID for the accordion --->
+										<cfset subscriptionDOMID = "suid#subscriptionUsage.getSubscriptionUsageID()#" />
+										
+										<div class="accordion-group">
+											
+											<!--- Main Button to expand order --->
+											<div class="accordion-heading">
+												<a class="accordion-toggle" data-toggle="collapse" data-parent="##subscription-acc" href="###subscriptionDOMID#">#subscriptionUsage.getSubscriptionOrderItemName()#<span class="pull-right">Status: #subscriptionUsage.getCurrentStatusType()#</span></a>
+				    						</div>
+											
+											<!--- Saved order content --->
+											<div id="#subscriptionDOMID#" class="accordion-body collapse">
+												
+												<div class="accordion-inner">
+													
+													<div class="row">
+														
+														<div class="span7">
+															<h5>Status</h5>
+															
+															<table class="table table-bordered table-condensed">
+																<tr>
+																	<td>Auto Renew</td>
+																	<td>#subscriptionUsage.getFormattedValue('autoRenewFlag')#</td>
+																</tr>
+																<cfif subscriptionUsage.getAutoRenewFlag()>
+																	<tr>
+																		<td>Auto Pay</td>
+																		<td>#subscriptionUsage.getFormattedValue('autoPayFlag')#</td>
+																	</tr>
+																	<tr>
+																		<td>Next Bill Date</td>
+																		<td>#subscriptionUsage.getFormattedValue('nextBillDate')#</td>
+																	</tr>
+																</cfif>
+																<tr>
+																	<td>Expiration Date</td>
+																	<td>#subscriptionUsage.getFormattedValue('expirationDate')#</td>
+																</tr>
+															</table>
+														</div>
+														
+														<div class="span4 pull-right">
+															
+															<h5>Renew</h5>
+															
+															<div class="well">
+															
+																<form action="?s=1" method="post">
+																		
+																	<!--- Hidden slatAction to update the account --->
+																	<input type="hidden" name="slatAction" value="public:account.renewSubscriptionUsage" />
+																	<input type="hidden" name="subscriptionUsageID" value="#subscriptionUsage.getSubscriptionUsageID()#" />
+																	
+																	<strong>Price</strong><br />#subscriptionUsage.getFormattedValue('renewalPrice')#<br /><br />
+																	<strong>New Expiration Date</strong><br />#subscriptionUsage.getProcessObject('renew').getFormattedValue('extendExpirationDate')#<br /><br />
+																																			
+																	<!--- Update --->
+																	<div class="control-group">
+												    					<div class="controls">
+												      						<button class="btn btn-primary">Renew Now</button>
+												    					</div>
+												  					</div>
+																	
+																</form>
+																
+															</div>
+															
+															<cfif subscriptionUsage.getAutoRenewFlag() and subscriptionUsage.getAutoPayFlag()>
+																<h5>Auto-Pay Settings</h5>
+																		
+																<div class="well">
+	
+																	<form action="?s=1" method="post">
+																		
+																		<!--- Hidden slatAction to update the account --->
+																		<input type="hidden" name="slatAction" value="public:account.updateSubscriptionUsage" />
+																		<input type="hidden" name="subscriptionUsageID" value="#subscriptionUsage.getSubscriptionUsageID()#" />
+																		
+																		<!--- Auto Pay Account Payment Method --->
+																		<div class="control-group">
+																			<label class="control-label" for="accountPaymentMethod.accountPaymentMethodID">Payment Method</label>
+													    					<div class="controls">
+													    						
+											    								<sw:FormField type="select" name="accountPaymentMethod.accountPaymentMethodID" value="#subscriptionUsage.getAccountPaymentMethodID()#" valueOptions="#subscriptionUsage.getAccountPaymentMethodOptions()#" />
+																				<sw:ErrorDisplay object="#subscriptionUsage#" errorName="accountPaymentMethod" />
+																				
+													    					</div>
+													  					</div>
+																		
+																		<!--- Update --->
+																		<div class="control-group">
+													    					<div class="controls">
+													      						<button class="btn btn-primary">Update Payment Method</button>
+													    					</div>
+													  					</div>
+																	</form>
+	
+																</div>
+															</cfif>
+														</div>
+														
+													</div>
+															
+												</div> <!--- END: accordion-inner --->
+												
+											</div> <!--- END: accordion-body --->
+												
+										</div> <!--- END: accordion-group --->
+											
+									</cfloop>
+									
+			 					</div>
+									
 							</div>
 							
 							<!--- ==================== PURCHASED CONTENT ==================== --->

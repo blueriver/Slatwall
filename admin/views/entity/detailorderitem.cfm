@@ -74,7 +74,11 @@ Notes:
 				<!--- Totals --->
 				<cf_HibachiPropertyTable>
 					<cf_HibachiPropertyTableBreak header="Sku Details" />
-					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="skuPrice" edit="false" displayType="table" />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem#" property="skuPrice" edit="false" displayType="table" title="#$.slatwall.rbKey('admin.entity.detailorderitem.skuPriceWhenOrdered')#" />
+					<cf_HibachiPropertyDisplay object="#rc.orderItem.getSku()#" property="price" edit="false" displayType="table" title="#$.slatwall.rbKey('admin.entity.detailorderitem.currentSkuPrice')#" />
+					<cfif rc.orderItem.getSku().getProduct().getBaseProductType() eq "subscription">
+						<cf_HibachiPropertyDisplay object="#rc.orderItem.getSku()#" property="renewalPrice" edit="#rc.edit#" displayType="table" title="#$.slatwall.rbKey('admin.entity.detailorderitem.currentSkuRenewalPrice')#" />
+					</cfif>
 					<cf_HibachiPropertyDisplay object="#rc.sku#" property="skuCode" edit="false" displayType="table">
 					<cfloop array="#rc.sku.getAlternateSkuCodes()#" index="asc">
 						<cf_HibachiPropertyDisplay object="#asc#" title="#asc.getAlternateSkuCodeType().getType()#" property="alternateSkuCode" edit="false" displayType="table">	

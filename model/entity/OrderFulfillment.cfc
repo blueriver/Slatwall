@@ -46,6 +46,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="manualFulfillmentChargeFlag" ormtype="boolean" hb_populateEnabled="false";
 	
 	// Related Object Properties (many-to-one)
+	property name="accountAddress" hb_populateEnabled="public" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
 	property name="accountEmailAddress" hb_populateEnabled="public" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="accountEmailAddressID";
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
@@ -72,10 +73,10 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="modifiedByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="accountAddress" hb_populateEnabled="public" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID" persistent="false";
+	
 	property name="accountAddressOptions" type="array" persistent="false";
-	property name="saveAccountAddressFlag" persistent="false";
-	property name="saveAccountAddressName" persistent="false";
+	property name="saveAccountAddressFlag" hb_populateEnabled="public" persistent="false";
+	property name="saveAccountAddressName" hb_populateEnabled="public" persistent="false";
 	
 	property name="chargeAfterDiscount" type="numeric" persistent="false" hb_formatType="currency";
 	property name="discountAmount" type="numeric" persistent="false" hb_formatType="currency";
@@ -133,17 +134,22 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	}
     }
     
-    public void function confirmShippingAddressAndAccountAddress() {
-    	if(!getAddress().getNewFlag() && !getAddress().hasErrors() && getSaveAccountAddressFlag() && !getOrder().getAccount().getGuestAccountFlag()) {
-			var accountAddress = getService('accountService').newAccountAddress();
+    public void function checkNewAccountAddressSave() {
+    	
+		// If this isn't a guest, there isn't an accountAddress, save is on - copy over an account address
+    	if(!isNull(getOrder().getAccount()) && !getOrder().getAccount().getGuestAccountFlag() && isNull(getAccountAddress()) && !isNull(getShippingAddress()) && !getShippingAddress().hasErrors() && getSaveAccountAddressFlag()) {
+    		
+    		// Create a New Account Address, Copy over Shipping Address, and save
+    		var accountAddress = getService('accountService').newAccountAddress();
 			accountAddress.setAccountAddressName( getSaveAccountAddressName() );
-			accountAddress.setAddress( getAddress().copyAddress(true) );
+			accountAddress.setAddress( getShippingAddress().copyAddress( true ) );
 			accountAddress.setAccount( getOrder().getAccount() );
 			accountAddress = getService('accountService').saveAccountAddress( accountAddress );
+			
+			// Set the accountAddress
+			setAccountAddress( accountAddress );
 		}
-		if(!isNull(getAccountAddress()) && !getAccountAddress().getNewFlag()) {
-			setShippingAddress( getAccountAddress().getAddress().copyAddress( true ) );
-		}
+    	
 	}
 	
 	// ====================  END: Logical Methods ==========================
@@ -299,14 +305,14 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     }
     
 	public numeric function getTotalShippingWeight() {
-    	if( !structKeyExists(variables, "totalShippingWeight") ) {
-	    	variables.totalShippingWeight = 0;
-	    	for( var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++ ) {
-	    		var convertedWeight = getService("measurementService").convertWeightToGlobalWeightUnit(getOrderFulfillmentItems()[i].getSku().setting('skuShippingWeight'), getOrderFulfillmentItems()[i].getSku().setting('skuShippingWeightUnitCode'));
-	    		variables.totalShippingWeight = precisionEvaluate(variables.totalShippingWeight + (convertedWeight * getOrderFulfillmentItems()[i].getQuantity()) );
-	    	}			
-  		}
-    	return variables.totalShippingWeight;
+    	var totalShippingWeight = 0;
+    	
+    	for( var orderItem in getOrderFulfillmentItems()) {
+    		var convertedWeight = getService("measurementService").convertWeightToGlobalWeightUnit(orderItem.getSku().setting('skuShippingWeight'), orderItem.getSku().setting('skuShippingWeightUnitCode'));
+    		totalShippingWeight = precisionEvaluate( totalShippingWeight + (convertedWeight * orderItem.getQuantity()) );
+    	}			
+  		
+    	return totalShippingWeight;
     }
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -391,13 +397,6 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		return variables.manualFulfillmentChargeFlag;
 	}
 	
-	// sets it up so that if an accountAddressID is passed in, then we will automatically copy it as the billing address
-	public void function setAccountAddress(required any accountAddress) {
-		variables.accountAddress = arguments.accountAddress;
-		
-		setShippingAddress( variables.accountAddress.getAddress().copyAddress( true ) );
-	}
-	
 	// sets it up so that the charge for the shipping method is pulled out of the shippingMethodOptions
 	public void function setShippingMethod( any shippingMethod ) {
 		if(structKeyExists(arguments, "shippingMethod")) {
@@ -443,22 +442,36 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		return rep;
 	}
 	
+	public any function populate() {
+		super.populate( argumentcollection=arguments );
+		
+		// If after populating, there is an account address, and shipping address then we update the shipping address
+		if ( !isNull(getAccountAddress()) && !isNull(getShippingAddress()) ) {
+    		
+    		getShippingAddress().setName( getAccountAddress().getAddress().getName() );
+			getShippingAddress().setCompany( getAccountAddress().getAddress().getCompany() );
+			getShippingAddress().setPhone( getAccountAddress().getAddress().getPhone() );
+			getShippingAddress().setStreetAddress( getAccountAddress().getAddress().getStreetAddress() );
+			getShippingAddress().setStreet2Address( getAccountAddress().getAddress().getStreet2Address() );
+			getShippingAddress().setLocality( getAccountAddress().getAddress().getLocality() );
+			getShippingAddress().setCity( getAccountAddress().getAddress().getCity() );
+			getShippingAddress().setStateCode( getAccountAddress().getAddress().getStateCode() );
+			getShippingAddress().setPostalCode( getAccountAddress().getAddress().getPostalCode() );
+			getShippingAddress().setCountryCode( getAccountAddress().getAddress().getCountryCode() );
+		
+		// If there is an accountAddress, and no shippingAddress, then create a shipping address
+		} else if ( !isNull(getAccountAddress()) && isNull(getShippingAddress()) ) {
+			
+			setShippingAddress( getAccountAddress().getAddress().copyAddress( true ) );
+			
+    	}
+		
+		return this;
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
-	
-	public void function preInsert(){
-		super.preInsert();
-		
-		confirmShippingAddressAndAccountAddress();
-	}
-	
-	public void function preUpdate(Struct oldData){
-		super.preUpdate();
-		
-		confirmShippingAddressAndAccountAddress();
-	}
-	
 	
 	// ===================  END:  ORM Event Hooks  =========================
 	

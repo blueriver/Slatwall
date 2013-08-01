@@ -71,12 +71,21 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function save(required struct rc) {
+		param name="arguments.rc.primaryPhoneNumber" default="#structNew()#";
+		param name="arguments.rc.primaryPhoneNumber.accountPhoneNumberID" default="#rc.$.slatwall.getCurrentAccount().getPrimaryPhoneNumber().getAccountPhoneNumberID()#";
+		param name="arguments.rc.primaryPhoneNumber.phoneNumber" default="";
+		param name="arguments.rc.primaryPhoneNumber.account.accountID" default="#rc.$.slatwall.getCurrentAccount().getAccountID()#";
+		
+		if(!len(arguments.rc.primaryPhoneNumber.phoneNumber) && structKeyExists(arguments.rc, "phoneNumber")) {
+			arguments.rc.primaryPhoneNumber.phoneNumber = arguments.rc.phoneNumber;
+		}
+		
 		var wasNew = rc.$.slatwall.getCurrentAccount().isNew();
 		var currentAction = "frontend:account.edit";
 		if(wasNew){
 			currentAction = "frontend:account.create";
 		}
-		rc.account = getAccountService().saveAccount(account=rc.$.slatwall.getCurrentAccount(), data=rc, siteID=rc.$.event('siteID'));
+		rc.account = getAccountService().saveAccount(rc.$.slatwall.getCurrentAccount(), rc);
 		if(rc.account.hasErrors()) {
 			prepareEditData(rc);
 			getFW().setView(currentAction);
@@ -199,9 +208,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	private void function redirectToView(string view="") {
 		if(view == ""){
-			getFW().redirectExact( $.createHREF(filename=setting('globalPageMyAccount')) );
+			getFW().redirectExact( request.muraScope.createHREF(filename=request.slatwallScope.setting('globalPageMyAccount')) );
 		} else {
-			getFW().redirectExact( $.createHREF(filename=setting('globalPageMyAccount'), queryString='showItem=#arguments.view#'));
+			getFW().redirectExact( request.muraScope.createHREF(filename=request.slatwallScope.setting('globalPageMyAccount'), queryString='showItem=#arguments.view#'));
 		}
 	}
 	

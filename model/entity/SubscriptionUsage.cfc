@@ -97,6 +97,8 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 			if(isNumeric(firstReminder)) {
 				// Setup teh next reminder emailDate
 				this.setNextReminderEmailDate( dateAdd("d", firstReminder, this.getNextBillDate()) );	
+			} else {
+				this.setNextReminderEmailDate( javaCast("null", "") );
 			}
 		}
 	}
@@ -215,7 +217,6 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 			for(var apm in smartList.getRecords()) {
 				arrayAppend(variables.accountPaymentMethodOptions,{name=apm.getSimpleRepresentation(),value=apm.getAccountPaymentMethodID()});
 			}
-			arrayPrepend(variables.accountPaymentMethodOptions,{name=rbKey("define.none"),value=""});
 		}
 		return variables.accountPaymentMethodOptions;
     }

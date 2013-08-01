@@ -44,6 +44,7 @@ Notes:
 	
 	<cfset thisTag.attributeSmartList = attributes.attributeSet.getAttributesSmartList() />
 	<cfset thisTag.attributeSmartList.addFilter('activeFlag', 1) />
+	<cfset thisTag.attributeSmartList.addOrder("sortOrder|ASC") />
 	
 	<cfloop array="#thisTag.attributeSmartList.getRecords()#" index="attribute">
 		<cfset thisAttributeValue = "" />

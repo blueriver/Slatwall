@@ -279,8 +279,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Otherwise, make sure that the order payments all pass the isProcessable for placeOrder & does not have any errors
 		} else {
 			
-			for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-				if(!arguments.order.getOrderPayments()[i].isProcessable( context="placeOrder" ) || arguments.order.getOrderPayments()[i].hasErrors()) {
+			for(var orderPayment in arguments.order.getOrderPayments()) {
+				if(orderPayment.getStatusCode() eq 'opstActive' && (!orderPayment.isProcessable( context="placeOrder" ) || orderPayment.hasErrors())) {
 					orderRequirementsList = listAppend(orderRequirementsList, "payment");
 					break;
 				}
@@ -632,11 +632,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Get the populated newOrderPayment out of the processObject
 		var newOrderPayment = processObject.getNewOrderPayment();
 		
-		// Make sure that this new orderPayment gets attached to the order
-		if(isNull(newOrderPayment.getOrder())) {
-			newOrderPayment.setOrder( arguments.order );
-		}
-		
 		// If this is an existing account payment method, then we can pull the data from there
 		if( len(arguments.processObject.getAccountPaymentMethodID()) ) {
 			
@@ -644,46 +639,51 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			var accountPaymentMethod = getAccountService().getAccountPaymentMethod( arguments.processObject.getAccountPaymentMethodID() );
 			newOrderPayment.copyFromAccountPaymentMethod( accountPaymentMethod );
 			
-		// This is a new payment, so we need to setup the billing address and see if there is a need to save it against the account
-		} else {
+		// If they just used an exiting account address then we can try that by itself
+		} else if(!isNull(arguments.processObject.getAccountAddressID()) && len(arguments.processObject.getAccountAddressID())) {
+			var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getAccountAddressID() );
 			
-			// Setup the billing address as an accountAddress if it existed, otherwise the billing address will have most likely just been populated already
-			if(!isNull(arguments.processObject.getAccountAddressID()) && len(arguments.processObject.getAccountAddressID())) {
-				var accountAddress = getAccountService().getAccountAddress( arguments.processObject.getAccountAddressID() );
-				
-				if(!isNull(accountAddress)) {
-					newOrderPayment.setBillingAddress( accountAddress.getAddress().copyAddress( true ) );
-				}
+			if(!isNull(accountAddress)) {
+				newOrderPayment.setBillingAddress( accountAddress.getAddress().copyAddress( true ) );
 			}
-			
-			// If saveAccountPaymentMethodFlag is set to true, then we need to save this object
-			if(arguments.processObject.getSaveAccountPaymentMethodFlag()) {
-				
-				// Create a new Account Payment Method
-				var newAccountPaymentMethod = getAccountService().newAccountPaymentMethod();
-				
-				// Attach to Account
-				newAccountPaymentMethod.setAccount( arguments.order.getAccount() );
-				
-				// Setup name if exists
-				if(!isNull(arguments.processObject.getSaveAccountPaymentMethodName())) {
-					newAccountPaymentMethod.setAccountPaymentMethodName( arguments.processObject.getSaveAccountPaymentMethodName() );	
-				}
-				
-				// Copy over details
-				newAccountPaymentMethod.copyFromOrderPayment( newOrderPayment );
-				
-				// Save it
-				newAccountPaymentMethod = getAccountService().saveAccountPaymentMethod( newAccountPaymentMethod );
-			}
-
 		}
+		
+		// Make sure that the payment gets attached to the order 
+		if(isNull(newOrderPayment.getOrder())) {
+			newOrderPayment.setOrder( arguments.order );
+		}
+		
+		// Make sure that the currencyCode matches the order
+		newOrderPayment.setCurrencyCode( arguments.order.getCurrencyCode() );
+		
 		
 		// Save the newOrderPayment
 		newOrderPayment = this.saveOrderPayment( newOrderPayment );
 		
+		// Attach 'createTransaction' errors to the order 
 		if(newOrderPayment.hasError('createTransaction')) {
 			arguments.order.addError('addOrderPayment', newOrderPayment.getError('createTransaction'));
+			
+		// Otherwise if no errors, and we are supposed to save as accountpayment, and an accountPaymentMethodID doesn't already exist then we can create one.
+		} else if (!newOrderPayment.hasErrors() && arguments.processObject.getSaveAccountPaymentMethodFlag() && isNull(newOrderPayment.getAccountPaymentMethod())) {
+				
+			// Create a new Account Payment Method
+			var newAccountPaymentMethod = getAccountService().newAccountPaymentMethod();
+			
+			// Attach to Account
+			newAccountPaymentMethod.setAccount( arguments.order.getAccount() );
+			
+			// Setup name if exists
+			if(!isNull(arguments.processObject.getSaveAccountPaymentMethodName())) {
+				newAccountPaymentMethod.setAccountPaymentMethodName( arguments.processObject.getSaveAccountPaymentMethodName() );	
+			}
+			
+			// Copy over details
+			newAccountPaymentMethod.copyFromOrderPayment( newOrderPayment );
+			
+			// Save it
+			newAccountPaymentMethod = getAccountService().saveAccountPaymentMethod( newAccountPaymentMethod );
+			
 		}
 		
 		return arguments.order;
@@ -751,17 +751,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		// Loop over all the payments and credit for any charges, and set paymentAmount to 0
-		for(var p=1; p<=arrayLen(arguments.order.getOrderPayments()); p++) {
-			var totalReceived = precisionEvaluate(arguments.order.getOrderPayments()[p].getAmountReceived() - arguments.order.getOrderPayments()[p].getAmountCredited());
-			if(totalReceived gt 0) {
-				var transactionData = {
-					amount = totalReceived,
-					transactionType = 'credit'
-				};
-				this.processOrderPayment(arguments.order.getOrderPayments()[p], transactionData, 'createTransaction');
+		for(var orderPayment in arguments.order.getOrderPayments()) {
+			
+			if(orderPayment.getStatusCode() eq "opstActive") {
+				var totalReceived = precisionEvaluate(orderPayment.getAmountReceived() - orderPayment.getAmountCredited());
+				if(totalReceived gt 0) {
+					var transactionData = {
+						amount = totalReceived,
+						transactionType = 'credit'
+					};
+					this.processOrderPayment(orderPayment, transactionData, 'createTransaction');
+				}
+				
+				// Set payment amount to 0
+				orderPayment.setAmount(0);
 			}
-			// Set payment amount to 0
-			arguments.order.getOrderPayments()[p].setAmount(0);
 		}
 		
 		// Change the status
@@ -778,16 +782,21 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var hasPaymentTransaction = false;
 		
 		// Loop over to make sure there are no payment transactions
-		for(var p=1; p<=arrayLen(arguments.order.getOrderPayments()); p++) {
-			if( arrayLen(arguments.order.getOrderPayments()[p].getPaymentTransactions()) ) {
+		for(var orderPayment in arguments.order.getOrderPayments()) {
+			if( arrayLen(orderPayment.getPaymentTransactions()) ) {
 				hasPaymentTransaction = true;
 				break;
-			}	
+			}
 		}
 		
 		// As long as there is no payment transactions, then we can delete the order
 		if( !hasPaymentTransaction ) {
 			this.deleteOrder( arguments.order );
+			
+		// Otherwise we can just remove the account so that it isn't remember as an open cart for this account
+		} else {
+			
+			order.setAccount( javaCast("null", "") );
 		}
 		
 		return this.newOrder();
@@ -896,7 +905,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				if(!arguments.order.hasErrors()) {
 					
 					// If the orderTotal is less than the orderPaymentTotal, then we can look in the data for a "newOrderPayment" record, and if one exists then try to add that orderPayment
-					if(arguments.order.getTotal() != arguments.order.getPaymentAmountTotal() && structKeyExists(arguments.data, "newOrderPayment")) {
+					if(arguments.order.getTotal() != arguments.order.getPaymentAmountTotal()) {
 						arguments.order = this.processOrder(arguments.order, arguments.data, 'addOrderPayment');
 					}
 					
@@ -925,12 +934,16 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						var amountAuthorizeCreditReceive = 0;
 						
 						// Process All Payments and Save the ones that were successful
-						for(var i = 1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+						for(var orderPayment in arguments.order.getOrderPayments()) {
 							
-							// Call the placeOrderTransactionType for the order payment
-							var thisOrderPayment = this.processOrderPayment(arguments.order.getOrderPayments()[i], {}, 'runPlaceOrderTransaction');
+							// As long as this orderPayment is active then we can run the place order transaction
+							if(orderPayment.getStatusCode() == 'opstActive') {
+								
+								// Call the placeOrderTransactionType for the order payment
+								orderPayment = this.processOrderPayment(orderPayment, {}, 'runPlaceOrderTransaction');
 							
-							amountAuthorizeCreditReceive = precisionEvaluate(amountAuthorizeCreditReceive + arguments.order.getOrderPayments()[i].getAmountAuthorized() + arguments.order.getOrderPayments()[i].getAmountReceived() + arguments.order.getOrderPayments()[i].getAmountCredited());
+								amountAuthorizeCreditReceive = precisionEvaluate(amountAuthorizeCreditReceive + orderPayment.getAmountAuthorized() + orderPayment.getAmountReceived() + orderPayment.getAmountCredited());
+							}
 						}
 						
 						// After all of the processing, double check that the order does not have errors.  If one of the payments didn't go through, then an error would have been set on the order.
@@ -1030,6 +1043,32 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
+	public any function processOrder_removeOrderPayment(required any order, required struct data) {
+		// Make sure that an orderItemID was passed in
+		if(structKeyExists(arguments.data, "orderPaymentID")) {
+			
+			// Loop over all of the items in this order
+			for(var orderPayment in arguments.order.getOrderPayments())	{
+			
+				// Check to see if this item is the same ID as the one passed in to remove
+				if(orderPayment.getOrderPaymentID() == arguments.data.orderPaymentID) {
+				
+					if(orderPayment.isDeletable()) {
+						arguments.order.removeOrderPayment( orderPayment );
+						this.deleteOrderPayment( orderPayment );
+					} else {
+						orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstRemoved') );
+					}
+					
+					break;
+				}
+			}
+			
+		}
+		
+		return arguments.order;
+	}
+	
 	public any function processOrder_removePromotionCode(required any order, required struct data) {
 		
 		if(structKeyExists(arguments.data, "promotionCodeID")) {
@@ -1101,26 +1140,24 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if(arguments.processObject.getCaptureAuthorizedPaymentsFlag()) {
 			var amountToBeCaptured = arguments.processObject.getCapturableAmount();
 			
-			var opArr = arguments.processObject.getOrder().getOrderPayments();
-			
-			for(var p=1; p<=arrayLen(opArr); p++) {
+			for(var orderPayment in arguments.processObject.getOrder().getOrderPayments()) {
 				
-				var orderPayment = opArr[p];
-				
-				if(orderPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard" && orderPayment.getAmountUnreceived() gt 0 && amountToBeCaptured gt 0) {
-					var transactionData = {
-						transactionType = 'chargePreAuthorization',
-						amount = amountToBeCaptured
-					};
-					
-					if(transactionData.amount gt orderPayment.getAmountUnreceived()) {
-						transactionData.amount = orderPayment.getAmountUnreceived();
-					}
-					
-					orderPayment = this.processOrderPayment(orderPayment, transactionData, 'createTransaction');
-					
-					if(!orderPayment.hasErrors()) {
-						amountToBeCaptured = precisionEvaluate(amountToBeCaptured - transactionData.amount);
+				if(orderPayment.getStatusCode() == 'opstActive') {
+					if(orderPayment.getPaymentMethod().getPaymentMethodType() eq "creditCard" && orderPayment.getAmountUnreceived() gt 0 && amountToBeCaptured gt 0) {
+						var transactionData = {
+							transactionType = 'chargePreAuthorization',
+							amount = amountToBeCaptured
+						};
+						
+						if(transactionData.amount gt orderPayment.getAmountUnreceived()) {
+							transactionData.amount = orderPayment.getAmountUnreceived();
+						}
+						
+						orderPayment = this.processOrderPayment(orderPayment, transactionData, 'createTransaction');
+						
+						if(!orderPayment.hasErrors()) {
+							amountToBeCaptured = precisionEvaluate(amountToBeCaptured - transactionData.amount);
+						}
 					}
 				}
 			}
@@ -1357,7 +1394,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// If the paymentTransaction has errors, then add those errors to the orderPayment itself
 		if(paymentTransaction.hasError('runTransaction')) {
+			
 			arguments.orderPayment.addError('createTransaction', paymentTransaction.getError('runTransaction'), true);
+			
+			// If this order payment has never had and amount Authorize, Received or Credited... then we can set it as invalid
+			if(arguments.orderPayment.getAmountAuthorized() == 0 && arguments.orderPayment.getAmountReceived() == 0 && arguments.orderPayment.getAmountCredited() == 0 ) {
+				
+				arguments.orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstInvalid') );
+			}
 		} else {
 			this.processOrder(arguments.orderPayment.getOrder(), {}, 'updateStatus');
 		}
@@ -1393,18 +1437,25 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// If there was expected authorize, receive, or credit
 			if( 
-				(arguments.orderPayment.hasErrors() || (listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthorized() lt arguments.orderPayment.getAmount()))
+				arguments.orderPayment.hasErrors()
+					|| 
+				(listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthorized() lt arguments.orderPayment.getAmount())
 					||
-				(arguments.orderPayment.hasErrors() || (listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount()))
+				(listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount())
 					||
-				(arguments.orderPayment.hasErrors() || (listFindNoCase("credit", processData.transactionType) && arguments.orderPayment.getAmountCredited() lt arguments.orderPayment.getAmount()))
+				(listFindNoCase("credit", processData.transactionType) && arguments.orderPayment.getAmountCredited() lt arguments.orderPayment.getAmount())
 			) {
 				
 				// Add a generic payment processing error and make it persistable
-				arguments.orderPayment.getOrder().addError('processing', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
+				arguments.orderPayment.getOrder().addError('runPlaceOrderTransaction', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
+				
+				// Add the actual message
+				if(arguments.orderPayment.hasError('createTransaction')) {
+					arguments.orderPayment.getOrder().addError('runPlaceOrderTransaction', arguments.orderPayment.getError('createTransaction'), true);	
+				}
 				
 			}
-
+			
 		}
 		
 		return arguments.orderPayment;
@@ -1430,27 +1481,24 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 			
 			// loop over any fulfillments and update the shippingMethodOptions for any shipping fulfillments
-			for(var f = arrayLen(arguments.order.getOrderFulfillments()); f >= 1; f--) {
-				if(arguments.order.getOrderFulfillments()[f].getFulfillmentMethodType() eq "shipping") {
-					getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.order.getOrderFulfillments()[f] );
-				}
-			}
-			
-			// Check to see if this order is the same as the currentCart
-			if(arguments.order.getOrderID() == getHibachiScope().getCart().getOrderID()) {
+			for(var orderFulfillment in arguments.order.getOrderFulfillments()) {
 				
-				// Make sure that this order gets attached to the current session
-				getHibachiScope().getSession().setOrder( arguments.order );
-
-				// Check to see if we can attach the current account to this order
-				if( isNull(arguments.order.getAccount()) && getHibachiScope().getLoggedInFlag() ) {
-					arguments.order.setAccount( getHibachiScope().getAccount() );
+				if(orderFulfillment.getFulfillmentMethodType() eq "shipping") {
+					
+					// Update the shipping methods
+					getShippingService().updateOrderFulfillmentShippingMethodOptions( orderFulfillment );
+					
+					// Save the accountAddress if needed
+					orderFulfillment.checkNewAccountAddressSave();
 				}
-			
+				
 			}
 			
 			// Recalculate the order amounts for tax and promotions
 			recalculateOrderAmounts(arguments.order);
+			
+			// Make sure the auto-state stuff gets called.
+			arguments.order.confirmOrderNumberOpenDateCloseDatePaymentAmount();
 		}
 		
 		return arguments.order;
@@ -1466,7 +1514,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// If this is a shipping fulfillment, then update the shippingMethodOptions and charge
 			if(arguments.orderFulfillment.getFulfillmentMethodType() eq "shipping") {
+				
+				// Update the shipping Methods
 				getShippingService().updateOrderFulfillmentShippingMethodOptions( arguments.orderFulfillment );
+				
+				// Save the accountAddress if needed
+				arguments.orderFulfillment.checkNewAccountAddressSave();
 			}
 			
 			// Recalculate the order amounts for tax and promotions
@@ -1506,7 +1559,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		arguments.orderPayment = save(arguments.orderPayment, arguments.data, arguments.context);
 		
 		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
-		if(wasNew && !arguments.orderPayment.hasErrors() && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
+		if((wasNew || arguments.orderPayment.getStatusCode() == 'opstInvalid') && !arguments.orderPayment.hasErrors() && isNull(arguments.orderPayment.getAccountPaymentMethod()) && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
+			
+			// In case we are trying to re-submit an orderPayment that was previously marked as invalid, we set it back to active
+			arguments.orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );
 			
 			// Setup the transaction data
 			var transactionData = {
@@ -1617,7 +1673,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// Recalculate the order amounts
 			recalculateOrderAmounts( order );
 			
-			return delete( arguments.orderItem );
+			// Actually delete the entity
+			getHibachiDAO().delete( arguments.orderItem );
+			
+			return true;
 		}
 		
 		return delete( arguments.orderItem );

@@ -41,22 +41,22 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" sRedirectAction="admin:entity.detailAccount" sRedirectQS="accountID=#rc.account.getAccountID()#">
+	<cf_HibachiEntityDetailForm object="#rc.accountPaymentMethod#" edit="#rc.edit#" 
+								saveActionQueryString="accountID=#rc.account.getAccountID()#"
+								saveActionHash="tabaccountpaymentmethods">
+								
 		<cf_HibachiEntityActionBar type="detail" object="#rc.accountPaymentMethod#" edit="#rc.edit#"
 					backAction="admin:entity.detailAccount" 
 					backQueryString="accountID=#rc.account.getAccountID()#"
 					cancelAction="admin:entity.detailAccount"
-					cancelQueryString="accountID=#rc.account.getAccountID()#"></cf_HibachiEntityActionBar>
-		
-		<!--- Hidden field to allow rc.account to be set on invalid submit --->
-		<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
-		
+					cancelQueryString="accountID=#rc.account.getAccountID()#"
+					deleteQueryString="redirectAction=admin:entity.detailAccount&accountID=#rc.account.getAccountID()#" />
+
 		<!--- Hidden field to attach this to the account --->
 		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
 		
 		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList>
-			
+			<cf_HibachiPropertyList divClass="span6">
 				<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="activeFlag" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="accountPaymentMethodName" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.accountPaymentMethod#" property="paymentMethod" edit="#rc.edit#">
@@ -86,15 +86,18 @@ Notes:
 				
 				<!--- Term Payment Details --->
 				<!--- Just uses Billing Address --->
-				
+			</cf_HibachiPropertyList>
+			<cf_HibachiPropertyList divClass="span6">
 				<!--- Billing Address Details --->
 				<cf_HibachiDisplayToggle selector="select[name='paymentMethod.paymentMethodID']" valueAttribute="paymentmethodtype" showValues="creditCard,termPayment" loadVisable="#listFindNoCase('creditCard,termPayment', loadPaymentMethodType)#">
-					<hr />
 					<h5>#$.slatwall.rbKey('entity.accountpaymentmethod.billingaddress')#</h5>
 					<cf_SlatwallAdminAddressDisplay address="#rc.accountPaymentMethod.getBillingAddress()#" fieldNamePrefix="billingaddress." edit="#rc.edit#">
 				</cf_HibachiDisplayToggle>
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
+		<cf_HibachiTabGroup object="#rc.accountPaymentMethod#">
+			<cf_HibachiTab property="paymentTransactions" />
+		</cf_HibachiTabGroup>
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

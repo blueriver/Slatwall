@@ -104,7 +104,16 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		arguments.rc.$.slatwall.addActionResult( "public:cart.addOrderItem", cart.hasErrors() );
 		
 		if(!cart.hasErrors()) {
+			// If the cart doesn't have errors then clear the process object
 			cart.clearProcessObject("addOrderItem");
+			
+			// Also make sure that this cart gets set in the session as the order
+			rc.$.slatwall.getSession().setOrder( cart );
+
+			// Check to see if we can attach the current account to this order
+			if( isNull(cart.getAccount()) && rc.$.slatwall.getLoggedInFlag() ) {
+				cart.setAccount( rc.$.slatwall.getAccount() );
+			}
 		}
 	}
 	
@@ -113,11 +122,17 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'create');
 		
 		if( !account.hasErrors() ) {
-			rc.$.slatwall.getCart().setAccount( account );
+			if( !isNull(rc.$.slatwall.getCart().getAccount())) {
+				var newCart = getOrderService().duplicateOrderWithNewAccount( getHibachiScope().getSession().getOrder(), getHibachiScope().getSession().getAccount() );
+				rc.$.slatwall.getSession().setOrder( newCart );
+			} else {
+				rc.$.slatwall.getCart().setAccount( account );	
+			}
 			arguments.rc.$.slatwall.addActionResult( "public:cart.guestCheckout", false );
 		} else {
 			arguments.rc.$.slatwall.addActionResult( "public:cart.guestCheckout", true );	
 		}
+		
 	}
 	
 	// Remove Order Item
@@ -147,13 +162,21 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	// Add Order Payment
 	public void function addOrderPayment(required any rc) {
+		param name="rc.newOrderPayment" default="#structNew()#";
+		param name="rc.newOrderPayment.orderPaymentID" default="";
+		param name="rc.accountAddressID" default="";
+		param name="rc.accountPaymentMethodID" default="";
 		
-		// Setup newOrderPayment requirements
-		if(structKeyExists(rc, "newOrderPayment")) {
-			rc.newOrderPayment.orderPaymentID = '';
-			rc.newOrderPayment.order.orderID = rc.$.slatwall.cart().getOrderID();
-			rc.newOrderPayment.orderPaymentType.typeID = '444df2f0fed139ff94191de8fcd1f61b';
+		// Make sure that someone isn't trying to pass in another users orderPaymentID
+		if(len(rc.newOrderPayment.orderPaymentID)) {
+			var orderPayment = getOrderService().getOrderPayment(rc.newOrderPayment.orderPaymentID);
+			if(orderPayment.getOrder().getOrderID() != rc.$.slatwall.cart().getOrderID()) {
+				rc.newOrderPayment.orderPaymentID = "";
+			}
 		}
+		
+		rc.newOrderPayment.order.orderID = rc.$.slatwall.cart().getOrderID();
+		rc.newOrderPayment.orderPaymentType.typeID = '444df2f0fed139ff94191de8fcd1f61b';
 		
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addOrderPayment');
 		
@@ -178,4 +201,12 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 			rc.$.slatwall.setSessionValue('confirmationOrderID', order.getOrderID());
 		}
 	}
+	
+	// Remove Order Payment
+	public void function removeOrderPayment(required any rc) {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removeOrderPayment');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.removeOrderPayment", cart.hasErrors() );
+	}
+	
 }
