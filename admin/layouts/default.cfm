@@ -92,6 +92,7 @@ Notes:
 								<li class="divider"></li>
 								<cf_HibachiActionCaller action="admin:entity.listpromotion" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listpricegroup" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listloyalty" type="list">
 							</cf_HibachiDividerHider>
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.orders_nav')#" icon="inbox icon-white" type="nav">
