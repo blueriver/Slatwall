@@ -51,12 +51,9 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
-		<!---<cf_HibachiTabGroup object="#rc.loyalty#">
-			<cf_HibachiTab view="admin:entity/loyaltytabs/loyaltyperiods" />
-			<cf_HibachiTab view="admin:entity/loyaltytabs/loyaltycodes" />
-			<cf_HibachiTab view="admin:entity/loyaltytabs/loyaltysummary" />
-			<cf_HibachiTab view="admin:entity/loyaltytabs/loyaltydescription" />
-		</cf_HibachiTabGroup>--->
+		<cf_HibachiTabGroup object="#rc.loyalty#">
+			<cf_HibachiTab view="admin:entity/loyaltytabs/loyaltyAccruement" />
+		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
