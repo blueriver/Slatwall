@@ -43,7 +43,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	public void function default(required struct rc) {
 		
 		if(arguments.rc.ajaxRequest && structKeyExists(arguments.rc, "reportName")) {
-			var report = getHibachiReportService().getReportCFC(arguments.rc.reportName);
+			var report = getHibachiReportService().getReportCFC(arguments.rc.reportName, arguments.rc);
 			arguments.rc.ajaxResponse["report"] = {};
 			arguments.rc.ajaxResponse["report"]["chartData"] = report.getChartData();
 		}

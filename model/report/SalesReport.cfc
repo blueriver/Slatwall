@@ -38,8 +38,8 @@ Notes:
 --->
 <cfcomponent accessors="true" persistent="false" output="false" extends="HibachiReport">
 	
-	<cfproperty name="reportDateTimeStart" />
-	<cfproperty name="reportDateTimeEnd" />
+	<cfproperty name="reportStartDateTime" />
+	<cfproperty name="reportEndDateTime" />
 	
 	<cfproperty name="data" />
 	<cfproperty name="chartDataQuery" />
@@ -84,10 +84,28 @@ Notes:
 				  	SlatwallAddress on SlatwallOrderFulfillment.shippingAddressID = SlatwallAddress.addressID
 				WHERE
 					SlatwallOrder.orderOpenDateTime is not null
+				  AND
+				  	SlatwallOrder.orderOpenDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportStartDateTime()#" />
+				  AND
+				  	SlatwallOrder.orderOpenDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportEndDateTime()#" />
 			</cfquery>
 		</cfif>
 		
 		<cfreturn variables.data />
+	</cffunction>
+	
+	<cffunction name="getReportStartDateTime">
+		<cfif not structKeyExists(variables, "reportStartDateTime")>
+			<cfset variables.reportStartDateTime = dateFormat(now() - 30, "yyyy-mm-dd") />
+		</cfif>
+		<cfreturn variables.reportStartDateTime />
+	</cffunction>
+	
+	<cffunction name="getReportEndDateTime">
+		<cfif not structKeyExists(variables, "reportEndDateTime")>
+			<cfset variables.reportEndDateTime = dateFormat(now(), "yyyy-mm-dd") />
+		</cfif>
+		<cfreturn variables.reportEndDateTime />
 	</cffunction>
 	
 	<cffunction name="getReportDateTimeSelect">
@@ -167,7 +185,7 @@ Notes:
 			<cfset arrayAppend(variables.chartData["series"], {})>
 			<cfset variables.chartData["series"][1]["name"] = "Extended Price" />
 			<cfset variables.chartData["series"][1]["data"] = [] />
-			<cfloop index="thisDate" from="#firstDateTime#" to="#lastDateTime#" step="#CreateTimeSpan( 1, 0, 0, 0 )#">
+			<cfloop index="thisDate" from="#getReportStartDateTime()#" to="#getReportEndDateTime()#" step="#CreateTimeSpan( 1, 0, 0, 0 )#">
 				<cfset var thisData = [] />
 				<cfset arrayAppend(thisData, dateDiff("s", createdatetime( '1970','01','01','00','00','00' ), dateConvert("local2Utc", thisDate))*1000) />
 				<cfif year(thisDate) eq chartDataQuery['reportDateTimeYear'][chartRow] and month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow] and day(thisDate) eq chartDataQuery['reportDateTimeDay'][chartRow]>

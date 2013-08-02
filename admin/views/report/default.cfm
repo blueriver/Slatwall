@@ -62,7 +62,7 @@ Notes:
 							<a href="" class="btn">Week</a>
 							<a href="" class="btn">Month</a>
 						</div>
-						<input type="text" name="reportStartDateTime" class="datepicker" style="width:100px;" value="#$.slatwall.formatValue(now()-30, 'date')#" /> - <input type="text" name="reportEndDateTime" class="datepicker" style="width:100px;" value="#$.slatwall.formatValue(now(), 'date')#" />
+						<input type="text" name="reportStartDateTime" class="datepicker reportdate" style="width:100px;" value="#$.slatwall.formatValue(now()-30, 'date')#" /> - <input type="text" name="reportEndDateTime" class="datepicker reportdate" style="width:100px;" value="#$.slatwall.formatValue(now(), 'date')#" />
 					</div>
 				</div>
 			</div>
@@ -91,26 +91,34 @@ Notes:
 	<script src="http://code.highcharts.com/highcharts.js"></script>
 	<script type="text/javascript">
 		jQuery(document).ready(function() {
-			var data = {
-				reportName: 'SalesReport'
-			};
 			
-			jQuery.ajax({
-				url: jQuery(this).attr('href'),
-				method: 'post',
-				data: data,
-				dataType: 'json',
-				beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
-				error: function( r ) {
-					console.log(r);
-				},
-				success: function( r ) {
-					console.log(r.report.chartData);
-					jQuery('##report-chart').highcharts(r.report.chartData);
-				}
-			});
+			function updateReport() {
+				var data = {
+					reportName: 'SalesReport',
+					reportStartDateTime: $('input[name="reportStartDateTime"]').val(),
+					reportEndDateTime: $('input[name="reportEndDateTime"]').val()
+				};
+				
+				jQuery.ajax({
+					url: jQuery(this).attr('href'),
+					method: 'post',
+					data: data,
+					dataType: 'json',
+					beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
+					error: function( r ) {
+						// Error
+					},
+					success: function( r ) {
+						jQuery('##report-chart').highcharts(r.report.chartData);
+					}
+				});
+			}
 			
+			updateReport();
 		    
+			jQuery('body').on('change', '.reportdate', function(){
+				updateReport();	
+			});
 		});
 	</script>
 	<!---jQuery('##report-chart').highcharts(#salesReport.getChartData()#);--->

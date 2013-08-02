@@ -4,7 +4,7 @@ component output="false" accessors="true" extends="HibachiService"  {
 	
 	public any function getReportCFC( required string reportName, required struct data={} ) {
 		var reportCFC = getBean( arguments.reportName );
-		reportCFC.populate(arguments.data);
+		reportCFC.populate( arguments.data );
 		return reportCFC;
 	}
 	
