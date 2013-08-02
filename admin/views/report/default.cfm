@@ -82,7 +82,7 @@ Notes:
 				<cfloop query="tableData">
 					<tr>
 						<td>#tableData.productName#</td>
-						<td>#dollarFormat(tableData.series1)#</td>
+						<td><!---#dollarFormat(tableData.series1)#---></td>
 					</tr>
 				</cfloop>
 			</table>
@@ -100,8 +100,6 @@ Notes:
 					reportEndDateTime: $('input[name="reportEndDateTime"]').val(),
 					reportDateTimeGroupBy: $('a.reportdategroup.active').data('groupby')
 				};
-				
-				console.log( data );
 				
 				jQuery.ajax({
 					url: jQuery(this).attr('href'),
