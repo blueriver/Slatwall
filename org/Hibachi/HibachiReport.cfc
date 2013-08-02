@@ -115,13 +115,25 @@
 	</cffunction>
 	
 	<!--- Definition Helper Methods --->
+	<cffunction name="getMetricDefinition">
+		<cfargument name="alias" type="string" required="true" />
+		
+		<cfset var metricDefinition = structNew() />
+		
+		<cfloop array="#getMetricDefinitions()#" index="metricDefinition">
+			<cfif metricDefinition.alias eq arguments.alias>
+				<cfreturn metricDefinition />
+			</cfif>
+		</cfloop>
+	</cffunction>
+	
 	<cffunction name="getDimensionDefinition">
-		<cfargument name="dimensionAlias" type="string" required="true" />
+		<cfargument name="alias" type="string" required="true" />
 		
 		<cfset var dimensionDefinition = structNew() />
 		
 		<cfloop array="#getDimensionDefinitions()#" index="dimensionDefinition">
-			<cfif dimensionDefinition.alias eq arguments.dimensionAlias>
+			<cfif dimensionDefinition.alias eq arguments.alias>
 				<cfreturn dimensionDefinition />
 			</cfif>
 		</cfloop>
@@ -151,8 +163,8 @@
 			
 			<cfquery name="variables.chartDataQuery" dbtype="query">
 				SELECT
-					<cfloop from="1" to="#arrayLen(getMetricDefinitions())#" step="1" index="m">
-						<cfset var metricDefinition = getMetricDefinitions()[m] />
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 						<cfif m gt 1>,</cfif>
 						<cfif structKeyExists(metricDefinition, "calculation")>
 							#metricDefinition.calculation# as #metricDefinition.alias#
@@ -249,12 +261,14 @@
 			<cfset variables.chartData["yAxis"]["title"]["text"] = '' />
 			<cfset variables.chartData["series"] = [] />
 			
-			<cfloop from="1" to="#arrayLen(getMetricDefinitions())#" step="1" index="m">
-				<cfset var chartRow = 1 />
-				<cfset var metricDefinition = getMetricDefinitions()[m] />
+			<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+				<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
+				
 				<cfset arrayAppend(variables.chartData["series"], {})>
 				<cfset variables.chartData["series"][m]["name"] = getMetricTitle(metricDefinition.alias) />
 				<cfset variables.chartData["series"][m]["data"] = [] />
+				
+				<cfset var chartRow = 1 />
 				
 				<cf_HibachiDateLoop index="thisDate" from="#getReportStartDateTime()#" to="#getReportEndDateTime()#" datepart="#loopdatepart#">
 					<cfset var thisData = [] />
@@ -286,8 +300,8 @@
 			
 			<cfquery name="unsortedData" dbtype="query">
 				SELECT
-					<cfloop from="1" to="#arrayLen(getMetricDefinitions())#" step="1" index="m">
-						<cfset var metricDefinition = getMetricDefinitions()[m] />
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 						<cfif m gt 1>,</cfif>
 						<cfif structKeyExists(metricDefinition, "calculation")>
 							#metricDefinition.calculation# as #metricDefinition.alias#
@@ -321,8 +335,8 @@
 				FROM
 					unsortedData
 				ORDER BY
-					<cfloop from="1" to="#arrayLen(getMetricDefinitions())#" step="1" index="m">
-						<cfset var metricDefinition = getMetricDefinitions()[m] />
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
 						<cfif m gt 1>,</cfif>#metricDefinition.alias#
 					</cfloop>
 			</cfquery>

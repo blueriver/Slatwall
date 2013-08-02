@@ -49,7 +49,7 @@ Notes:
 		<div class="span10">
 			<!--- Chart --->
 			<div class="well">
-				<div id="report-chart" style="width:100%; height:400px; margin-bottom:10px;"></div>
+				<div id="report-chart" style="width:100%; height:300px; margin-bottom:10px;"></div>
 				<div class="padding-top:10px;">
 					<div class="btn-group" style="vertical-align:top;">
 						<a href="" class="btn active">Line</a>
@@ -79,12 +79,30 @@ Notes:
 		jQuery(document).ready(function() {
 			
 			function updateReport() {
+					
 				var data = {
 					reportName: 'ProductPerformanceReport',
 					reportStartDateTime: $('input[name="reportStartDateTime"]').val(),
 					reportEndDateTime: $('input[name="reportEndDateTime"]').val(),
-					reportDateTimeGroupBy: $('a.reportdategroup.active').data('groupby')
+					reportDateTimeGroupBy: $('a.reportdategroup.active').data('groupby'),
 				};
+				
+				jQuery.each( $('input[name="metrics"]:checked'), function(i,v) {
+					if(i === 0) {
+						data.metrics = ''
+					} else {
+						data.metrics += ','
+					}
+					data.metrics += jQuery(v).val();
+				});
+				jQuery.each($('input[name="dimensions"]:checked'), function(i,v) {
+					if(i === 0) {
+						data.dimensions = ''
+					} else {
+						data.dimensions += ','
+					}
+					data.dimensions += jQuery(v).val();
+				});
 				
 				jQuery.ajax({
 					url: jQuery(this).attr('href'),
@@ -105,8 +123,13 @@ Notes:
 			updateReport();
 		    
 			jQuery('body').on('change', '.reportdate', function(){
-				updateReport();	
+				updateReport();
 			});
+			
+			jQuery('body').on('click', 'input[name="metrics"],input[name="dimensions"]', function(e){
+				updateReport();
+			});
+			
 			jQuery('body').on('click', '.reportdategroup', function(e){
 				e.preventDefault();
 				jQuery('.reportdategroup').removeClass('active');
