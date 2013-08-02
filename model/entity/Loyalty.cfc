@@ -43,6 +43,9 @@ component displayname="Loyalty" entityname="SlatwallLoyalty" table="SlatwallLoya
 	property name="loyaltyName" ormtype="string";
 	property name="activeFlag" ormtype="boolean" default="1";
 	
+	// Related Object Properties (many-to-one)
+	property name="LoyaltyAccruement" cfc="LoyaltyAccruement" fieldtype="many-to-one" fkcolumn="loyaltyAccruementID";
+	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
