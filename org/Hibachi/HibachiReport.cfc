@@ -19,6 +19,9 @@
 	<cfproperty name="chartData" />
 	<cfproperty name="tableDataQuery" />
 	
+	<!--- Rendered Data Properties --->
+	<cfproperty name="reportDataTable" />
+	
 	<!--- Date / Time Defaults --->
 	<cffunction name="getReportStartDateTime">
 		<cfif not structKeyExists(variables, "reportStartDateTime")>
@@ -292,4 +295,13 @@
 		<cfreturn variables.tableDataQuery />
 	</cffunction>
 	
+	<cffunction name="getReportDataTable">
+		<cfif(!structKeyExists(variables, "reportDataTable"))>
+			<cfsavecontent variable="variables.reportDataTable">
+				<cf_HibachiReportDataTable report="#this#">
+			</cfsavecontent>
+		</cfif>
+		
+		<cfreturn variables.reportDataTable />
+	</cffunction>
 </cfcomponent>

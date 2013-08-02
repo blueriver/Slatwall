@@ -37,8 +37,6 @@ Notes:
 
 --->
 
-<cfset salesReport = $.slatwall.getBean("SalesReport") />
-
 <cfoutput>
 	<div class="row-fluid">
 		<div class="span2">
@@ -69,23 +67,9 @@ Notes:
 			</div>
 			
 			<!--- Table --->
-			<table class="table table-condensed table-bordered">
-				<tr>
-					<th>
-						Product
-					</th>
-					<th>
-						Product Revenue
-					</th>
-				</tr>
-				<cfset tableData = salesReport.getTableDataQuery() /> 
-				<cfloop query="tableData">
-					<tr>
-						<td>#tableData.productName#</td>
-						<td><!---#dollarFormat(tableData.series1)#---></td>
-					</tr>
-				</cfloop>
-			</table>
+			<div id="report-table">
+				
+			</div>
 		</div>
 	</div>
 	<!--- Chart --->
@@ -112,6 +96,7 @@ Notes:
 					},
 					success: function( r ) {
 						jQuery('##report-chart').highcharts(r.report.chartData);
+						jQuery('##report-table').html(r.report.dataTable);
 					}
 				});
 			}

@@ -49,6 +49,7 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 			var report = getHibachiReportService().getReportCFC(arguments.rc.reportName, arguments.rc);
 			arguments.rc.ajaxResponse["report"] = {};
 			arguments.rc.ajaxResponse["report"]["chartData"] = report.getChartData();
+			arguments.rc.ajaxResponse["report"]["dataTable"] = report.getReportDataTable();
 		}
 	}
 	
