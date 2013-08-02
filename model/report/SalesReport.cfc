@@ -40,6 +40,7 @@ Notes:
 	
 	<cfproperty name="reportStartDateTime" />
 	<cfproperty name="reportEndDateTime" />
+	<cfproperty name="reportDateTimeGroupBy" />
 	
 	<cfproperty name="data" />
 	<cfproperty name="chartDataQuery" />
@@ -108,6 +109,13 @@ Notes:
 		<cfreturn variables.reportEndDateTime />
 	</cffunction>
 	
+	<cffunction name="getReportDateTimeGroupBy">
+		<cfif not structKeyExists(variables, "reportDateTimeGroupBy")>
+			<cfset variables.reportDateTimeGroupBy = "day" />
+		</cfif>
+		<cfreturn variables.reportDateTimeGroupBy />
+	</cffunction>
+	
 	<cffunction name="getReportDateTimeSelect">
 		<cfargument name="column" />
 		
@@ -117,11 +125,13 @@ Notes:
 				<cfif getApplicationValue('databaseType') eq "MySQL">
 					YEAR( #arguments.column# ) as reportDateTimeYear,
 					MONTH( #arguments.column# ) as reportDateTimeMonth,
+					WEEK( #arguments.column# ) as reportDateTimeWeek,
 					DAY( #arguments.column# ) as reportDateTimeDay,
 					HOUR( #arguments.column# ) as reportDateTimeHour
 				<cfelse>
 					DATEPART( year, #arguments.column# ) as reportDateTimeYear,
 					DATEPART( month, #arguments.column# ) as reportDateTimeMonth,
+					DATEPART( week, #arguments.column# ) as reportDateTimeWeek,
 					DATEPART( day, #arguments.column# ) as reportDateTimeDay,
 					DATEPART( hour, #arguments.column# ) as reportDateTimeHour  
 				</cfif>
@@ -140,18 +150,56 @@ Notes:
 					SUM(data.extendedPrice) as series1,
 					AVG(data.price) as series2,
 					COUNT(quantity) as series3,
-					COUNT(data.orderID) as series4,
-					data.reportDateTimeYear,
-					data.reportDateTimeMonth,
-					data.reportDateTimeDay
+					COUNT(data.orderID) as series4
+					<cfif listFindNoCase('year,month,week,day,hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeYear
+					</cfif>
+					<cfif listFindNoCase('month,week,day,hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeMonth
+					</cfif>
+					<cfif listFindNoCase('week,day,hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeWeek
+					</cfif>
+					<cfif listFindNoCase('day,hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeDay
+					</cfif>
+					<cfif listFindNoCase('hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeHour
+					</cfif>
 				FROM
 					data
 				GROUP BY
-					data.reportDateTimeYear, data.reportDateTimeMonth, data.reportDateTimeDay
+					<cfif listFindNoCase('year,month,week,day,hour', getReportDateTimeGroupBy())>
+						data.reportDateTimeYear
+					</cfif>
+					<cfif listFindNoCase('month,week,day,hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeMonth
+					</cfif>
+					<cfif listFindNoCase('week,day,hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeWeek
+					</cfif>
+					<cfif listFindNoCase('day,hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeDay
+					</cfif>
+					<cfif listFindNoCase('hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeHour
+					</cfif>
 				ORDER BY
-					data.reportDateTimeYear,
-					data.reportDateTimeMonth,
-					data.reportDateTimeDay
+					<cfif listFindNoCase('year,month,week,day,hour', getReportDateTimeGroupBy())>
+						data.reportDateTimeYear
+					</cfif>
+					<cfif listFindNoCase('month,week,day,hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeMonth
+					</cfif>
+					<cfif listFindNoCase('week,day,hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeWeek
+					</cfif>
+					<cfif listFindNoCase('day,hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeDay
+					</cfif>
+					<cfif listFindNoCase('hour', getReportDateTimeGroupBy())>
+						,data.reportDateTimeHour
+					</cfif>
 			</cfquery>
 		</cfif>
 		
@@ -165,8 +213,6 @@ Notes:
 			<cfset var chartDataStruct = structNew() />
 			
 			<cfset var thisDate = "" />
-			<cfset var firstDateTime = createDateTime(chartDataQuery['reportDateTimeYear'][1], chartDataQuery['reportDateTimeMonth'][1], chartDataQuery['reportDateTimeDay'][1], 0, 0, 0) />
-			<cfset var lastDateTime = createDateTime(chartDataQuery['reportDateTimeYear'][chartDataQuery.recordCount], chartDataQuery['reportDateTimeMonth'][chartDataQuery.recordCount], chartDataQuery['reportDateTimeDay'][chartDataQuery.recordCount], 0, 0, 0) />
 			<cfset var chartRow = 1 />
 			
 			<cfset variables.chartData = {} />
@@ -185,10 +231,40 @@ Notes:
 			<cfset arrayAppend(variables.chartData["series"], {})>
 			<cfset variables.chartData["series"][1]["name"] = "Extended Price" />
 			<cfset variables.chartData["series"][1]["data"] = [] />
+			
+			<cfset var loopdatepart = "d" />
+			<cfif getReportDateTimeGroupBy() eq 'year'>
+				<cfset loopdatepart = "yyyy" />
+			<cfelseif getReportDateTimeGroupBy() eq 'month'>
+				<cfset loopdatepart = "m" />
+			<cfelseif getReportDateTimeGroupBy() eq 'week'>
+				<cfset loopdatepart = "ww" />
+			<cfelseif getReportDateTimeGroupBy() eq 'hour'>
+				<cfset loopdatepart = "h" />	
+			</cfif>
+			
+			<cf_HibachiDateLoop index="thisDate" from="#getReportStartDateTime()#" to="#getReportEndDateTime()#" datepart="#loopdatepart#">
+				<cfset var thisData = [] />
+				<cfset arrayAppend(thisData, dateDiff("s", createdatetime( '1970','01','01','00','00','00' ), dateAdd("h", 1, thisDate))*1000) />
+				<cfif year(thisDate) eq chartDataQuery['reportDateTimeYear'][chartRow] and 
+						(!listFindNoCase('month,day,hour', getReportDateTimeGroupBy()) or month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow]) and
+						(!listFindNoCase('day,hour', getReportDateTimeGroupBy()) or day(thisDate) eq chartDataQuery['reportDateTimeDay'][chartRow]) and
+						(!listFindNoCase('hour', getReportDateTimeGroupBy()) or hour(thisDate) eq chartDataQuery['reportDateTimeHour'][chartRow])>
+					<cfset arrayAppend(thisData, chartDataQuery['series1'][chartRow]) />
+					<cfset chartRow ++ />
+				<cfelse>
+					<cfset arrayAppend(thisData, 0) />
+				</cfif>
+				<cfset arrayAppend(variables.chartData["series"][1]["data"], thisData) />
+			</cf_HibachiDateLoop>
+			<!---
 			<cfloop index="thisDate" from="#getReportStartDateTime()#" to="#getReportEndDateTime()#" step="#CreateTimeSpan( 1, 0, 0, 0 )#">
 				<cfset var thisData = [] />
 				<cfset arrayAppend(thisData, dateDiff("s", createdatetime( '1970','01','01','00','00','00' ), dateConvert("local2Utc", thisDate))*1000) />
-				<cfif year(thisDate) eq chartDataQuery['reportDateTimeYear'][chartRow] and month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow] and day(thisDate) eq chartDataQuery['reportDateTimeDay'][chartRow]>
+				<cfif year(thisDate) eq chartDataQuery['reportDateTimeYear'][chartRow] and 
+						(!listFindNoCase('month,day,hour', getReportDateTimeGroupBy()) or month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow]) and
+						(!listFindNoCase('day,hour', getReportDateTimeGroupBy()) or day(thisDate) eq chartDataQuery['reportDateTimeDay'][chartRow]) and
+						(!listFindNoCase('hour', getReportDateTimeGroupBy()) or hour(thisDate) eq chartDataQuery['reportDateTimeHour'][chartRow])>
 					<cfset arrayAppend(thisData, chartDataQuery['series1'][chartRow]) />
 					<cfset chartRow ++ />
 				<cfelse>
@@ -196,6 +272,7 @@ Notes:
 				</cfif>
 				<cfset arrayAppend(variables.chartData["series"][1]["data"], thisData) />
 			</cfloop>
+			--->
 		</cfif>
 		
 		<cfreturn variables.chartData />

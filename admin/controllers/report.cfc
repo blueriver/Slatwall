@@ -40,6 +40,9 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 
 	property name="hibachiReportService" type="any";
 
+	this.secureMethods='';
+	this.secureMethods=listAppend(this.secureMethods,'default');
+
 	public void function default(required struct rc) {
 		
 		if(arguments.rc.ajaxRequest && structKeyExists(arguments.rc, "reportName")) {

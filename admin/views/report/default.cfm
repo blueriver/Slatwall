@@ -58,9 +58,10 @@ Notes:
 					</div>
 					<div class="pull-right">
 						<div class="btn-group" style="vertical-align:top;">
-							<a href="" class="btn active">Day</a>
-							<a href="" class="btn">Week</a>
-							<a href="" class="btn">Month</a>
+							<a href="" class="reportdategroup btn" data-groupby="hour">Hour</a>
+							<a href="" class="reportdategroup btn active" data-groupby="day">Day</a>
+							<a href="" class="reportdategroup btn" data-groupby="week">Week</a>
+							<a href="" class="reportdategroup btn" data-groupby="month">Month</a>
 						</div>
 						<input type="text" name="reportStartDateTime" class="datepicker reportdate" style="width:100px;" value="#$.slatwall.formatValue(now()-30, 'date')#" /> - <input type="text" name="reportEndDateTime" class="datepicker reportdate" style="width:100px;" value="#$.slatwall.formatValue(now(), 'date')#" />
 					</div>
@@ -96,8 +97,11 @@ Notes:
 				var data = {
 					reportName: 'SalesReport',
 					reportStartDateTime: $('input[name="reportStartDateTime"]').val(),
-					reportEndDateTime: $('input[name="reportEndDateTime"]').val()
+					reportEndDateTime: $('input[name="reportEndDateTime"]').val(),
+					reportDateTimeGroupBy: $('a.reportdategroup.active').data('groupby')
 				};
+				
+				console.log( data );
 				
 				jQuery.ajax({
 					url: jQuery(this).attr('href'),
@@ -118,6 +122,12 @@ Notes:
 		    
 			jQuery('body').on('change', '.reportdate', function(){
 				updateReport();	
+			});
+			jQuery('body').on('click', '.reportdategroup', function(e){
+				e.preventDefault();
+				jQuery('.reportdategroup').removeClass('active');
+				jQuery( this ).addClass('active');
+				updateReport();
 			});
 		});
 	</script>
