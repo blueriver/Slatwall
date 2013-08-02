@@ -1,5 +1,8 @@
 <cfcomponent accessors="true" persistent="false" output="false" extends="HibachiTransient">
 	
+	<!--- Title Information --->
+	<cfproperty name="reportTitle" />
+	
 	<!--- Date / Time Properties --->
 	<cfproperty name="reportStartDateTime" />
 	<cfproperty name="reportEndDateTime" />
@@ -21,6 +24,39 @@
 	
 	<!--- Rendered Data Properties --->
 	<cfproperty name="reportDataTable" />
+	
+	<!--- Title Methods --->
+	<cffunction name="getReportTitle">
+		<cfreturn rbKey('report.#getClassName()#') />
+	</cffunction>
+	
+	<cffunction name="getMetricTitle">
+		<cfargument name="alias" type="string" required="true" />
+		
+		<cfset var metricDefinition = {} />
+		
+		<cfloop array="#getMetricDefinitions()#" index="metricDefinition">
+			<cfif metricDefinition.alias eq arguments.alias and structKeyExists(metricDefinition, 'title')>
+				<cfreturn metricDefinition.title />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn rbKey('report.#getClassName()#.#alias#') />
+	</cffunction>
+	
+	<cffunction name="getDimensionTitle">
+		<cfargument name="alias" type="string" required="true" />
+		
+		<cfset var dimensionDefinition = {} />
+		
+		<cfloop array="#getDimensionDefinitions()#" index="dimensionDefinition">
+			<cfif dimensionDefinition.alias eq arguments.alias and structKeyExists(dimensionDefinition, 'title')>
+		 		<cfreturn dimensionDefinition.title />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn rbKey('report.#getClassName()#.#alias#') />
+	</cffunction>
 	
 	<!--- Date / Time Defaults --->
 	<cffunction name="getReportStartDateTime">
@@ -186,7 +222,6 @@
 			<cfset var chartDataStruct = structNew() />
 			
 			<cfset var thisDate = "" />
-			<cfset var chartRow = 1 />
 			<cfset var m = 1 />
 			<cfset var loopdatepart = "d" />
 			
@@ -206,7 +241,7 @@
 			<cfset variables.chartData["legend"] = {} />
 			<cfset variables.chartData["legend"]["enabled"] = false />
 			<cfset variables.chartData["title"] = {} />
-			<cfset variables.chartData["title"]["text"] = "Sales Report" />
+			<cfset variables.chartData["title"]["text"] = getReportTitle() />
 			<cfset variables.chartData["xAxis"] = {} />
 			<cfset variables.chartData["xAxis"]["type"] = "datetime" />
 			<cfset variables.chartData["yAxis"] = {} />
@@ -215,9 +250,10 @@
 			<cfset variables.chartData["series"] = [] />
 			
 			<cfloop from="1" to="#arrayLen(getMetricDefinitions())#" step="1" index="m">
+				<cfset var chartRow = 1 />
 				<cfset var metricDefinition = getMetricDefinitions()[m] />
 				<cfset arrayAppend(variables.chartData["series"], {})>
-				<cfset variables.chartData["series"][m]["name"] = metricDefinition.alias />
+				<cfset variables.chartData["series"][m]["name"] = getMetricTitle(metricDefinition.alias) />
 				<cfset variables.chartData["series"][m]["data"] = [] />
 				
 				<cf_HibachiDateLoop index="thisDate" from="#getReportStartDateTime()#" to="#getReportEndDateTime()#" datepart="#loopdatepart#">
@@ -227,7 +263,7 @@
 							(!listFindNoCase('month,day,hour', getReportDateTimeGroupBy()) or month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow]) and
 							(!listFindNoCase('day,hour', getReportDateTimeGroupBy()) or day(thisDate) eq chartDataQuery['reportDateTimeDay'][chartRow]) and
 							(!listFindNoCase('hour', getReportDateTimeGroupBy()) or hour(thisDate) eq chartDataQuery['reportDateTimeHour'][chartRow])>
-						<cfset arrayAppend(thisData, chartDataQuery[metricDefinition.alias][chartRow]) />
+						<cfset arrayAppend(thisData, chartDataQuery[ metricDefinition.alias ][ chartRow ]) />
 						<cfset chartRow ++ />
 					<cfelse>
 						<cfset arrayAppend(thisData, 0) />

@@ -42,11 +42,12 @@ Notes:
 		<div class="span2">
 			<div class="well">
 				<ul class="nav">
-					<li><a href="##SalesReport">Sales Report</a></li>
+					<li><a href="##ProductPerformanceReport">Product Performance</a></li>
 				</ul>
 			</div>
 		</div>
 		<div class="span10">
+			<!--- Chart --->
 			<div class="well">
 				<div id="report-chart" style="width:100%; height:400px; margin-bottom:10px;"></div>
 				<div class="padding-top:10px;">
@@ -79,7 +80,7 @@ Notes:
 			
 			function updateReport() {
 				var data = {
-					reportName: 'SalesReport',
+					reportName: 'ProductPerformanceReport',
 					reportStartDateTime: $('input[name="reportStartDateTime"]').val(),
 					reportEndDateTime: $('input[name="reportEndDateTime"]').val(),
 					reportDateTimeGroupBy: $('a.reportdategroup.active').data('groupby')

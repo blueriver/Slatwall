@@ -40,18 +40,19 @@ Notes:
 	
 	<cffunction name="getMetricDefinitions">
 		<cfreturn [
+			{alias='revenue', calculation='(SUM(salePreDiscount) - SUM(itemDiscount)) + (SUM(returnPreDiscount) - SUM(itemDiscount))'},
 			{alias='salePreDiscount', function='sum'},
 			{alias='returnPreDiscount', function='sum'},
 			{alias='itemDiscount', function='sum'},
-			{alias='saleAfterDiscount', calculation='SUM(salePreDiscount - itemDiscount)'},
-			{alias='returnAfterDiscount', calculation='SUM(returnPreDiscount - itemDiscount)'}
+			{alias='saleAfterDiscount', calculation='SUM(salePreDiscount) - SUM(itemDiscount)'},
+			{alias='returnAfterDiscount', calculation='SUM(returnPreDiscount) - SUM(itemDiscount)'}
 		] />
 	</cffunction>
 	
 	<cffunction name="getDimensionDefinitions">
 		<cfreturn [
-			{alias='productName', filterAlias='productID', filterDimension='skuCode'},
-			{alias='skuCode'}
+			{alias='productName', filterAlias='productID', filterDimension='skuCode', title=rbKey('entity.product.productName')},
+			{alias='skuCode', title=rbKey('entity.sku.skuCode')}
 		] />
 	</cffunction>
 	

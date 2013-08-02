@@ -8,11 +8,11 @@
 			<tr>
 				<cfloop from="1" to="#listLen(attributes.report.getDimensions())#" step="1" index="d">
 					<cfset dimensionDefinition = attributes.report.getDimensionDefinition( listGetAt(attributes.report.getDimensions(), d) ) />
-					<th>#dimensionDefinition.alias#</th>
+					<th>#attributes.report.getDimensionTitle( dimensionDefinition.alias )#</th>
 				</cfloop>
 				<cfloop from="1" to="#arrayLen(attributes.report.getMetricDefinitions())#" step="1" index="m">
 					<cfset metricDefinition = attributes.report.getMetricDefinitions()[m] />
-					<th>#metricDefinition.alias#</th>
+					<th>#attributes.report.getMetricTitle( metricDefinition.alias )#</th>
 				</cfloop>
 			</tr>
 			
