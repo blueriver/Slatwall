@@ -67,13 +67,14 @@ Notes:
 		<AVSstate>#arguments.requestBean.getBillingStateCode()#</AVSstate>
 		<AVSphoneNum>#arguments.requestBean.getAccountPrimaryPhoneNumber()#</AVSphoneNum>
 		<AVSname>#arguments.requestBean.getNameOnCreditCard()#</AVSname>
+		<AVScountryCode>#arguments.requestBean.getBillingCountryCode()#</AVScountryCode>
 		<CustomerRefNum>#arguments.requestBean.getAccountID()#</CustomerRefNum>
 		<OrderID>#arguments.requestBean.getOrderID()#</OrderID>
 		<Amount>#arguments.requestBean.getTransactionAmount()*100#</Amount>
-		<CustomerEmail>#arguments.requestBean.getAccountPrimaryEmailAddress()#</CustomerEmail>
 		<cfif arguments.requestBean.getTransactionType() EQ "credit">
 			<TxRefNum>#arguments.requestBean.getProviderTransactionID()#</TxRefNum>
 		</cfif>
+		<CustomerEmail>#arguments.requestBean.getAccountPrimaryEmailAddress()#</CustomerEmail>
 		<CustomerIpAddress>#CGI.REMOTE_ADDR#</CustomerIpAddress>
 	</NewOrder>
 </Request>
