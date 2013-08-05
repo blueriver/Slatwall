@@ -33,28 +33,32 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
-
+	Notes:
+	
 --->
-<cfparam name="rc.attributeSet" type="any" />
+<cfcomponent extends="BaseResource" taffy_uri="/display/toolbarSearchResults/">
 
-<cfoutput>
+	<cffunction name="get">
+		<cfset var display = "" />
+		
+		<cfset var search = structNew() />
+		
+		<cfset search.products = getService("productService").getProductSmartList(data=arguments) />
+		<cfset search.products.setPageRecordsShow(14) />
+		<cfset search.productTypes = getService("productService").getProductTypeSmartList(data=arguments) />
+		<cfset search.productTypes.setPageRecordsShow(7) />
+		<cfset search.brands = getService("brandService").getBrandSmartList(data=arguments) />
+		<cfset search.brands.setPageRecordsShow(7) />
+		<cfset search.accounts = getService("accountService").getAccountSmartList(data=arguments) />
+		<cfset search.accounts.setPageRecordsShow(7) />
+		<cfset search.orders = getService("orderService").getOrderSmartList(data=arguments) />
+		<cfset search.orders.setPageRecordsShow(7) />
+		
+		<cfsavecontent variable="display">
+			<cf_SlatwallToolbarSearchResults searchResults="#search#" keywords="#arguments.keywords#">
+		</cfsavecontent>
 
-	<cf_HibachiListingDisplay smartList="#rc.attributeSet.getAttributesSmartList()#" 
-							   recordEditAction="admin:entity.editattribute" 
-							   recordEditQueryString="redirectAction=admin:entity.detailattributeset&attributeSetID=#rc.attributeSet.getAttributeSetID()#"
-							   recordDetailAction="admin:entity.detailattribute"
-							   recordDetailQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
-							   sortProperty="sortOrder"
-							   sortContextIDColumn="attributeSetID"
-							   sortContextIDValue="#rc.attributeSet.getAttributeSetID()#">
-							      
-		<cf_HibachiListingColumn propertyIdentifier="attributeCode" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="attributeName" />
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
-		<cf_HibachiListingColumn propertyIdentifier="attributeType.type" />
-	</cf_HibachiListingDisplay>
+		<cfreturn representationOF(display) />
+	</cffunction>
 	
-	<cf_HibachiActionCaller action="admin:entity.createattribute" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailattributeset&attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
-	
-</cfoutput>
+</cfcomponent>

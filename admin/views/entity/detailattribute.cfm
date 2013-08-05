@@ -47,7 +47,8 @@ Notes:
 								   backAction="admin:entity.detailAttributeSet"
 								   backQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
 								   cancelAction="admin:entity.detailAttributeSet"
-								   cancelQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#" />
+								   cancelQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#" 
+								   deleteQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#&redirectAction=admin:entity.detailAttributeSet" />
 		
 		<cfif rc.edit>
 			

@@ -164,6 +164,8 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	public void function addOrderPayment(required any rc) {
 		param name="rc.newOrderPayment" default="#structNew()#";
 		param name="rc.newOrderPayment.orderPaymentID" default="";
+		param name="rc.accountAddressID" default="";
+		param name="rc.accountPaymentMethodID" default="";
 		
 		// Make sure that someone isn't trying to pass in another users orderPaymentID
 		if(len(rc.newOrderPayment.orderPaymentID)) {
@@ -199,4 +201,12 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 			rc.$.slatwall.setSessionValue('confirmationOrderID', order.getOrderID());
 		}
 	}
+	
+	// Remove Order Payment
+	public void function removeOrderPayment(required any rc) {
+		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'removeOrderPayment');
+		
+		arguments.rc.$.slatwall.addActionResult( "public:cart.removeOrderPayment", cart.hasErrors() );
+	}
+	
 }

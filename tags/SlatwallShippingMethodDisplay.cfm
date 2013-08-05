@@ -53,15 +53,15 @@ Notes:
 				</cfif>
 				<cfloop array="#local.methodOptions#" index="option">
 					<cfset local.optionSelected = false />
-					<cfif !isNull(attributes.orderFulfillmentShipping.getShippingMethod()) and attributes.orderFulfillmentShipping.getShippingMethod().getShippingMethodID() eq option.getShippingMethodRate().getShippingMethod().getShippingMethodID()>
+					<cfif !isNull(attributes.orderFulfillmentShipping.getShippingMethod()) and attributes.orderFulfillmentShipping.getShippingMethod().getShippingMethodID() eq option['value']>
 						<cfset local.optionSelected = true />
 					<cfelseif local.noneSelected>
 						<cfset local.noneSelected = false />
 						<cfset local.optionSelected = true />
 					</cfif>
 					<dl>
-						<dt><input type="radio" name="orderFulfillments[#attributes.orderFulfillmentIndex#].fulfillmentShippingMethodOptionID" value="#option.getShippingMethodOptionID()#" <cfif local.optionSelected>checked="checked"</cfif>>#option.getShippingMethodRate().getShippingMethod().getShippingMethodName()#</dt>
-						<dd>#option.getFormattedValue('totalChargeAfterDiscount', 'currency')#</dd>
+						<dt><input type="radio" name="orderFulfillments[#attributes.orderFulfillmentIndex#].shippingMethodID" value="#option['value']#" <cfif local.optionSelected>checked="checked"</cfif>></dt>
+						<dd>#option['name']#</dd>
 					</dl>
 				</cfloop>
 			<cfelse>

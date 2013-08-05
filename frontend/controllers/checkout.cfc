@@ -72,6 +72,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		// get the list of requirements left for this order to be processed
 		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
 		
+		// LEGACY SUPPORT
+		if(listFindNoCase(rc.orderRequirementsList, "fulfillment")) {
+			rc.orderRequirementsList = listAppend(rc.orderRequirementsList, rc.$.slatwall.cart().getOrderFulfillments()[1].getOrderFulfillmentID());
+		}
+		
 		// Account Setup Logic
 		if(!structKeyExists(rc, "account")) {
 			if ( isNull(rc.$.slatwall.cart().getAccount()) ) {

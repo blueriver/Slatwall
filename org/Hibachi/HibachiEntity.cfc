@@ -359,6 +359,15 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		return variables[ cacheKey ];
 	}
 	
+	public string function getPropertyPrimaryID( required string propertyName ) {
+		var propertyValue = invokeMethod("get#arguments.propertyName#");
+		if(!isNull(propertyValue) && isObject(propertyValue) && propertyValue.isPersistent()) {
+			return propertyValue.getPrimaryIDValue();
+		}
+		
+		return "";
+	}
+	
 	// @hint returns an array of name/value pairs that can function as options for a many-to-one property
 	public array function getPropertyOptions( required string propertyName ) {
 		
@@ -512,6 +521,11 @@ component output="false" accessors="true" persistent="false" extends="HibachiTra
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 14) == "AssignedIDList") {
 			
 			return getPropertyAssignedIDList( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-17) );
+		
+		// getXXXID()		Where XXX is a many-to-one property that we want to get the primaryIDValue of that property 		
+		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 2) == "ID") {
+			
+			return getPropertyPrimaryID( propertyName=left(right(arguments.missingMethodName, len(arguments.missingMethodName)-3), len(arguments.missingMethodName)-5) );
 			
 		// getXXXOptions()		Where XXX is a one-to-many or many-to-many property that we need an array of valid options returned 		
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 7) == "Options") {

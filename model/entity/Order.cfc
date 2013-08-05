@@ -273,17 +273,17 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.deliveredItemsAmountTotal = 0;
 			var fulfillmentChargeAddedList = "";
 			
-			for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			for(var orderItem in getOrderItems()) {
 				
-				if(getOrderItems()[i].getQuantityDelivered()) {
+				if(orderItem.getQuantityDelivered()) {
 					
-					variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + ((getOrderItems()[i].getQuantityDelivered() / thisQuantity) * getOrderItems()[i].getExtendedPriceAfterDiscount()));
+					variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + ((orderItem.getQuantityDelivered() / orderItem.getQuantity()) * orderItem.getExtendedPriceAfterDiscount()));
 					
-					if(!listFindNoCase(fulfillmentChargeAddedList, getOrderItems()[i].getOrderFulfillment().getOrderFulfillmentID())) {
+					if(!listFindNoCase(fulfillmentChargeAddedList, orderItem.getOrderFulfillment().getOrderFulfillmentID())) {
 						
-						listAppend(fulfillmentChargeAddedList, getOrderItems()[i].getOrderFulfillment().getOrderFulfillmentID());
+						listAppend(fulfillmentChargeAddedList, orderItem.getOrderFulfillment().getOrderFulfillmentID());
 						
-						variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + getOrderItems()[i].getOrderFulfillment().getChargeAfterDiscount());
+						variables.deliveredItemsAmountTotal = precisionEvaluate(variables.deliveredItemsAmountTotal + orderItem.getOrderFulfillment().getChargeAfterDiscount());
 					}
 				}
 			}

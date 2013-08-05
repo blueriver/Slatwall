@@ -112,7 +112,7 @@ Notes:
 				<h3>Checkout Example (4 Step)</h3>
 				
 				<!--- Display any errors associated with actually placing the order, and running those transactions --->
-				<sw:ErrorDisplay object="#$.slatwall.cart()#" errorName="runPlaceOrderTransaction" />
+				<sw:ErrorDisplay object="#$.slatwall.cart()#" errorName="runPlaceOrderTransaction" displayType="p" />
 			</div>
 		</div>
 		
@@ -148,7 +148,7 @@ Notes:
 									
 									<!--- Email Address --->
 									<div class="control-group">
-				    					<label class="control-label" for="rating">Email Address</label>
+				    					<label class="control-label" for="emailAddress">Email Address</label>
 				    					<div class="controls">
 				    						
 											<sw:FormField type="text" valueObject="#accountLoginObj#" valueObjectProperty="emailAddress" class="span4" />
@@ -159,7 +159,7 @@ Notes:
 									
 									<!--- Password --->
 									<div class="control-group">
-				    					<label class="control-label" for="rating">Password</label>
+				    					<label class="control-label" for="password">Password</label>
 				    					<div class="controls">
 				    						
 											<sw:FormField type="password" valueObject="#accountLoginObj#" valueObjectProperty="password" class="span4" />
@@ -543,8 +543,12 @@ Notes:
 															<!--- OPTIONAL: You can use this formField display to show options as a select box
 															<sw:FormField type="select" name="orderFulfillments[#orderFulfillmentIndex#].shippingMethod.shippingMethodID" valueObject="#orderFulfillment#" valueObjectProperty="shippingMethod" valueOptions="#orderFulfillment.getShippingMethodOptions()#" class="span4" />
 															--->
+															<cfset shippingMethodID = "" />
+															<cfif not isNull(orderFulfillment.getShippingMethod())>
+																<cfset shippingMethodID = orderFulfillment.getShippingMethod().getShippingMethodID() />	
+															</cfif>
 															
-															<sw:FormField type="radiogroup" name="orderFulfillments[#orderFulfillmentIndex#].shippingMethod.shippingMethodID" valueObject="#orderFulfillment#" valueObjectProperty="shippingMethod" valueOptions="#orderFulfillment.getShippingMethodOptions()#" />
+															<sw:FormField type="radiogroup" name="orderFulfillments[#orderFulfillmentIndex#].shippingMethod.shippingMethodID" value="#shippingMethodID#" valueOptions="#orderFulfillment.getShippingMethodOptions()#" />
 															<sw:ErrorDisplay object="#orderFulfillment#" errorName="shippingMethod" />
 															
 								    					</div>
@@ -977,10 +981,14 @@ Notes:
 								<div class="span12">
 									<h5>Payment Details <a href="?step=payment">edit</a></h5>
 									
+									<!--- Get the applied payments smart list, and filter by only payments that are active --->
+									<cfset appliedPaymentsSmartList = $.slatwall.cart().getOrderPaymentsSmartList() />
+									<cfset appliedPaymentsSmartList.addFilter('orderPaymentStatusType.systemCode', 'opstActive') />
+									
 									<cfset orderPaymentReviewIndex = 0 />
 									
 									<!--- List the payment methods applied to this order --->
-									<cfloop array="#$.slatwall.cart().getOrderPayments()#" index="orderPayment">
+									<cfloop array="#appliedPaymentsSmartList.getRecords()#" index="orderPayment">
 										
 										<cfset orderPaymentReviewIndex++ />
 										
@@ -1098,37 +1106,11 @@ Notes:
 									
 								<!--- SHIPPING --->
 								<cfelseif orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping">
-									<cfif not isNull(orderFulfillment.getAddress().getName())>
-										#orderFulfillment.getAddress().getName()#<br />
+									<sw:AddressDisplay address="#orderFulfillment.getAddress()#" />
+									<cfif not isNull(orderFulfillment.getShippingMethod())>
+										<strong>Shipping Method:</strong> #orderFulfillment.getShippingMethod().getShippingMethodName()#<br />
 									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getCompany())>
-										#orderFulfillment.getAddress().getCompany()#<br />
-									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getStreetAddress())>
-										#orderFulfillment.getAddress().getStreetAddress()#<br />
-									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getStreet2Address())>
-										#orderFulfillment.getAddress().getStreet2Address()#<br />
-									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getLocality())>
-										#orderFulfillment.getAddress().getLocality()#<br />
-									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getCity()) and not isNull(orderFulfillment.getAddress().getStateCode()) and not isNull(orderFulfillment.getAddress().getPostalCode())>
-										#orderFulfillment.getAddress().getCity()#, #orderFulfillment.getAddress().getStateCode()# #orderFulfillment.getAddress().getPostalCode()#<br />
-									<cfelse>
-										<cfif not isNull(orderFulfillment.getAddress().getCity())>
-											#orderFulfillment.getAddress().getCity()#<br />
-										</cfif>
-										<cfif not isNull(orderFulfillment.getAddress().getStateCode())>
-											#orderFulfillment.getAddress().getStateCode()#<br />
-										</cfif>
-										<cfif not isNull(orderFulfillment.getAddress().getPostalCode())>
-											#orderFulfillment.getAddress().getPostalCode()#<br />
-										</cfif>
-									</cfif>
-									<cfif not isNull(orderFulfillment.getAddress().getCountryCode())>
-										#orderFulfillment.getAddress().getCountryCode()#<br />
-									</cfif>
+									
 								</cfif>
 							</p>
 							

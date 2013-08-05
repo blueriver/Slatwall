@@ -217,7 +217,6 @@ component entityname="SlatwallSubscriptionUsage" table="SlatwallSubscriptionUsag
 			for(var apm in smartList.getRecords()) {
 				arrayAppend(variables.accountPaymentMethodOptions,{name=apm.getSimpleRepresentation(),value=apm.getAccountPaymentMethodID()});
 			}
-			arrayPrepend(variables.accountPaymentMethodOptions,{name=rbKey("define.none"),value=""});
 		}
 		return variables.accountPaymentMethodOptions;
     }

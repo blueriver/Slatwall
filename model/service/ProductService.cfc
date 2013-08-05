@@ -262,6 +262,9 @@ component extends="HibachiService" accessors="true" {
 			arguments.product.setURLTitle(getDataService().createUniqueURLTitle(titleString=arguments.product.getTitle(), tableName="SlatwallProduct"));
 		}
 		
+		// validate the product
+		arguments.product.validate( context="save" );
+		
 		// If this is a new product and it doesn't have any errors... there are a few additional steps we need to take
 		if(arguments.product.isNew() && !arguments.product.hasErrors()) {
 			
@@ -271,9 +274,6 @@ component extends="HibachiService" accessors="true" {
 			// Generate Image Files
 			arguments.product = this.processProduct(arguments.product, {}, 'updateDefaultImageFileNames');
 		}
-		
-		// validate the product
-		arguments.product.validate( context="save" );
 		
 		// If the product passed validation then call save in the DAO, otherwise set the errors flag
         if(!arguments.product.hasErrors()) {
@@ -286,12 +286,11 @@ component extends="HibachiService" accessors="true" {
 	
 	public any function saveProductType(required any productType, required struct data) {
 		if( (isNull(arguments.productType.getURLTitle()) || !len(arguments.productType.getURLTitle())) && (!structKeyExists(arguments.data, "urlTitle") || !len(arguments.data.urlTitle)) ) {
-			if(!isNull(arguments.productType.getProductTypeName())) {
-				param name="arguments.data.productTypeName" default="#arguments.productType.getProductTypeName()#";
-			} else {
-				param name="arguments.data.productTypeName" default="";
+			if(structKeyExists(arguments.data, "productTypeName") && len(arguments.data.productTypeName)) {
+				data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.productTypeName, tableName="SlatwallProductType");	
+			} else if (!isNull(arguments.productType.getProductTypeName()) && len(arguments.productType.getProductTypeName())) {
+				data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.productType.getProductTypeName(), tableName="SlatwallProductType");
 			}
-			data.urlTitle = getDataService().createUniqueURLTitle(titleString=arguments.data.productTypeName, tableName="SlatwallProduct");
 		}
 		
 		arguments.productType = super.save(arguments.productType, arguments.data);

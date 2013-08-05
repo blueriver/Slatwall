@@ -54,6 +54,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// Related Object Properties (One-To-Many)
 	property name="childProductTypes" singularname="childProductType" cfc="ProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
 	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (Many-To-Many - inverse)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" inverse="true";
@@ -215,6 +216,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		arguments.attributeSet.removeProductType( this );
 	}
 	
+	// Attribute Values (one-to-many)
+	public void function addAttributeValue(required any attributeValue) {
+		arguments.attributeValue.setProductType( this );
+	}
+	public void function removeAttributeValue(required any attributeValue) {
+		arguments.attributeValue.removeProductType( this );
+	}
+	
 	// Physicals (many-to-many - inverse)    
 	public void function addPhysical(required any physical) {    
 		arguments.physical.addProductType( this );    
@@ -263,7 +272,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 			variables.assignedAttributeSetSmartList = getService("attributeService").getAttributeSetSmartList();
 			
 			variables.assignedAttributeSetSmartList.addFilter('activeFlag', 1);
-			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astProduct');
+			variables.assignedAttributeSetSmartList.addFilter('attributeSetType.systemCode', 'astProductType');
 			
 			variables.assignedAttributeSetSmartList.joinRelatedProperty("SlatwallAttributeSet", "productTypes", "left");
 			

@@ -71,6 +71,15 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function save(required struct rc) {
+		param name="arguments.rc.primaryPhoneNumber" default="#structNew()#";
+		param name="arguments.rc.primaryPhoneNumber.accountPhoneNumberID" default="#rc.$.slatwall.getCurrentAccount().getPrimaryPhoneNumber().getAccountPhoneNumberID()#";
+		param name="arguments.rc.primaryPhoneNumber.phoneNumber" default="";
+		param name="arguments.rc.primaryPhoneNumber.account.accountID" default="#rc.$.slatwall.getCurrentAccount().getAccountID()#";
+		
+		if(!len(arguments.rc.primaryPhoneNumber.phoneNumber) && structKeyExists(arguments.rc, "phoneNumber")) {
+			arguments.rc.primaryPhoneNumber.phoneNumber = arguments.rc.phoneNumber;
+		}
+		
 		var wasNew = rc.$.slatwall.getCurrentAccount().isNew();
 		var currentAction = "frontend:account.edit";
 		if(wasNew){

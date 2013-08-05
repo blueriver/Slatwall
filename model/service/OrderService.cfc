@@ -1043,6 +1043,32 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
+	public any function processOrder_removeOrderPayment(required any order, required struct data) {
+		// Make sure that an orderItemID was passed in
+		if(structKeyExists(arguments.data, "orderPaymentID")) {
+			
+			// Loop over all of the items in this order
+			for(var orderPayment in arguments.order.getOrderPayments())	{
+			
+				// Check to see if this item is the same ID as the one passed in to remove
+				if(orderPayment.getOrderPaymentID() == arguments.data.orderPaymentID) {
+				
+					if(orderPayment.isDeletable()) {
+						arguments.order.removeOrderPayment( orderPayment );
+						this.deleteOrderPayment( orderPayment );
+					} else {
+						orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstRemoved') );
+					}
+					
+					break;
+				}
+			}
+			
+		}
+		
+		return arguments.order;
+	}
+	
 	public any function processOrder_removePromotionCode(required any order, required struct data) {
 		
 		if(structKeyExists(arguments.data, "promotionCodeID")) {
@@ -1368,6 +1394,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// If the paymentTransaction has errors, then add those errors to the orderPayment itself
 		if(paymentTransaction.hasError('runTransaction')) {
+			
 			arguments.orderPayment.addError('createTransaction', paymentTransaction.getError('runTransaction'), true);
 			
 			// If this order payment has never had and amount Authorize, Received or Credited... then we can set it as invalid
@@ -1410,18 +1437,25 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// If there was expected authorize, receive, or credit
 			if( 
-				(arguments.orderPayment.hasErrors() || (listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthorized() lt arguments.orderPayment.getAmount()))
+				arguments.orderPayment.hasErrors()
+					|| 
+				(listFindNoCase("authorize", processData.transactionType) && arguments.orderPayment.getAmountAuthorized() lt arguments.orderPayment.getAmount())
 					||
-				(arguments.orderPayment.hasErrors() || (listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount()))
+				(listFindNoCase("authorizeAndCharge,receive", processData.transactionType) && arguments.orderPayment.getAmountReceived() lt arguments.orderPayment.getAmount())
 					||
-				(arguments.orderPayment.hasErrors() || (listFindNoCase("credit", processData.transactionType) && arguments.orderPayment.getAmountCredited() lt arguments.orderPayment.getAmount()))
+				(listFindNoCase("credit", processData.transactionType) && arguments.orderPayment.getAmountCredited() lt arguments.orderPayment.getAmount())
 			) {
 				
 				// Add a generic payment processing error and make it persistable
 				arguments.orderPayment.getOrder().addError('runPlaceOrderTransaction', rbKey('entity.order.process.placeOrder.paymentProcessingError'), true);
 				
+				// Add the actual message
+				if(arguments.orderPayment.hasError('createTransaction')) {
+					arguments.orderPayment.getOrder().addError('runPlaceOrderTransaction', arguments.orderPayment.getError('createTransaction'), true);	
+				}
+				
 			}
-
+			
 		}
 		
 		return arguments.orderPayment;

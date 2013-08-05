@@ -33,28 +33,23 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
-
+	Notes:
+	
 --->
-<cfparam name="rc.attributeSet" type="any" />
+<cfcomponent extends="BaseResource" taffy_uri="/display/addressDisplay/">
 
-<cfoutput>
+	<cffunction name="get">
+		<cfset var display = "" />
+		
+		<cfset arguments.address = getService("addressService").newAddress() />
+		
+		<cfset arguments.address.populate(arguments) />
+		
+		<cfsavecontent variable="display">
+			<cf_SlatwallAddressDisplay attributeCollection="#arguments#" />
+		</cfsavecontent>
 
-	<cf_HibachiListingDisplay smartList="#rc.attributeSet.getAttributesSmartList()#" 
-							   recordEditAction="admin:entity.editattribute" 
-							   recordEditQueryString="redirectAction=admin:entity.detailattributeset&attributeSetID=#rc.attributeSet.getAttributeSetID()#"
-							   recordDetailAction="admin:entity.detailattribute"
-							   recordDetailQueryString="attributeSetID=#rc.attributeSet.getAttributeSetID()#"
-							   sortProperty="sortOrder"
-							   sortContextIDColumn="attributeSetID"
-							   sortContextIDValue="#rc.attributeSet.getAttributeSetID()#">
-							      
-		<cf_HibachiListingColumn propertyIdentifier="attributeCode" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="attributeName" />
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
-		<cf_HibachiListingColumn propertyIdentifier="attributeType.type" />
-	</cf_HibachiListingDisplay>
-	
-	<cf_HibachiActionCaller action="admin:entity.createattribute" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailattributeset&attributesetid=#rc.attributeset.getAttributeSetID()#" modal=true />
-	
-</cfoutput>
+		<cfreturn representationOF(display) />
+	</cffunction>
+
+</cfcomponent>
