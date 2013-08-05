@@ -48,7 +48,8 @@ Notes:
 								   backAction="admin:entity.detailloyalty"
 								   backQueryString="loyaltyID=#rc.loyalty.getLoyaltyID()#"
 								   cancelAction="admin:entity.detailloyalty"
-								   cancelQueryString="loyaltyID=#rc.loyalty.getLoyaltyID()#" />
+								   cancelQueryString="loyaltyID=#rc.loyalty.getLoyaltyID()#" 
+							  	   deleteQueryString="redirectAction=admin:entity.detailloyalty&loyaltyID=#rc.loyalty.getLoyaltyID()#" />
 		
 		<input type="hidden" name="loyalty.loyaltyID" value="#rc.loyalty.getLoyaltyID()#" />
 		
@@ -63,5 +64,13 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="globalFlag" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
+		
+		<cf_HibachiTabGroup object="#rc.loyaltyAccruement#">
+			<cf_HibachiTab view="admin:entity/loyaltyaccruementtabs/producttypes" />
+			<cf_HibachiTab view="admin:entity/loyaltyaccruementtabs/products" />
+			<cf_HibachiTab view="admin:entity/loyaltyaccruementtabs/skus" />
+			<cf_HibachiTab view="admin:entity/loyaltyaccruementtabs/brands" />
+		</cf_HibachiTabGroup>
+		
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
