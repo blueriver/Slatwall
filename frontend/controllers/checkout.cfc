@@ -177,6 +177,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				newMuraUser.setPassword( accountData.password );
 				newMuraUser.setSiteID( request.muraScope.event('siteID') );
 				newMuraUser.save();
+				rc.$.slatwall.getAccount().setCMSAccountID( newMuraUser.getUserID() );
 			}	
 		} else {
 			arguments.rc.account = getAccountService().saveAccount( rc.$.slatwall.getAccount(), accountData );

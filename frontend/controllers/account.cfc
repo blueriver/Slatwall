@@ -97,6 +97,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			newMuraUser.setPassword( rc.password );
 			newMuraUser.setSiteID( request.muraScope.event('siteID') );
 			newMuraUser.save();
+			rc.account.setCMSAccountID( newMuraUser.getUserID() );
 		}
 		if(rc.account.hasErrors()) {
 			prepareEditData(rc);
