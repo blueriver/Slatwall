@@ -1,37 +1,47 @@
 <!---
 
     Slatwall - An Open Source eCommerce Platform
-    Copyright (C) 2011 ten24, LLC
-
+    Copyright (C) ten24, LLC
+	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
+	
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
+	
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-    Linking this library statically or dynamically with other modules is
-    making a combined work based on this library.  Thus, the terms and
+    Linking this program statically or dynamically with other modules is
+    making a combined work based on this program.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
-    As a special exception, the copyright holders of this library give you
-    permission to link this library with independent modules to produce an
-    executable, regardless of the license terms of these independent
-    modules, and to copy and distribute the resulting executable under
-    terms of your choice, provided that you also meet, for each linked
-    independent module, the terms and conditions of the license of that
-    module.  An independent module is a module which is not derived from
-    or based on this library.  If you modify this library, you may extend
-    this exception to your version of the library, but you are not
-    obligated to do so.  If you do not wish to do so, delete this
-    exception statement from your version.
+	
+    As a special exception, the copyright holders of this program give you
+    permission to combine this program with independent modules and your 
+    custom code, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting program under terms 
+    of your choice, provided that you follow these specific guidelines: 
+
+	- You also meet the terms and conditions of the license of each 
+	  independent module 
+	- You must not alter the default display of the Slatwall name or logo from  
+	  any part of the application 
+	- Your custom code must not alter or create any files inside Slatwall, 
+	  except in the following directories:
+		/integrationServices/
+
+	You may copy and distribute the modified version of this program that meets 
+	the above guidelines as a combined work under the terms of GPL for this program, 
+	provided that you include the source code of that other code when and as the 
+	GNU GPL requires distribution of source code.
+    
+    If you modify this program, you may extend this exception to your version 
+    of the program, but you are not obligated to do so.
 
 Notes:
 
@@ -47,6 +57,7 @@ globalEncryptionKeySize
 	<cfproperty name="contentService" type="any" />
 	<cfproperty name="currencyService" type="any" />
 	<cfproperty name="emailService" type="any" />
+	<cfproperty name="fulfillmentService" type="any" />
 	<cfproperty name="integrationService" type="any" />
 	<cfproperty name="locationService" type="any" />
 	<cfproperty name="measurementService" type="any" />
@@ -71,6 +82,8 @@ globalEncryptionKeySize
 			"accountAuthentication",
 			"shippingMethodRate",
 			"fulfillmentMethod",
+			"subscriptionUsage",
+			"subscriptionTerm",
 			"shippingMethod",
 			"paymentMethod",
 			"productType",
@@ -82,6 +95,7 @@ globalEncryptionKeySize
 			"email",
 			"stock",
 			"site",
+			"task",
 			"sku"
 		];
 		
@@ -93,18 +107,18 @@ globalEncryptionKeySize
 			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
 			email = ["emailTemplate.emailTemplateID"],
 			shippingMethodRate = ["shippingMethod.shippingMethodID"],
-			accountAuthentication = [ "integration.integrationID" ]
+			accountAuthentication = [ "integration.integrationID" ],
+			subscriptionUsage = [ "subscriptionTerm.subscriptionTermID" ]
 		};
 		
 		public any function getSettingMetaData(required string settingName) {
 			
 			if(!structKeyExists(variables, 'settingMetaData')) {
-				
 				var smd = {
 					
 					// Account
 					accountEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod", defaultValue=getPaymentService().getAllActivePaymentMethodIDList()},
-					accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm"},
+					accountEligiblePaymentTerms = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentTerm", defaultValue=getPaymentService().getAllActivePaymentTermIDList()},
 					accountPaymentTerm = {fieldType="select"},
 					accountTermCreditLimit = {fieldType="text", formatType="currency",defaultValue=0},
 					
@@ -128,11 +142,11 @@ globalEncryptionKeySize
 					contentMetaKeywordsString = {fieldType="textarea"},
 					
 					// Email
-					emailFromAddress = {fieldType="text",defaultValue="info@myslatwallStore.com"},
-					emailToAddress = {fieldType="text",defaultValue="info@myslatwallStore.com"},
+					emailFromAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
+					emailToAddress = {fieldType="text", defaultValue="email@youremaildomain.com"},
 					emailCCAddress = {fieldType="text"},
 					emailBCCAddress = {fieldType="text"},
-					emailSubject = {fieldType="text",defaultValue="Message From MySlatwallStore"},
+					emailSubject = {fieldType="text", defaultValue="Notification From Slatwall"},
 					
 					// Fulfillment Method
 					fulfillmentMethodEmailFrom = {fieldType="text"},
@@ -143,7 +157,7 @@ globalEncryptionKeySize
 					fulfillmentMethodAutoMinReceivedPercentage = {fieldType="text", formatType="percentage", defaultValue=100},
 					
 					// Global
-					globalUsageStats = {fieldType="yesno",defaultValue=1},
+					globalUsageStats = {fieldType="yesno",defaultValue=0},
 					globalCurrencyLocale = {fieldType="select",defaultValue="English (US)"},
 					globalCurrencyType = {fieldType="select",defaultValue="Local"},
 					globalDateFormat = {fieldType="text",defaultValue="mmm dd, yyyy"},
@@ -156,10 +170,6 @@ globalEncryptionKeySize
 					globalEncryptionService = {fieldType="select",defaultValue="internal"},
 					globalLogMessages = {fieldType="select",defaultValue="General"},
 					globalMissingImagePath = {fieldType="text", defaultValue=getURLFromPath(getApplicationValue('applicationRootMappingPath')) & '/custom/assets/images/missingimage.jpg'},
-					globalOrderPlacedEmailFrom = {fieldType="text",defaultValue="info@mySlatwallStore.com"},
-					globalOrderPlacedEmailCC = {fieldType="text",defaultValue=""},
-					globalOrderPlacedEmailBCC = {fieldType="text",defaultValue=""},
-					globalOrderPlacedEmailSubjectString = {fieldType="text",defaultValue="Order Confirmation - Order Number: ${orderNumber}"},
 					globalOrderNumberGeneration = {fieldType="select",defaultValue="Internal"},
 					globalRemoteIDShowFlag = {fieldType="yesno",defaultValue=0},
 					globalRemoteIDEditFlag = {fieldType="yesno",defaultValue=0},
@@ -209,10 +219,10 @@ globalEncryptionKeySize
 					skuAllowBackorderFlag = {fieldType="yesno", defaultValue=0},
 					skuAllowPreorderFlag = {fieldType="yesno", defaultValue=0},
 					skuCurrency = {fieldType="select", defaultValue="USD"},
-					skuEligibleCurrencies = {fieldType="listingMultiselect", defaultValue="USD", listingMultiselectEntityName="Currency"},
-					skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod"},
-					skuEligibleOrderOrigins = {fieldType="listingMultiselect", defaultValue="", listingMultiselectEntityName="OrderOrigin"},
-					skuEligiblePaymentMethods = {fieldType="listingMultiselect", defaultValue="", listingMultiselectEntityName="PaymentMethod"},
+					skuEligibleCurrencies = {fieldType="listingMultiselect", listingMultiselectEntityName="Currency", defaultValue=getCurrencyService().getAllActiveCurrencyIDList()},
+					skuEligibleFulfillmentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="FulfillmentMethod", defaultValue=getFulfillmentService().getAllActiveFulfillmentMethodIDList()},
+					skuEligibleOrderOrigins = {fieldType="listingMultiselect", listingMultiselectEntityName="OrderOrigin", defaultValue=this.getAllActiveOrderOriginIDList()},
+					skuEligiblePaymentMethods = {fieldType="listingMultiselect", listingMultiselectEntityName="PaymentMethod", defaultValue=getPaymentService().getAllActivePaymentMethodIDList()},
 					skuHoldBackQuantity = {fieldType="text", defaultValue=0},
 					skuOrderMinimumQuantity = {fieldType="text", defaultValue=1},
 					skuOrderMaximumQuantity = {fieldType="text", defaultValue=1000},
@@ -224,8 +234,21 @@ globalEncryptionKeySize
 					skuTaxCategory = {fieldType="select", defaultValue="444df2c8cce9f1417627bd164a65f133"},
 					skuTrackInventoryFlag = {fieldType="yesno", defaultValue=0},
 					
+					// Subscription Term
+					subscriptionUsageAutoRetryPaymentDays = {fieldType="text", defaultValue=""},
+					subscriptionUsageRenewalReminderDays = {fieldType="text", defaultValue=""},
+					subscriptionUsageRenewalReminderEmailTemplate = {fieldType="select", defaultValue=""},
+					
+					// Task
+					taskFailureEmailTemplate = {fieldType="select", defaultValue=""},
+					taskSuccessEmailTemplate = {fieldType="select", defaultValue=""},
+					
 					// DEPRECATED***
 					globalImageExtension = {fieldType="text",defaultValue="jpg"},
+					globalOrderPlacedEmailFrom = {fieldType="text",defaultValue="info@mySlatwallStore.com"},
+					globalOrderPlacedEmailCC = {fieldType="text",defaultValue=""},
+					globalOrderPlacedEmailBCC = {fieldType="text",defaultValue=""},
+					globalOrderPlacedEmailSubjectString = {fieldType="text",defaultValue="Order Confirmation - Order Number: ${orderNumber}"},
 					globalPageShoppingCart = {fieldType="text", defaultValue="shopping-cart"},
 					globalPageOrderStatus = {fieldType="text", defaultValue="order-status"},
 					globalPageOrderConfirmation = {fieldType="text", defaultValue="order-confirmation"},
@@ -285,8 +308,8 @@ globalEncryptionKeySize
 						return getContentService().getDisplayTemplateOptions( "barrierPage", arguments.settingObject.getSite().getSiteID() );	
 					}
 					return getContentService().getDisplayTemplateOptions( "barrierPage" );
-				case "productImageOptionCodeDelimiter":
-					return ['-','_'];
+				case "fulfillmentMethodAutoLocation" :
+					return getLocationService().getLocationOptions();
 				case "globalDefaultSite":
 					var optionSL = getSiteService().getSiteSmartList();
 					optionSL.addSelect('siteName', 'name');
@@ -318,6 +341,10 @@ globalEncryptionKeySize
 					optionSL.addSelect('unitName', 'name');
 					optionSL.addSelect('unitCode', 'value');
 					return optionSL.getRecords();
+				case "paymentMethodCheckoutTransactionType" :
+					return [{name='None', value='none'}, {name='Authorize Only', value='authorize'}, {name='Authorize And Charge', value='authorizeAndCharge'}];
+				case "productImageOptionCodeDelimiter":
+					return ['-','_'];
 				case "siteForgotPasswordEmailTemplate":
 					return getEmailService().getEmailTemplateOptions( "account" );
 				case "shippingMethodQualifiedRateSelection" :
@@ -331,10 +358,12 @@ globalEncryptionKeySize
 					optionSL.addSelect('taxCategoryName', 'name');
 					optionSL.addSelect('taxCategoryID', 'value');
 					return optionSL.getRecords();
-				case "paymentMethodCheckoutTransactionType" :
-					return [{name='None', value='none'}, {name='Authorize Only', value='authorize'}, {name='Authorize And Charge', value='authorizeAndCharge'}];
-				case "fulfillmentMethodAutoLocation" :
-					return getLocationService().getLocationOptions();
+				case "subscriptionUsageRenewalReminderEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "subscriptionUsage" );
+				case "taskFailureEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "task" );
+				case "taskSuccessEmailTemplate":
+					return getEmailService().getEmailTemplateOptions( "task" );
 			}
 			
 			if(structKeyExists(getSettingMetaData(arguments.settingName), "valueOptions")) {
@@ -342,6 +371,38 @@ globalEncryptionKeySize
 			}
 							
 			throw("The setting '#arguments.settingName#' doesn't have any valueOptions configured.  Either add them in the setting metadata or in the SettingService.cfc")
+		}
+		
+		public void function setupDefaultValues( required struct data ) {
+			
+			// Default Values Based on Email Address
+			if(structKeyExists(arguments.data, "emailAddress")) {
+				
+				// SETUP - emailFromAddress
+				var fromEmailSL = this.getSettingSmartList();
+				fromEmailSL.addFilter( 'settingName', 'emailFromAddress' );
+				if(!fromEmailSL.getRecordsCount()) {
+					var setting = this.newSetting();
+					setting.setSettingName( 'emailFromAddress' );
+					setting.setSettingValue( arguments.data.emailAddress );
+					this.saveSetting( setting );
+				}
+				
+				// SETUP - emailToAddress
+				var toEmailSL = this.getSettingSmartList();
+				toEmailSL.addFilter( 'settingName', 'emailToAddress' );
+				if(!toEmailSL.getRecordsCount()) {
+					var setting = this.newSetting();
+					setting.setSettingName( 'emailToAddress' );
+					setting.setSettingValue( arguments.data.emailAddress );
+					this.saveSetting( setting );
+				}
+				
+			}
+			
+			// Clear out the setting Cached
+			clearAllSettingsCache();
+				
 		}
 		
 		public array function getCustomIntegrationOptions() {
@@ -370,7 +431,11 @@ globalEncryptionKeySize
 		
 		public any function clearAllSettingsCache() {
 			structDelete(variables, "allSettingsQuery");
+			structDelete(variables, "settingMetaData");
 			variables.settingDetailsCache = {};
+			if(!getHibachiScope().getORMHasErrors()) {
+				getHibachiDAO().flushORMSession();
+			}
 			writeLog(file="Slatwall", text="General Log - All settings cache was cleared");
 		}
 		
@@ -663,6 +728,18 @@ globalEncryptionKeySize
 			} 
 		}
 		
+		public string function getAllActiveOrderOriginIDList() {
+			var returnList = "";
+			var apmSL = this.getOrderOriginSmartList();
+			apmSL.addFilter('activeFlag', 1);
+			apmSL.addSelect('orderOriginID', 'orderOriginID');
+			var records = apmSL.getRecords();
+			for(var i=1; i<=arrayLen(records); i++) {
+				returnList = listAppend(returnList, records[i]['orderOriginID']);
+			}
+			return returnList;
+		}
+		
 	</cfscript>
 	
 	<cffunction name="getSettingRecordCount" output="false">
@@ -720,31 +797,6 @@ globalEncryptionKeySize
 					<cfelseif structKeyExists(allSettings, "cmsContentID")>
 						AND allSettings.cmsContentID IS NULL
 					</cfif>
-				  	<cfif structKeyExists(settingRelationships, "paymentMethodID") and structKeyExists(allSettings, "paymentMethodID")>
-						AND LOWER(allSettings.paymentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.paymentMethodID)#" > 
-					<cfelseif structKeyExists(allSettings, "paymentMethodID")>
-						AND allSettings.paymentMethodID IS NULL
-					</cfif>
-				  	<cfif structKeyExists(settingRelationships, "productTypeID") and structKeyExists(allSettings, "productTypeID")>
-						AND LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
-					<cfelseif structKeyExists(allSettings, "productTypeID")>
-						AND allSettings.productTypeID IS NULL
-					</cfif>
-					<cfif structKeyExists(settingRelationships, "productID") and structKeyExists(allSettings, "productID")>
-						AND LOWER(allSettings.productID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productID)#" > 
-					<cfelseif structKeyExists(allSettings, "productID")>
-						AND allSettings.productID IS NULL
-					</cfif>
-					<cfif structKeyExists(settingRelationships, "siteID") and structKeyExists(allSettings, "siteID")>
-						AND LOWER(allSettings.siteID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.siteID)#" > 
-					<cfelseif structKeyExists(allSettings, "siteID")>
-						AND allSettings.siteID IS NULL
-					</cfif>
-					<cfif structKeyExists(settingRelationships, "skuID") and structKeyExists(allSettings, "skuID")>
-						AND LOWER(allSettings.skuID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.skuID)#" > 
-					<cfelseif structKeyExists(allSettings, "skuID")>
-						AND allSettings.skuID IS NULL
-					</cfif>
 					<cfif structKeyExists(settingRelationships, "brandID") and structKeyExists(allSettings, "brandID")>
 						AND LOWER(allSettings.brandID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.brandID)#" > 
 					<cfelseif structKeyExists(allSettings, "brandID")>
@@ -760,6 +812,26 @@ globalEncryptionKeySize
 					<cfelseif structKeyExists(allSettings, "emailTemplateID")>
 						AND allSettings.emailTemplateID IS NULL
 					</cfif>
+				  	<cfif structKeyExists(settingRelationships, "fulfillmentMethodID") and structKeyExists(allSettings, "fulfillmentMethodID")>
+						AND LOWER(allSettings.fulfillmentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.fulfillmentMethodID)#" > 
+					<cfelseif structKeyExists(allSettings, "fulfillmentMethodID")>
+						AND allSettings.fulfillmentMethodID IS NULL
+					</cfif>
+				  	<cfif structKeyExists(settingRelationships, "paymentMethodID") and structKeyExists(allSettings, "paymentMethodID")>
+						AND LOWER(allSettings.paymentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.paymentMethodID)#" > 
+					<cfelseif structKeyExists(allSettings, "paymentMethodID")>
+						AND allSettings.paymentMethodID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "productID") and structKeyExists(allSettings, "productID")>
+						AND LOWER(allSettings.productID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productID)#" > 
+					<cfelseif structKeyExists(allSettings, "productID")>
+						AND allSettings.productID IS NULL
+					</cfif>
+				  	<cfif structKeyExists(settingRelationships, "productTypeID") and structKeyExists(allSettings, "productTypeID")>
+						AND LOWER(allSettings.productTypeID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.productTypeID)#" > 
+					<cfelseif structKeyExists(allSettings, "productTypeID")>
+						AND allSettings.productTypeID IS NULL
+					</cfif>
 				  	<cfif structKeyExists(settingRelationships, "shippingMethodID") and structKeyExists(allSettings, "shippingMethodID")>
 						AND LOWER(allSettings.shippingMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.shippingMethodID)#" > 
 					<cfelseif structKeyExists(allSettings, "shippingMethodID")>
@@ -770,10 +842,30 @@ globalEncryptionKeySize
 					<cfelseif structKeyExists(allSettings, "shippingMethodRateID")>
 						AND allSettings.shippingMethodRateID IS NULL
 					</cfif>
-				  	<cfif structKeyExists(settingRelationships, "fulfillmentMethodID") and structKeyExists(allSettings, "fulfillmentMethodID")>
-						AND LOWER(allSettings.fulfillmentMethodID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.fulfillmentMethodID)#" > 
-					<cfelseif structKeyExists(allSettings, "fulfillmentMethodID")>
-						AND allSettings.fulfillmentMethodID IS NULL
+					<cfif structKeyExists(settingRelationships, "siteID") and structKeyExists(allSettings, "siteID")>
+						AND LOWER(allSettings.siteID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.siteID)#" > 
+					<cfelseif structKeyExists(allSettings, "siteID")>
+						AND allSettings.siteID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "skuID") and structKeyExists(allSettings, "skuID")>
+						AND LOWER(allSettings.skuID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.skuID)#" > 
+					<cfelseif structKeyExists(allSettings, "skuID")>
+						AND allSettings.skuID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "subscriptionTermID") and structKeyExists(allSettings, "subscriptionTermID")>
+						AND LOWER(allSettings.subscriptionTermID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.subscriptionTermID)#" > 
+					<cfelseif structKeyExists(allSettings, "subscriptionTermID")>
+						AND allSettings.subscriptionTermID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "subscriptionUsageID") and structKeyExists(allSettings, "subscriptionUsageID")>
+						AND LOWER(allSettings.subscriptionUsageID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.subscriptionUsageID)#" > 
+					<cfelseif structKeyExists(allSettings, "subscriptionUsageID")>
+						AND allSettings.subscriptionUsageID IS NULL
+					</cfif>
+					<cfif structKeyExists(settingRelationships, "taskID") and structKeyExists(allSettings, "taskID")>
+						AND LOWER(allSettings.taskID) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingRelationships.taskID)#" > 
+					<cfelseif structKeyExists(allSettings, "taskID")>
+						AND allSettings.taskID IS NULL
 					</cfif>
 		</cfquery>
 		
@@ -878,3 +970,4 @@ globalEncryptionKeySize
 	<!--- ======================  END: Get Overrides ============================= --->
 
 </cfcomponent>
+
