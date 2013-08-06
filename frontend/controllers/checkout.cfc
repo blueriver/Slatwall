@@ -175,6 +175,19 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				if(!isNull(arguments.rc.account.getProcessObject('create').getPhoneNumber())) {
 					arguments.rc.account.getPrimaryPhoneNumber().setPhoneNumber(arguments.rc.account.getProcessObject('create').getPhoneNumber());	
 				}
+				
+			// If there were no errors, then we can create a mura account with the same info
+			} else {
+				var newMuraUser = request.muraScope.getBean('userBean');
+				newMuraUser.setFName( nullReplace(rc.$.slatwall.getAccount().getFirstName(), '') );
+				newMuraUser.setLName( nullReplace(rc.$.slatwall.getAccount().getLastName(), '') );
+				newMuraUser.setCompany( nullReplace(rc.$.slatwall.getAccount().getCompany(), '') );
+				newMuraUser.setUsername( rc.$.slatwall.getAccount().getEmailAddress() );
+				newMuraUser.setEmail( rc.$.slatwall.getAccount().getEmailAddress() );
+				newMuraUser.setPassword( accountData.password );
+				newMuraUser.setSiteID( request.muraScope.event('siteID') );
+				newMuraUser.save();
+				rc.$.slatwall.getAccount().setCMSAccountID( newMuraUser.getUserID() );
 			}	
 		} else {
 			arguments.rc.account = getAccountService().saveAccount( rc.$.slatwall.getAccount(), accountData );
@@ -196,6 +209,19 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function saveOrderFulfillments(required struct rc) {
 		rc.guestAccountOK = true;
+		
+		if(structKeyExists(arguments.rc, "orderFulfillments") && 
+			arrayLen(arguments.rc.orderFulfillments) && 
+			structKeyExists(arguments.rc.orderFulfillments[1], "addressIndex") && 
+			arguments.rc.orderFulfillments[1].addressIndex > 0 && 
+			structKeyExists(arguments.rc.orderFulfillments[1], "accountAddresses") &&
+			arrayLen(arguments.rc.orderFulfillments[1].accountAddresses) >= arguments.rc.orderFulfillments[1].addressIndex &&
+			structKeyExists(arguments.rc.orderFulfillments[1].accountAddresses[ arguments.rc.orderFulfillments[1].addressIndex ], "accountAddressID")
+			) {
+				
+			arguments.rc.orderFulfillments[1].accountAddress.accountAddressID = arguments.rc.orderFulfillments[1].accountAddresses[ arguments.rc.orderFulfillments[1].addressIndex ].accountAddressID;
+			
+		}
 		
 		getOrderService().saveOrder(rc.$.slatwall.cart(), rc);
 		
