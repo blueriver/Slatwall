@@ -52,7 +52,12 @@ Notes:
 	<cffunction name="getDimensionDefinitions">
 		<cfreturn [
 			{alias='productName', filterAlias='productID', filterDimension='skuCode', title=rbKey('entity.product.productName')},
-			{alias='skuCode', title=rbKey('entity.sku.skuCode')}
+			{alias='skuCode', title=rbKey('entity.sku.skuCode')},
+			{alias='productTypeName', title=rbKey('entity.productType.productTypeName')},
+			{alias='brandName', title=rbKey('entity.brand.brandName')},
+			{alias='city', title=rbKey('entity.address.city')},
+			{alias='stateCode', title=rbKey('entity.address.stateCode')},
+			{alias='countryCode', title=rbKey('entity.address.countryCode')}
 		] />
 	</cffunction>
 	
@@ -69,6 +74,9 @@ Notes:
 					SlatwallBrand.brandID,
 					SlatwallBrand.brandName,
 					SlatwallOrder.orderID,
+					SlatwallAddress.countryCode,
+					SlatwallAddress.stateCode,
+					SlatwallAddress.city,
 					SlatwallOrderItem.quantity,
 					SlatwallOrderItem.price,
 					CASE
