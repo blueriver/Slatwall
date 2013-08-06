@@ -152,7 +152,7 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 		httpRequest.addParam(type="formfield", name="allowNote", value="0");																							// Dynamic
 		//httpRequest.addParam(type="formfield", name="hdrImg", value="");
 		httpRequest.addParam(type="formfield", name="email", value=arguments.paymentMethod.getIntegration().setting('paypalAccountEmail'));
-		httpRequest.addParam(type="formfield", name="returnURL", value="http://cf9.muracms/default/index.cfm/checkout/?slatAction=paypalexpress:main.processResponse&paymentMethodID=#arguments.paymentMethod.getPaymentMethodID()#");		// Dynamic
+		httpRequest.addParam(type="formfield", name="returnURL", value="#request.slatwallScope.getURL()#");		// Dynamic
 		httpRequest.addParam(type="formfield", name="cancelURL", value=paymentMethod.getIntegration().setting('cancelURL'));
 		
 		var response = httpRequest.send().getPrefix();

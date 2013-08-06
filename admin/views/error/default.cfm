@@ -48,18 +48,3 @@ Notes:
 --->
 <cfdump var="#request.exception#" />
 <cfabort />
-
-
-<cfset arguments.exception = request.exception />
-<cfif structKeyExists(application,"configBean")>
-	<cfif not application.configBean.getDebuggingEnabled()>
-		<cfif len(application.configBean.getValue("errorTemplate"))>
-			<cfinclude template="#application.configBean.getValue('errorTemplate')#">
-		<cfelse>
-			<cfinclude template="/muraWRM/config/error.html">
-		</cfif>
-	<cfelse>
-		<cfdump var="#arguments.exception#" top="3">
-	</cfif>
-</cfif>
-<cfabort>
