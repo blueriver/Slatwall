@@ -84,6 +84,14 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		if(!cart.hasErrors()) {
 			cart.clearProcessObject("addOrderItem");
+			
+			// Also make sure that this cart gets set in the session as the order
+			rc.$.slatwall.getSession().setOrder( cart );
+			
+			// Check to see if we can attach the current account to this order
+			if( isNull(cart.getAccount()) && rc.$.slatwall.getLoggedInFlag() ) {
+				cart.setAccount( rc.$.slatwall.getAccount() );
+			}
 		}
 		
 		getFW().setView("frontend:cart.detail");
