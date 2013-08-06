@@ -226,7 +226,7 @@ component extends="HibachiService" accessors="true" {
 	}
 	
 	public any function processProduct_uploadDefaultImage(required any product, required any processObject) {
-		// Wrap in try/catch to add validation error based on fileAcceptMIMEType
+		// Wrap in try/catch to add validation error based on fileAcceptMIMEType	
 		try {
 			
 			// Get the upload directory for the current property
