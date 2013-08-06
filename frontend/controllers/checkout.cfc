@@ -200,6 +200,19 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function saveOrderFulfillments(required struct rc) {
 		rc.guestAccountOK = true;
 		
+		if(structKeyExists(arguments.rc, "orderFulfillments") && 
+			arrayLen(arguments.rc.orderFulfillments) && 
+			structKeyExists(arguments.rc.orderFulfillments[1], "addressIndex") && 
+			arguments.rc.orderFulfillments[1].addressIndex > 0 && 
+			structKeyExists(arguments.rc.orderFulfillments[1], "accountAddresses") &&
+			arrayLen(arguments.rc.orderFulfillments[1].accountAddresses) >= arguments.rc.orderFulfillments[1].addressIndex &&
+			structKeyExists(arguments.rc.orderFulfillments[1].accountAddresses[ arguments.rc.orderFulfillments[1].addressIndex ], "accountAddressID")
+			) {
+				
+			arguments.rc.orderFulfillments[1].accountAddress.accountAddressID = arguments.rc.orderFulfillments[1].accountAddresses[ arguments.rc.orderFulfillments[1].addressIndex ].accountAddressID;
+			
+		}
+		
 		getOrderService().saveOrder(rc.$.slatwall.cart(), rc);
 		
 		detail(rc);
