@@ -1,7 +1,7 @@
 /*
 	
     Slatwall - An Open Source eCommerce Platform
-    Copyright (C) 2011 ten24, LLC
+    Copyright (C) ten24, LLC
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,22 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-    Linking this library statically or dynamically with other modules is
-    making a combined work based on this library.  Thus, the terms and
+    Linking this program statically or dynamically with other modules is
+    making a combined work based on this program.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
 	
-    As a special exception, the copyright holders of this library give you
-    permission to link this library with independent modules to produce an
-    executable, regardless of the license terms of these independent
-    modules, and to copy and distribute the resulting executable under
-    terms of your choice, provided that you also meet, for each linked
-    independent module, the terms and conditions of the license of that
-    module.  An independent module is a module which is not derived from
-    or based on this library.  If you modify this library, you may extend
-    this exception to your version of the library, but you are not
-    obligated to do so.  If you do not wish to do so, delete this
-    exception statement from your version.
+    As a special exception, the copyright holders of this program give you
+    permission to combine this program with independent modules and your 
+    custom code, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting program under terms 
+    of your choice, provided that you follow these specific guidelines: 
+
+	- You also meet the terms and conditions of the license of each 
+	  independent module 
+	- You must not alter the default display of the Slatwall name or logo from  
+	  any part of the application 
+	- Your custom code must not alter or create any files inside Slatwall, 
+	  except in the following directories:
+		/integrationServices/
+
+	You may copy and distribute the modified version of this program that meets 
+	the above guidelines as a combined work under the terms of GPL for this program, 
+	provided that you include the source code of that other code when and as the 
+	GNU GPL requires distribution of source code.
+    
+    If you modify this program, you may extend this exception to your version 
+    of the program, but you are not obligated to do so.
 	
 Notes:
 	
@@ -57,196 +67,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	property name="taxService";
 	
 	// ===================== START: Logical Methods ===========================
-	
-	public void function addOrderItem(required any order, required any sku, any stock, numeric quantity=1, any orderFulfillment, struct customizatonData, struct data = {})	{
-	
-		// Check to see if the order has already been closed or canceled
-		if(arguments.order.getOrderStatusType().getSystemCode() == "ostClosed" || arguments.order.getOrderStatusType().getSystemCode() == "ostCanceled") {
-			throw("You cannot add an item to an order that has been closed or canceled");
-		}
-		
-		// If the currency code was not passed in, then set it to the sku default
-		if(!structKeyExists(arguments.data, "currencyCode")) {
-			if( !isNull(arguments.order.getCurrencyCode()) && listFindNoCase(arguments.sku.setting('skuEligibleCurrencies'), arguments.order.getCurrencyCode()) && arrayLen(arguments.order.getOrderItems()) ) {
-				arguments.data.currencyCode = arguments.order.getCurrencyCode();
-			} else {
-				arguments.data.currencyCode = arguments.sku.setting('skuCurrency');
-			}
-		}
-		
-		// Make sure the order has a currency code
-		if( isNull(arguments.order.getCurrencyCode()) || !arrayLen(arguments.order.getOrderItems()) ) {
-			arguments.order.setCurrencyCode( arguments.data.currencyCode );
-		}
-		
-		// Verify the order has the same currency as the one being added
-		if(arguments.order.getCurrencyCode() eq arguments.data.currencyCode) {
-			
-			// Make sure the item is in stock 
-			if(arguments.sku.getQuantity('qats') gt 0) {
-				
-				// Update the quantity to add to whatever the qats is if trying to add more.
-				if(arguments.sku.getQuantity('qats') lt arguments.quantity) {
-					arguments.quantity = arguments.sku.getQuantity('qats'); 
-				}
-					
-				// save order so it's added to the hibernate scope
-				save( arguments.order );
-				
-				// if a filfillmentMethodID is passed in the data, set orderfulfillment to that
-				if(structKeyExists(arguments.data, "fulfillmentMethodID") && !structKeyExists(arguments, "orderFulfillment")) {
-					// make sure this is eligible fulfillment method
-					if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), arguments.data.fulfillmentMethodID)) {
-						var fulfillmentMethod = this.getFulfillmentService().getFulfillmentMethod(arguments.data.fulfillmentMethodID);
-						if(!isNull(fulfillmentMethod)) {
-							arguments.orderFulfillment = this.getOrderFulfillment({order=arguments.order,fulfillmentMethod=fulfillmentMethod},true);
-							if(arguments.orderFulfillment.isNew()) {
-								if(structKeyExists(arguments.data, "orderFulfillment"))	{
-									arguments.orderFulfillment.populate( arguments.data.orderFulfillment );	
-								}
-								arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethod );
-								arguments.orderFulfillment.setOrder( arguments.order );
-								arguments.orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() ) ;
-								// Push the fulfillment into the hibernate scope
-								getHibachiDAO().save(arguments.orderFulfillment);
-							}
-						}
-					}
-					
-				}
-				
-				// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
-				if(!structKeyExists(arguments, "orderFulfillment"))	{
-					
-					var thisFulfillmentMethodType = getFulfillmentService().getFulfillmentMethod(listGetAt(arguments.sku.setting('skuEligibleFulfillmentMethods'),1)).getFulfillmentMethodType();
-					
-					// check if there is a fulfillment method of this type in the order
-					for(var fulfillment in arguments.order.getOrderFulfillments()) {
-						if(listFindNoCase(arguments.sku.setting('skuEligibleFulfillmentMethods'), fulfillment.getFulfillmentMethod().getFulfillmentMethodID())) {
-							arguments.orderFulfillment = fulfillment;
-							break;
-						}
-					}
-					
-					// if no fulfillment of this type found then create a new one 
-					if(!structKeyExists(arguments, "orderFulfillment")) {
-						
-						var fulfillmentMethodOptions = arguments.sku.getEligibleFulfillmentMethods();
-						
-						// If there are at least 1 options, then we create the new method, otherwise stop and just return the order
-						if(arrayLen(fulfillmentMethodOptions)) {
-							arguments.orderFulfillment = this.newSlatwallOrderFulfillment();
-							arguments.orderFulfillment.setFulfillmentMethod( fulfillmentMethodOptions[1] );
-							arguments.orderFulfillment.setOrder( arguments.order );
-							arguments.orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() ) ;
-						} else {
-							return arguments.order;
-						}
-						
-						// Push the fulfillment into the hibernate scope
-						getHibachiDAO().save(arguments.orderFulfillment);
-					}
-				}
-			
-				var orderItems = arguments.order.getOrderItems();
-				var itemExists = false;
-				
-				// If there are no product customizations then we can check for the order item already existing.
-				if(!structKeyExists(arguments, "customizatonData") || !structKeyExists(arguments.customizatonData,"attribute"))	{
-					// Check the existing order items and increment quantity if possible.
-					for(var i = 1; i <= arrayLen(orderItems); i++) {
-						
-						// This is a simple check inside of the loop to find any sku that matches
-						if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
-							
-							// This verifies that the stock being passed in matches the stock on the order item, or that both are null
-							if( ( !isNull(arguments.stock) && !isNull(orderItems[i].getStock()) && arguments.stock.getStockID() == orderItems[i].getStock().getStockID() ) || ( isNull(arguments.stock) && isNull(orderItems[i].getStock()) ) ) {
-								
-								itemExists = true;
-								// do not increment quantity for content access product
-								if(orderItems[i].getSku().getBaseProductType() != "contentAccess") {
-									
-									// Verify that this item now that it has a greater quantity isn't bigger than the qats
-									if((orderItems[i].getQuantity() + arguments.quantity) gt orderItems[i].getSku().getQuantity('qats')) {
-										orderItems[i].setQuantity(orderItems[i].getSku().getQuantity('qats'));
-									} else {
-										orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);	
-									}
-									
-									if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
-										orderItems[i].setPrice( arguments.data.price );
-										orderItems[i].setSkuPrice( arguments.data.price );	
-									} else {
-										orderItems[i].setPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
-										orderItems[i].setSkuPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
-									}
-								}
-								break;
-								
-							}
-						}
-					}
-				}
-			
-				// If the sku doesn't exist in the order, then create a new order item and add it
-				if(!itemExists)	{
-					var newItem = this.newOrderItem();
-					newItem.setSku(arguments.sku);
-					newItem.setQuantity(arguments.quantity);
-					newItem.setOrder(arguments.order);
-					newItem.setOrderFulfillment(arguments.orderFulfillment);
-					newItem.setCurrencyCode( arguments.order.getCurrencyCode() );
-					
-					// All new items have the price and skuPrice set to the current price of the sku being added.  Later the price may be changed by the recalculateOrderAmounts() method
-					if( structKeyExists(arguments.data, "price") && arguments.sku.getUserDefinedPriceFlag() ) {
-						newItem.setPrice( arguments.data.price );
-						newItem.setSkuPrice( arguments.data.price );
-					} else {
-						newItem.setPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
-						newItem.setSkuPrice( arguments.sku.getPriceByCurrencyCode( arguments.data.currencyCode ) );
-					}
-					
-					// If a stock was passed in, then assign it to this new item
-					if(!isNull(arguments.stock)) {
-						newItem.setStock(arguments.stock);
-					}
-				
-					// Check for product customization
-					if(structKeyExists(arguments, "customizationData") && structKeyExists(arguments.customizationData, "attribute")) {
-						var pcas = arguments.sku.getProduct().getAttributeSets(['astOrderItem']);
-						for(var i = 1; i <= arrayLen(pcas); i++) {
-							var attributes = pcas[i].getAttributes();
-							
-							for(var a = 1; a <= arrayLen(attributes); a++) {
-								if(structKeyExists(arguments.customizationData.attribute, attributes[a].getAttributeID())) {
-									var av = this.newAttributeValue();
-									av.setAttributeValueType("orderItem");
-									av.setAttribute(attributes[a]);
-									av.setAttributeValue(arguments.customizationData.attribute[attributes[a].getAttributeID()]);
-									av.setOrderItem(newItem);
-									// Push the attribute value
-									getHibachiDAO().save(av);
-								}
-							}
-						}
-					}
-					
-					// Push the order Item into the hibernate scope
-					getHibachiDAO().save(newItem);
-				}
-				
-				// Recalculate the order amounts for tax and promotions and priceGroups
-				recalculateOrderAmounts( arguments.order );
-		
-				
-			} else {
-				order.addError("quantity", rbKey('validate.order.orderitemoutofstock'));
-			}
-		} else {
-			order.addError("currency", rbKey('validate.order.orderitemwrongcurrency'));
-		}
-		
-	}
 	
 	public string function getOrderRequirementsList(required any order) {
 		var orderRequirementsList = "";
@@ -289,20 +109,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		return orderRequirementsList;
-	}
-	
-	public void function clearCart() {
-		var currentSession = getSlatwallScope().getCurrentSession();
-		var cart = currentSession.getOrder();
-		
-		if(!isNull(cart) && !cart.isNew()) {
-			currentSession.removeOrder();
-		
-			getHibachiDAO().delete(cart.getOrderItems());
-			getHibachiDAO().delete(cart.getOrderFulfillments());
-			getHibachiDAO().delete(cart.getOrderPayments());
-			getHibachiDAO().delete(cart);
-		}
 	}
 	
 	public void function removeAccountSpecificOrderDetails(required any order) {
