@@ -49,15 +49,12 @@ Notes:
 <cfparam name="rc.sku" type="any" />
 <cfparam name="rc.edit" type="any" />
 
-<<<<<<< HEAD
-<cf_HibachiPropertyDisplay object="#rc.sku#" property="priceGroupRates" edit="#rc.edit#" displayType="plain" />
-=======
 <!---
 
-TODO: NEED TO ADD A TABLE HERE TO DISPLAY ALL PRICE GROUPS --->
+TODO: NEED TO ADD A TABLE HERE TO DISPLAY ALL PRICE GROUPS
 
 <cfset det = rc.$.slatwall.getService('priceGroupService').getBestPriceGroupDetailsBasedOnSkuAndAccount(rc.sku, rc.$.slatwall.getAccount()) />
 <cfdump var="#det#" top="3" />
 
-<cf_HibachiPropertyDisplay object="#rc.sku#" property="priceGroupRates" edit="#rc.edit#" displayType="plain" />--->
->>>>>>> refs/heads/rc3
+<cf_HibachiPropertyDisplay object="#rc.sku#" property="priceGroupRates" edit="#rc.edit#" displayType="plain" />
+--->
