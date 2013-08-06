@@ -52,7 +52,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function clearCart(required struct rc) {
-		getOrderService().clearCart();
+		var cart = getOrderService().processOrder(rc.$.slatwall.getCart(), {}, 'clear');
 		
 		
 		getFW().setView("frontend:cart.detail");
