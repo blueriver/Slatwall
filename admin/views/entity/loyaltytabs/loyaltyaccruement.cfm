@@ -45,7 +45,7 @@ Notes:
 							   recorddetailaction="admin:entity.detailloyaltyaccruement">
 		<cf_HibachiListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
 		<cf_HibachiListingColumn propertyIdentifier="endDateTime" />
-		<!---<cf_HibachiListingColumn propertyIdentifier="expirationTerm" />--->
+		<cf_HibachiListingColumn propertyIdentifier="expirationTerm.termName" />
 		<cf_HibachiListingColumn propertyIdentifier="accruementType" />
 		<cf_HibachiListingColumn propertyIdentifier="pointType" />
 		<cf_HibachiListingColumn propertyIdentifier="point" />
