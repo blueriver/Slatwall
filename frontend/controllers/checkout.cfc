@@ -165,6 +165,18 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				if(!isNull(arguments.rc.account.getProcessObject('create').getPhoneNumber())) {
 					arguments.rc.account.getPrimaryPhoneNumber().setPhoneNumber(arguments.rc.account.getProcessObject('create').getPhoneNumber());	
 				}
+				
+			// If there were no errors, then we can create a mura account with the same info
+			} else {
+				var newMuraUser = request.muraScope.getBean('userBean');
+				newMuraUser.setFName( nullReplace(rc.$.slatwall.getAccount().getFirstName(), '') );
+				newMuraUser.setLName( nullReplace(rc.$.slatwall.getAccount().getLastName(), '') );
+				newMuraUser.setCompany( nullReplace(rc.$.slatwall.getAccount().getCompany(), '') );
+				newMuraUser.setUsername( rc.$.slatwall.getAccount().getEmailAddress() );
+				newMuraUser.setEmail( rc.$.slatwall.getAccount().getEmailAddress() );
+				newMuraUser.setPassword( accountData.password );
+				newMuraUser.setSiteID( request.muraScope.event('siteID') );
+				newMuraUser.save();
 			}	
 		} else {
 			arguments.rc.account = getAccountService().saveAccount( rc.$.slatwall.getAccount(), accountData );

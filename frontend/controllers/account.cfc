@@ -86,6 +86,18 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			currentAction = "frontend:account.create";
 		}
 		rc.account = getAccountService().saveAccount(rc.$.slatwall.getCurrentAccount(), rc);
+		
+		if(!rc.account.hasErrors() && wasNew) {
+			var newMuraUser = request.muraScope.getBean('userBean');
+			newMuraUser.setFName( nullReplace(rc.account.getFirstName(), '') );
+			newMuraUser.setLName( nullReplace(rc.account.getLastName(), '') );
+			newMuraUser.setCompany( nullReplace(rc.account.getCompany(), '') );
+			newMuraUser.setUsername( rc.account.getEmailAddress() );
+			newMuraUser.setEmail( rc.account.getEmailAddress() );
+			newMuraUser.setPassword( rc.password );
+			newMuraUser.setSiteID( request.muraScope.event('siteID') );
+			newMuraUser.save();
+		}
 		if(rc.account.hasErrors()) {
 			prepareEditData(rc);
 			getFW().setView(currentAction);
