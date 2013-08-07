@@ -126,6 +126,7 @@
 						
 						// Override the contentBean for the request
 						$.event('contentBean', $.getBean("content").loadBy( contentID=$.slatwall.getContent().getCMSContentID(), siteID=$.slatwall.getContent().getSite().getCMSSiteID() ) );
+						$.event('muraForceFilename', false);
 						
 						// Change Title & HTMLTitle of page
 						$.content().setTitle( $.slatwall.getProduct().getTitle() );
@@ -167,6 +168,7 @@
 						
 						// Override the contentBean for the request
 						$.event('contentBean', $.getBean("content").loadBy( contentID=$.slatwall.getContent().getCMSContentID(), siteID=$.slatwall.getContent().getSite().getCMSSiteID() ) );
+						$.event('muraForceFilename', false);
 						
 						// Change Title & HTMLTitle of page
 						$.content().setTitle( $.slatwall.getProductType().getProductTypeName() );
@@ -191,6 +193,7 @@
 						
 						// Override the contentBean for the request
 						$.event('contentBean', $.getBean("content").loadBy( contentID=$.slatwall.getContent().getCMSContentID(), siteID=$.slatwall.getContent().getSite().getCMSSiteID() ) );
+						$.event('muraForceFilename', false);
 						
 						// Change Title & HTMLTitle of page
 						$.content().setTitle( $.slatwall.getBrand().getBrandName() );
