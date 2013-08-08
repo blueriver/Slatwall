@@ -69,10 +69,10 @@ component displayname="AccountLoyaltyTransaction" entityname="SlatwallAccountLoy
 	
 	public array function getAccruementTypeOptions() {
 		return [
-			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.productPurchase'), value="productPurchase"},
+			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.itemFulfilled'), value="itemFulfilled"},
 			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.orderClosed'), value="orderClosed"},
-			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.fulfillmentMethodFulfilled'), value="fulfillmentMethodFulfilled"},
-			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.enroll'), value="enroll"}
+			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillmentMethodUsed"},
+			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.enrollment'), value="enrollment"}
 		];
 	}
 	

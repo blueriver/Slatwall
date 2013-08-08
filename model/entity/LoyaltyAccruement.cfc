@@ -83,10 +83,10 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 	
 	public array function getAccruementTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyAccruement.accruementType.productPurchase'), value="productPurchase"},
+			{name=rbKey('entity.loyaltyAccruement.accruementType.itemFulfilled'), value="itemFulfilled"},
 			{name=rbKey('entity.loyaltyAccruement.accruementType.orderClosed'), value="orderClosed"},
-			{name=rbKey('entity.loyaltyAccruement.accruementType.fulfillmentMethodFulfilled'), value="fulfillmentMethodFulfilled"},
-			{name=rbKey('entity.loyaltyAccruement.accruementType.enroll'), value="enroll"}
+			{name=rbKey('entity.loyaltyAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillmentMethodUsed"},
+			{name=rbKey('entity.loyaltyAccruement.accruementType.enrollment'), value="enrollment"}
 		];
 	}
 	
