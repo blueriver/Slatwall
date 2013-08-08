@@ -53,7 +53,7 @@ Notes:
 		<cfreturn [
 			{alias='productName', filterAlias='productID', filterDimension='skuCode', title=rbKey('entity.product.productName')},
 			{alias='skuCode', title=rbKey('entity.sku.skuCode')},
-			{alias='productTypeName', title=rbKey('entity.productType.productTypeName')},
+			{alias='productTypeName', filterAlias='productTypeID', filterDimension='productName', title=rbKey('entity.productType.productTypeName')},
 			{alias='brandName', title=rbKey('entity.brand.brandName')},
 			{alias='city', title=rbKey('entity.address.city')},
 			{alias='stateCode', title=rbKey('entity.address.stateCode')},
