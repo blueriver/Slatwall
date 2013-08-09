@@ -12,11 +12,7 @@
 					<dd style="margin-left:100px;">
 						<span id="hibachi-report-metric-sort">
 							<cfloop list="#attributes.report.getMetrics()#" index="metric">
-								<cfif listGetAt(attributes.report.getMetrics(), 1) eq metric>
-									<span class="label label-warning" data-metric="#metric#">#attributes.report.getMetricTitle(metric)#</span>
-								<cfelse>
-									<span class="label label-default" data-metric="#metric#">#attributes.report.getMetricTitle(metric)# (<a href="" class="hibachi-report-remove-metric" data-metric="#metric#">remove</a>)</span>
-								</cfif>
+								<span class="label" data-metric="#metric#">#attributes.report.getMetricTitle(metric)#<cfif listLen(attributes.report.getMetrics()) gt 1> (<a href="" class="hibachi-report-remove-metric" data-metric="#metric#">remove</a>)</cfif></span>
 							</cfloop>
 						</span>
 						<cfif arrayLen(attributes.report.getMetricDefinitions()) gt listLen(attributes.report.getMetrics())>
@@ -35,11 +31,7 @@
 					<dd style="margin-left:100px;">
 						<span id="hibachi-report-dimension-sort">
 							<cfloop list="#attributes.report.getDimensions()#" index="dimension">
-								<cfif listGetAt(attributes.report.getDimensions(), 1) eq dimension>
-									<span class="label label-warning" data-dimension="#dimension#">#attributes.report.getDimensionTitle(dimension)#</span>
-								<cfelse>
-									<span class="label label-default" data-dimension="#dimension#">#attributes.report.getDimensionTitle(dimension)# (<a href="" class="hibachi-report-remove-dimension" data-dimension="#dimension#">remove</a>)</span>
-								</cfif>
+								<span class="label" data-dimension="#dimension#">#attributes.report.getDimensionTitle(dimension)#<cfif listLen(attributes.report.getDimensions()) gt 1> (<a href="" class="hibachi-report-remove-dimension" data-dimension="#dimension#">remove</a>)</cfif></span>
 							</cfloop>
 						</span>
 						<cfif arrayLen(attributes.report.getDimensionDefinitions()) gt listLen(attributes.report.getDimensions())>
@@ -71,7 +63,7 @@
 						</select>
 					</div>
 					<div style="margin-bottom:-5px;">
-						<span style="display:block;font-size:11px;font-weight:bold;">Start - End: <a href="##" id="hibachi-report-enable-compare" class="pull-right<cfif attributes.report.getReportCompareFlag()> hide</cfif>">+Compare</a></span>
+						<span style="display:block;font-size:11px;font-weight:bold;">Start - End: <!--- TODO: Add Compare <a href="##" id="hibachi-report-enable-compare" class="pull-right<cfif attributes.report.getReportCompareFlag()> hide</cfif>">+Compare</a> ---></span>
 						<input type="text" name="reportStartDateTime" class="datepicker hibachi-report-date" style="width:80px;" value="#attributes.report.getFormattedValue('reportStartDateTime')#" /> - <input type="text" name="reportEndDateTime" class="datepicker hibachi-report-date" style="width:80px;" value="#attributes.report.getFormattedValue('reportEndDateTime')#" />
 						<input type="hidden" name="reportCompareFlag" value="#attributes.report.getReportCompareFlag()#" />
 					</div>

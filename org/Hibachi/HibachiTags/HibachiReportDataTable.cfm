@@ -34,11 +34,17 @@
 				<tr>
 					<cfloop from="1" to="#listLen(attributes.report.getDimensions())#" step="1" index="d">
 						<cfset dimensionDefinition = attributes.report.getDimensionDefinition( listGetAt(attributes.report.getDimensions(), d) ) />
+						<!---
+							TODO: Add Filter Links
 						<cfif structKeyExists(dimensionDefinition, "filterAlias")>
 							<td><a href="" class="datafilter" data-filteralias="#dimensionDefinition.filterAlias#" data-filtervalue="tableData[ dimensionDefinition.filterAlias ][ tableData.currentRow ]">#tableData[ dimensionDefinition.alias ][ tableData.currentRow ]#</a>
 						<cfelse>
 							<td>#attributes.hibachiScope.formatValue( tableData[ dimensionDefinition.alias ][ tableData.currentRow ], attributes.report.getAliasFormatType(dimensionDefinition.alias))#</td>
 						</cfif>
+						--->
+						
+						<!--- Temporary --->
+						<td>#attributes.hibachiScope.formatValue( tableData[ dimensionDefinition.alias ][ tableData.currentRow ], attributes.report.getAliasFormatType(dimensionDefinition.alias))#</td>
 					</cfloop>
 					<cfloop from="1" to="#listLen(attributes.report.getMetrics())#" step="1" index="m">
 						<cfset metricDefinition = attributes.report.getMetricDefinition( listGetAt(attributes.report.getMetrics(), m) ) />

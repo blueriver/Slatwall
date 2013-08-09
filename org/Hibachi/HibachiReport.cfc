@@ -478,7 +478,7 @@
 				ORDER BY
 					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
 						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
-						<cfif m gt 1>,</cfif>#metricDefinition.alias#
+						<cfif m gt 1>,</cfif>#metricDefinition.alias# DESC
 					</cfloop>
 			</cfquery>
 		</cfif>
