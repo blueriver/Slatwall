@@ -373,6 +373,41 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.account;
 	}
 	
+	// Account Loyalty Programs
+	public any function processAccountLoyaltyProgram_itemsFulfilled(required any accountLoyaltyProgram, required struct data) {
+		// arguments.data.orderDelivery
+		
+		// Loop over the acrument rules in the loyalty program to look for ones with type of 'fulfillItems'
+			
+			// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAcrument'
+			
+				// If loyaltyProgramAcrument eq 'fulfillItem' as the type, then based on the amount create a new transaction and apply that amount
+				
+					// Loop over the orderDeliveryItems in arguments.data.orderDelivery
+						
+						// Verify that this orderDeliveryItem product is in the productTypes, products, or skus for the accruement
+						
+						// For each orderItem add a transaction record for the points accrued
+						var accountLoayltyTransaction = this.newAccountLoyaltyTransaction();
+						accountLoayltyTransaction.setAccount(accountLoyaltyProgram.getAccount());
+						accountLoayltyTransaction.setOrderItem( orderDeliveryItem.getOrderItem() );
+						// if loyaltyProgramAcrument.getPointType eq 'fixed'
+						accountLoayltyTransaction.setPointsIn( loyaltyProgramAcrument.getPoint );
+						// else if loyaltyProgramAcrument.getPointType eq 'pricePerDollar'
+						accountLoayltyTransaction.setPointsIn( loyaltyProgramAcrument.getPoint * (orderDeliveryItem.getQuantity() * orderDeliveryItem().getOrderItem().getPrice()) );
+	}
+	
+	public any function processAccountLoyaltyProgram_orderClosed() {
+		
+	}
+	
+	public any function processAccountLoyaltyProgram_fulfillmentMethodUsed() {
+		
+	}
+	
+	public any function processAccountLoyaltyProgram_enrollment() {
+		
+	}
 	
 	// Account Payment
 	public any function processAccountPayment_createTransaction(required any accountPayment, required any processObject) {
