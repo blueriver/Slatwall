@@ -47,12 +47,12 @@ Notes:
 	
 	<cffunction name="getMetricDefinitions">
 		<cfreturn [
-			{alias='revenue', calculation='(SUM(salePreDiscount) - SUM(itemDiscount)) + (SUM(returnPreDiscount) - SUM(itemDiscount))'},
-			{alias='salePreDiscount', function='sum'},
-			{alias='returnPreDiscount', function='sum'},
-			{alias='itemDiscount', function='sum'},
-			{alias='saleAfterDiscount', calculation='SUM(salePreDiscount) - SUM(itemDiscount)'},
-			{alias='returnAfterDiscount', calculation='SUM(returnPreDiscount) - SUM(itemDiscount)'}
+			{alias='revenue', calculation='(SUM(salePreDiscount) - SUM(itemDiscount)) + (SUM(returnPreDiscount) - SUM(itemDiscount))', formatType="currency"},
+			{alias='salePreDiscount', function='sum', formatType="currency"},
+			{alias='returnPreDiscount', function='sum', formatType="currency"},
+			{alias='itemDiscount', function='sum', formatType="currency"},
+			{alias='saleAfterDiscount', calculation='SUM(salePreDiscount) - SUM(itemDiscount)', formatType="currency"},
+			{alias='returnAfterDiscount', calculation='SUM(returnPreDiscount) - SUM(itemDiscount)', formatType="currency"}
 		] />
 	</cffunction>
 	

@@ -704,10 +704,24 @@ function setupEventHandlers() {
 		jQuery('input[name="dimensions"]').val( jQuery('input[name="dimensions"]').val() + ',' + jQuery(this).data('dimension') );
 		updateReport();
 	});
+	jQuery('body').on('click', '.hibachi-report-remove-dimension', function(e){
+		e.preventDefault();
+		var vArr =  jQuery('input[name="metrics"]').val().split(',');
+		vArr.splice(vArr.indexOf(jQuery(this).data('metric')),1);
+		jQuery('input[name="metrics"]').val( vArr.join(',') );
+		updateReport();
+	});
 	
 	jQuery('body').on('click', '.hibachi-report-add-metric', function(e){
 		e.preventDefault();
 		jQuery('input[name="metrics"]').val( jQuery('input[name="metrics"]').val() + ',' + jQuery(this).data('metric') );
+		updateReport();
+	});
+	jQuery('body').on('click', '.hibachi-report-remove-metric', function(e){
+		e.preventDefault();
+		var vArr =  jQuery('input[name="metrics"]').val().split(',');
+		vArr.splice(vArr.indexOf(jQuery(this).data('metric')),1);
+		jQuery('input[name="metrics"]').val( vArr.join(',') );
 		updateReport();
 	});
 	

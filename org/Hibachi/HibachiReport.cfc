@@ -79,6 +79,37 @@
 		<cfreturn rbKey('report.#getClassName()#.#alias#') />
 	</cffunction>
 	
+	<!--- Format Type Methods --->
+	<cffunction name="getAliasFormatType">
+		<cfargument name="alias" type="string" required="true" />
+		
+		<cfif not structKeyExists(variables, "aliasFormatType#arguments.alias#")>
+			<cfset variables[ "aliasFormatType#arguments.alias#" ] = "" />
+			
+			<!--- Check Dimensions --->
+			<cfloop array="#getDimensionDefinitions()#" index="dimensionDefinition">
+				<cfif dimensionDefinition.alias eq arguments.alias and structKeyExists(dimensionDefinition, 'formatType')>
+					<cfset variables[ "aliasFormatType#arguments.alias#" ] = dimensionDefinition.formatType />
+					<cfreturn variables[ "aliasFormatType#arguments.alias#" ] />
+				<cfelseif dimensionDefinition.alias eq arguments.alias>
+					<cfbreak />
+				</cfif>
+			</cfloop>
+			
+			<!--- Check Metrics --->
+			<cfloop array="#getMetricDefinitions()#" index="metricDefinition">
+				<cfif metricDefinition.alias eq arguments.alias and structKeyExists(metricDefinition, 'formatType')>
+					<cfset variables[ "aliasFormatType#arguments.alias#" ] = metricDefinition.formatType />
+					<cfreturn variables[ "aliasFormatType#arguments.alias#" ] />
+				<cfelseif metricDefinition.alias eq arguments.alias>
+					<cfbreak />
+				</cfif>
+			</cfloop>
+		</cfif>
+		
+		<cfreturn variables[ "aliasFormatType#arguments.alias#" ] />
+	</cffunction>
+	
 	<!--- Date / Time Defaults --->
 	<cffunction name="getReportStartDateTime">
 		<cfif not structKeyExists(variables, "reportStartDateTime")>
@@ -311,6 +342,31 @@
 		<cfreturn variables.chartDataQuery />
 	</cffunction>
 	
+	<cffunction name="getTotalsQuery">
+		<cfif not structKeyExists(variables, "totalsQuery")>
+			
+			<cfset var m = 1 />
+			<cfset var data = getData() />
+			
+			<cfquery name="variables.totalsQuery" dbtype="query">
+				SELECT
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
+						<cfif m gt 1>,</cfif>
+						<cfif structKeyExists(metricDefinition, "calculation")>
+							#metricDefinition.calculation# as #metricDefinition.alias#
+						<cfelse>
+							#metricDefinition.function#(#metricDefinition.alias#) as #metricDefinition.alias#
+						</cfif>
+					</cfloop>
+				FROM
+					data
+			</cfquery>
+		</cfif>
+		
+		<cfreturn variables.totalsQuery />
+	</cffunction>
+	
 	<cffunction name="getChartData">
 		<cfif not structKeyExists(variables, "chartData")>
 			
@@ -358,7 +414,8 @@
 					<cfset var thisData = [] />
 					<cfset arrayAppend(thisData, dateDiff("s", createdatetime( '1970','01','01','00','00','00' ), dateAdd("h", 1, thisDate))*1000) />
 					<cfif year(thisDate) eq chartDataQuery['reportDateTimeYear'][chartRow] and 
-							(!listFindNoCase('month,day,hour', getReportDateTimeGroupBy()) or month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow]) and
+							(!listFindNoCase('month,week,day,hour', getReportDateTimeGroupBy()) or month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow]) and
+							(!listFindNoCase('week,day,hour', getReportDateTimeGroupBy()) or (week(thisDate) - 1) eq chartDataQuery['reportDateTimeWeek'][chartRow]) and
 							(!listFindNoCase('day,hour', getReportDateTimeGroupBy()) or day(thisDate) eq chartDataQuery['reportDateTimeDay'][chartRow]) and
 							(!listFindNoCase('hour', getReportDateTimeGroupBy()) or hour(thisDate) eq chartDataQuery['reportDateTimeHour'][chartRow])>
 						<cfset arrayAppend(thisData, chartDataQuery[ metricDefinition.alias ][ chartRow ]) />

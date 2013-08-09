@@ -13,15 +13,15 @@
 						<span id="hibachi-report-metric-sort">
 							<cfloop list="#attributes.report.getMetrics()#" index="metric">
 								<cfif listGetAt(attributes.report.getMetrics(), 1) eq metric>
-									<span class="label label-warning" data-dimension="#metric#">#attributes.report.getMetricTitle(metric)#</span>
+									<span class="label label-warning" data-metric="#metric#">#attributes.report.getMetricTitle(metric)#</span>
 								<cfelse>
-									<span class="label label-default" data-dimension="#metric#">#attributes.report.getMetricTitle(metric)# (<a href="##">remove</a>)</span>
+									<span class="label label-default" data-metric="#metric#">#attributes.report.getMetricTitle(metric)# (<a href="" class="hibachi-report-remove-metric" data-metric="#metric#">remove</a>)</span>
 								</cfif>
 							</cfloop>
 						</span>
 						<cfif arrayLen(attributes.report.getMetricDefinitions()) gt listLen(attributes.report.getMetrics())>
 							<span class="dropdown">
-								<span data-toggle="dropdown" class="dropdown-toggle label label-info" style="cursor:pointer;"></a>+</span>
+								<span data-toggle="dropdown" class="dropdown-toggle label" style="cursor:pointer;"></a>+</span>
 								<ul class="dropdown-menu">
 									<cfloop array="#attributes.report.getMetricDefinitions()#" index="metricDefinition">
 										<cfif not listFindNoCase(attributes.report.getMetrics(), metricDefinition.alias)><li><a href="" class="hibachi-report-add-metric" data-metric="#metricDefinition.alias#">#attributes.report.getMetricTitle(metricDefinition.alias)#</a></li></cfif>
@@ -38,13 +38,13 @@
 								<cfif listGetAt(attributes.report.getDimensions(), 1) eq dimension>
 									<span class="label label-warning" data-dimension="#dimension#">#attributes.report.getDimensionTitle(dimension)#</span>
 								<cfelse>
-									<span class="label label-default" data-dimension="#dimension#">#attributes.report.getDimensionTitle(dimension)# (<a href="##">remove</a>)</span>
+									<span class="label label-default" data-dimension="#dimension#">#attributes.report.getDimensionTitle(dimension)# (<a href="" class="hibachi-report-remove-dimension" data-dimension="#dimension#">remove</a>)</span>
 								</cfif>
 							</cfloop>
 						</span>
 						<cfif arrayLen(attributes.report.getDimensionDefinitions()) gt listLen(attributes.report.getDimensions())>
 							<span class="dropdown">
-								<span data-toggle="dropdown" class="dropdown-toggle label label-info" style="cursor:pointer;"></a>+</span>
+								<span data-toggle="dropdown" class="dropdown-toggle label" style="cursor:pointer;"></a>+</span>
 								<ul class="dropdown-menu">
 									<cfloop array="#attributes.report.getDimensionDefinitions()#" index="dimensionDefinition">
 										<cfif not listFindNoCase(attributes.report.getDimensions(), dimensionDefinition.alias)><li><a href="" class="hibachi-report-add-dimension" data-dimension="#dimensionDefinition.alias#">#attributes.report.getDimensionTitle(dimensionDefinition.alias)#</a></li></cfif>
