@@ -670,6 +670,12 @@ function setupEventHandlers() {
 		updateReport();
 	});
 	
+	jQuery('body').on('click', '.hibachi-report-add-dimension', function(e){
+		e.preventDefault();
+		jQuery('input[name="dimensions"]').val( jQuery('input[name="dimensions"]').val() + ',' + jQuery(this).data('dimension') );
+		updateReport();
+	});
+	
 }
 
 function initModal( modalWin ){
@@ -1304,7 +1310,9 @@ function updateReport() {
 		reportEndDateTime: jQuery('input[name="reportEndDateTime"]').val(),
 		reportDateTimeGroupBy: jQuery('a.hibachi-report-date-group.active').data('groupby'),
 		reportDateTime: jQuery('select[name="reportDateTime"]').val(),
-		reportCompareFlag: jQuery('input[name="reportCompareFlag"]').val()
+		reportCompareFlag: jQuery('input[name="reportCompareFlag"]').val(),
+		dimensions: jQuery('input[name="dimensions"]').val(),
+		metrics: jQuery('input[name="metrics"]').val()
 	};
 	
 	jQuery.ajax({

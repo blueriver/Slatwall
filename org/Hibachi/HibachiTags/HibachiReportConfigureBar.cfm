@@ -7,6 +7,7 @@
 		<div class="row-fluid">
 			<div class="span7">
 				<dl class="dl-horizontal">
+					<input type="hidden" name="metrics" value="#trim(attributes.report.getMetrics())#" />
 					<dt style="width:100px;"><strong>Metrics</strong></dt>
 					<dd style="margin-left:100px;">
 						<cfloop list="#attributes.report.getMetrics()#" index="metric">
@@ -14,12 +15,37 @@
 						</cfloop>
 						<span class="label label-info">+</span>
 					</dd>
+					<input type="hidden" name="dimensions" value="#trim(attributes.report.getDimensions())#" />
 					<dt style="width:100px;"><strong>Dimensions</strong></dt>
 					<dd style="margin-left:100px;">
-						<cfloop list="#attributes.report.getDimensions()#" index="dimension">
-							<span class="label label-warning">#attributes.report.getDimensionTitle(dimension)#</span>
-						</cfloop>
-						<span class="label label-info">+</span>		
+						<ul style="list-style:none; display:inline;">
+							<cfloop list="#attributes.report.getDimensions()#" index="dimension">
+								<cfif listGetAt(attributes.report.getDimensions(), 1) eq dimension>
+									<li style="display:inline;">&nbsp;<span class="label label-warning">#attributes.report.getDimensionTitle(dimension)#</span></li>
+								<cfelse>
+									<li style="display:inline;">&nbsp;<span class="label label-default">#attributes.report.getDimensionTitle(dimension)# - X</span></li>
+								</cfif>
+							</cfloop>
+							<li class="dropdown">
+								&nbsp;<span data-toggle="dropdown" class="dropdown-toggle label label-info"></a>+</span>
+								<ul class="dropdown-menu ">
+									<cfloop array="#attributes.report.getDimensionDefinitions()#" index="dimensionDefinition">
+										<cfif not listFindNoCase(attributes.report.getDimensions(), dimensionDefinition.alias)><li><a href="" class="hibachi-report-add-dimension" data-dimension="#dimensionDefinition.alias#">#dimensionDefinition.title#</a></li></cfif>
+									</cfloop>		 
+								</ul>
+							</li>
+							<!---<li>&nbsp;<span class="label label-info"></a>+</span></li>--->
+						</ul>
+						<!---
+						<li class="dropdown">
+							<a href="##" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-inbox icon-white"></i> Orders </a>
+							<ul class="dropdown-menu ">
+								<li><a title="Orders" class="adminentitylistorder " href="?slatAction=entity.listorder">Orders</a></li> <li><a title="Carts &amp; Quotes" class="adminentitylistcartandquote " href="?slatAction=entity.listcartandquote">Carts &amp; Quotes</a></li> <li><a title="Order Items" class="adminentitylistorderitem " href="?slatAction=entity.listorderitem">Order Items</a></li> <li><a title="Order Fulfillments" class="adminentitylistorderfulfillment " href="?slatAction=entity.listorderfulfillment">Order Fulfillments</a></li> <li><a title="Order Payments" class="adminentitylistorderpayment " href="?slatAction=entity.listorderpayment">Order Payments</a></li> <li><a title="Order Deliveries" class="adminentitylistorderdelivery " href="?slatAction=entity.listorderdelivery">Order Deliveries</a></li> 
+										<li class="divider"></li>
+										<li><a title="Vendor Orders" class="adminentitylistvendororder " href="?slatAction=entity.listvendororder">Vendor Orders</a></li> <li><a title="Vendor Order Items" class="adminentitylistvendororderitem " href="?slatAction=entity.listvendororderitem">Vendor Order Items</a></li> 
+							</ul>
+						</li>
+						--->
 					</dd>
 				</dl>
 			</div>
