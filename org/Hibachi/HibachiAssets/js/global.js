@@ -673,11 +673,13 @@ function setupEventHandlers() {
 	// Report Hooks ============================================
 	
 	jQuery('body').on('change', '.hibachi-report-date', function(){
+		addLoadingDiv( 'hibachi-report' );
 		updateReport();
 	});
 	
 	jQuery('body').on('click', '.hibachi-report-date-group', function(e){
 		e.preventDefault();
+		addLoadingDiv( 'hibachi-report' );
 		jQuery('.hibachi-report-date-group').removeClass('active');
 		jQuery( this ).addClass('active');
 		updateReport();
@@ -685,6 +687,7 @@ function setupEventHandlers() {
 	
 	jQuery('body').on('click', '#hibachi-report-enable-compare', function(e){
 		e.preventDefault();
+		addLoadingDiv( 'hibachi-report' );
 		jQuery('input[name="reportCompareFlag"]').val(1);
 		jQuery('#hibachi-report-compare-date').removeClass('hide');
 		jQuery(this).addClass('hide');
@@ -693,6 +696,7 @@ function setupEventHandlers() {
 	
 	jQuery('body').on('click', '#hibachi-report-disable-compare', function(e){
 		e.preventDefault();
+		addLoadingDiv( 'hibachi-report' );
 		jQuery('input[name="reportCompareFlag"]').val(0);
 		jQuery('#hibachi-report-compare-date').addClass('hide');
 		jQuery('#hibachi-report-enable-compare').removeClass('hide');
@@ -701,24 +705,28 @@ function setupEventHandlers() {
 	
 	jQuery('body').on('click', '.hibachi-report-add-dimension', function(e){
 		e.preventDefault();
+		addLoadingDiv( 'hibachi-report' );
 		jQuery('input[name="dimensions"]').val( jQuery('input[name="dimensions"]').val() + ',' + jQuery(this).data('dimension') );
 		updateReport();
 	});
 	jQuery('body').on('click', '.hibachi-report-remove-dimension', function(e){
 		e.preventDefault();
-		var vArr =  jQuery('input[name="metrics"]').val().split(',');
-		vArr.splice(vArr.indexOf(jQuery(this).data('metric')),1);
-		jQuery('input[name="metrics"]').val( vArr.join(',') );
+		addLoadingDiv( 'hibachi-report' );
+		var vArr =  jQuery('input[name="dimensions"]').val().split(',');
+		vArr.splice(vArr.indexOf(jQuery(this).data('dimension')),1);
+		jQuery('input[name="dimensions"]').val( vArr.join(',') );
 		updateReport();
 	});
 	
 	jQuery('body').on('click', '.hibachi-report-add-metric', function(e){
 		e.preventDefault();
+		addLoadingDiv( 'hibachi-report' );
 		jQuery('input[name="metrics"]').val( jQuery('input[name="metrics"]').val() + ',' + jQuery(this).data('metric') );
 		updateReport();
 	});
 	jQuery('body').on('click', '.hibachi-report-remove-metric', function(e){
 		e.preventDefault();
+		addLoadingDiv( 'hibachi-report' );
 		var vArr =  jQuery('input[name="metrics"]').val().split(',');
 		vArr.splice(vArr.indexOf(jQuery(this).data('metric')),1);
 		jQuery('input[name="metrics"]').val( vArr.join(',') );
@@ -1373,12 +1381,14 @@ function updateReport() {
 		beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
 		error: function( r ) {
 			// Error
+			removeLoadingDiv( 'hibachi-report' );
 		},
 		success: function( r ) {
 			jQuery('#hibachi-report-chart').highcharts(r.report.chartData);
 			jQuery('#hibachi-report-configure-bar').html(r.report.configureBar);
 			jQuery('#hibachi-report-table').html(r.report.dataTable);
 			initUIElements('#hibachi-report');
+			removeLoadingDiv( 'hibachi-report' );
 		}
 	});
 	
