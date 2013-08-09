@@ -192,6 +192,35 @@ function initUIElements( scopeSelector ) {
 		}
 	});
 	
+	
+	// Report Sortable
+	jQuery( scopeSelector ).find(jQuery('#hibachi-report-dimension-sort')).sortable({
+		stop: function( event, ui ) {
+			var newDimensionsValue = '';
+			jQuery.each(jQuery('#hibachi-report-dimension-sort').children(), function(i, v){
+				if(i > 0) {
+					newDimensionsValue += ','
+				}
+				newDimensionsValue += jQuery(v).data('dimension'); 
+			});
+			jQuery('input[name="dimensions"]').val( newDimensionsValue );
+			updateReport();
+		}				
+	});
+	// Report Sortable
+	jQuery( scopeSelector ).find(jQuery('#hibachi-report-metric-sort')).sortable({
+		stop: function( event, ui ) {
+			var newMetricsValue = '';
+			jQuery.each(jQuery('#hibachi-report-metric-sort').children(), function(i, v){
+				if(i > 0) {
+					newMetricsValue += ','
+				}
+				newMetricsValue += jQuery(v).data('metric'); 
+			});
+			jQuery('input[name="metrics"]').val( newMetricsValue );
+			updateReport();
+		}				
+	});
 }
 
 function setupEventHandlers() {
@@ -673,6 +702,12 @@ function setupEventHandlers() {
 	jQuery('body').on('click', '.hibachi-report-add-dimension', function(e){
 		e.preventDefault();
 		jQuery('input[name="dimensions"]').val( jQuery('input[name="dimensions"]').val() + ',' + jQuery(this).data('dimension') );
+		updateReport();
+	});
+	
+	jQuery('body').on('click', '.hibachi-report-add-metric', function(e){
+		e.preventDefault();
+		jQuery('input[name="metrics"]').val( jQuery('input[name="metrics"]').val() + ',' + jQuery(this).data('metric') );
 		updateReport();
 	});
 	
@@ -1305,6 +1340,7 @@ function updateGlobalSearchResults() {
 function updateReport() {
 	
 	var data = {
+		slatAction: 'admin:report.default',
 		reportName: jQuery('#hibachi-report').data('reportname'),
 		reportStartDateTime: jQuery('input[name="reportStartDateTime"]').val(),
 		reportEndDateTime: jQuery('input[name="reportEndDateTime"]').val(),
@@ -1316,7 +1352,7 @@ function updateReport() {
 	};
 	
 	jQuery.ajax({
-		url: jQuery(this).attr('href'),
+		url: hibachiConfig.baseURL + '/',
 		method: 'post',
 		data: data,
 		dataType: 'json',

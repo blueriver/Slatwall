@@ -1,37 +1,69 @@
-component output="false" accessors="true" extends="HibachiService"  {
+<cfcomponent output="false" accessors="true" extends="HibachiService">
 	
-	// ===================== START: Logical Methods ===========================
+	<!--- ===================== START: Logical Methods =========================== --->
 	
-	public any function getReportCFC( required string reportName, required struct data={} ) {
-		var reportCFC = getBean( arguments.reportName );
-		reportCFC.populate( arguments.data );
-		return reportCFC;
-	}
+	<cfscript>
+		public any function getReportCFC( required string reportName, required struct data={} ) {
+			var reportCFC = getBean( arguments.reportName );
+			reportCFC.populate( arguments.data );
+			return reportCFC;
+		}
+	</cfscript>
 	
-	// =====================  END: Logical Methods ============================
+	<cffunction name="getBuiltInReportsList">
+		<cfset var reportFiles = "" />
+		<cfset var reportsList = "" />
+		
+		<cfdirectory action="list" directory="#getApplicationValue('applicationRootMappingPath')#/model/report" name="reportFiles" />
+		
+		<cfloop query="reportFiles">
+			<cfif reportFiles.name neq "HibachiReport.cfc">
+				<cfset reportsList = listAppend(reportsList, listFirst(reportFiles.name, '.')) />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn reportsList />
+	</cffunction>
 	
-	// ===================== START: DAO Passthrough ===========================
+	<cffunction name="getCustomReportsList">
+		<cfset var reportFiles = "" />
+		<cfset var reportsList = "" />
+		
+		<cfdirectory action="list" directory="#getApplicationValue('applicationRootMappingPath')#/custom/model/report" name="reportFiles" />
+		
+		<cfloop query="reportFiles">
+			<cfif reportFiles.name neq "HibachiReport.cfc">
+				<cfset reportsList = listAppend(reportsList, listFirst(reportFiles.name, '.')) />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn reportsList />
+	</cffunction>
 	
-	// ===================== START: DAO Passthrough ===========================
+	<!--- =====================  END: Logical Methods ============================ --->
 	
-	// ===================== START: Process Methods ===========================
+	<!--- ===================== START: DAO Passthrough =========================== --->
 	
-	// =====================  END: Process Methods ============================
+	<!--- ===================== START: DAO Passthrough =========================== --->
 	
-	// ====================== START: Status Methods ===========================
+	<!--- ===================== START: Process Methods =========================== --->
 	
-	// ======================  END: Status Methods ============================
+	<!--- =====================  END: Process Methods ============================ --->
 	
-	// ====================== START: Save Overrides ===========================
+	<!--- ====================== START: Status Methods =========================== --->
 	
-	// ======================  END: Save Overrides ============================
+	<!--- ======================  END: Status Methods ============================ --->
 	
-	// ==================== START: Smart List Overrides =======================
+	<!--- ====================== START: Save Overrides =========================== --->
 	
-	// ====================  END: Smart List Overrides ========================
+	<!--- ======================  END: Save Overrides ============================ --->
 	
-	// ====================== START: Get Overrides ============================
+	<!--- ==================== START: Smart List Overrides ======================= --->
 	
-	// ======================  END: Get Overrides =============================
+	<!--- ====================  END: Smart List Overrides ======================== --->
 	
-}
+	<!--- ====================== START: Get Overrides ============================ --->
+	
+	<!--- ======================  END: Get Overrides ============================= --->
+	
+</cfcomponent>

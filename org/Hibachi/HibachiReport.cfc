@@ -64,6 +64,21 @@
 		<cfreturn rbKey('report.#getClassName()#.#alias#') />
 	</cffunction>
 	
+	
+	<cffunction name="getReportDateTimeTitle">
+		<cfargument name="alias" type="string" required="true" />
+		
+		<cfset var reportDateTimeDefinition = {} />
+		
+		<cfloop array="#getReportDateTimeDefinitions()#" index="reportDateTimeDefinition">
+			<cfif reportDateTimeDefinition.alias eq arguments.alias and structKeyExists(reportDateTimeDefinition, 'title')>
+		 		<cfreturn reportDateTimeDefinition.title />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn rbKey('report.#getClassName()#.#alias#') />
+	</cffunction>
+	
 	<!--- Date / Time Defaults --->
 	<cffunction name="getReportStartDateTime">
 		<cfif not structKeyExists(variables, "reportStartDateTime")>

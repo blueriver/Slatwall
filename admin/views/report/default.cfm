@@ -41,10 +41,24 @@ Notes:
 	<div class="row-fluid">
 		<div class="span2">
 			<ul class="nav">
-				<li><strong>Core Reports</strong></li>
-				<li><a href="##ProductPerformanceReport" class="hibachi-report-link">Product Performance</a></li>
-				<li><strong>Custom Reports</strong></li>
-				<li><strong>Integration Reports</strong></li>
+				<cfif listLen(rc.builtInReportsList)>
+					<li><strong>#$.slatwall.rbKey('admin.report.default.builtInReports')#</strong></li>
+					<cfloop list="#rc.builtInReportsList#" index="reportName">
+						<cf_HibachiActionCaller action="admin:report.default" queryString="reportName=#reportName#" text="#$.slatwall.rbKey('report.#reportName#')#" type="list" />
+					</cfloop> 
+				</cfif>
+				<cfif listLen(rc.customReportsList)>
+					<li><strong>#$.slatwall.rbKey('admin.report.default.customReports')#</strong></li>
+					<cfloop list="#rc.customReportsList#" index="reportName">
+						<li><a href="###reportName#" class="hibachi-report-link">#$.slatwall.rbKey('report.#reportName#')#</a></li>
+					</cfloop> 
+				</cfif>
+				<cfif listLen(rc.integrationReportsList)>
+					<li><strong>#$.slatwall.rbKey('admin.report.default.integrationReports')#</strong></li>
+					<cfloop list="#rc.builtInReportsList#" index="reportName">
+						<li><a href="###reportName#" class="hibachi-report-link">#$.slatwall.rbKey('report.#reportName#')#</a></li>
+					</cfloop> 
+				</cfif>
 			</ul>
 		</div>
 		<div class="span10">

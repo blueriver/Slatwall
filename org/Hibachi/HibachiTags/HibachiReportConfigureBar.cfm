@@ -10,42 +10,48 @@
 					<input type="hidden" name="metrics" value="#trim(attributes.report.getMetrics())#" />
 					<dt style="width:100px;"><strong>Metrics</strong></dt>
 					<dd style="margin-left:100px;">
-						<cfloop list="#attributes.report.getMetrics()#" index="metric">
-							<span class="label label-warning">#attributes.report.getMetricTitle(metric)#</span>
-						</cfloop>
-						<span class="label label-info">+</span>
+						<span id="hibachi-report-metric-sort">
+							<cfloop list="#attributes.report.getMetrics()#" index="metric">
+								<cfif listGetAt(attributes.report.getMetrics(), 1) eq metric>
+									<span class="label label-warning" data-dimension="#metric#">#attributes.report.getMetricTitle(metric)#</span>
+								<cfelse>
+									<span class="label label-default" data-dimension="#metric#">#attributes.report.getMetricTitle(metric)# (<a href="##">remove</a>)</span>
+								</cfif>
+							</cfloop>
+						</span>
+						<cfif arrayLen(attributes.report.getMetricDefinitions()) gt listLen(attributes.report.getMetrics())>
+							<span class="dropdown">
+								<span data-toggle="dropdown" class="dropdown-toggle label label-info" style="cursor:pointer;"></a>+</span>
+								<ul class="dropdown-menu">
+									<cfloop array="#attributes.report.getMetricDefinitions()#" index="metricDefinition">
+										<cfif not listFindNoCase(attributes.report.getMetrics(), metricDefinition.alias)><li><a href="" class="hibachi-report-add-metric" data-metric="#metricDefinition.alias#">#attributes.report.getMetricTitle(metricDefinition.alias)#</a></li></cfif>
+									</cfloop>		 
+								</ul>
+							</span>
+						</cfif>
 					</dd>
 					<input type="hidden" name="dimensions" value="#trim(attributes.report.getDimensions())#" />
 					<dt style="width:100px;"><strong>Dimensions</strong></dt>
 					<dd style="margin-left:100px;">
-						<ul style="list-style:none; display:inline;">
+						<span id="hibachi-report-dimension-sort">
 							<cfloop list="#attributes.report.getDimensions()#" index="dimension">
 								<cfif listGetAt(attributes.report.getDimensions(), 1) eq dimension>
-									<li style="display:inline;">&nbsp;<span class="label label-warning">#attributes.report.getDimensionTitle(dimension)#</span></li>
+									<span class="label label-warning" data-dimension="#dimension#">#attributes.report.getDimensionTitle(dimension)#</span>
 								<cfelse>
-									<li style="display:inline;">&nbsp;<span class="label label-default">#attributes.report.getDimensionTitle(dimension)# - X</span></li>
+									<span class="label label-default" data-dimension="#dimension#">#attributes.report.getDimensionTitle(dimension)# (<a href="##">remove</a>)</span>
 								</cfif>
 							</cfloop>
-							<li class="dropdown">
-								&nbsp;<span data-toggle="dropdown" class="dropdown-toggle label label-info"></a>+</span>
-								<ul class="dropdown-menu ">
+						</span>
+						<cfif arrayLen(attributes.report.getDimensionDefinitions()) gt listLen(attributes.report.getDimensions())>
+							<span class="dropdown">
+								<span data-toggle="dropdown" class="dropdown-toggle label label-info" style="cursor:pointer;"></a>+</span>
+								<ul class="dropdown-menu">
 									<cfloop array="#attributes.report.getDimensionDefinitions()#" index="dimensionDefinition">
-										<cfif not listFindNoCase(attributes.report.getDimensions(), dimensionDefinition.alias)><li><a href="" class="hibachi-report-add-dimension" data-dimension="#dimensionDefinition.alias#">#dimensionDefinition.title#</a></li></cfif>
+										<cfif not listFindNoCase(attributes.report.getDimensions(), dimensionDefinition.alias)><li><a href="" class="hibachi-report-add-dimension" data-dimension="#dimensionDefinition.alias#">#attributes.report.getDimensionTitle(dimensionDefinition.alias)#</a></li></cfif>
 									</cfloop>		 
 								</ul>
-							</li>
-							<!---<li>&nbsp;<span class="label label-info"></a>+</span></li>--->
-						</ul>
-						<!---
-						<li class="dropdown">
-							<a href="##" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-inbox icon-white"></i> Orders </a>
-							<ul class="dropdown-menu ">
-								<li><a title="Orders" class="adminentitylistorder " href="?slatAction=entity.listorder">Orders</a></li> <li><a title="Carts &amp; Quotes" class="adminentitylistcartandquote " href="?slatAction=entity.listcartandquote">Carts &amp; Quotes</a></li> <li><a title="Order Items" class="adminentitylistorderitem " href="?slatAction=entity.listorderitem">Order Items</a></li> <li><a title="Order Fulfillments" class="adminentitylistorderfulfillment " href="?slatAction=entity.listorderfulfillment">Order Fulfillments</a></li> <li><a title="Order Payments" class="adminentitylistorderpayment " href="?slatAction=entity.listorderpayment">Order Payments</a></li> <li><a title="Order Deliveries" class="adminentitylistorderdelivery " href="?slatAction=entity.listorderdelivery">Order Deliveries</a></li> 
-										<li class="divider"></li>
-										<li><a title="Vendor Orders" class="adminentitylistvendororder " href="?slatAction=entity.listvendororder">Vendor Orders</a></li> <li><a title="Vendor Order Items" class="adminentitylistvendororderitem " href="?slatAction=entity.listvendororderitem">Vendor Order Items</a></li> 
-							</ul>
-						</li>
-						--->
+							</span>
+						</cfif>
 					</dd>
 				</dl>
 			</div>
@@ -60,7 +66,7 @@
 					<div style="margin-bottom:-5px;">
 						<select name="reportDateTime" class="hibachi-report-date" style="width:192px;">
 							<cfloop array="#attributes.report.getReportDateTimeDefinitions()#" index="dateTimeAlias">
-								<option value="#dateTimeAlias['alias']#" <cfif dateTimeAlias['alias'] eq attributes.report.getReportDateTime()>selected="selected"</cfif>>#dateTimeAlias['title']#</option>
+								<option value="#dateTimeAlias['alias']#" <cfif dateTimeAlias['alias'] eq attributes.report.getReportDateTime()>selected="selected"</cfif>>#attributes.report.getReportDateTimeTitle(dateTimeAlias['alias'])#</option>
 							</cfloop>
 						</select>
 					</div>

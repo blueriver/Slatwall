@@ -44,7 +44,9 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	this.secureMethods=listAppend(this.secureMethods,'default');
 
 	public void function default(required struct rc) {
-		param name="rc.reportName" default="ProductPerformanceReport";
+		if(!structKeyExists(arguments.rc, "reportName")) {
+			arguments.rc.reportName = listFirst(getHibachiReportService().getBuiltInReportsList());
+		}
 		
 		arguments.rc.report = getHibachiReportService().getReportCFC(arguments.rc.reportName, arguments.rc);
 		
@@ -53,6 +55,10 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 			arguments.rc.ajaxResponse["report"]["chartData"] = arguments.rc.report.getChartData();
 			arguments.rc.ajaxResponse["report"]["configureBar"] = arguments.rc.report.getReportConfigureBar();
 			arguments.rc.ajaxResponse["report"]["dataTable"] = arguments.rc.report.getReportDataTable();
+		} else {
+			arguments.rc.builtInReportsList = getHibachiReportService().getBuiltInReportsList();
+			arguments.rc.customReportsList = getHibachiReportService().getCustomReportsList();
+			arguments.rc.integrationReportsList = "";
 		}
 	}
 	
