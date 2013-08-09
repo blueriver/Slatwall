@@ -2,6 +2,7 @@
 	<cfparam name="attributes.report" type="any" />
 	
 	<cfoutput>
+		<!---
 		<div class="row">
 			<div class="span4">
 				<strong>Dimensions</strong><br />
@@ -16,6 +17,7 @@
 				</cfloop>
 			</div>
 		</div>
+		--->
 		<table class="table table-condensed table-bordered">
 			
 			<!--- Headers --->

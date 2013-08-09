@@ -4,17 +4,23 @@
 	<cfproperty name="reportTitle" />
 	
 	<!--- Date / Time Properties --->
-	<cfproperty name="reportStartDateTime" />
-	<cfproperty name="reportEndDateTime" />
+	<cfproperty name="reportStartDateTime" hb_formatType="date" />
+	<cfproperty name="reportEndDateTime" hb_formatType="date" />
+	<cfproperty name="reportCompareStartDateTime" hb_formatType="date" />
+	<cfproperty name="reportCompareEndDateTime" hb_formatType="date" />
 	<cfproperty name="reportDateTimeGroupBy" />
+	<cfproperty name="reportDateTimeDataColumn" />
+	<cfproperty name="reportCompareFlag" />
 	
 	<!--- Definition Properties --->
 	<cfproperty name="metricDefinitions" />
 	<cfproperty name="dimensionDefinitions" />
+	<cfproperty name="reportDateTimeDefinitions" />
 	
 	<!--- Metric / Dimension States --->
 	<cfproperty name="metrics" />
 	<cfproperty name="dimensions" />
+	<cfproperty name="reportDateTime" />
 	
 	<!--- Data Properties & Queries ---> 
 	<cfproperty name="data" />
@@ -63,14 +69,28 @@
 		<cfif not structKeyExists(variables, "reportStartDateTime")>
 			<cfset variables.reportStartDateTime = dateFormat(now() - 30, "yyyy-mm-dd") />
 		</cfif>
-		<cfreturn variables.reportStartDateTime />
+		<cfreturn dateFormat(variables.reportStartDateTime,"yyyy-mm-dd") />
 	</cffunction>
 	
 	<cffunction name="getReportEndDateTime">
 		<cfif not structKeyExists(variables, "reportEndDateTime")>
 			<cfset variables.reportEndDateTime = dateFormat(now(), "yyyy-mm-dd") />
 		</cfif>
-		<cfreturn variables.reportEndDateTime />
+		<cfreturn dateFormat(variables.reportEndDateTime,"yyyy-mm-dd") />
+	</cffunction>
+	
+	<cffunction name="getReportCompareStartDateTime">
+		<cfif not structKeyExists(variables, "reportCompareStartDateTime")>
+			<cfset variables.reportCompareStartDateTime = dateFormat(getReportCompareEndDateTime() - 30, "yyyy-mm-dd") />
+		</cfif>
+		<cfreturn dateFormat(variables.reportCompareStartDateTime,"yyyy-mm-dd") />
+	</cffunction>
+	
+	<cffunction name="getReportCompareEndDateTime">
+		<cfif not structKeyExists(variables, "reportCompareEndDateTime")>
+			<cfset variables.reportCompareEndDateTime = dateFormat(getReportStartDateTime()-1, "yyyy-mm-dd") />
+		</cfif>
+		<cfreturn dateFormat(variables.reportCompareEndDateTime,"yyyy-mm-dd") />
 	</cffunction>
 	
 	<cffunction name="getReportDateTimeGroupBy">
@@ -80,29 +100,55 @@
 		<cfreturn variables.reportDateTimeGroupBy />
 	</cffunction>
 	
+	<cffunction name="getReportCompareFlag">
+		<cfif not structKeyExists(variables, "reportCompareFlag")>
+			<cfset variables.reportCompareFlag = 0 />
+		</cfif>
+		<cfreturn variables.reportCompareFlag />
+	</cffunction>
+	
 	<!--- Date / Time Helpers --->
 	<cffunction name="getReportDateTimeSelect">
-		<cfargument name="column" />
-		
 		<cfset var reportDateTimeSelect="" />
 		<cfsavecontent variable="reportDateTimeSelect">
 			<cfoutput>
 				<cfif getApplicationValue('databaseType') eq "MySQL">
-					YEAR( #arguments.column# ) as reportDateTimeYear,
-					MONTH( #arguments.column# ) as reportDateTimeMonth,
-					WEEK( #arguments.column# ) as reportDateTimeWeek,
-					DAY( #arguments.column# ) as reportDateTimeDay,
-					HOUR( #arguments.column# ) as reportDateTimeHour
+					YEAR( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeYear,
+					MONTH( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeMonth,
+					WEEK( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeWeek,
+					DAY( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeDay,
+					HOUR( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeHour
 				<cfelse>
-					DATEPART( year, #arguments.column# ) as reportDateTimeYear,
-					DATEPART( month, #arguments.column# ) as reportDateTimeMonth,
-					DATEPART( week, #arguments.column# ) as reportDateTimeWeek,
-					DATEPART( day, #arguments.column# ) as reportDateTimeDay,
-					DATEPART( hour, #arguments.column# ) as reportDateTimeHour  
+					DATEPART( year, #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeYear,
+					DATEPART( month, #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeMonth,
+					DATEPART( week, #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeWeek,
+					DATEPART( day, #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeDay,
+					DATEPART( hour, #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# ) as reportDateTimeHour  
 				</cfif>
 			</cfoutput>
 		</cfsavecontent>
 		<cfreturn reportDateTimeSelect />
+	</cffunction>
+	
+	<cffunction name="getReportDateTimeWhere">
+		<cfset var reportDateTimeWhere="" />
+		
+		<cfset var startDateTime = replace(replace(createDateTime(dateFormat(getReportStartDateTime(), "yyyy"),datePart("m" , getReportStartDateTime()),datePart("d" , getReportStartDateTime()),0,0,0), '{ts', ''),'}','') />
+		<cfset var endDateTime = replace(replace(createDateTime(dateFormat(getReportEndDateTime(), "yyyy"),datePart("m" , getReportEndDateTime()),datePart("d" , getReportEndDateTime()),23,59,59), '{ts', ''),'}','') />
+		<cfset var compareStartDateTime = replace(replace(createDateTime(dateFormat(getReportCompareStartDateTime(), "yyyy"),datePart("m" , getReportCompareStartDateTime()),datePart("d" , getReportCompareStartDateTime()),0,0,0), '{ts', ''),'}','') />
+		<cfset var compareEndDateTime = replace(replace(createDateTime(dateFormat(getReportCompareEndDateTime(), "yyyy"),datePart("m" , getReportCompareEndDateTime()),datePart("d" , getReportCompareEndDateTime()),23,59,59), '{ts', ''),'}','') />
+		<cfsavecontent variable="reportDateTimeWhere">
+			<cfoutput>
+				(
+					(#getReportDateTimeDefinition(getReportDateTime())['dataColumn']# >= #startDateTime# AND #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# <= #endDateTime#)
+					<cfif getReportCompareFlag()>
+						OR (#getReportDateTimeDefinition(getReportDateTime())['dataColumn']# >= #compareStartDateTime# AND #getReportDateTimeDefinition(getReportDateTime())['dataColumn']# <= #compareEndDateTime#)
+					</cfif>
+				)
+			</cfoutput>
+		</cfsavecontent>
+		
+		<cfreturn reportDateTimeWhere />
 	</cffunction>
 	
 	<!--- Definition Defaults --->
@@ -111,6 +157,10 @@
 	</cffunction>
 	
 	<cffunction name="getDimensionDefinitions">
+		<cfreturn [] />
+	</cffunction>
+	
+	<cffunction name="getReportDateTimeDefinitions">
 		<cfreturn [] />
 	</cffunction>
 	
@@ -139,7 +189,19 @@
 		</cfloop>
 	</cffunction>
 	
-	<!--- Metric / Dimension State Defaults --->
+	<cffunction name="getReportDateTimeDefinition">
+		<cfargument name="alias" type="string" required="true" />
+		
+		<cfset var reportDateTimeDefinition = structNew() />
+		
+		<cfloop array="#getReportDateTimeDefinitions()#" index="reportDateTimeDefinition">
+			<cfif reportDateTimeDefinition.alias eq arguments.alias>
+				<cfreturn reportDateTimeDefinition />
+			</cfif>
+		</cfloop>
+	</cffunction>
+	
+	<!--- Metric / Dimension / ReportDateTime State Defaults --->
 	<cffunction name="getMetrics">
 		<cfif not structKeyExists(variables, "metrics")>
 			<cfset variables.metrics = getMetricDefinitions()[1].alias />
@@ -152,6 +214,13 @@
 			<cfset variables.dimensions = getDimensionDefinitions()[1].alias />
 		</cfif>
 		<cfreturn variables.dimensions />
+	</cffunction>
+	
+	<cffunction name="getReportDateTime">
+		<cfif not structKeyExists(variables, "reportDateTime")>
+			<cfset variables.reportDateTime = getReportDateTimeDefinitions()[1].alias />
+		</cfif>
+		<cfreturn variables.reportDateTime />
 	</cffunction>
 	
 	<!--- Data / Query Methods --->
@@ -353,5 +422,15 @@
 		</cfif>
 		
 		<cfreturn variables.reportDataTable />
+	</cffunction>
+	
+	<cffunction name="getReportConfigureBar">
+		<cfif(!structKeyExists(variables, "reportConfigureBar"))>
+			<cfsavecontent variable="variables.reportConfigureBar">
+				<cf_HibachiReportConfigureBar report="#this#">
+			</cfsavecontent>
+		</cfif>
+		
+		<cfreturn variables.reportConfigureBar />
 	</cffunction>
 </cfcomponent>

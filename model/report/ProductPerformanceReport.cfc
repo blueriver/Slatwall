@@ -38,6 +38,13 @@ Notes:
 --->
 <cfcomponent accessors="true" persistent="false" output="false" extends="HibachiReport">
 	
+	<cffunction name="getReportDateTimeDefinitions">
+		<cfreturn [
+			{alias='orderOpenDateTime', dataColumn='SlatwallOrder.orderOpenDateTime', title=rbKey('entity.order.orderOpenDateTime')},
+			{alias='orderCloseDateTime', dataColumn='SlatwallOrder.orderCloseDateTime', title=rbKey('entity.order.orderCloseDateTime')}
+		] />
+	</cffunction>
+	
 	<cffunction name="getMetricDefinitions">
 		<cfreturn [
 			{alias='revenue', calculation='(SUM(salePreDiscount) - SUM(itemDiscount)) + (SUM(returnPreDiscount) - SUM(itemDiscount))'},
@@ -92,7 +99,7 @@ Notes:
     						0
 					END as returnPreDiscount,
 					(SELECT coalesce(SUM(pa.discountAmount), 0) FROM SlatwallPromotionApplied pa WHERE pa.orderItemID = SlatwallOrderItem.orderItemID) as 'itemDiscount',
-					#getReportDateTimeSelect('SlatwallOrder.orderOpenDateTime')#
+					#getReportDateTimeSelect()#
 				FROM
 					SlatwallOrderItem
 				  INNER JOIN
@@ -114,9 +121,7 @@ Notes:
 				WHERE
 					SlatwallOrder.orderOpenDateTime is not null
 				  AND
-				  	SlatwallOrder.orderOpenDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportStartDateTime()#" />
-				  AND
-				  	SlatwallOrder.orderOpenDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportEndDateTime()#" />
+					#getReportDateTimeWhere()#
 			</cfquery>
 		</cfif>
 		

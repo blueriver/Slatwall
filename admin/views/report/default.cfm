@@ -40,103 +40,16 @@ Notes:
 <cfoutput>
 	<div class="row-fluid">
 		<div class="span2">
-			<div class="well">
-				<ul class="nav">
-					<li><a href="##ProductPerformanceReport">Product Performance</a></li>
-				</ul>
-			</div>
+			<ul class="nav">
+				<li><strong>Core Reports</strong></li>
+				<li><a href="##ProductPerformanceReport" class="hibachi-report-link">Product Performance</a></li>
+				<li><strong>Custom Reports</strong></li>
+				<li><strong>Integration Reports</strong></li>
+			</ul>
 		</div>
 		<div class="span10">
-			<!--- Chart --->
-			<div class="well">
-				<div id="report-chart" style="width:100%; height:300px; margin-bottom:10px;"></div>
-				<div class="padding-top:10px;">
-					<div class="btn-group" style="vertical-align:top;">
-						<a href="" class="btn active">Line</a>
-						<a href="" class="btn">Bar</a>
-					</div>
-					<div class="pull-right">
-						<div class="btn-group" style="vertical-align:top;">
-							<a href="" class="reportdategroup btn" data-groupby="hour">Hour</a>
-							<a href="" class="reportdategroup btn active" data-groupby="day">Day</a>
-							<a href="" class="reportdategroup btn" data-groupby="week">Week</a>
-							<a href="" class="reportdategroup btn" data-groupby="month">Month</a>
-						</div>
-						<input type="text" name="reportStartDateTime" class="datepicker reportdate" style="width:100px;" value="#$.slatwall.formatValue(now()-30, 'date')#" /> - <input type="text" name="reportEndDateTime" class="datepicker reportdate" style="width:100px;" value="#$.slatwall.formatValue(now(), 'date')#" />
-					</div>
-				</div>
-			</div>
-			
-			<!--- Table --->
-			<div id="report-table">
-				
-			</div>
+			<cf_HibachiReportViewer report="#rc.report#" />
 		</div>
 	</div>
-	<!--- Chart --->
-	<script src="http://code.highcharts.com/highcharts.js"></script>
-	<script type="text/javascript">
-		jQuery(document).ready(function() {
-			
-			function updateReport() {
-					
-				var data = {
-					reportName: 'ProductPerformanceReport',
-					reportStartDateTime: $('input[name="reportStartDateTime"]').val(),
-					reportEndDateTime: $('input[name="reportEndDateTime"]').val(),
-					reportDateTimeGroupBy: $('a.reportdategroup.active').data('groupby'),
-				};
-				
-				jQuery.each( $('input[name="metrics"]:checked'), function(i,v) {
-					if(i === 0) {
-						data.metrics = ''
-					} else {
-						data.metrics += ','
-					}
-					data.metrics += jQuery(v).val();
-				});
-				jQuery.each($('input[name="dimensions"]:checked'), function(i,v) {
-					if(i === 0) {
-						data.dimensions = ''
-					} else {
-						data.dimensions += ','
-					}
-					data.dimensions += jQuery(v).val();
-				});
-				
-				jQuery.ajax({
-					url: jQuery(this).attr('href'),
-					method: 'post',
-					data: data,
-					dataType: 'json',
-					beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
-					error: function( r ) {
-						// Error
-					},
-					success: function( r ) {
-						jQuery('##report-chart').highcharts(r.report.chartData);
-						jQuery('##report-table').html(r.report.dataTable);
-					}
-				});
-			}
-			
-			updateReport();
-		    
-			jQuery('body').on('change', '.reportdate', function(){
-				updateReport();
-			});
-			
-			jQuery('body').on('click', 'input[name="metrics"],input[name="dimensions"]', function(e){
-				updateReport();
-			});
-			
-			jQuery('body').on('click', '.reportdategroup', function(e){
-				e.preventDefault();
-				jQuery('.reportdategroup').removeClass('active');
-				jQuery( this ).addClass('active');
-				updateReport();
-			});
-		});
-	</script>
-	<!---jQuery('##report-chart').highcharts(#salesReport.getChartData()#);--->
+	
 </cfoutput>

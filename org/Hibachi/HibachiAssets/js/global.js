@@ -640,6 +640,36 @@ function setupEventHandlers() {
 	});
 	jQuery('.hibachi-permission-checkbox:checked').change();
 	
+	
+	// Report Hooks ============================================
+	
+	jQuery('body').on('change', '.hibachi-report-date', function(){
+		updateReport();
+	});
+	
+	jQuery('body').on('click', '.hibachi-report-date-group', function(e){
+		e.preventDefault();
+		jQuery('.hibachi-report-date-group').removeClass('active');
+		jQuery( this ).addClass('active');
+		updateReport();
+	});
+	
+	jQuery('body').on('click', '#hibachi-report-enable-compare', function(e){
+		e.preventDefault();
+		jQuery('input[name="reportCompareFlag"]').val(1);
+		jQuery('#hibachi-report-compare-date').removeClass('hide');
+		jQuery(this).addClass('hide');
+		updateReport();
+	});
+	
+	jQuery('body').on('click', '#hibachi-report-disable-compare', function(e){
+		e.preventDefault();
+		jQuery('input[name="reportCompareFlag"]').val(0);
+		jQuery('#hibachi-report-compare-date').addClass('hide');
+		jQuery('#hibachi-report-enable-compare').removeClass('hide');
+		updateReport();
+	});
+	
 }
 
 function initModal( modalWin ){
@@ -1266,23 +1296,54 @@ function updateGlobalSearchResults() {
 	}
 }
 
-/*
-function getEntityAutocompleteTemplate( entityName, data ) {
-	var output = "";
-	if( entityName === 'Account') {
-		output += '<span class="image"><img src="';
-		output += data.gravatarURL;
-		output += '" /></span>';
-		output += '<span class="image">';
-		output += '</span>';
-		output += '<span class="image">';
-		output += '</span>';
-		output += '<span class="image">';
-		output += '</span>';
-	}
-	return output;
+function updateReport() {
+	
+	var data = {
+		reportName: jQuery('#hibachi-report').data('reportname'),
+		reportStartDateTime: jQuery('input[name="reportStartDateTime"]').val(),
+		reportEndDateTime: jQuery('input[name="reportEndDateTime"]').val(),
+		reportDateTimeGroupBy: jQuery('a.hibachi-report-date-group.active').data('groupby'),
+		reportDateTime: jQuery('select[name="reportDateTime"]').val(),
+		reportCompareFlag: jQuery('input[name="reportCompareFlag"]').val()
+	};
+	
+	jQuery.ajax({
+		url: jQuery(this).attr('href'),
+		method: 'post',
+		data: data,
+		dataType: 'json',
+		beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
+		error: function( r ) {
+			// Error
+		},
+		success: function( r ) {
+			jQuery('#hibachi-report-chart').highcharts(r.report.chartData);
+			jQuery('#hibachi-report-configure-bar').html(r.report.configureBar);
+			jQuery('#hibachi-report-table').html(r.report.dataTable);
+			initUIElements('#hibachi-report');
+		}
+	});
+	
+
+	/*
+	jQuery.each( $('input[name="metrics"]:checked'), function(i,v) {
+		if(i === 0) {
+			data.metrics = ''
+		} else {
+			data.metrics += ','
+		}
+		data.metrics += jQuery(v).val();
+	});
+	jQuery.each($('input[name="dimensions"]:checked'), function(i,v) {
+		if(i === 0) {
+			data.dimensions = ''
+		} else {
+			data.dimensions += ','
+		}
+		data.dimensions += jQuery(v).val();
+	});
+	*/
 }
-*/
 
 // ========================= START: HELPER METHODS ================================
 
