@@ -40,19 +40,23 @@ Notes:
 	
 	<cffunction name="getReportDateTimeDefinitions">
 		<cfreturn [
+			{alias='orderOpenDateTime', dataColumn='SlatwallOrder.orderOpenDateTime', title=rbKey('entity.order.orderOpenDateTime')},
+			{alias='orderCloseDateTime', dataColumn='SlatwallOrder.orderCloseDateTime', title=rbKey('entity.order.orderCloseDateTime')},
 			{alias='promotionAppliedDateTime', dataColumn='SlatwallPromotionApplied.createdDateTime'}
 		] />
 	</cffunction>
 	
 	<cffunction name="getMetricDefinitions">
 		<cfreturn [
-			{alias='discountAmount', function='sum', title=rbKey('entity.promotionApplied.discountAmount')}
+			{alias='discountAmount', function='sum', title=rbKey('entity.promotionApplied.discountAmount')},
+			{alias='promotionAppliedID', function='count', title="Usage Count"}
 		] />
 	</cffunction>
 	
 	<cffunction name="getDimensionDefinitions">
 		<cfreturn [
-			{alias='promotionName', title=rbKey('entity.promotion.promotionName')}
+			{alias='promotionName', title=rbKey('entity.promotion.promotionName')},
+			{alias='promotionCode', title=rbKey('entity.promotionCode.promotionCode')}
 		] />
 	</cffunction>
 	
@@ -60,25 +64,33 @@ Notes:
 		<cfif not structKeyExists(variables, "data")>
 			<cfquery name="variables.data">
 				SELECT
+					SlatwallPromotionApplied.promotionAppliedID,
 					SlatwallPromotionApplied.discountAmount,
 					SlatwallPromotion.promotionName,
+					SlatwallPromotionCode.promotionCode,
 					#getReportDateTimeSelect()#
 				FROM
 					SlatwallPromotionApplied
 				  INNER JOIN
 				  	SlatwallPromotion on SlatwallPromotionApplied.promotionID = SlatwallPromotion.promotionID
 				  LEFT JOIN
-				  	SlatwallOrder oo on SlatwallPromotionApplied.orderID = oo.orderID
-				  LEFT JOIN
-				  	SlatwallOrderItem on SlatwallPromotionApplied.orderItemID = SlatwallOrderItem.orderItemID
-				  LEFT JOIN
-				  	SlatwallOrder oio on SlatwallOrderItem.orderID = oio.orderID
-				  LEFT JOIN
 				  	SlatwallOrderFulfillment on SlatwallPromotionApplied.orderFulfillmentID = SlatwallOrderFulfillment.orderFulfillmentID
 				  LEFT JOIN
-				  	SlatwallOrder ofo on SlatwallOrderFulfillment.orderID = ofo.orderID
+				  	SlatwallOrderItem on SlatwallPromotionApplied.orderItemID = SlatwallOrderItem.orderItemID
+				  INNER JOIN
+				  	SlatwallOrder on (
+				  		(SlatwallPromotionApplied.appliedType = 'order' AND SlatwallPromotionApplied.orderID = SlatwallOrder.orderID)
+				  		OR
+				  		(SlatwallPromotionApplied.appliedType = 'orderItem' AND SlatwallOrderItem.orderID = SlatwallOrder.orderID)
+				  		OR
+				  		(SlatwallPromotionApplied.appliedType = 'orderFulfillment' AND SlatwallOrderFulfillment.orderID = SlatwallOrder.orderID)
+				  	)
+				  LEFT JOIN
+				  	SlatwallOrderPromotionCode on SlatwallOrder.orderID = SlatwallOrderPromotionCode.orderID
+				  LEFT JOIN
+				  	SlatwallPromotionCode on SlatwallOrderPromotionCode.promotionCodeID = SlatwallPromotionCode.promotionCodeID 
 				WHERE
-					(oo.orderOpenDateTime is not null or oio.orderOpenDateTime is not null or ofo.orderOpenDateTime is not null)
+					SlatwallOrder.orderOpenDateTime is not null
 				  AND
 					#getReportDateTimeWhere()#
 			</cfquery>
