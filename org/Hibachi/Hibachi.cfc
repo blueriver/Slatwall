@@ -118,7 +118,29 @@ component extends="FW1.framework" {
 		this.ormSettings.secondaryCacheEnabled = false;
 	}
 	
-	// Make Sure that the required values end up in the application scope so that we can get them from somewhere else
+	// ==================== START: PRE UPDATE SCRIPTS ======================
+	if(!fileExists(expandPath('/#variables.framework.applicationKey#/custom/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
+		variables.preupdate = {};
+		if(!fileExists("#expandPath('custom/config')#/preUpdatesRun.txt.cfm")) {
+			fileWrite("#expandPath('custom/config')#/preUpdatesRun.txt.cfm", "");
+		}
+		
+		variables.preupdate.preUpdatesRun = fileRead("#expandPath('custom/config')#/preUpdatesRun.txt.cfm");
+		
+		// Loop over and run any pre-update files
+		variables.preupdate.preUpdateFiles = directoryList(expandPath('config/scripts/preupdate'));
+		
+		for(variables.preupdate.preUpdateFullFilename in variables.preupdate.preUpdateFiles) {
+			variables.preupdate.thisFilename = listLast(variables.preupdate.preUpdateFullFilename, "/\");
+			if(!listFindNoCase(variables.preupdate.preUpdatesRun, variables.preupdate.thisFilename)) {
+				include "../../config/scripts/preupdate/#variables.preupdate.thisFilename#";
+				listAppend(variables.preupdate.preUpdateFiles, variables.preupdate.thisFilename);
+			}
+		}
+		
+		fileWrite("#expandPath('custom/config')#/preUpdatesRun.txt.cfm", variables.preupdate.preUpdatesRun);
+	}
+	// ==================== END: PRE UPDATE SCRIPTS ======================
 	
 	// =======  END: ENVIORNMENT CONFIGURATION  =======
 	
@@ -371,6 +393,10 @@ component extends="FW1.framework" {
 				}
 			}
 		}
+	}
+	
+	public void function onPreUpdateRequest() {
+		
 	}
 	
 	public void function setupResponse() {
