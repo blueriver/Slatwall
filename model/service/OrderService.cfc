@@ -937,6 +937,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// TODO [paul]: If the order wasn't closed before... but now, same thing... loop over the loyaltyPrograms that the account on the order has, and call the processLoyaltyProgram with context of 'orderClosed'
 		
+		if(!listFindNoCase("ostClosed", arguments.order.getOrderStatusType().getSystemCode())) {
+			for(var accountLoyaltyProgram in arguments.orderDelivery.getOrder().getAccount().getAccountLoyaltyPrograms()) {
+				var itemsFulfilledData = {
+					orderDelivery = arguments.orderDelivery
+				};
+				getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, itemsFulfilledData, 'orderClosed');
+			}
+		}
 		return arguments.order;
 	}
 	
