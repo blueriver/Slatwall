@@ -42,14 +42,14 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.loyaltyAccruement#" edit="#rc.edit#"  
-								saveActionQueryString="loyaltyProgramID=#rc.loyalty.getLoyaltyProgramID()#">
+								saveActionQueryString="loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#">
 								
 		<cf_HibachiEntityActionBar type="detail" object="#rc.loyaltyAccruement#" edit="#rc.edit#"
 								   backAction="admin:entity.detailloyaltyprogram"
-								   backQueryString="loyaltyID=#rc.loyalty.getLoyaltyProgramID()#"
+								   backQueryString="loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#"
 								   cancelAction="admin:entity.detailloyaltyprogram"
-								   cancelQueryString="loyaltyID=#rc.loyalty.getLoyaltyProgramID()#" 
-							  	   deleteQueryString="redirectAction=admin:entity.detailloyaltyProgram&loyaltyProgramID=#rc.loyalty.getLoyaltyProgramID()#" />
+								   cancelQueryString="loyaltyID=#rc.loyaltyProgram.getLoyaltyProgramID()#" 
+							  	   deleteQueryString="redirectAction=admin:entity.detailloyaltyProgram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#" />
 		
 		<input type="hidden" name="loyaltyProgram.loyaltyProgramID" value="#rc.loyaltyProgram.getLoyaltyProgramID()#" />
 		

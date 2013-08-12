@@ -65,7 +65,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	property name="stockService";
 	property name="subscriptionService";
 	property name="taxService";
-	property name="loyaltyService";
 	
 	// ===================== START: Logical Methods ===========================
 	
@@ -937,11 +936,17 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// TODO [paul]: If the order wasn't closed before... but now, same thing... loop over the loyaltyPrograms that the account on the order has, and call the processLoyaltyProgram with context of 'orderClosed'
 		
+		
+		// If the order order status is not 'closed'
 		if(!listFindNoCase("ostClosed", arguments.order.getOrderStatusType().getSystemCode())) {
+			
+			// Loop over the loyaltyPrograms that the account on the order has and call the processAccountLoyaltyProgram with context of 'orderClosed'
 			for(var accountLoyaltyProgram in arguments.orderDelivery.getOrder().getAccount().getAccountLoyaltyPrograms()) {
 				var itemsFulfilledData = {
 					orderDelivery = arguments.orderDelivery
 				};
+				
+				// Call processAccountLoyaltyProgram with context of 'orderClosed'
 				getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, itemsFulfilledData, 'orderClosed');
 			}
 		}
@@ -1061,27 +1066,35 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.processObject.addError('capturableAmount', rbKey('validate.processOrderDelivery_create.captureAmount'));
 		}
 		
+		
 		// TODO [paul]: wrap this in an .hasErrors() to make sure the orderDelivery doesn't have errors
 		// TODO [paul]: Loop over the accounts loyalty programs and call processLoyalty
 		
+		// Make sure the orderDelivery doesn't have errors
 		if (!arguments.orderDelivery.hasErrors()) {
+			
+			// Loop over the accounts loyalty programs
 			for(var accountLoyaltyProgram in arguments.orderDelivery.getOrder().getAccount().getAccountLoyaltyPrograms()) {
-				// TODO [paul]: add loyalty service injection
 				var itemsFulfilledData = {
 					orderDelivery = arguments.orderDelivery
 				};
+				
+				// Call process loyalty program
 				getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, itemsFulfilledData, 'itemsFulfilled');
 			}
+			
+			// Check to see if this orderFulfillment is complete and fully 'fulfilled'
+			if( arguments.orderDelivery.getFulfillment().quantityUndelivered() eq 0 ){
+				
+				for(var accountLoyaltyProgram in arguments.orderDelivery.getOrder().getAccount().getAccountLoyaltyPrograms()) {
+					var fulfillmentMethodUsedData = {
+						orderDelivery = arguments.orderDelivery
+					};
+					// Call processAccountLoyaltyProgram
+					getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, fulfillmentMethodUsedData, 'fulfillmentMethodUsed'); 
+				}
+			}
 		}
-		
-		// TODO [paul]: Check to see if this orderFulfillment is complete and fully 'fulfilled'... if it is call:
-		// getLoyaltyService().processLoyaltyProgram(loyaltyProgram, fulfillmentMethodUsedData, 'fulfillmentMethodUsed'); 
-		
-		//if(arguments.orderDelivery.getFulfillment().getOrderStatusCode() eq "fulfilled"){
-			
-			//getLoyaltyService().processLoyaltyProgram(loyaltyProgram, fulfillmentMethodUsedData, 'fulfillmentMethodUsed'); 
-			
-		//}
 		return arguments.orderDelivery;
 	}
 	
