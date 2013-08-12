@@ -36,25 +36,25 @@
 Notes:
 
 --->
-<cfparam name="rc.loyalty" type="any">
+<cfparam name="rc.loyaltyProgram" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.loyalty#" edit="#rc.edit#" saveActionQueryString="loyaltyID=#rc.loyalty.getLoyaltyID()#">
+	<cf_HibachiEntityDetailForm object="#rc.loyaltyProgram#" edit="#rc.edit#" saveActionQueryString="loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#">
 		
-		<cf_HibachiEntityActionBar type="detail" object="#rc.loyalty#" edit="#rc.edit#">
-			<cf_HibachiActionCaller action="admin:entity.createloyaltyaccruement" queryString="redirectAction=admin:entity.detailloyalty&loyaltyID=#rc.loyalty.getLoyaltyID()#"type="list" modal="true" />
+		<cf_HibachiEntityActionBar type="detail" object="#rc.loyaltyProgram#" edit="#rc.edit#">
+			<cf_HibachiActionCaller action="admin:entity.createloyaltyaccruement" queryString="redirectAction=admin:entity.detailloyaltyprogram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#"type="list" modal="true" />
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.loyalty#" property="activeFlag" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyalty#" property="loyaltyName" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgram#" property="activeFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgram#" property="loyaltyProgramName" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
-		<cf_HibachiTabGroup object="#rc.loyalty#">
-			<cf_HibachiTab view="admin:entity/loyaltytabs/loyaltyAccruement" />
+		<cf_HibachiTabGroup object="#rc.loyaltyProgram#">
+			<cf_HibachiTab view="admin:entity/loyaltyProgramtabs/loyaltyAccruement" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

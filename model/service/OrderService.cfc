@@ -65,6 +65,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	property name="stockService";
 	property name="subscriptionService";
 	property name="taxService";
+	property name="loyaltyService";
 	
 	// ===================== START: Logical Methods ===========================
 	
@@ -1054,17 +1055,25 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// TODO [paul]: wrap this in an .hasErrors() to make sure the orderDelivery doesn't have errors
 		// TODO [paul]: Loop over the accounts loyalty programs and call processLoyalty
-		for(var accountLoyaltyProgram in arguments.orderDelivery.getOrder().getAccount().getAccountLoyaltyPrograms()) {
-			// TODO [paul]: add loyalty service injection
-			var itemsFulfilledData = {
-				orderDelivery = arguments.orderDelivery
-			};
-			getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, itemsFulfilledData, 'itemsFulfilled');
+		
+		if (!arguments.orderDelivery.hasErrors()) {
+			for(var accountLoyaltyProgram in arguments.orderDelivery.getOrder().getAccount().getAccountLoyaltyPrograms()) {
+				// TODO [paul]: add loyalty service injection
+				var itemsFulfilledData = {
+					orderDelivery = arguments.orderDelivery
+				};
+				getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, itemsFulfilledData, 'itemsFulfilled');
+			}
 		}
 		
 		// TODO [paul]: Check to see if this orderFulfillment is complete and fully 'fulfilled'... if it is call:
 		// getLoyaltyService().processLoyaltyProgram(loyaltyProgram, fulfillmentMethodUsedData, 'fulfillmentMethodUsed'); 
 		
+		//if(arguments.orderDelivery.getFulfillment().getOrderStatusCode() eq "fulfilled"){
+			
+			//getLoyaltyService().processLoyaltyProgram(loyaltyProgram, fulfillmentMethodUsedData, 'fulfillmentMethodUsed'); 
+			
+		//}
 		return arguments.orderDelivery;
 	}
 	

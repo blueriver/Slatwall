@@ -36,18 +36,18 @@
 Notes:
 
 --->
-<cfparam name="rc.loyaltySmartList" type="any" />
+<cfparam name="rc.loyaltyProgramSmartList" type="any" />
 
 <cfoutput>
 	
-<cf_HibachiEntityActionBar type="listing" object="#rc.loyaltySmartList#" />
+<cf_HibachiEntityActionBar type="listing" object="#rc.loyaltyProgramSmartList#" />
 
-<cfset rc.loyaltySmartList.addOrder("loyaltyName|ASC") />
+<cfset rc.loyaltyProgramSmartList.addOrder("loyaltyName|ASC") />
 
-<cf_HibachiListingDisplay smartList="#rc.loyaltySmartList#"
-						   recorddetailaction="admin:entity.detailloyalty"
-						   recordEditAction="admin:entity.editloyalty">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="loyaltyName" />
+<cf_HibachiListingDisplay smartList="#rc.loyaltyProgramSmartList#"
+						   recorddetailaction="admin:entity.detailloyaltyprogram"
+						   recordEditAction="admin:entity.editloyaltyprogram">
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="loyaltyProgramName" />
 	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
 	<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" />
 	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />

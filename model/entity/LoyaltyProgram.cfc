@@ -36,11 +36,11 @@
 Notes:
 
 */
-component displayname="Loyalty" entityname="SlatwallLoyalty" table="SlatwallLoyalty" persistent="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
+component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table="SlatwallLoyaltyProgram" persistent="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
 	
 	// Persistent Properties
-	property name="loyaltyID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="loyaltyName" ormtype="string";
+	property name="loyaltyProgramID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="loyaltyProgramName" ormtype="string";
 	property name="activeFlag" ormtype="boolean" default="1";
 	
 	// Related Object Properties (many-to-one)
