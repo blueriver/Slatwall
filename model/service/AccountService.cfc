@@ -375,38 +375,141 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// Account Loyalty Programs
 	public any function processAccountLoyaltyProgram_itemsFulfilled(required any accountLoyaltyProgram, required struct data) {
-		// arguments.data.orderDelivery
-		
-		// Loop over the acrument rules in the loyalty program to look for ones with type of 'fulfillItems'
+	
+		// Loop Over arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
+		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements()) {	
 			
-			// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAcrument'
-			
-				// If loyaltyProgramAcrument eq 'fulfillItem' as the type, then based on the amount create a new transaction and apply that amount
+			// If loyaltyProgramAccruement eq 'fulfillItem' as the type, then based on the amount create a new transaction and apply that amount
+			if (loyaltyProgramAccruement.getAccruementType() eq 'fulfillItem') {
 				
-					// Loop over the orderDeliveryItems in arguments.data.orderDelivery
+				// Loop over the orderDeliveryItems in arguments.data.orderDelivery
+				for(var orderDeliveryItem in arguments.data.orderDelivery.getOrderDeliveryItems()) {
 						
-						// Verify that this orderDeliveryItem product is in the productTypes, products, or skus for the accruement
+					// Verify that this orderDeliveryItem product is in the productTypes, products, or skus for the accruement
+					if ( loyaltyProgramAccruement.hasProduct(orderDeliveryItem.getOrderItem().getSku().getProduct()) 
+						|| loyaltyProgramAccruement.hasSku(orderDeliveryItem.getOrderItem().getSku()) 
+						|| loyaltyProgramAccruement.hasBrand(orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand()) 
+						|| loyaltyProgramAccruement.hasProductTypes(orderDeliveryItem.getOrderItem().getSku().getProduct().getProductType()) ){
 						
 						// For each orderItem add a transaction record for the points accrued
 						var accountLoayltyTransaction = this.newAccountLoyaltyTransaction();
-						accountLoayltyTransaction.setAccount(accountLoyaltyProgram.getAccount());
+						accountLoayltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
 						accountLoayltyTransaction.setOrderItem( orderDeliveryItem.getOrderItem() );
-						// if loyaltyProgramAcrument.getPointType eq 'fixed'
-						accountLoayltyTransaction.setPointsIn( loyaltyProgramAcrument.getPoint );
-						// else if loyaltyProgramAcrument.getPointType eq 'pricePerDollar'
-						accountLoayltyTransaction.setPointsIn( loyaltyProgramAcrument.getPoint * (orderDeliveryItem.getQuantity() * orderDeliveryItem().getOrderItem().getPrice()) );
+						
+						if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
+							accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
+						}
+						else if ( loyaltyProgramAccruement.getPointType() eq 'pricePerDollar' ) {
+							accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * (orderDeliveryItem.getQuantity() * orderDeliveryItem().getOrderItem().getPrice()) );
+						}
+					}
+				}
+			}
+		}
 	}
 	
-	public any function processAccountLoyaltyProgram_orderClosed() {
+	public any function processAccountLoyaltyProgram_orderClosed(required any accountLoyaltyProgram, required struct data) {
+		
+		// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
+		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements()) {	
+			
+			// If loyaltyProgramAccruement eq 'fulfillItem' as the type, then based on the amount create a new transaction and apply that amount
+			if (loyaltyProgramAccruement.getAccruementType() eq 'orderClosed') {
+				
+				// Loop over the orderDeliveryItems in arguments.data.orderDelivery
+				for(var orderDeliveryItem in arguments.data.orderDelivery.getOrderDeliveryItems()) {
+						
+					// Verify that this orderDeliveryItem product is in the productTypes, products, or skus for the accruement
+					if ( loyaltyProgramAccruement.hasProduct(orderDeliveryItem.getOrderItem().getSku().getProduct()) 
+						|| loyaltyProgramAccruement.hasSku(orderDeliveryItem.getOrderItem().getSku()) 
+						|| loyaltyProgramAccruement.hasBrand(orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand()) 
+						|| loyaltyProgramAccruement.hasProductTypes(orderDeliveryItem.getOrderItem().getSku().getProduct().getProductType()) ){
+						
+						// For each orderItem add a transaction record for the points accrued
+						var accountLoayltyTransaction = this.newAccountLoyaltyTransaction();
+						accountLoayltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
+						accountLoayltyTransaction.setOrderItem( orderDeliveryItem.getOrderItem() );
+						
+						if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
+							accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
+						}
+						else if ( loyaltyProgramAccruement.getPointType() eq 'pricePerDollar' ) {
+							accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * (orderDeliveryItem.getQuantity() * orderDeliveryItem().getOrderItem().getPrice()) );
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public any function processAccountLoyaltyProgram_fulfillmentMethodUsed(required any accountLoyaltyProgram, required struct data) {
+		
+		// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
+		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements()) {	
+			
+			// If loyaltyProgramAccruement eq 'fulfillItem' as the type, then based on the amount create a new transaction and apply that amount
+			if (loyaltyProgramAccruement.getAccruementType() eq 'fulfillmentMetodUsed') {
+				
+				// Loop over the orderDeliveryItems in arguments.data.orderDelivery
+				for(var orderDeliveryItem in arguments.data.orderDelivery.getOrderDeliveryItems()) {
+						
+					// Verify that this orderDeliveryItem product is in the productTypes, products, or skus for the accruement
+					if ( loyaltyProgramAccruement.hasProduct(orderDeliveryItem.getOrderItem().getSku().getProduct()) 
+						|| loyaltyProgramAccruement.hasSku(orderDeliveryItem.getOrderItem().getSku()) 
+						|| loyaltyProgramAccruement.hasBrand(orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand()) 
+						|| loyaltyProgramAccruement.hasProductTypes(orderDeliveryItem.getOrderItem().getSku().getProduct().getProductType()) ){
+						
+						// For each orderItem add a transaction record for the points accrued
+						var accountLoayltyTransaction = this.newAccountLoyaltyTransaction();
+						accountLoayltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
+						accountLoayltyTransaction.setOrderItem( orderDeliveryItem.getOrderItem() );
+						
+						if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
+							accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
+						}
+						else if ( loyaltyProgramAccruement.getPointType() eq 'pricePerDollar' ) {
+							accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * (orderDeliveryItem.getQuantity() * orderDeliveryItem().getOrderItem().getPrice()) );
+						}
+					}
+				}
+			}
+		}
 		
 	}
 	
-	public any function processAccountLoyaltyProgram_fulfillmentMethodUsed() {
+	public any function processAccountLoyaltyProgram_enrollment(required any accountLoyaltyProgram, required struct data) {
 		
-	}
-	
-	public any function processAccountLoyaltyProgram_enrollment() {
-		
+		// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
+		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements()) {	
+			
+			// If loyaltyProgramAccruement eq 'fulfillItem' as the type, then based on the amount create a new transaction and apply that amount
+			if (loyaltyProgramAccruement.getAccruementType() eq 'enrollment') {
+				
+				// Loop over the orderDeliveryItems in arguments.data.orderDelivery
+				for(var orderDeliveryItem in arguments.data.orderDelivery.getOrderDeliveryItems()) {
+						
+					// Verify that this orderDeliveryItem product is in the productTypes, products, or skus for the accruement
+					if ( loyaltyProgramAccruement.hasProduct(orderDeliveryItem.getOrderItem().getSku().getProduct()) 
+						|| loyaltyProgramAccruement.hasSku(orderDeliveryItem.getOrderItem().getSku()) 
+						|| loyaltyProgramAccruement.hasBrand(orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand()) 
+						|| loyaltyProgramAccruement.hasProductTypes(orderDeliveryItem.getOrderItem().getSku().getProduct().getProductType()) ){
+						
+						// For each orderItem add a transaction record for the points accrued
+						var accountLoayltyTransaction = this.newAccountLoyaltyTransaction();
+						accountLoayltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
+						accountLoayltyTransaction.setOrderItem( orderDeliveryItem.getOrderItem() );
+						
+						if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
+							accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
+						}
+						else if ( loyaltyProgramAccruement.getPointType() eq 'pricePerDollar' ) {
+							accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * (orderDeliveryItem.getQuantity() * orderDeliveryItem().getOrderItem().getPrice()) );
+						}
+					}
+				}
+			}
+		}
+			
 	}
 	
 	// Account Payment

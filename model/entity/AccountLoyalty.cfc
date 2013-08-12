@@ -38,11 +38,11 @@ Notes:
 component displayname="AccountLoyalty" entityname="SlatwallAccountLoyalty" table="SlatwallAccountLoyalty" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
 	
 	// Persistent Properties
-	property name="accountLoyaltyID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="accountLoyaltyNumber" ormtype="string";
+	property name="accountLoyaltyProgramID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="accountLoyaltyProgramNumber" ormtype="string";
 
 	// Related Entities
-	property name="loyalty" cfc="loyalty" fieldtype="many-to-one" fkcolumn="loyaltyID";
+	property name="loyaltyProgram" cfc="loyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
 	// Audit Properties
@@ -63,39 +63,21 @@ component displayname="AccountLoyalty" entityname="SlatwallAccountLoyalty" table
 	// Account (many-to-one)
 	public void function setAccount(required any account) {
 		variables.account = arguments.account;
-		if(isNew() or !arguments.account.hasAccountLoyalty( this )) {
-			arrayAppend(arguments.account.getAccountLoyalties(), this);
+		if(isNew() or !arguments.account.hasAccountLoyaltyProgram( this )) {
+			arrayAppend(arguments.account.getAccountLoyaltyPrograms(), this);
 		}
 	}
 	public void function removeAccount(any account) {
 		if(!structKeyExists(arguments, "account")) {
 			arguments.account = variables.account;
 		}
-		var index = arrayFind(arguments.account.getAccountLoyalty(), this);
+		var index = arrayFind(arguments.account.getAccountLoyaltyPrograms(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getAccountLoyalty(), index);
+			arrayDeleteAt(arguments.account.getAccountLoyaltyPrograms(), index);
 		}
 		structDelete(variables, "account");
 	}
 	
-	// Loyalty (many-to-one)    	
-	public void function setLoyalty(required any promotion) {    
-		variables.loyalty = arguments.loyalty;    
-		if(isNew() or !arguments.loyalty.hasLoyaltyAccount( this )) {    
-			arrayAppend(arguments.loyalty.getLoyaltyAccounts(), this);    
-		}    
-	}  
-	 
-	public void function removeLoyalty(any loyalty) {    
-		if(!structKeyExists(arguments, "loyalty")) {    
-			arguments.loyalty = variables.loyalty;    
-		}    
-		var index = arrayFind(arguments.loyalty.getLoyaltyAccounts(), this);    
-		if(index > 0) {    
-			arrayDeleteAt(arguments.account.getLoyaltyAccounts(), index);    
-		}    
-		structDelete(variables, "loyalty");    
-	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

@@ -37,21 +37,21 @@ Notes:
 
 --->
 <cfparam name="rc.loyaltyAccruement" type="any">
-<cfparam name="rc.loyalty" type="any" default="#rc.loyaltyAccruement.getLoyalty()#">
+<cfparam name="rc.loyaltyProgram" type="any" default="#rc.loyaltyAccruement.getLoyaltyProgram()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.loyaltyAccruement#" edit="#rc.edit#"  
-								saveActionQueryString="loyaltyID=#rc.loyalty.getLoyaltyID()#">
+								saveActionQueryString="loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#">
 								
 		<cf_HibachiEntityActionBar type="detail" object="#rc.loyaltyAccruement#" edit="#rc.edit#"
-								   backAction="admin:entity.detailloyalty"
-								   backQueryString="loyaltyID=#rc.loyalty.getLoyaltyID()#"
-								   cancelAction="admin:entity.detailloyalty"
-								   cancelQueryString="loyaltyID=#rc.loyalty.getLoyaltyID()#" 
-							  	   deleteQueryString="redirectAction=admin:entity.detailloyalty&loyaltyID=#rc.loyalty.getLoyaltyID()#" />
+								   backAction="admin:entity.detailloyaltyprogram"
+								   backQueryString="loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#"
+								   cancelAction="admin:entity.detailloyaltyprogram"
+								   cancelQueryString="loyaltyID=#rc.loyaltyProgram.getLoyaltyProgramID()#" 
+							  	   deleteQueryString="redirectAction=admin:entity.detailloyaltyProgram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#" />
 		
-		<input type="hidden" name="loyalty.loyaltyID" value="#rc.loyalty.getLoyaltyID()#" />
+		<input type="hidden" name="loyaltyProgram.loyaltyProgramID" value="#rc.loyaltyProgram.getLoyaltyProgramID()#" />
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>

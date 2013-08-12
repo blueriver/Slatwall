@@ -36,11 +36,11 @@
 Notes:
 
 --->
-<cfparam name="rc.loyalty" type="any">
+<cfparam name="rc.loyaltyProgram" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.loyalty.getLoyaltyAccruementSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.loyaltyProgram.getLoyaltyAccruementSmartList()#"
 							   recordEditAction="admin:entity.editloyaltyaccruement"
 							   recorddetailaction="admin:entity.detailloyaltyaccruement">
 		<cf_HibachiListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
@@ -52,6 +52,6 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="globalFlag" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createloyaltyaccruement" class="btn" icon="plus" queryString="redirectAction=admin:entity.detailloyalty&loyaltyID=#rc.loyalty.getLoyaltyID()#" modal="true"  />
+	<cf_HibachiActionCaller action="admin:entity.createloyaltyaccruement" class="btn" icon="plus" queryString="redirectAction=admin:entity.detailloyaltyprogram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#" modal="true"  />
 
 </cfoutput>
