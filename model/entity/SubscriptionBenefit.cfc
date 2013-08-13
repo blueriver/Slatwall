@@ -67,7 +67,7 @@ component entityname="SlatwallSubscriptionBenefit" table="SwSubsBenefit" persist
 	property name="excludedContents" singularname="excludedContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SwSubsBenefitExclContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
 	
 	// Related Object Properties (many-to-many - inverse)
-	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SwSkuSubscriptionBenefit" fkcolumn="subscriptionBenefitID" inversejoincolumn="skuID" inverse="true";
+	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SwSkuSubsBenefit" fkcolumn="subscriptionBenefitID" inversejoincolumn="skuID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
