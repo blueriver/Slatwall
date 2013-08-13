@@ -55,7 +55,7 @@ component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifi
 	property name="minimumOrderQuantity" ormtype="integer" hb_nullRBKey="define.0";
 	property name="maximumOrderQuantity" ormtype="integer" hb_nullRBKey="define.unlimited";
 	property name="minimumOrderSubtotal" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.0";
-	property name="maximumOrderSubtotal" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.none";
+	property name="maximumOrderSubtotal" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.unlimited";
 	property name="minimumItemQuantity" ormtype="integer" hb_nullRBKey="define.0";
 	property name="maximumItemQuantity" ormtype="integer" hb_nullRBKey="define.unlimited";
 	property name="minimumItemPrice" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.0";
