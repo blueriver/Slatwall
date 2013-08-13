@@ -392,7 +392,6 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 		if(thatIndex > 0) {
 			arrayDeleteAt(arguments.productType.getPromotionRewardExclusions(), thatIndex);
 		}
-<<<<<<< HEAD
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
@@ -424,37 +423,4 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
-=======
-	}
-	
-	// =============  END:  Bidirectional Helper Methods ===================
-	
-	// =============== START: Custom Formatting Methods ====================
-	
-	public string function getAmountFormatted() {
-		if(getAmountType() == "percentageOff") {
-			return formatValue(getAmount(), "percentage");
-		}
-		
-		return formatValue(getAmount(), "currency");
-	}
-	
-	// ===============  END: Custom Formatting Methods =====================
-
-	// ================== START: Overridden Methods ========================
-	
-	public string function getSimpleRepresentationPropertyName() {
-		return "rewardType";
-	}
-
-	public boolean function isDeletable() {
-		return !getPromotionPeriod().isExpired() && getPromotionPeriod().getPromotion().isDeletable();
-	}
-	
-	// ==================  END:  Overridden Methods ========================
-
-	// =================== START: ORM Event Hooks  =========================
-	
-	// ===================  END:  ORM Event Hooks  =========================
->>>>>>> refs/heads/develop
 }
