@@ -388,8 +388,12 @@ component extends="HibachiService" accessors="true" output="false" {
 					// Verify that this orderDeliveryItem product is in the productTypes, products, or skus for the accruement
 					if ( loyaltyProgramAccruement.hasProduct(orderDeliveryItem.getOrderItem().getSku().getProduct()) 
 						|| loyaltyProgramAccruement.hasSku(orderDeliveryItem.getOrderItem().getSku()) 
-						|| loyaltyProgramAccruement.hasBrand(orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand()) 
-						|| loyaltyProgramAccruement.hasProductTypes(orderDeliveryItem.getOrderItem().getSku().getProduct().getProductType()) ){
+						|| (!isNull(orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand()) && loyaltyProgramAccruement.hasBrand(orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand())) 
+						){
+						 
+						// TODO [paul]:Neet to add a check for excludes
+						// TODO [paul]:THIS WILL NOT WORK -> loyaltyProgramAccruement.hasProductType(orderDeliveryItem.getOrderItem().getSku().getProduct().getProductType())
+						// Look at PromotionService.cfc lines 926 - 940 for example
 						
 						// For each orderItem add a transaction record for the points accrued
 						var accountLoayltyTransaction = this.newAccountLoyaltyTransaction();
@@ -416,6 +420,10 @@ component extends="HibachiService" accessors="true" output="false" {
 			// If loyaltyProgramAccruement eq 'fulfillItem' as the type, then based on the amount create a new transaction and apply that amount
 			if (loyaltyProgramAccruement.getAccruementType() eq 'orderClosed') {
 				
+				// TODO [paul]: Remove all of the below... there is not product checking for the accruement type of 'orderClosed'
+				// TODO [paul]: keep in mind there is not going to be an orderDelivery in arguments.data, there will be an 'order'.
+				
+				/*
 				// Loop over the orderDeliveryItems in arguments.data.orderDelivery
 				for(var orderDeliveryItem in arguments.data.orderDelivery.getOrderDeliveryItems()) {
 						
@@ -438,6 +446,7 @@ component extends="HibachiService" accessors="true" output="false" {
 						}
 					}
 				}
+				*/
 			}
 		}
 	}
@@ -450,6 +459,11 @@ component extends="HibachiService" accessors="true" output="false" {
 			// If loyaltyProgramAccruement eq 'fulfillItem' as the type, then based on the amount create a new transaction and apply that amount
 			if (loyaltyProgramAccruement.getAccruementType() eq 'fulfillmentMetodUsed') {
 				
+				
+				// TODO [paul]: Same here, you don't need to check on the delivery items.  You just need to know if all the orderItems have a status of 'fulfilled'
+				// Use something like: var allOrderItemsFulfilled = true; and then set it to false and break out of loop if you find an order item that hasn't been fully fulfilled.
+				 
+				/*
 				// Loop over the orderDeliveryItems in arguments.data.orderDelivery
 				for(var orderDeliveryItem in arguments.data.orderDelivery.getOrderDeliveryItems()) {
 						
@@ -472,6 +486,7 @@ component extends="HibachiService" accessors="true" output="false" {
 						}
 					}
 				}
+				*/
 			}
 		}
 		
@@ -485,6 +500,8 @@ component extends="HibachiService" accessors="true" output="false" {
 			// If loyaltyProgramAccruement eq 'fulfillItem' as the type, then based on the amount create a new transaction and apply that amount
 			if (loyaltyProgramAccruement.getAccruementType() eq 'enrollment') {
 				
+				// TODO [paul]: THERE IS NO ORDERDELIVERY!
+				/*
 				// Loop over the orderDeliveryItems in arguments.data.orderDelivery
 				for(var orderDeliveryItem in arguments.data.orderDelivery.getOrderDeliveryItems()) {
 						
@@ -507,6 +524,7 @@ component extends="HibachiService" accessors="true" output="false" {
 						}
 					}
 				}
+				*/
 			}
 		}
 			

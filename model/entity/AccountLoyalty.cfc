@@ -99,6 +99,8 @@ component displayname="AccountLoyalty" entityname="SlatwallAccountLoyalty" table
 	
 	// =================== START: ORM Event Hooks  =========================
 	
+	// TODO [paul]: add a preInsert event hook so that we process an enrollment for the loyalty program.
+	
 	// ===================  END:  ORM Event Hooks  =========================
 	
 	// ================== START: Deprecated Methods ========================
