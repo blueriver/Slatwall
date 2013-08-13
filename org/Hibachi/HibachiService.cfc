@@ -10,9 +10,6 @@
 	<cfproperty name="hibachiUtilityService" type="any">
 	<cfproperty name="hibachiValidationService" type="any">
 	
-	<!--- TODO: FIX THIS --->
-	<cfproperty name="attributeService" type="any">
-	
 	<!--- Variables Scope Used For Caching --->
 	<cfset variables.entitiesMetaData = {} />
 	<cfset variables.entitiesProcessContexts = {} />

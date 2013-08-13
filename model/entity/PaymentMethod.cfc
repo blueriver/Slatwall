@@ -148,7 +148,7 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('define.authorize'), value="authorize"});
 				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('define.authorizeAndCharge'), value="authorizeAndCharge"});
 			} else if (!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "external") {
-				// TODO: Get external transaction types
+				// TODO [issue #1765]: Get external transaction types here
 			} else {
 				arrayAppend(variables.placeOrderChargeTransactionTypeOptions, {name=rbKey('define.receive'), value="receive"});
 			}
@@ -164,7 +164,7 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 			if(!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "creditCard") {
 				arrayAppend(variables.placeOrderCreditTransactionTypeOptions, {name=rbKey('define.generateToken'), value="generateToken"});
 			} else if (!isNull(getPaymentMethodType()) && getPaymentMethodType() eq "external") {
-				// TODO: Get external transaction types
+				// TODO [issue #1765]: Get external transaction types here
 			}
 			
 			arrayAppend(variables.placeOrderCreditTransactionTypeOptions, {name=rbKey('define.credit'), value="credit"});
