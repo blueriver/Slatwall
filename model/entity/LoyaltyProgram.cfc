@@ -43,8 +43,8 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 	property name="loyaltyProgramName" ormtype="string";
 	property name="activeFlag" ormtype="boolean" default="1";
 	
-	// Related Object Properties (many-to-one)
-	property name="LoyaltyAccruement" cfc="LoyaltyAccruement" fieldtype="many-to-one" fkcolumn="loyaltyAccruementID";
+	// Related Object Properties (one-to-many)
+	property name="loyaltyAccruements" singularname="loyaltyAccruement" cfc="LoyaltyAccruement" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -63,6 +63,14 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Attributes (one-to-many)
+	public void function addLoyaltyAccruement(required any loyaltyAccruement) {
+		arguments.attribute.setLoyaltyAccruement( this );
+	}
+	public void function removeLoyaltyAccruement(required any loyaltyAccruement) {
+		arguments.attribute.removeLoyaltyAccruement( this );
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

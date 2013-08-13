@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.loyaltyProgram.getLoyaltyAccruementSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.loyaltyProgram.getLoyaltyAccruementsSmartList()#"
 							   recordEditAction="admin:entity.editloyaltyaccruement"
 							   recorddetailaction="admin:entity.detailloyaltyaccruement">
 		<cf_HibachiListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
