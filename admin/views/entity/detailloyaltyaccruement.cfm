@@ -48,7 +48,7 @@ Notes:
 								   backAction="admin:entity.detailloyaltyprogram"
 								   backQueryString="loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#"
 								   cancelAction="admin:entity.detailloyaltyprogram"
-								   cancelQueryString="loyaltyID=#rc.loyaltyProgram.getLoyaltyProgramID()#" 
+								   cancelQueryString="loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#" 
 							  	   deleteQueryString="redirectAction=admin:entity.detailloyaltyProgram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#" />
 		
 		<input type="hidden" name="loyaltyProgram.loyaltyProgramID" value="#rc.loyaltyProgram.getLoyaltyProgramID()#" />
