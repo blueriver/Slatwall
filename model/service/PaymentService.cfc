@@ -324,7 +324,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					// NO INTEGRATION
 					} else {
 						
-						// TODO: Future this is where internal giftCard logic would go
+						// TODO [issue #36]: Add Gift Card Logic Here
 						
 						// Setup amountReceived
 						if( listFindNoCase("receive", arguments.data.transactionType) ) {
