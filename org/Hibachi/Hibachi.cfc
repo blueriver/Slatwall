@@ -134,7 +134,7 @@ component extends="FW1.framework" {
 			variables.preupdate.thisFilename = listLast(variables.preupdate.preUpdateFullFilename, "/\");
 			if(!listFindNoCase(variables.preupdate.preUpdatesRun, variables.preupdate.thisFilename)) {
 				include "../../config/scripts/preupdate/#variables.preupdate.thisFilename#";
-				listAppend(variables.preupdate.preUpdatesRun, variables.preupdate.thisFilename);
+				variables.preupdate.preUpdatesRun = listAppend(variables.preupdate.preUpdatesRun, variables.preupdate.thisFilename);
 			}
 		}
 		
