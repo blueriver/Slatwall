@@ -35,7 +35,7 @@
 Notes:
 
 */
-component displayname="AccountLoyalty" entityname="SlatwallAccountLoyalty" table="SlatwallAccountLoyalty" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
+component displayname="AccountLoyaltyProgram" entityname="SlatwallAccountLoyaltyProgram" table="SlatwallAccountLoyaltyProgram" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="accountLoyaltyProgramID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -100,6 +100,19 @@ component displayname="AccountLoyalty" entityname="SlatwallAccountLoyalty" table
 	// =================== START: ORM Event Hooks  =========================
 	
 	// TODO [paul]: add a preInsert event hook so that we process an enrollment for the loyalty program.
+	public void function preInsert() {
+		for(var accountLoyaltyProgram in getAccount().getAccountLoyaltyPrograms()) {
+			var enrollmentData = {
+				orderDelivery = arguments.orderDelivery
+			};
+			// Call processAccountLoyaltyProgram
+			getService("accountService").processAccountLoyaltyProgram(accountLoyaltyProgram, fulfillmentMethodUsedData, 'enrollment'); 
+		}
+		
+		super.preInsert();
+    }
+    
+	
 	
 	// ===================  END:  ORM Event Hooks  =========================
 	

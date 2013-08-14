@@ -935,19 +935,17 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		// TODO [paul]: If the order wasn't closed before... but now, same thing... loop over the loyaltyPrograms that the account on the order has, and call the processLoyaltyProgram with context of 'orderClosed'
-		
-		
-		// If the order order status is not 'closed'
+		// If the order status is not 'closed'
 		if(!listFindNoCase("ostClosed", arguments.order.getOrderStatusType().getSystemCode())) {
 			
 			// Loop over the loyaltyPrograms that the account on the order has and call the processAccountLoyaltyProgram with context of 'orderClosed'
-			for(var accountLoyaltyProgram in arguments.orderDelivery.getOrder().getAccount().getAccountLoyaltyPrograms()) {
-				var itemsFulfilledData = {
-					orderDelivery = arguments.orderDelivery
+			for(var accountLoyaltyProgram in arguments.order.getOrder().getAccount().getAccountLoyaltyPrograms()) {
+				var orderClosedData = {
+					order = arguments.order
 				};
 				
 				// Call processAccountLoyaltyProgram with context of 'orderClosed'
-				getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, itemsFulfilledData, 'orderClosed');
+				getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, orderClosedData, 'orderClosed');
 			}
 		}
 		return arguments.order;
@@ -1084,7 +1082,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 			
 			// Check to see if this orderFulfillment is complete and fully 'fulfilled'
-			if( arguments.orderDelivery.getFulfillment().quantityUndelivered() eq 0 ){
+			// Use something like: var allOrderItemsFulfilled = true; and then set it to false and break out of loop if you find an order item that hasn't been fully fulfilled.
+			var allOrderItemsFulfilled = true;
+			var orderFulfillment = arguments.orderDelivery.getOrderDeliveryItems()[1].getOrderFulfillment();
+			
+			for(var orderfulfillmentItems in orderFulfillment) {
+				if(!listFindNoCase("oistFulfilled",orderfulfillmentItems.getOrderItemStatusType().getSystemCode())){
+					allOrderItemsFulfilled = false;
+					break;
+				}
+			}
+			
+			if( allOrderItemsFulfilled ){
 				
 				for(var accountLoyaltyProgram in arguments.orderDelivery.getOrder().getAccount().getAccountLoyaltyPrograms()) {
 					var fulfillmentMethodUsedData = {
