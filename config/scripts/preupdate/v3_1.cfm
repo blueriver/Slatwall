@@ -67,12 +67,9 @@ Notes:
 	</cfloop>
 	<cfif local.newTableName NEQ local.tables.table_name>
 		<cfif this.ormSettings.dialect eq "MySQL">
-			<cftry>
 			<cfquery name="local.qryrenametable" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
 				RENAME TABLE #local.tables.table_name# TO #local.newTableName#
 			</cfquery>
-			<cfcatch><cfdump var="#local.tables.table_name#" /><cfdump var="#local.newTableName#" abort /></cfcatch>
-			</cftry>
 		<cfelse>
 			<cfquery name="local.qryrenametable" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
 				EXEC sp_rename '#local.tables.table_name#','#local.newTableName#'
@@ -80,5 +77,28 @@ Notes:
 		</cfif>
 	</cfif>
 </cfloop>
+
+<!--- change the long field names --->
+<cfset local.lookupValues = ['SwAccountAuthentication.integrationAccessTokenExpiration','SwPaymentMethod.saveAccountPaymentMethodTransactionType','SwPaymentMethod.saveAccountPaymentMethodEncryptFlag','SwPaymentMethod.saveOrderPaymentTransactionType','SwPaymentMethod.placeOrderChargeTransactionType','SwPaymentMethod.placeOrderCreditTransactionType','SwAccess.subscriptionUsageBenefitAccountID','SwSubscriptionStatus.subscriptionStatusChangeReasonTypeID','SwSubscriptionUsageBenefitAccount.subscriptionUsageBenefitAccountID'] />
+<cfset local.newValues = ['SwAccountAuthentication.integrationAccessTokenExp','SwPaymentMethod.saveAccountPaymentMethodTxType','SwPaymentMethod.saveAccPaymentMethodEncFlag','SwPaymentMethod.saveOrderPaymentTxType','SwPaymentMethod.placeOrderChargeTxType','SwPaymentMethod.placeOrderCreditTxType','SwAccess.subsUsageBenefitAccountID','SwSubscriptionStatus.subsStatusChangeReasonTypeID','SwSubscriptionUsageBenefitAccount.subsUsageBenefitAccountID'] />
+
+<cfloop from="1" to="#arrayLen(local.lookupValues)#" index="i">
+	<cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="columns" table="#listFirst(local.lookupValues[i],'.')#" name="local.columns" />
+	
+	<cfloop query="local.columns">
+		<cfif local.columns.column_name EQ listLast(local.lookupValues[i],'.')>
+			<cfif this.ormSettings.dialect eq "MySQL">
+				<cfquery name="local.qryrenametable" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
+					ALTER TABLE #listFirst(local.lookupValues[i],'.')# CHANGE #listLast(local.lookupValues[i],'.')# #listLast(local.newValues[i],'.')# <cfif local.columns.TYPE_NAME EQ "varchar">varchar(#local.columns.COLUMN_SIZE#)<cfelse>#local.columns.TYPE_NAME#</cfif>
+				</cfquery>
+			<cfelse>
+				<cfquery name="local.qryrenametable" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
+					EXEC sp_rename '#listFirst(local.lookupValues[i],'.')#.#listLast(local.lookupValues[i],'.')#','#listLast(local.newValues[i],'.')#','COLUMN'
+				</cfquery>
+			</cfif>
+		</cfif>
+	</cfloop>
+</cfloop>
+
 
 <cflog file="Slatwall" text="General Log - Preupdate Script v3_1 has run with no errors">
