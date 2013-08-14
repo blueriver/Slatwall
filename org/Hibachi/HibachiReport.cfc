@@ -31,55 +31,7 @@
 	<!--- Rendered Data Properties --->
 	<cfproperty name="reportDataTable" />
 	
-	<!--- Title Methods --->
-	<cffunction name="getReportTitle" access="public" output="false">
-		<cfreturn rbKey('report.#getClassName()#') />
-	</cffunction>
-	
-	<cffunction name="getMetricTitle" access="public" output="false">
-		<cfargument name="alias" type="string" required="true" />
-		
-		<cfset var metricDefinition = {} />
-		
-		<cfloop array="#getMetricDefinitions()#" index="metricDefinition">
-			<cfif metricDefinition.alias eq arguments.alias and structKeyExists(metricDefinition, 'title')>
-				<cfreturn metricDefinition.title />
-			</cfif>
-		</cfloop>
-		
-		<cfreturn rbKey('report.#getClassName()#.#alias#') />
-	</cffunction>
-	
-	<cffunction name="getDimensionTitle" access="public" output="false">
-		<cfargument name="alias" type="string" required="true" />
-		
-		<cfset var dimensionDefinition = {} />
-		
-		<cfloop array="#getDimensionDefinitions()#" index="dimensionDefinition">
-			<cfif dimensionDefinition.alias eq arguments.alias and structKeyExists(dimensionDefinition, 'title')>
-		 		<cfreturn dimensionDefinition.title />
-			</cfif>
-		</cfloop>
-		
-		<cfreturn rbKey('report.#getClassName()#.#alias#') />
-	</cffunction>
-	
-	
-	<cffunction name="getReportDateTimeTitle" access="public" output="false">
-		<cfargument name="alias" type="string" required="true" />
-		
-		<cfset var reportDateTimeDefinition = {} />
-		
-		<cfloop array="#getReportDateTimeDefinitions()#" index="reportDateTimeDefinition">
-			<cfif reportDateTimeDefinition.alias eq arguments.alias and structKeyExists(reportDateTimeDefinition, 'title')>
-		 		<cfreturn reportDateTimeDefinition.title />
-			</cfif>
-		</cfloop>
-		
-		<cfreturn rbKey('report.#getClassName()#.#alias#') />
-	</cffunction>
-	
-	<!--- Format Type Methods --->
+	<!--- Format Type Method --->
 	<cffunction name="getAliasFormatType" access="public" output="false">
 		<cfargument name="alias" type="string" required="true" />
 		
@@ -110,50 +62,8 @@
 		<cfreturn variables[ "aliasFormatType#arguments.alias#" ] />
 	</cffunction>
 	
-	<!--- Date / Time Defaults --->
-	<cffunction name="getReportStartDateTime" access="public" output="false">
-		<cfif not structKeyExists(variables, "reportStartDateTime")>
-			<cfset variables.reportStartDateTime = dateFormat(now() - 30, "yyyy-mm-dd") />
-		</cfif>
-		<cfreturn dateFormat(variables.reportStartDateTime,"yyyy-mm-dd") />
-	</cffunction>
+	<!--- ================= START: QUERY HELPER METHODS ====================== --->
 	
-	<cffunction name="getReportEndDateTime" access="public" output="false">
-		<cfif not structKeyExists(variables, "reportEndDateTime")>
-			<cfset variables.reportEndDateTime = dateFormat(now(), "yyyy-mm-dd") />
-		</cfif>
-		<cfreturn dateFormat(variables.reportEndDateTime,"yyyy-mm-dd") />
-	</cffunction>
-	
-	<cffunction name="getReportCompareStartDateTime" access="public" output="false">
-		<cfif not structKeyExists(variables, "reportCompareStartDateTime")>
-			<cfset variables.reportCompareStartDateTime = dateFormat(getReportCompareEndDateTime() - 30, "yyyy-mm-dd") />
-		</cfif>
-		<cfreturn dateFormat(variables.reportCompareStartDateTime,"yyyy-mm-dd") />
-	</cffunction>
-	
-	<cffunction name="getReportCompareEndDateTime" access="public" output="false">
-		<cfif not structKeyExists(variables, "reportCompareEndDateTime")>
-			<cfset variables.reportCompareEndDateTime = dateFormat(getReportStartDateTime()-1, "yyyy-mm-dd") />
-		</cfif>
-		<cfreturn dateFormat(variables.reportCompareEndDateTime,"yyyy-mm-dd") />
-	</cffunction>
-	
-	<cffunction name="getReportDateTimeGroupBy" access="public" output="false">
-		<cfif not structKeyExists(variables, "reportDateTimeGroupBy")>
-			<cfset variables.reportDateTimeGroupBy = "day" />
-		</cfif>
-		<cfreturn variables.reportDateTimeGroupBy />
-	</cffunction>
-	
-	<cffunction name="getReportCompareFlag" access="public" output="false">
-		<cfif not structKeyExists(variables, "reportCompareFlag")>
-			<cfset variables.reportCompareFlag = 0 />
-		</cfif>
-		<cfreturn variables.reportCompareFlag />
-	</cffunction>
-	
-	<!--- Date / Time Helpers --->
 	<cffunction name="getReportDateTimeSelect" access="public" output="false">
 		<cfset var reportDateTimeSelect="" />
 		<cfsavecontent variable="reportDateTimeSelect">
@@ -199,7 +109,60 @@
 		<cfreturn reportDateTimeWhere />
 	</cffunction>
 	
-	<!--- Definition Defaults --->
+	<!--- =================  END: QUERY HELPER METHODS ======================= --->
+	
+	<!--- ================= START: TITLE HELPER METHODS ====================== --->
+		
+	<cffunction name="getReportTitle" access="public" output="false">
+		<cfreturn rbKey('report.#getClassName()#') />
+	</cffunction>
+	
+	<cffunction name="getMetricTitle" access="public" output="false">
+		<cfargument name="alias" type="string" required="true" />
+		
+		<cfset var metricDefinition = {} />
+		
+		<cfloop array="#getMetricDefinitions()#" index="metricDefinition">
+			<cfif metricDefinition.alias eq arguments.alias and structKeyExists(metricDefinition, 'title')>
+				<cfreturn metricDefinition.title />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn rbKey('report.#getClassName()#.#alias#') />
+	</cffunction>
+	
+	<cffunction name="getDimensionTitle" access="public" output="false">
+		<cfargument name="alias" type="string" required="true" />
+		
+		<cfset var dimensionDefinition = {} />
+		
+		<cfloop array="#getDimensionDefinitions()#" index="dimensionDefinition">
+			<cfif dimensionDefinition.alias eq arguments.alias and structKeyExists(dimensionDefinition, 'title')>
+		 		<cfreturn dimensionDefinition.title />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn rbKey('report.#getClassName()#.#alias#') />
+	</cffunction>
+	
+	<cffunction name="getReportDateTimeTitle" access="public" output="false">
+		<cfargument name="alias" type="string" required="true" />
+		
+		<cfset var reportDateTimeDefinition = {} />
+		
+		<cfloop array="#getReportDateTimeDefinitions()#" index="reportDateTimeDefinition">
+			<cfif reportDateTimeDefinition.alias eq arguments.alias and structKeyExists(reportDateTimeDefinition, 'title')>
+		 		<cfreturn reportDateTimeDefinition.title />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn rbKey('report.#getClassName()#.#alias#') />
+	</cffunction>
+		
+	<!--- =================  END: TITLE HELPER METHODS ======================= --->
+	
+	<!--- ================== START: DEFINITION METHODS ======================= --->
+		
 	<cffunction name="getMetricDefinitions" access="public" output="false">
 		<cfreturn [] />
 	</cffunction>
@@ -211,8 +174,7 @@
 	<cffunction name="getReportDateTimeDefinitions" access="public" output="false">
 		<cfreturn [] />
 	</cffunction>
-	
-	<!--- Definition Helper Methods --->
+		
 	<cffunction name="getMetricDefinition" access="public" output="false">
 		<cfargument name="alias" type="string" required="true" />
 		
@@ -249,7 +211,56 @@
 		</cfloop>
 	</cffunction>
 	
-	<!--- Metric / Dimension / ReportDateTime State Defaults --->
+	<!--- ==================  END: DEFINITION METHODS ======================== --->
+	
+	<!--- ================== START: DATE/TIME DEFAULTS ======================= --->
+
+	<cffunction name="getReportStartDateTime" access="public" output="false">
+		<cfif not structKeyExists(variables, "reportStartDateTime")>
+			<cfset variables.reportStartDateTime = dateFormat(now() - 30, "yyyy-mm-dd") />
+		</cfif>
+		<cfreturn dateFormat(variables.reportStartDateTime,"yyyy-mm-dd") />
+	</cffunction>
+	
+	<cffunction name="getReportEndDateTime" access="public" output="false">
+		<cfif not structKeyExists(variables, "reportEndDateTime")>
+			<cfset variables.reportEndDateTime = dateFormat(now(), "yyyy-mm-dd") />
+		</cfif>
+		<cfreturn dateFormat(variables.reportEndDateTime,"yyyy-mm-dd") />
+	</cffunction>
+	
+	<cffunction name="getReportCompareStartDateTime" access="public" output="false">
+		<cfif not structKeyExists(variables, "reportCompareStartDateTime")>
+			<cfset variables.reportCompareStartDateTime = dateFormat(getReportCompareEndDateTime() - 30, "yyyy-mm-dd") />
+		</cfif>
+		<cfreturn dateFormat(variables.reportCompareStartDateTime,"yyyy-mm-dd") />
+	</cffunction>
+	
+	<cffunction name="getReportCompareEndDateTime" access="public" output="false">
+		<cfif not structKeyExists(variables, "reportCompareEndDateTime")>
+			<cfset variables.reportCompareEndDateTime = dateFormat(getReportStartDateTime()-1, "yyyy-mm-dd") />
+		</cfif>
+		<cfreturn dateFormat(variables.reportCompareEndDateTime,"yyyy-mm-dd") />
+	</cffunction>
+	
+	<cffunction name="getReportDateTimeGroupBy" access="public" output="false">
+		<cfif not structKeyExists(variables, "reportDateTimeGroupBy")>
+			<cfset variables.reportDateTimeGroupBy = "day" />
+		</cfif>
+		<cfreturn variables.reportDateTimeGroupBy />
+	</cffunction>
+	
+	<cffunction name="getReportCompareFlag" access="public" output="false">
+		<cfif not structKeyExists(variables, "reportCompareFlag")>
+			<cfset variables.reportCompareFlag = 0 />
+		</cfif>
+		<cfreturn variables.reportCompareFlag />
+	</cffunction>
+	
+	<!--- ==================  END: DATE/TIME DEFAULTS ======================== --->
+	
+	<!--- ================== START: SELECTION DEFAULTS ======================= --->
+		
 	<cffunction name="getMetrics" access="public" output="false">
 		<cfif not structKeyExists(variables, "metrics")>
 			<cfset variables.metrics = getMetricDefinitions()[1].alias />
@@ -271,7 +282,10 @@
 		<cfreturn variables.reportDateTime />
 	</cffunction>
 	
-	<!--- Data / Query Methods --->
+	<!--- ==================  END: SELECTION DEFAULTS ======================== --->
+	
+	<!--- ==================== START: CHART FUNCTIONS ======================== --->
+	
 	<cffunction name="getChartDataQuery" access="public" output="false">
 		<cfif not structKeyExists(variables, "chartDataQuery")>
 			
@@ -424,62 +438,16 @@
 		<cfreturn variables.chartCompareDataQuery />
 	</cffunction>
 	
-	<cffunction name="getTotalsQuery" access="public" output="false">
-		<cfif not structKeyExists(variables, "totalsQuery")>
-			
-			<cfset var m = 1 />
-			<cfset var data = getData() />
-			
-			<cfquery name="variables.totalsQuery" dbtype="query">
-				SELECT
-					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
-						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
-						<cfif m gt 1>,</cfif>
-						<cfif structKeyExists(metricDefinition, "calculation")>
-							#metricDefinition.calculation# as #metricDefinition.alias#
-						<cfelse>
-							#metricDefinition.function#(#metricDefinition.alias#) as #metricDefinition.alias#
-						</cfif>
-					</cfloop>
-				FROM
-					data
-				WHERE
-					reportDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportStartDateTime()#" />
-				  AND
-				  	reportDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportEndDateTime()#" />
-			</cfquery>
-		</cfif>
-		
-		<cfreturn variables.totalsQuery />
-	</cffunction>
-	
-	<cffunction name="getCompareTotalsQuery" access="public" output="false">
-		<cfif not structKeyExists(variables, "compareTotalsQuery")>
-			
-			<cfset var m = 1 />
-			<cfset var data = getData() />
-			
-			<cfquery name="variables.compareTotalsQuery" dbtype="query">
-				SELECT
-					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
-						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
-						<cfif m gt 1>,</cfif>
-						<cfif structKeyExists(metricDefinition, "calculation")>
-							#metricDefinition.calculation# as #metricDefinition.alias#
-						<cfelse>
-							#metricDefinition.function#(#metricDefinition.alias#) as #metricDefinition.alias#
-						</cfif>
-					</cfloop>
-				FROM
-					data
-				WHERE
-					reportDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportCompareStartDateTime()#" />
-				  AND
-				  	reportDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportCompareEndDateTime()#" />
-			</cfquery>
-		</cfif>
-		
-		<cfreturn variables.compareTotalsQuery />
+	<cffunction name="getMetricColorDetails" access="public" output="false">
+		<cfreturn [
+			{color="##eb6420",compareColor="##fad8c7"},
+			{color="##009800",compareColor="##bfe5bf"},
+			{color="##207de5",compareColor="##c7def8"},
+			{color="##5319e7",compareColor="##d4c5f9"},
+			{color="##fbca04",compareColor="##fef2c0"},
+			{color="##006b75",compareColor="##bfdadc"},
+			{color="##0052cc",compareColor="##bfd4f2"}
+		] />
 	</cffunction>
 	
 	<cffunction name="getChartData" access="public" output="false">
@@ -547,6 +515,10 @@
 				<cfset variables.chartData["series"][dataSeriesID]["name"] = getMetricTitle(metricDefinition.alias) />
 				<cfset variables.chartData["series"][dataSeriesID]["data"] = [] />
 				<cfset variables.chartData["series"][dataSeriesID]["xAxis"] = 0 />
+				<cfset variables.chartData["series"][dataSeriesID]["color"] = getMetricColorDetails()[m]['color'] />
+				<cfif m eq 1>
+					<cfset variables.chartData["series"][dataSeriesID]["type"] = "area" />
+				</cfif>
 				
 				<cf_HibachiDateLoop index="thisDate" from="#getReportStartDateTime()#" to="#getReportEndDateTime()#" datepart="#loopdatepart#">
 					<cfset var thisData = [] />
@@ -574,6 +546,7 @@
 					<cfset variables.chartData["series"][dataSeriesID]["name"] = getMetricTitle(metricDefinition.alias) />
 					<cfset variables.chartData["series"][dataSeriesID]["data"] = [] />
 					<cfset variables.chartData["series"][dataSeriesID]["xAxis"] = 1 />
+					<cfset variables.chartData["series"][dataSeriesID]["color"] = getMetricColorDetails()[m]['compareColor'] />
 					
 					<cf_HibachiDateLoop index="thisDate" from="#getReportCompareStartDateTime()#" to="#getReportCompareEndDateTime()#" datepart="#loopdatepart#">
 						<cfset var thisData = [] />
@@ -596,6 +569,68 @@
 		</cfif>
 		
 		<cfreturn variables.chartData />
+	</cffunction>
+	
+	<!--- ====================  END: CHART FUNCTIONS ========================= --->
+		
+	<!--- ==================== START: TABLE FUNCTIONS ======================== --->
+		
+	<cffunction name="getTotalsQuery" access="public" output="false">
+		<cfif not structKeyExists(variables, "totalsQuery")>
+			
+			<cfset var m = 1 />
+			<cfset var data = getData() />
+			
+			<cfquery name="variables.totalsQuery" dbtype="query">
+				SELECT
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
+						<cfif m gt 1>,</cfif>
+						<cfif structKeyExists(metricDefinition, "calculation")>
+							#metricDefinition.calculation# as #metricDefinition.alias#
+						<cfelse>
+							#metricDefinition.function#(#metricDefinition.alias#) as #metricDefinition.alias#
+						</cfif>
+					</cfloop>
+				FROM
+					data
+				WHERE
+					reportDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportStartDateTime()#" />
+				  AND
+				  	reportDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportEndDateTime()#" />
+			</cfquery>
+		</cfif>
+		
+		<cfreturn variables.totalsQuery />
+	</cffunction>
+	
+	<cffunction name="getCompareTotalsQuery" access="public" output="false">
+		<cfif not structKeyExists(variables, "compareTotalsQuery")>
+			
+			<cfset var m = 1 />
+			<cfset var data = getData() />
+			
+			<cfquery name="variables.compareTotalsQuery" dbtype="query">
+				SELECT
+					<cfloop from="1" to="#listLen(getMetrics())#" step="1" index="m">
+						<cfset var metricDefinition = getMetricDefinition( listGetAt(getMetrics(), m) ) />
+						<cfif m gt 1>,</cfif>
+						<cfif structKeyExists(metricDefinition, "calculation")>
+							#metricDefinition.calculation# as #metricDefinition.alias#
+						<cfelse>
+							#metricDefinition.function#(#metricDefinition.alias#) as #metricDefinition.alias#
+						</cfif>
+					</cfloop>
+				FROM
+					data
+				WHERE
+					reportDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportCompareStartDateTime()#" />
+				  AND
+				  	reportDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#getReportCompareEndDateTime()#" />
+			</cfquery>
+		</cfif>
+		
+		<cfreturn variables.compareTotalsQuery />
 	</cffunction>
 	
 	<cffunction name="getTableDataQuery" access="public" output="false">
@@ -766,6 +801,10 @@
 		
 		<cfreturn variables.tableDataQuery />
 	</cffunction>
+		
+	<!--- ====================  END: TABLE FUNCTIONS ========================= --->
+	
+	<!--- =============== START: CUSTOM TAG OUTPUT METHODS =================== --->
 	
 	<cffunction name="getReportDataTable" access="public" output="false">
 		<cfif(!structKeyExists(variables, "reportDataTable"))>
@@ -786,5 +825,6 @@
 		
 		<cfreturn variables.reportConfigureBar />
 	</cffunction>
-		
+	
+	<!--- ===============  END: CUSTOM TAG OUTPUT METHODS ==================== --->	
 </cfcomponent>
