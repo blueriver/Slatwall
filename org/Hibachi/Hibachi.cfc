@@ -119,7 +119,7 @@ component extends="FW1.framework" {
 	}
 	
 	// ==================== START: PRE UPDATE SCRIPTS ======================
-	if(!fileExists(expandPath('/#variables.framework.applicationKey#/custom/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
+	if(!fileExists('#expandPath('custom/config')#/lastFullUpdate.txt.cfm') || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
 		variables.preupdate = {};
 		if(!fileExists("#expandPath('custom/config')#/preUpdatesRun.txt.cfm")) {
 			fileWrite("#expandPath('custom/config')#/preUpdatesRun.txt.cfm", "");
