@@ -530,7 +530,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 	}
 	
-	public any function processAccountLoyaltyProgram_enrollment(required any accountLoyaltyProgram, required struct data) {
+	public any function processAccountLoyaltyProgram_enrollment(required any accountLoyaltyProgram) {
 		
 		// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
 		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements()) {	

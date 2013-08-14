@@ -100,19 +100,15 @@ component displayname="AccountLoyaltyProgram" entityname="SlatwallAccountLoyalty
 	// =================== START: ORM Event Hooks  =========================
 	
 	// TODO [paul]: add a preInsert event hook so that we process an enrollment for the loyalty program.
+	
 	public void function preInsert() {
 		for(var accountLoyaltyProgram in getAccount().getAccountLoyaltyPrograms()) {
-			var enrollmentData = {
-				orderDelivery = arguments.orderDelivery
-			};
-			// Call processAccountLoyaltyProgram
-			getService("accountService").processAccountLoyaltyProgram(accountLoyaltyProgram, fulfillmentMethodUsedData, 'enrollment'); 
+			getService("accountService").processAccountLoyaltyProgram(accountLoyaltyProgram, 'enrollment'); 
 		}
 		
 		super.preInsert();
     }
-    
-	
+
 	
 	// ===================  END:  ORM Event Hooks  =========================
 	
