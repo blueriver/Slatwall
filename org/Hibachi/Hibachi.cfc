@@ -362,9 +362,6 @@ component extends="FW1.framework" {
 					// Call the onFirstRequest() Method for the parent Application.cfc
 					onFirstRequest();
 					
-					// Announce the applicationSetup event
-					getHibachiScope().getService("hibachiEventService").announceEvent("onApplicationSetup");
-					
 					// ============================ FULL UPDATE =============================== (this is only run when updating, or explicitly calling it by passing update=true as a url key)
 					if(!fileExists(expandPath('/#variables.framework.applicationKey#/custom/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
 						writeLog(file="#variables.framework.applicationKey#", text="General Log - Full Update Initiated");
@@ -387,16 +384,19 @@ component extends="FW1.framework" {
 					}
 					// ========================== END: FULL UPDATE ==============================
 					
+					// Call the onFirstRequestPostUpdate() Method for the parent Application.cfc
+					onFirstRequestPostUpdate();
+					
 					// Application Setup Ended
 					getHibachiScope().setApplicationValue("initialized", true);
 					writeLog(file="#variables.framework.applicationKey#", text="General Log - Application Setup Complete");
+					
+					// Announce the applicationSetup event
+					getHibachiScope().getService("hibachiEventService").announceEvent("onApplicationSetup");
+					
 				}
 			}
 		}
-	}
-	
-	public void function onPreUpdateRequest() {
-		
 	}
 	
 	public void function setupResponse() {
@@ -586,5 +586,7 @@ component extends="FW1.framework" {
 	public void function onFirstRequest() {}
 	
 	public void function onUpdateRequest() {}
+	
+	public void function onFirstRequestPostUpdate() {}
 	
 }
