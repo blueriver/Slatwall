@@ -67,9 +67,12 @@ Notes:
 	</cfloop>
 	<cfif local.newTableName NEQ local.tables.table_name>
 		<cfif this.ormSettings.dialect eq "MySQL">
+			<cftry>
 			<cfquery name="local.qryrenametable" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
 				RENAME TABLE #local.tables.table_name# TO #local.newTableName#
 			</cfquery>
+			<cfcatch><cfdump var="#local.tables.table_name#" /><cfdump var="#local.newTableName#" abort /></cfcatch>
+			</cftry>
 		<cfelse>
 			<cfquery name="local.qryrenametable" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
 				EXEC sp_rename '#local.tables.table_name#','#local.newTableName#'
