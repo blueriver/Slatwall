@@ -119,16 +119,16 @@ component extends="FW1.framework" {
 	}
 	
 	// ==================== START: PRE UPDATE SCRIPTS ======================
-	if(!fileExists('#expandPath('custom/config')#/lastFullUpdate.txt.cfm') || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
+	if(!fileExists("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/lastFullUpdate.txt.cfm") || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
 		variables.preupdate = {};
-		if(!fileExists("#expandPath('custom/config')#/preUpdatesRun.txt.cfm")) {
-			fileWrite("#expandPath('custom/config')#/preUpdatesRun.txt.cfm", "");
+		if(!fileExists("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/preUpdatesRun.txt.cfm")) {
+			fileWrite("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/preUpdatesRun.txt.cfm", "");
 		}
 		
-		variables.preupdate.preUpdatesRun = fileRead("#expandPath('custom/config')#/preUpdatesRun.txt.cfm");
+		variables.preupdate.preUpdatesRun = fileRead("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/preUpdatesRun.txt.cfm");
 		
 		// Loop over and run any pre-update files
-		variables.preupdate.preUpdateFiles = directoryList(expandPath('config/scripts/preupdate'));
+		variables.preupdate.preUpdateFiles = directoryList("#this.mappings[ '/#variables.framework.applicationKey#' ]#/config/scripts/preupdate");
 		
 		for(variables.preupdate.preUpdateFullFilename in variables.preupdate.preUpdateFiles) {
 			variables.preupdate.thisFilename = listLast(variables.preupdate.preUpdateFullFilename, "/\");
@@ -138,7 +138,7 @@ component extends="FW1.framework" {
 			}
 		}
 		
-		fileWrite("#expandPath('custom/config')#/preUpdatesRun.txt.cfm", variables.preupdate.preUpdatesRun);
+		fileWrite("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/preUpdatesRun.txt.cfm", variables.preupdate.preUpdatesRun);
 	}
 	// ==================== END: PRE UPDATE SCRIPTS ======================
 	
