@@ -61,7 +61,7 @@ Notes:
 	<cfset local.newTableName = local.tables.table_name /> 
 	<!--- loop through all the string in name that needs to get replaced --->
 	<cfloop from="1" to="#arrayLen(local.lookupvalues)#" index="i">
-		<cfif findNoCase(local.lookupvalues[i],local.tables.table_name)>
+		<cfif findNoCase(local.lookupvalues[i],local.newTableName)>
 			<cfset local.newTableName = replaceNoCase(local.newTableName,local.lookupvalues[i],local.newValues[i]) /> 
 		</cfif>
 	</cfloop>
