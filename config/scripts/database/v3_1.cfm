@@ -46,36 +46,39 @@
 Notes:
 
 --->
-<cfparam name="this.ormSettings.dialect" />
-<cfparam name="this.datasource.name" />
-<cfparam name="this.datasource.username" default="" />
-<cfparam name="this.datasource.password" default="" />
 
-<!--- Rename DB Table --->
-<cfset local.lookupValues = ['Slatwall','PromotionReward','PromotionQualifier','SubscriptionUsage','SubscriptionBenefit','Exclusion','Excluded','PriceGroupRateExcludedProductType','PromoRewardEligiblePriceGroup','PromoRewardShippingAddressZone','PromoQualShippingAddressZone'] />
-<cfset local.newValues = ['Sw','PromoReward','PromoQual','SubsUsage','SubsBenefit','Excl','Excl','PriceGrpRateExclProductType','PromoRewardEligiblePriceGrp','PromoRewardShipAddressZone','PromoQualShipAddressZone'] />
-<cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="tables" name="local.tables" />
+<cfset local.scriptHasErrors = false />
 
-<!--- loop through all the table --->
-<cfloop query="local.tables">
-	<cfset local.newTableName = local.tables.table_name /> 
-	<!--- loop through all the string in name that needs to get replaced --->
-	<cfloop from="1" to="#arrayLen(local.lookupvalues)#" index="i">
-		<cfif findNoCase(local.lookupvalues[i],local.tables.table_name)>
-			<cfset local.newTableName = replaceNoCase(local.newTableName,local.lookupvalues[i],local.newValues[i]) /> 
-		</cfif>
+<cftry>
+	<!--- change the long field names --->
+	<cfset local.lookupValues = ['SwAccountAuthentication.integrationAccessTokenExpiration','SwPaymentMethod.saveAccountPaymentMethodTransactionType','SwPaymentMethod.saveAccountPaymentMethodEncryptFlag','SwPaymentMethod.saveOrderPaymentTransactionType','SwPaymentMethod.placeOrderChargeTransactionType','SwPaymentMethod.placeOrderCreditTransactionType'] />
+	<cfset local.newValues = ['SwAccountAuthentication.integrationAccessTokenExp','SwPaymentMethod.saveAccountPaymentMethodTxType','SwPaymentMethod.saveAccPaymentMethodEncFlag','SwPaymentMethod.saveOrderPaymentTxType','SwPaymentMethod.placeOrderChargeTxType','SwPaymentMethod.placeOrderCreditTxType'] />
+	
+	<cfloop from="1" to="#arrayLen(local.lookupValues)#" index="i">
+		<cfdbinfo datasource="#getApplicationValue("datasource")#" username="#getApplicationValue("datasourceUsername")#" password="#getApplicationValue("datasourcePassword")#" type="columns" table="#listFirst(local.lookupValues[i],'.')#" name="local.columns" />
+		
+		<cfloop query="local.columns">
+			<cfif local.columns.column_name EQ listLast(local.lookupValues[i],'.')>
+				<cfquery name="updateColumn">
+					UPDATE #listFirst(local.lookupValues[i],'.')#
+					SET #listLast(local.newValues[i],'.')# = #listLast(local.lookupValues[i],'.')#
+				</cfquery>
+				<cfquery name="dropColumn">
+					ALTER TABLE #listFirst(local.lookupValues[i],'.')#
+					DROP COLUMN #listLast(local.lookupValues[i],'.')#
+				</cfquery>
+			</cfif>
+		</cfloop>
 	</cfloop>
-	<cfif local.newTableName NEQ local.tables.table_name>
-		<cfif this.ormSettings.dialect eq "MySQL">
-			<cfquery name="local.qryrenametable" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
-				RENAME TABLE #local.tables.table_name# TO #local.newTableName#
-			</cfquery>
-		<cfelse>
-			<cfquery name="local.qryrenametable" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
-				EXEC sp_rename '#local.tables.table_name#','#local.newTableName#'
-			</cfquery>
-		</cfif>
-	</cfif>
-</cfloop>
+	<cfcatch>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Drop Column #listLast(local.lookupValues[i],'.')# on #listFirst(local.lookupValues[i],'.')# Has Error">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
 
-<cflog file="Slatwall" text="General Log - Preupdate Script v3_1 has run with no errors">
+<cfif local.scriptHasErrors>
+	<cflog file="Slatwall" text="General Log - Part of Script v3_1 had errors when running">
+	<cfthrow detail="Part of Script v3_1 had errors when running">
+<cfelse>
+	<cflog file="Slatwall" text="General Log - Script v3_1 has run with no errors">
+</cfif>
