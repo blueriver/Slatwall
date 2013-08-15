@@ -286,7 +286,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							}
 							// avsCode
 							if(!isNull(response.getAVSCode())) {
-								arguments.paymentTransaction.setAuthorizationCode(response.getAVSCode());
+								arguments.paymentTransaction.setAVSCode(response.getAVSCode());
 							}
 							
 							// add the providerToken to the orderPayment & accountPayment
