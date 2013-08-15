@@ -79,14 +79,39 @@ Notes:
 </cfloop>
 
 <!--- change the long field names --->
-<cfset local.lookupValues = ['SwAccountAuthentication.integrationAccessTokenExpiration','SwPaymentMethod.saveAccountPaymentMethodTransactionType','SwPaymentMethod.saveAccountPaymentMethodEncryptFlag','SwPaymentMethod.saveOrderPaymentTransactionType','SwPaymentMethod.placeOrderChargeTransactionType','SwPaymentMethod.placeOrderCreditTransactionType','SwAccess.subscriptionUsageBenefitAccountID','SwSubscriptionStatus.subscriptionStatusChangeReasonTypeID','SwSubscriptionUsageBenefitAccount.subscriptionUsageBenefitAccountID'] />
-<cfset local.newValues = ['SwAccountAuthentication.integrationAccessTokenExp','SwPaymentMethod.saveAccountPaymentMethodTxType','SwPaymentMethod.saveAccPaymentMethodEncFlag','SwPaymentMethod.saveOrderPaymentTxType','SwPaymentMethod.placeOrderChargeTxType','SwPaymentMethod.placeOrderCreditTxType','SwAccess.subsUsageBenefitAccountID','SwSubscriptionStatus.subsStatusChangeReasonTypeID','SwSubscriptionUsageBenefitAccount.subsUsageBenefitAccountID'] />
+<cfset local.lookupValues = ['SwAccountAuthentication.integrationAccessTokenExpiration','SwPaymentMethod.saveAccountPaymentMethodTransactionType','SwPaymentMethod.saveAccountPaymentMethodEncryptFlag','SwPaymentMethod.saveOrderPaymentTransactionType','SwPaymentMethod.placeOrderChargeTransactionType','SwPaymentMethod.placeOrderCreditTransactionType','SwAccess.subscriptionUsageBenefitAccountID','SwSubscriptionStatus.subscriptionStatusChangeReasonTypeID','SwSubsUsageBenefitAccount.subscriptionUsageBenefitAccountID'] />
+<cfset local.newValues = ['SwAccountAuthentication.integrationAccessTokenExp','SwPaymentMethod.saveAccountPaymentMethodTxType','SwPaymentMethod.saveAccPaymentMethodEncFlag','SwPaymentMethod.saveOrderPaymentTxType','SwPaymentMethod.placeOrderChargeTxType','SwPaymentMethod.placeOrderCreditTxType','SwAccess.subsUsageBenefitAccountID','SwSubscriptionStatus.subsStatusChangeReasonTypeID','SwSubsUsageBenefitAccount.subsUsageBenefitAccountID'] />
 
 <cfloop from="1" to="#arrayLen(local.lookupValues)#" index="i">
 	<cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="columns" table="#listFirst(local.lookupValues[i],'.')#" name="local.columns" />
 	
 	<cfloop query="local.columns">
 		<cfif local.columns.column_name EQ listLast(local.lookupValues[i],'.')>
+			<!--- first drop the constraints --->
+			<cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="index" table="#listFirst(local.lookupValues[i],'.')#" name="local.indexes" />
+			<cfquery name="getConstraint" dbtype="query">
+				SELECT INDEX_NAME 
+				FROM indexes
+				WHERE COLUMN_NAME = '#listLast(local.lookupValues[i],'.')#'
+			</cfquery>
+			<cfset local.pkName = "" />
+			<cfif getConstraint.recordcount>
+				<cfloop query="getConstraint">
+					<cfif getConstraint.INDEX_NAME EQ "PRIMARY">
+						<cfset local.pkName = getConstraint.INDEX_NAME />
+						<cfquery name="dropConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
+							ALTER TABLE #listFirst(local.lookupValues[i],'.')#
+							DROP PRIMARY KEY
+						</cfquery>
+					<cfelse>
+						<cfquery name="dropConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
+							ALTER TABLE #listFirst(local.lookupValues[i],'.')#
+							DROP <cfif this.ormSettings.dialect eq "MySQL">FOREIGN KEY<cfelse>CONSTRAINT</cfif> #getConstraint.INDEX_NAME#
+						</cfquery>
+					</cfif>
+				</cfloop>
+			</cfif>
+			<!--- update column names --->
 			<cfif this.ormSettings.dialect eq "MySQL">
 				<cfquery name="local.qryrenametable" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
 					ALTER TABLE #listFirst(local.lookupValues[i],'.')# CHANGE #listLast(local.lookupValues[i],'.')# #listLast(local.newValues[i],'.')# <cfif local.columns.TYPE_NAME EQ "varchar">varchar(#local.columns.COLUMN_SIZE#)<cfelse>#local.columns.TYPE_NAME#</cfif>
@@ -95,6 +120,18 @@ Notes:
 				<cfquery name="local.qryrenametable" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
 					EXEC sp_rename '#listFirst(local.lookupValues[i],'.')#.#listLast(local.lookupValues[i],'.')#','#listLast(local.newValues[i],'.')#','COLUMN'
 				</cfquery>
+			</cfif>
+			<!--- create primary key --->
+			<cfif local.columns.IS_PRIMARYKEY>
+				<cfif this.ormSettings.dialect eq "MySQL">
+					<cfquery name="addConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
+						ALTER TABLE #listFirst(local.lookupValues[i],'.')# ADD PRIMARY KEY(#listLast(local.newValues[i],'.')#)
+					</cfquery>
+				<cfelse>
+					<cfquery name="addConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
+						ALTER TABLE #listFirst(local.lookupValues[i],'.')# ADD CONSTRAINT #local.pkName# PRIMARY KEY CLUSTERED (#listLast(local.newValues[i],'.')#)
+					</cfquery>
+				</cfif>
 			</cfif>
 		</cfif>
 	</cfloop>
