@@ -155,6 +155,11 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 			setGiftCardNumber( arguments.accountPaymentMethod.getGiftCardNumber() );
 		}
 		
+		// Term Payment
+		if(listFindNoCase("termPayment", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
+			setTermPaymentAccount( arguments.accountPaymentMethod.getAccount() );
+		}
+		
 		// Credit Card & Gift Card
 		if(listFindNoCase("creditCard,giftCard", arguments.accountPaymentMethod.getPaymentMethod().getPaymentMethodType())) {
 			setProviderToken( arguments.accountPaymentMethod.getProviderToken() );

@@ -51,11 +51,11 @@ component entityname="SlatwallShippingMethodRate" table="SlatwallShippingMethodR
 	// Persistent Properties
 	property name="shippingMethodRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="sortOrder" ormtype="int" sortContext="shippingMethod";
-	property name="minimumShipmentWeight" ormtype="int";
-	property name="maximumShipmentWeight" ormtype="int";
-	property name="minimumShipmentItemPrice" ormtype="big_decimal";
-	property name="maximumShipmentItemPrice" ormtype="big_decimal";
-	property name="defaultAmount" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.none";
+	property name="minimumShipmentWeight" ormtype="int" hb_nullRBKey="define.0";
+	property name="maximumShipmentWeight" ormtype="int" hb_nullRBKey="define.unlimited";
+	property name="minimumShipmentItemPrice" ormtype="big_decimal" hb_nullRBKey="define.0";
+	property name="maximumShipmentItemPrice" ormtype="big_decimal" hb_nullRBKey="define.unlimited";
+	property name="defaultAmount" ormtype="big_decimal" hb_formatType="currency" hb_nullRBKey="define.0";
 	property name="shippingIntegrationMethod" ormtype="string";
 	
 	// Related Object Properties (many-to-one)

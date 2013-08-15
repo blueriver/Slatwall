@@ -152,6 +152,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			if(structKeyExists(accountData, "emailAddress") && !structKeyExists(accountData, "emailAddressConfirm")) {
 				accountData.emailAddressConfirm = accountData.emailAddress;
 			}
+			if(structKeyExists(accountData, "guestAccount")) {
+				accountData.createAuthenticationFlag = !accountData.guestAccount;
+			} else {
+				accountData.createAuthenticationFlag = 0;
+			}
 		}
 		
 		// Call the new processing methods
@@ -177,7 +182,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				}
 				
 			// If there were no errors, then we can create a mura account with the same info
-			} else {
+			} else if (structKeyExists(accountData, "password") && structKeyExists(accountData, "createAuthenticationFlag") && accountData.createAuthenticationFlag) {
 				var newMuraUser = request.muraScope.getBean('userBean');
 				newMuraUser.setFName( nullReplace(rc.$.slatwall.getAccount().getFirstName(), '') );
 				newMuraUser.setLName( nullReplace(rc.$.slatwall.getAccount().getLastName(), '') );

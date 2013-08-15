@@ -232,7 +232,8 @@ component extends="HibachiService" accessors="true" {
 				}
 			}
 		}		
-	
+		
+		return arguments.product;
 	}
 	
 	public any function processProduct_uploadDefaultImage(required any product, required any processObject) {
