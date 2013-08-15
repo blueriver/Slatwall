@@ -87,29 +87,22 @@ Notes:
 	
 	<cfloop query="local.columns">
 		<cfif local.columns.column_name EQ listLast(local.lookupValues[i],'.')>
-			<!--- first drop the constraints --->
-			<cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="index" table="#listFirst(local.lookupValues[i],'.')#" name="local.indexes" />
-			<cfquery name="getConstraint" dbtype="query">
-				SELECT INDEX_NAME 
-				FROM indexes
-				WHERE COLUMN_NAME = '#listLast(local.lookupValues[i],'.')#'
-			</cfquery>
-			<cfset local.pkName = "" />
-			<cfif getConstraint.recordcount>
-				<cfloop query="getConstraint">
-					<cfif getConstraint.INDEX_NAME EQ "PRIMARY">
-						<cfset local.pkName = getConstraint.INDEX_NAME />
+			<!--- for mysql first drop the constraints --->
+			<cfif this.ormSettings.dialect eq "MySQL">
+				<cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="index" table="#listFirst(local.lookupValues[i],'.')#" name="local.indexes" />
+				<cfquery name="getConstraint" dbtype="query">
+					SELECT INDEX_NAME 
+					FROM indexes
+					WHERE COLUMN_NAME = '#listLast(local.lookupValues[i],'.')#'
+				</cfquery>
+				<cfif getConstraint.recordcount>
+					<cfloop query="getConstraint">
 						<cfquery name="dropConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
 							ALTER TABLE #listFirst(local.lookupValues[i],'.')#
-							DROP PRIMARY KEY
+							DROP <cfif getConstraint.INDEX_NAME EQ "PRIMARY">PRIMARY KEY<cfelse>FOREIGN KEY #getConstraint.INDEX_NAME#</cfif>
 						</cfquery>
-					<cfelse>
-						<cfquery name="dropConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
-							ALTER TABLE #listFirst(local.lookupValues[i],'.')#
-							DROP <cfif this.ormSettings.dialect eq "MySQL">FOREIGN KEY<cfelse>CONSTRAINT</cfif> #getConstraint.INDEX_NAME#
-						</cfquery>
-					</cfif>
-				</cfloop>
+					</cfloop>
+				</cfif>
 			</cfif>
 			<!--- update column names --->
 			<cfif this.ormSettings.dialect eq "MySQL">
@@ -122,16 +115,10 @@ Notes:
 				</cfquery>
 			</cfif>
 			<!--- create primary key --->
-			<cfif local.columns.IS_PRIMARYKEY>
-				<cfif this.ormSettings.dialect eq "MySQL">
-					<cfquery name="addConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
-						ALTER TABLE #listFirst(local.lookupValues[i],'.')# ADD PRIMARY KEY(#listLast(local.newValues[i],'.')#)
-					</cfquery>
-				<cfelse>
-					<cfquery name="addConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
-						ALTER TABLE #listFirst(local.lookupValues[i],'.')# ADD CONSTRAINT #local.pkName# PRIMARY KEY CLUSTERED (#listLast(local.newValues[i],'.')#)
-					</cfquery>
-				</cfif>
+			<cfif local.columns.IS_PRIMARYKEY AND this.ormSettings.dialect eq "MySQL">
+				<cfquery name="addConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
+					ALTER TABLE #listFirst(local.lookupValues[i],'.')# ADD PRIMARY KEY(#listLast(local.newValues[i],'.')#)
+				</cfquery>
 			</cfif>
 		</cfif>
 	</cfloop>
