@@ -36,10 +36,10 @@
 Notes:
 
 */
-component displayname="AccountLoyaltyTransaction" entityname="SlatwallAccountLoyaltyTransaction" table="SlatwallAccountLoyaltyTransaction" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
+component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAccountLoyaltyProgramTransaction" table="SlatwallAccountLoyaltyProgramTransaction" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
 	
 	// Persistent Properties
-	property name="accountLoyaltyTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="accountLoyaltyProgramTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="accruementType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="redemptionType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="pointsIn" ormType="integer";
@@ -48,8 +48,8 @@ component displayname="AccountLoyaltyTransaction" entityname="SlatwallAccountLoy
 	
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="loyaltyAccruement" cfc="LoyaltyAccruement" fieldtype="many-to-one" fkcolumn="loyaltyAccruementID";
-	//property name="loyaltyRedemption" cfc="LoyaltyRedemption" fieldtype="many-to-one" fkcolumn="loyaltyRedemptionID";
+	property name="loyaltyProgramAccruement" cfc="loyaltyProgramAccruement" fieldtype="many-to-one" fkcolumn="loyaltyProgramAccruementID";
+	//property name="loyaltyProgramRedemption" cfc="LoyaltyProgramRedemption" fieldtype="many-to-one" fkcolumn="loyaltyProgramRedemptionID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
@@ -69,18 +69,18 @@ component displayname="AccountLoyaltyTransaction" entityname="SlatwallAccountLoy
 	
 	public array function getAccruementTypeOptions() {
 		return [
-			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.itemFulfilled'), value="itemFulfilled"},
-			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.orderClosed'), value="orderClosed"},
-			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillmentMethodUsed"},
-			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.enrollment'), value="enrollment"}
+			{name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.itemFulfilled'), value="itemFulfilled"},
+			{name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.orderClosed'), value="orderClosed"},
+			{name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillmentMethodUsed"},
+			{name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.enrollment'), value="enrollment"}
 		];
 	}
 	
 	public array function getRedemptionTypeOptions() {
 		return [
-			{name=rbKey('entity.accountLoyaltyAccruement.redemptionType.productPurchase'), value="productPurchase"},
-			{name=rbKey('entity.accountLoyaltyAccruement.redemptionType.cashCouponCreation'), value="cashCouponCreation"},
-			{name=rbKey('entity.accountLoyaltyAccruement.redemptionType.priceGroupAssignment'), value="priceGroupAssignment"}
+			{name=rbKey('entity.accountLoyaltyProgramAccruement.redemptionType.productPurchase'), value="productPurchase"},
+			{name=rbKey('entity.accountLoyaltyProgramAccruement.redemptionType.cashCouponCreation'), value="cashCouponCreation"},
+			{name=rbKey('entity.accountLoyaltyProgramAccruement.redemptionType.priceGroupAssignment'), value="priceGroupAssignment"}
 		];
 	}
 	

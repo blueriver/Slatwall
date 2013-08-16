@@ -36,16 +36,22 @@
 Notes:
 
 --->
-<cfparam name="rc.loyaltyAccruement" type="any">
+<cfparam name="rc.loyaltyProgram" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<div class="span6">
-		<h5>#$.slatwall.rbKey('entity.loyaltyAccruement.productTypes')#</h5>
-		<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="productTypes" edit="#rc.edit#" displaytype="plain" />
-	</div>
-	<div class="span6">
-		<h5>#$.slatwall.rbKey('entity.loyaltyAccruement.excludedProductTypes')#</h5>
-		<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="excludedProductTypes" edit="#rc.edit#" displaytype="plain" />	
-	</div>
+	<cf_HibachiListingDisplay smartList="#rc.loyaltyProgram.getloyaltyProgramAccruementsSmartList()#"
+							   recordEditAction="admin:entity.editloyaltyProgramAccruement"
+							   recorddetailaction="admin:entity.detailloyaltyProgramAccruement">
+		<cf_HibachiListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
+		<cf_HibachiListingColumn propertyIdentifier="endDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="expirationTerm.termName" />
+		<cf_HibachiListingColumn propertyIdentifier="accruementType" />
+		<cf_HibachiListingColumn propertyIdentifier="pointType" />
+		<cf_HibachiListingColumn propertyIdentifier="point" />
+		<cf_HibachiListingColumn propertyIdentifier="globalFlag" />
+	</cf_HibachiListingDisplay>
+	
+	<cf_HibachiActionCaller action="admin:entity.createloyaltyprogramaccruement" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailloyaltyprogram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#" modal="true"  />
+
 </cfoutput>

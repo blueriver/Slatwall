@@ -74,6 +74,7 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="delete-orphan";
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true";
 	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderItemID" inverse="true" cascade="all"; // Used For Returns
+	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" cfc="AccountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramAccruementID" cascade="all" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";

@@ -36,15 +36,15 @@
 Notes:
 
 --->
-<cfparam name="rc.loyaltyAccruement" type="any">
-<cfparam name="rc.loyaltyProgram" type="any" default="#rc.loyaltyAccruement.getLoyaltyProgram()#">
+<cfparam name="rc.loyaltyProgramAccruement" type="any">
+<cfparam name="rc.loyaltyProgram" type="any" default="#rc.loyaltyProgramAccruement.getLoyaltyProgram()#">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.loyaltyAccruement#" edit="#rc.edit#"  
+	<cf_HibachiEntityDetailForm object="#rc.loyaltyProgramAccruement#" edit="#rc.edit#"  
 								saveActionQueryString="loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#">
 								
-		<cf_HibachiEntityActionBar type="detail" object="#rc.loyaltyAccruement#" edit="#rc.edit#"
+		<cf_HibachiEntityActionBar type="detail" object="#rc.loyaltyProgramAccruement#" edit="#rc.edit#"
 								   backAction="admin:entity.detailloyaltyprogram"
 								   backQueryString="loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#"
 								   cancelAction="admin:entity.detailloyaltyprogram"
@@ -55,21 +55,21 @@ Notes:
 		
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="startDateTime" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="endDateTime" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="expirationTerm" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="accruementType" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="pointType" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="point" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="globalFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="startDateTime" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="endDateTime" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="expirationTerm" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="accruementType" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="pointType" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="point" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="globalFlag" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
-		<cf_HibachiTabGroup object="#rc.loyaltyAccruement#">
-			<cf_HibachiTab view="admin:entity/loyaltyaccruementtabs/producttypes" />
-			<cf_HibachiTab view="admin:entity/loyaltyaccruementtabs/products" />
-			<cf_HibachiTab view="admin:entity/loyaltyaccruementtabs/skus" />
-			<cf_HibachiTab view="admin:entity/loyaltyaccruementtabs/brands" />
+		<cf_HibachiTabGroup object="#rc.loyaltyProgramAccruement#">
+			<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/producttypes" />
+			<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/products" />
+			<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/skus" />
+			<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/brands" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

@@ -36,10 +36,10 @@
 Notes:
 
 */
-component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement" table="SlatwallLoyaltyAccruement" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
+component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProgramAccruement" table="SlatwallLoyaltyProgramAccruement" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
 	
 	// Persistent Properties
-	property name="loyaltyAccruementID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="loyaltyProgramAccruementID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
 	property name="accruementType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
@@ -50,18 +50,21 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 	
 	// Related Object Properties (many-to-one)
 	property name="loyaltyProgram" cfc="LoyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
-	property name="expirationTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="expirationTermID";
+	property name="expirationTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="termID";
+	
+	// Related Object Properties (one-to-many)
+	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" cfc="AccountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramAccruementID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallLoyaltyAccruementBrand" fkcolumn="loyaltyAccruementID" inversejoincolumn="brandID";
-	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallLoyaltyAccruementSku" fkcolumn="loyaltyAccruementID" inversejoincolumn="skuID";
-	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallLoyaltyAccruementProduct" fkcolumn="loyaltyAccruementID" inversejoincolumn="productID";
-	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallLoyaltyAccruementProductType" fkcolumn="loyaltyAccruementID" inversejoincolumn="productTypeID";
+	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallLoyaltyProgramAccruementBrand" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="brandID";
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallLoyaltyProgramAccruementSku" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="skuID";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallLoyaltyProgramAccruementProduct" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productID";
+	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallLoyaltyProgramAccruementProductType" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productTypeID";
 	
-	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SlatwallLoyaltyAccruementExcludedBrand" fkcolumn="loyaltyAccruementID" inversejoincolumn="brandID";
-	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallLoyaltyAccruementExcludedSku" fkcolumn="loyaltyAccruementID" inversejoincolumn="skuID";
-	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallLoyaltyAccruementExcludedProduct" fkcolumn="loyaltyAccruementID" inversejoincolumn="productID";
-	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallLoyaltyAccruementExcludedProductType" fkcolumn="loyaltyAccruementID" inversejoincolumn="productTypeID";
+	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SlatwallLoyaltyProgramAccruementExcludedBrand" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="brandID";
+	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallLoyaltyProgramAccruementExcludedSku" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="skuID";
+	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallLoyaltyProgramAccruementExcludedProduct" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productID";
+	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallLoyaltyProgramAccruementExcludedProductType" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productTypeID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -76,24 +79,24 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 
 
 	public string function getSimpleRepresentation() {
-		return "#rbKey('entity.loyaltyAccruement')#";
+		return "#rbKey('entity.loyaltyProgramAccruement')#";
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public array function getAccruementTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyAccruement.accruementType.itemFulfilled'), value="itemFulfilled"},
-			{name=rbKey('entity.loyaltyAccruement.accruementType.orderClosed'), value="orderClosed"},
-			{name=rbKey('entity.loyaltyAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillmentMethodUsed"},
-			{name=rbKey('entity.loyaltyAccruement.accruementType.enrollment'), value="enrollment"}
+			{name=rbKey('entity.loyaltyProgramAccruement.accruementType.itemFulfilled'), value="itemFulfilled"},
+			{name=rbKey('entity.loyaltyProgramAccruement.accruementType.orderClosed'), value="orderClosed"},
+			{name=rbKey('entity.loyaltyProgramAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillmentMethodUsed"},
+			{name=rbKey('entity.loyaltyProgramAccruement.accruementType.enrollment'), value="enrollment"}
 		];
 	}
 	
 	public array function getPointTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyAccruement.pointType.fixed'), value="fixed"},
-			{name=rbKey('entity.loyaltyAccruement.pointType.pointPerDollar'), value="pointPerDollar"}
+			{name=rbKey('entity.loyaltyProgramAccruement.pointType.fixed'), value="fixed"},
+			{name=rbKey('entity.loyaltyProgramAccruement.pointType.pointPerDollar'), value="pointPerDollar"}
 		];
 	}
 	

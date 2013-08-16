@@ -67,9 +67,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="accountAuthentications" singularname="accountAuthentication" cfc="AccountAuthentication" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="accountContentAccesses" hb_populateEnabled="false" singularname="accountContentAccess" cfc="AccountContentAccess" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountEmailAddresses" hb_populateEnabled="public" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
+	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountLoyaltyProgramTransaction" cascade="all-delete-orphan" inverse="true";
 	
 	// TODO [paul do first]: Add one-to-many for AccountLoyaltyProgram... MAKE SURE YOU UPDATE ENTITY OBJECTS WITH NEW NAMES
-	property name="accountLoyaltyPrograms" hb_populateEnabled="public" singularname="accountLoyaltyProgram" cfc="AccountLoyaltyProgram" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
+	property name="accountLoyaltyPrograms" singularname="accountLoyaltyProgram" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountLoyaltyProgram" cascade="all-delete-orphan" inverse="true";
 	
 	property name="accountPaymentMethods" hb_populateEnabled="public" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountPayments" singularname="accountPayment" cfc="AccountPayment" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all" inverse="true";

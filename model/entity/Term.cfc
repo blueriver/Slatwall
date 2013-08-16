@@ -67,6 +67,7 @@ component entityname="SlatwallTerm" table="SlatwallTerm" persistent="true" acces
 	property name="initialSubscriptionUsageTerms" hb_populateEnabled="false" singularname="initialSubscriptionUsageTerm" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="initialTermID" cascade="all" inverse="true" lazy="extra";				// Extra Lazy because it is only used for validation
 	property name="renewalSubscriptionUsageTerms" hb_populateEnabled="false" singularname="renewalSubscriptionUsageTerm" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="renewalTermID" cascade="all" inverse="true" lazy="extra";				// Extra Lazy because it is only used for validation
 	property name="gracePeriodSubscriptionUsageTerms" hb_populateEnabled="false" singularname="gracePeriodSubscriptionUsageTerm" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="gracePeriodTermID" cascade="all" inverse="true" lazy="extra";	// Extra Lazy because it is only used for validation
+	property name="loyaltyProgramAccruements" singularname="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" type="array" fieldtype="one-to-many" fkcolumn="termID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	

@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.loyaltyProgram#" edit="#rc.edit#" saveActionQueryString="loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#">
 		
 		<cf_HibachiEntityActionBar type="detail" object="#rc.loyaltyProgram#" edit="#rc.edit#">
-			<cf_HibachiActionCaller action="admin:entity.createloyaltyaccruement" queryString="redirectAction=admin:entity.detailloyaltyprogram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#"type="list" modal="true" />
+			<cf_HibachiActionCaller action="admin:entity.createloyaltyprogrampccruement" queryString="redirectAction=admin:entity.detailloyaltyprogram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#"type="list" modal="true" />
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
@@ -54,7 +54,7 @@ Notes:
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.loyaltyProgram#">
-			<cf_HibachiTab view="admin:entity/loyaltyProgramtabs/loyaltyAccruement" />
+			<cf_HibachiTab view="admin:entity/loyaltyProgramtabs/loyaltyProgramAccruement" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>

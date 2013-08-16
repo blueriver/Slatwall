@@ -41,9 +41,12 @@ component displayname="AccountLoyaltyProgram" entityname="SlatwallAccountLoyalty
 	property name="accountLoyaltyProgramID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="accountLoyaltyProgramNumber" ormtype="string";
 
-	// Related Entities
+	// Related Object Properties (many-to-one)
 	property name="loyaltyProgram" cfc="loyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";

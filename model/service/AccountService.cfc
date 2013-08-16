@@ -375,19 +375,19 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// Account Loyalty Programs
 	public any function processAccountLoyaltyProgram_itemsFulfilled(required any accountLoyaltyProgram, required struct data) {
-	
+		
 		// Loop Over arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
-		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements()) {	
+		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements()) {	
 			
 			// If loyaltyProgramAccruement eq 'fulfillItem' as the type, then based on the amount create a new transaction and apply that amount
 			if (loyaltyProgramAccruement.getAccruementType() eq 'fulfillItem') {
 				
 				// Loop over the orderDeliveryItems in arguments.data.orderDelivery
 				for(var orderDeliveryItem in arguments.data.orderDelivery.getOrderDeliveryItems()) {
-					
+
 					// START: Check Exclusions
-		
-					var hasExcludedProductType = false;
+					var itemExcluded = false;
+					
 					// Check all of the exclusions for an excluded product type
 					if(arrayLen(loyaltyProgramAccruement.getExcludedProductTypes())) {
 						var excludedProductTypeIDList = "";
@@ -397,14 +397,14 @@ component extends="HibachiService" accessors="true" output="false" {
 					
 						for(var ptid=1; ptid<=listLen(arguments.orderItem.getSku().getProduct().getProductType().getProductTypeIDPath()); ptid++) {
 							if(listFindNoCase(excludedProductTypeIDList, listGetAt(arguments.orderItem.getSku().getProduct().getProductType().getProductTypeIDPath(), ptid))) {
-								hasExcludedProductType = true;
+								itemExcluded = true;
 								break;
 							}	
 						}
 					}
 					
 					// If anything is excluded then we return false
-					if(	hasExcludedProductType
+					if(	itemExcluded
 						||
 						loyaltyProgramAccruement.hasExcludedProduct( orderDeliveryItem.getOrderItem().getSku().getProduct() )
 						||
@@ -412,11 +412,12 @@ component extends="HibachiService" accessors="true" output="false" {
 						||
 						( arrayLen( loyaltyProgramAccruement.getExcludedBrands() ) && ( isNull( orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand() ) || loyaltyProgramAccruement.hasExcludedBrand( orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand() ) ) )
 						) {
-						return false;
+						itemExcluded = true;
 					}
 					
+					
 					// START: Check Inclusions
-					var hasIncludedProductType = false;
+					var itemIncluded = false;
 					
 					if(arrayLen(arguments.reward.getProductTypes())) {
 						var includedPropertyTypeIDList = "";
@@ -427,14 +428,14 @@ component extends="HibachiService" accessors="true" output="false" {
 						
 						for(var ptid=1; ptid<=listLen(arguments.orderItem.getSku().getProduct().getProductType().getProductTypeIDPath()); ptid++) {
 							if(listFindNoCase(includedPropertyTypeIDList, listGetAt(orderDeliveryItem.getOrderItem().getSku().getProduct().getProductType().getProductTypeIDPath(), ptid))) {
-								hasIncludedProductType = true;
+								itemIncluded = true;
 								break;
 							}	
 						}
 					}
 						
 					// Verify that this orderDeliveryItem product is in the products, or skus for the accruement
-					if ( hasIncludedProductType 
+					if ( itemIncluded 
 						|| loyaltyProgramAccruement.hasProduct(orderDeliveryItem.getOrderItem().getSku().getProduct()) 
 						|| loyaltyProgramAccruement.hasSku(orderDeliveryItem.getOrderItem().getSku()) 
 						|| (!isNull(orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand()) && loyaltyProgramAccruement.hasBrand(orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand())) 
@@ -442,98 +443,100 @@ component extends="HibachiService" accessors="true" output="false" {
 						 
 						// TODO [paul]:Neet to add a check for excludes
 						// TODO [paul]:THIS WILL NOT WORK -> loyaltyProgramAccruement.hasProductType(orderDeliveryItem.getOrderItem().getSku().getProduct().getProductType())
-						// Look at PromotionService.cfc lines 926 - 940 for example
 						
 						// For each orderItem add a transaction record for the points accrued
+						// Create a new accountLoayltyTransaction
 						var accountLoayltyTransaction = this.newAccountLoyaltyTransaction();
+						
+						// Setup the transaction
 						accountLoayltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
 						accountLoayltyTransaction.setOrderItem( orderDeliveryItem.getOrderItem() );
 						
+						// If pointType is 'fixed' set points
 						if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
 							accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
-						}
-						else if ( loyaltyProgramAccruement.getPointType() eq 'pricePerDollar' ) {
+						} // If pointType is 'pointPerDollar' set point times the qty times the item price
+						else if ( loyaltyProgramAccruement.getPointType() eq 'pointPerDollar' ) {
 							accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * (orderDeliveryItem.getQuantity() * orderDeliveryItem().getOrderItem().getPrice()) );
 						}
 					}
 				}
 			}
 		}
+		
+		return arguments.accountLoyaltyProgram;	
 	}
 	
 	public any function processAccountLoyaltyProgram_orderClosed(required any accountLoyaltyProgram, required struct data) {
 		
 		// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
-		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements()) {	
+		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements()) {	
 			
 			// If loyaltyProgramAccruement eq 'orderClosed' as the type
 			if (loyaltyProgramAccruement.getAccruementType() eq 'orderClosed') {
 				
 				// TODO [paul]: Remove all of the below... there is no product checking for the accruement type of 'orderClosed'
 				// TODO [paul]: keep in mind there is not going to be an orderDelivery in arguments.data, there will be an 'order'.
+				// Fixed amount or pointPerDollar based upon orderTotal order.getTotal()
 				
 				if ( listFindNoCase("ostClosed",arguments.data.order.getOrderItemStatusType().getSystemCode()) ){
+					
+					// Create a new accountLoayltyTransaction
 					var accountLoayltyTransaction = this.newAccountLoyaltyTransaction();
+					
+					// Setup the transaction
 					accountLoayltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
 					accountLoayltyTransaction.setOrder( arguments.data.order.getOrder() );
 					
-					//if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
+					// If pointType is 'fixed' set points
+					if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
 						accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
-					//}
-					//else if ( loyaltyProgramAccruement.getPointType() eq 'pricePerDollar' ) {
-					//	accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * (orderDeliveryItem.getQuantity() * orderDeliveryItem().getOrderItem().getPrice()) );
-					//}	
+					} // If pointType is 'pointPerDollar' set point times the order total
+					else if ( loyaltyProgramAccruement.getPointType() eq 'pointPerDollar' ) {
+						accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * arguments.data.order.getOrder().getTotal() );
+					}	
 				}	
-
 			}
 		}
+		
+		return arguments.accountLoyaltyProgram;	
 	}
 	
 	public any function processAccountLoyaltyProgram_fulfillmentMethodUsed(required any accountLoyaltyProgram, required struct data) {
 		
 		// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
-		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements()) {	
+		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements()) {	
 			
 			// If loyaltyProgramAccruement eq 'fulfillmentMetodUsed' as the type
 			if (loyaltyProgramAccruement.getAccruementType() eq 'fulfillmentMetodUsed') {
 				
 				// TODO [paul]: Same here, you don't need to check on the delivery items.  You just need to know if all the orderItems have a status of 'fulfilled'
-				
-				var allOrderItemsFulfilled = true;
-				
-				// Loop over the orderDeliveryItems in arguments.data.orderDelivery
-				for(var orderDeliveryItem in arguments.data.orderDelivery.getOrderDeliveryItems()) {
-						
-					// Verify that this orderDeliveryItem product is in the productTypes, products, or skus for the accruement
-					if ( listFindNoCase("oistFulfilled",orderDeliveryItem.getOrderItemStatusType().getSystemCode()) ){
-						allOrderItemsFulfilled = false;
-						break;
-					}	
+				// If all the items are fulfilled then set accruement points
 					
-				}	
+				// Create a new accountLoayltyTransaction and set it up
+				var accountLoayltyTransaction = this.newAccountLoyaltyTransaction();
+				accountLoayltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
 				
-				if( allOrderItemsFulfilled ){
-					
-					var accountLoayltyTransaction = this.newAccountLoyaltyTransaction();
-					accountLoayltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
-					accountLoayltyTransaction.setOrderFulfillment( arguments.data.orderDelivery.getOrderDeliveryItems()[1].getOrderFulfillment() );
-					
-					//if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
-						accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
-					//}
-					//else if ( loyaltyProgramAccruement.getPointType() eq 'pricePerDollar' ) {
-					//	accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * (orderDeliveryItem.getQuantity() * orderDeliveryItem().getOrderItem().getPrice()) );
-					//}
+				//var orderFulFillment = arguments.data.orderDelivery.getOrderDeliveryItems()[1].getOrderFulfillment();
+				accountLoayltyTransaction.setOrderFulfillment( arguments.data.orderFulfillment );
+				
+				// If pointType is 'fixed' set points
+				if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
+					accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
+				} // If pointType is 'pointPerDollar' set point times the fulfillmentcharge
+				else if ( loyaltyProgramAccruement.getPointType() eq 'pointPerDollar' ) {
+					accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * arguments.data.orderFulfillment.getFulFillmentCharge() );
 				}
 			}
 		}
 		
+		return arguments.accountLoyaltyProgram;	
 	}
 	
 	public any function processAccountLoyaltyProgram_enrollment(required any accountLoyaltyProgram) {
 		
 		// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
-		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements()) {	
+		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements()) {	
 			
 			// If loyaltyProgramAccruement eq 'enrollment' as the type
 			if (loyaltyProgramAccruement.getAccruementType() eq 'enrollment') {
@@ -544,7 +547,8 @@ component extends="HibachiService" accessors="true" output="false" {
 				accountLoayltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
 			}
 		}
-			
+		
+		return arguments.accountLoyaltyProgram;	
 	}
 	
 	// Account Payment
