@@ -439,6 +439,22 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		arguments.termAccountOrderPayment.removeTermPaymentAccount( this );
 	}
 	
+	// Account Loyalty Programs (one-to-many)
+	public void function addAccountLoyaltyProgram(required any accountLoyaltyProgram) {    
+		arguments.accountLoyaltyProgram.setAccount( this );    
+	}    
+	public void function removeAccountLoyaltyProgram(required any accountLoyaltyProgram) {    
+		arguments.accountLoyaltyProgram.removeAccount( this );    
+	}
+	
+	// Account Loyalty Programs Transactions (one-to-many)
+	public void function addAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {    
+		arguments.accountLoyaltyProgramTransaction.setAccount( this );    
+	}    
+	public void function removeAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {    
+		arguments.accountLoyaltyProgramTransaction.removeAccount( this );    
+	}
+	
 	// Price Groups (many-to-many - owner)
 	public void function addPriceGroup(required any priceGroup) {
 		if(arguments.priceGroup.isNew() or !hasPriceGroup(arguments.priceGroup)) {

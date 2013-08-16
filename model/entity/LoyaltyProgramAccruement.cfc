@@ -104,10 +104,58 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// promotionPeriods (one-to-many)
+	public void function addAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {
+		arguments.accountLoyaltyProgramTransaction.setLoyaltyProgram( this );
+	}
+	public void function removeAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {
+		arguments.accountLoyaltyProgramTransaction.removeLoyaltyProgram( this );
+	}
+	
+	
+	// loyalty Program (many-to-one)
+	public void function setLoyaltyProgram(required any loyaltyProgram) {
+		variables.loyaltyProgram = arguments.loyaltyProgram;
+		if(isNew() or !arguments.loyaltyProgram.hasLoyaltyProgramAccruement( this )) {
+			arrayAppend(arguments.loyaltyProgram.hasLoyaltyProgramAccruements(), this);
+		}
+	}
+	public void function removeLoyaltyProgram(any loyaltyProgram) {
+		if(!structKeyExists(arguments, "loyaltyProgram")) {
+			arguments.loyaltyProgram = variables.loyaltyProgram;
+		}
+		var index = arrayFind(arguments.loyaltyProgram.getLoyaltyProgramAccruements(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.loyaltyProgram.getLoyaltyProgramAccruements(), index);
+		}
+		structDelete(variables, "loyaltyProgram");
+	}
+	
+	// Expiration Term (many-to-one)
+	public void function setTerm(required any term) {
+		variables.term = arguments.term;
+		if(isNew() or !arguments.term.hasExpirationTerm( this )) {
+			arrayAppend(arguments.term.getExpirationTerms(), this);
+		}
+	}
+	public void function removeTerm(any term) {
+		if(!structKeyExists(arguments, "term")) {
+			arguments.term = variables.term;
+		}
+		var index = arrayFind(arguments.term.getExpirationTerms(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.term.getExpirationTerms(), index);
+		}
+		structDelete(variables, "term");
+	}
+	
 	// Brands (many-to-many - owner)
 	public void function addBrand(required any brand) {
 		if(arguments.brand.isNew() or !hasBrand(arguments.brand)) {
 			arrayAppend(variables.brands, arguments.brand);
+		}
+		if(isNew() or !arguments.brand.hasLoyaltyProgramAccruement( this )) {
+			arrayAppend(arguments.brand.getLoyaltyProgramAccruements(), this);
 		}
 	}
 	public void function removeBrand(required any brand) {
@@ -115,18 +163,29 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.brands, thisIndex);
 		}
+		var thatIndex = arrayFind(arguments.brand.getLoyaltyProgramAccruement(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.brand.getLoyaltyProgramAccruements(), thatIndex);
+		}
 	}
 	
 	// Skus (many-to-many - owner)    
 	public void function addSku(required any sku) {    
 		if(arguments.sku.isNew() or !hasSku(arguments.sku)) {    
 			arrayAppend(variables.skus, arguments.sku);    
+		}
+		if(isNew() or !arguments.sku.hasLoyaltyProgramAccruement( this )) {
+			arrayAppend(arguments.sku.getLoyaltyProgramAccruements(), this);
 		}   
 	}    
 	public void function removeSku(required any sku) {    
 		var thisIndex = arrayFind(variables.skus, arguments.sku);    
 		if(thisIndex > 0) {    
 			arrayDeleteAt(variables.skus, thisIndex);    
+		}
+		var thatIndex = arrayFind(arguments.sku.getLoyaltyProgramAccruement(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.sku.getLoyaltyProgramAccruements(), thatIndex);
 		}   
 	}
 
@@ -135,12 +194,19 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.product.isNew() or !hasProduct(arguments.product)) {
 			arrayAppend(variables.products, arguments.product);
 		}
+		if(isNew() or !arguments.products.hasLoyaltyProgramAccruement( this )) {
+			arrayAppend(arguments.products.getLoyaltyProgramAccruements(), this);
+		} 
 	}
 	public void function removeProduct(required any product) {
 		var thisIndex = arrayFind(variables.products, arguments.product);
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.products, thisIndex);
 		}
+		var thatIndex = arrayFind(arguments.products.getLoyaltyProgramAccruement(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.products.getLoyaltyProgramAccruements(), thatIndex);
+		} 
 	}
 	
 	// Product Types (many-to-many - owner)
@@ -148,11 +214,98 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.productType.isNew() or !hasProductType(arguments.productType)) {
 			arrayAppend(variables.productTypes, arguments.productType);
 		}
+		if(isNew() or !arguments.productTypes.hasLoyaltyProgramAccruement( this )) {
+			arrayAppend(arguments.productTypes.getLoyaltyProgramAccruements(), this);
+		} 
 	}
 	public void function removeProductType(required any productType) {
 		var thisIndex = arrayFind(variables.productTypes, arguments.productType);
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.productTypes, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.productTypes.getLoyaltyProgramAccruement(), this);
+		if(thatIndex > 0) {
+			arrayDeleteAt(arguments.productTypes.getLoyaltyProgramAccruements(), thatIndex);
+		}
+	}
+	
+	// Excluded Brands (many-to-many - owner)    
+	public void function addExcludedBrand(required any brand) {    
+		if(arguments.brand.isNew() or !hasExcludedBrand(arguments.brand)) {    
+			arrayAppend(variables.excludedBrands, arguments.brand);    
+		}
+		if(isNew() or !arguments.brand.hasLoyaltyProgramAccruementExclusion( this )) {    
+			arrayAppend(arguments.brand.getLoyaltyProgramAccruementExclusions(), this);    
+		}  
+	}    
+	public void function removeExcludedBrand(required any brand) {    
+		var thisIndex = arrayFind(variables.excludedBrands, arguments.brand);    
+		if(thisIndex > 0) {    
+			arrayDeleteAt(variables.excludedBrands, thisIndex);    
+		}
+		var thatIndex = arrayFind(arguments.brand.getLoyaltyProgramAccruementExclusion(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.brand.getLoyaltyProgramAccruementExclusions(), thatIndex);    
+		}    
+	}
+	
+	// Excluded Skus (many-to-many - owner)
+	public void function addExcludedSku(required any sku) {
+		if(arguments.sku.isNew() or !hasExcludedSku(arguments.sku)) {
+			arrayAppend(variables.excludedSkus, arguments.sku);
+		}
+		if(isNew() or !arguments.sku.hasLoyaltyProgramAccruementExclusion( this )) {    
+			arrayAppend(arguments.sku.getLoyaltyProgramAccruementExclusions(), this);    
+		}
+	}
+	public void function removeExcludedSku(required any sku) {
+		var thisIndex = arrayFind(variables.excludedSkus, arguments.sku);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.excludedSkus, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.sku.getLoyaltyProgramAccruementExclusion(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.sku.getLoyaltyProgramAccruementExclusions(), thatIndex);    
+		}  
+	}
+	
+	// Excluded Products (many-to-many - owner)
+	public void function addExcludedProduct(required any product) {
+		if(arguments.product.isNew() or !hasExcludedProduct(arguments.product)) {
+			arrayAppend(variables.excludedProducts, arguments.product);
+		}
+		if(isNew() or !arguments.product.hasLoyaltyProgramAccruementExclusion( this )) {    
+			arrayAppend(arguments.product.getLoyaltyProgramAccruementExclusions(), this);    
+		}
+	}
+	public void function removeExcludedProduct(required any product) {
+		var thisIndex = arrayFind(variables.excludedProducts, arguments.product);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.excludedProducts, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.product.getLoyaltyProgramAccruementExclusion(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.product.getLoyaltyProgramAccruementExclusions(), thatIndex);    
+		}
+	}
+
+	// Excluded Product Types (many-to-many - owner)
+	public void function addExcludedProductType(required any productType) {
+		if(arguments.productType.isNew() or !hasExcludedProductType(arguments.productType)) {
+			arrayAppend(variables.excludedProductTypes, arguments.productType);
+		}
+		if(isNew() or !arguments.productType.hasLoyaltyProgramAccruementExclusion( this )) {    
+			arrayAppend(arguments.productType.getLoyaltyProgramAccruementExclusions(), this);    
+		}
+	}
+	public void function removeExcludedProductType(required any productType) {
+		var thisIndex = arrayFind(variables.excludedProductTypes, arguments.productType);
+		if(thisIndex > 0) {
+			arrayDeleteAt(variables.excludedProductTypes, thisIndex);
+		}
+		var thatIndex = arrayFind(arguments.productType.getLoyaltyProgramAccruementExclusion(), this);    
+		if(thatIndex > 0) {    
+			arrayDeleteAt(arguments.productType.getLoyaltyProgramAccruementExclusions(), thatIndex);    
 		}
 	}
 	

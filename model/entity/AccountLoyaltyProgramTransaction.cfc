@@ -88,6 +88,24 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAcc
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// account (many-to-one)
+	public void function setAccount(required any account) {
+		variables.account = arguments.account;
+		if(isNew() or !arguments.account.hasAccountLoyaltyProgramTransaction( this )) {
+			arrayAppend(arguments.account.getAccountLoyaltyProgramTransactions(), this);
+		}
+	}
+	public void function removeAccount(any account) {
+	   if(!structKeyExists(arguments, "account")) {
+	   		arguments.account = variables.account;
+	   }
+       var index = arrayFind(arguments.account.getAccountLoyaltyProgramTransactions(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.account.getAccountLoyaltyProgramTransactions(), index);
+       }
+       structDelete(variables,"account");
+    }
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// =============== START: Custom Validation Methods ====================

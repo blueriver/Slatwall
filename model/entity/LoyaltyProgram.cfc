@@ -46,6 +46,9 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 	// Related Object Properties (one-to-many)
 	property name="loyaltyProgramAccruements" singularname="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
 	
+	// Related Object Properties (many-to-many - inverse)
+	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountLoyaltyProgram" fkcolumn="loyaltyProgramID" inversejoincolumn="accountID" inverse="true";
+	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
@@ -70,6 +73,14 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 	}
 	public void function removeLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
 		arguments.attribute.removeLoyaltyProgramAccruement( this );
+	}
+	
+	// Accounts (many-to-many - inverse)
+	public void function addAccount(required any account) {
+		arguments.account.addLoyaltyProgram( this );
+	}
+	public void function removeAccount(required any account) {
+		arguments.account.removeLoyaltyProgram( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

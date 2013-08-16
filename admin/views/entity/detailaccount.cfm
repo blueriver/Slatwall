@@ -49,9 +49,10 @@ Notes:
 <cfparam name="rc.account" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
-<!--- Set up the order / carts smart lists --->
+<!--- Set up the order / carts / loyaltyPrograms smart lists --->
 <cfset rc.ordersPlacedSmartList = rc.account.getOrdersPlacedSmartList() />
 <cfset rc.ordersNotPlacedSmartList = rc.account.getOrdersNotPlacedSmartList() />
+<cfset rc.loyaltyProgramsSmartList = rc.account.getLoyaltyPrograms() />
 
 <cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.account#" edit="#rc.edit#">
@@ -103,6 +104,7 @@ Notes:
 			<cf_HibachiTab property="orders" count="#rc.ordersPlacedSmartList.getRecordsCount()#" />
 			<cf_HibachiTab view="admin:entity/accounttabs/cartsandquotes" count="#rc.ordersNotPlacedSmartList.getRecordsCount()#" />
 			<cf_HibachiTab property="accountPayments" />
+			<cf_HibachiTab view="admin:entity/accounttabs/loyaltyprograms" />
 			<cf_HibachiTab property="productReviews" />
 			<cf_HibachiTab view="admin:entity/accounttabs/subscriptionusage" count="#rc.account.getSubscriptionUsagesSmartList().getRecordsCount()#" />
 			<cf_HibachiTab property="permissionGroups" />
