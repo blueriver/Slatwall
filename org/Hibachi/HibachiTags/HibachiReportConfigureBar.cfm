@@ -11,8 +11,9 @@
 					<dt style="width:100px;"><strong>Metrics</strong></dt>
 					<dd style="margin-left:100px;">
 						<span id="hibachi-report-metric-sort">
-							<cfloop list="#attributes.report.getMetrics()#" index="metric">
-								<span class="label" data-metric="#trim(metric)#">#attributes.report.getMetricTitle(metric)#<cfif listLen(attributes.report.getMetrics()) gt 1> (<a href="" class="hibachi-report-remove-metric" data-metric="#metric#">remove</a>)</cfif></span>
+							<cfloop from="1" to="#listLen(attributes.report.getMetrics())#" step="1" index="m">
+								<cfset metric = listGetAt(attributes.report.getMetrics(), m) />
+								<span class="label" style="background-color:#attributes.report.getMetricColorDetails()[m].color#" data-metric="#trim(metric)#">#attributes.report.getMetricTitle(metric)#<cfif listLen(attributes.report.getMetrics()) gt 1> (<a href="" class="hibachi-report-remove-metric" data-metric="#metric#">remove</a>)</cfif></span>
 							</cfloop>
 						</span>
 						<cfif arrayLen(attributes.report.getMetricDefinitions()) gt listLen(attributes.report.getMetrics())>

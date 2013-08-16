@@ -290,6 +290,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 			}
 			arguments.width = getProduct().setting("productImage#thisSize#Width");
 			arguments.height = getProduct().setting("productImage#thisSize#Height");
+			arguments.resizeMethod = "scaleBest";
 		}
 		
 		return getService("imageService").getResizedImage(argumentCollection=arguments);
@@ -317,6 +318,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 			}
 			arguments.width = getProduct().setting("productImage#arguments.size#Width");
 			arguments.height = getProduct().setting("productImage#arguments.size#Height");
+			arguments.resizeMethod = "scaleBest";
 			structDelete(arguments, "size");
 		}
 		
