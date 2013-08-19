@@ -98,6 +98,10 @@ component displayname="AccountLoyaltyProgram" entityname="SlatwallAccountLoyalty
 
 	// ================== START: Overridden Methods ========================
 	
+	public string function getSimpleRepresentationPropertyName() {
+		return "accountLoyaltyProgram";
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

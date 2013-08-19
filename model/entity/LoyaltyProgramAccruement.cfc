@@ -117,7 +117,7 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	public void function setLoyaltyProgram(required any loyaltyProgram) {
 		variables.loyaltyProgram = arguments.loyaltyProgram;
 		if(isNew() or !arguments.loyaltyProgram.hasLoyaltyProgramAccruement( this )) {
-			arrayAppend(arguments.loyaltyProgram.hasLoyaltyProgramAccruements(), this);
+			arrayAppend(arguments.loyaltyProgram.getLoyaltyProgramAccruements(), this);
 		}
 	}
 	public void function removeLoyaltyProgram(any loyaltyProgram) {
@@ -194,8 +194,8 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.product.isNew() or !hasProduct(arguments.product)) {
 			arrayAppend(variables.products, arguments.product);
 		}
-		if(isNew() or !arguments.products.hasLoyaltyProgramAccruement( this )) {
-			arrayAppend(arguments.products.getLoyaltyProgramAccruements(), this);
+		if(isNew() or !arguments.product.hasLoyaltyProgramAccruement( this )) {
+			arrayAppend(arguments.product.getLoyaltyProgramAccruements(), this);
 		} 
 	}
 	public void function removeProduct(required any product) {
@@ -214,8 +214,8 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.productType.isNew() or !hasProductType(arguments.productType)) {
 			arrayAppend(variables.productTypes, arguments.productType);
 		}
-		if(isNew() or !arguments.productTypes.hasLoyaltyProgramAccruement( this )) {
-			arrayAppend(arguments.productTypes.getLoyaltyProgramAccruements(), this);
+		if(isNew() or !arguments.productType.hasLoyaltyProgramAccruement( this )) {
+			arrayAppend(arguments.productType.getLoyaltyProgramAccruements(), this);
 		} 
 	}
 	public void function removeProductType(required any productType) {
@@ -223,9 +223,9 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.productTypes, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.productTypes.getLoyaltyProgramAccruement(), this);
+		var thatIndex = arrayFind(arguments.productType.getLoyaltyProgramAccruement(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.productTypes.getLoyaltyProgramAccruements(), thatIndex);
+			arrayDeleteAt(arguments.productType.getLoyaltyProgramAccruements(), thatIndex);
 		}
 	}
 	

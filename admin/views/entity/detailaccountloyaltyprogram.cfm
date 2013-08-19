@@ -46,19 +46,42 @@
 Notes:
 
 --->
-<cfparam name="rc.account" type="any" />
+<cfparam name="rc.accountLoyaltyProgram" type="any">
+<cfparam name="rc.account" type="any" default="#rc.accountLoyaltyProgram.getAccount()#">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.account.getAccountLoyaltyProgramsSmartList()#"
-							   recordDetailAction="admin:entity.detailaccountloyaltyprogram"
-							   recordEditAction="admin:entity.editaccountloyaltyprogram">
-
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="loyaltyProgram.loyaltyProgramName" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountloyaltyProgramNumber" />
-		<cf_HibachiListingColumn propertyIdentifier="loyaltyProgram.activeFlag" />
-
-	</cf_HibachiListingDisplay>
-
-
-	<cf_HibachiActionCaller action="admin:entity.createaccountloyaltyprogram" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal="true"  />
+	<cf_HibachiEntityDetailForm object="#rc.accountLoyaltyProgram#" edit="#rc.edit#" saveActionQueryString="accountID=#rc.account.getAccountID()#">
+		<cf_HibachiEntityActionBar type="detail" object="#rc.accountLoyaltyProgram#" edit="#rc.edit#" 
+								   backAction="admin:entity.detailaccount"
+								   backQueryString="accountID=#rc.account.getAccountID()#"
+								   cancelAction="admin:entity.detailaccount"
+								   cancelQueryString="accountID=#rc.account.getAccountID()#" />
+		
+		<!--- Hidden field to attach this to the account --->
+		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
+		
+		<cf_HibachiPropertyRow>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.accountLoyaltyProgram#" property="accountLoyaltyProgramNumber" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.accountLoyaltyProgram#" property="loyaltyProgram" edit="#rc.edit#">
+			</cf_HibachiPropertyList>
+		</cf_HibachiPropertyRow>	
+	</cf_HibachiEntityDetailForm>
 </cfoutput>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
