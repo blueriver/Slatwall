@@ -104,7 +104,7 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// promotionPeriods (one-to-many)
+	// Account Loyalty Program Transaction (one-to-many)
 	public void function addAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {
 		arguments.accountLoyaltyProgramTransaction.setLoyaltyProgramAccruement( this );
 	}

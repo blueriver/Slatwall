@@ -44,8 +44,8 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 	property name="activeFlag" ormtype="boolean" default="1";
 	
 	// Related Object Properties (one-to-many)
-	property name="loyaltyProgramAccruements" singularname="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
-	property name="accountLoyaltyPrograms" singularname="accountLoyaltyProgram" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" cfc="AccountLoyaltyProgram" cascade="all-delete-orphan" inverse="true";
+	property name="loyaltyProgramAccruements" singularname="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
+	property name="accountLoyaltyPrograms" singularname="accountLoyaltyProgram" cfc="AccountLoyaltyProgram" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountLoyaltyProgram" fkcolumn="loyaltyProgramID" inversejoincolumn="accountID" inverse="true";

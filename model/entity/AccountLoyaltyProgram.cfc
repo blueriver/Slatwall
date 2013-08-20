@@ -35,7 +35,7 @@
 Notes:
 
 */
-component displayname="AccountLoyaltyProgram" entityname="SlatwallAccountLoyaltyProgram" table="SlatwallAccountLoyaltyProgram" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
+component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyaltyProgram" table="SlatwallAccountLoyaltyProgram" persistent="true" accessors="true"  output="false" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="account.accountLoyaltyPrograms" {
 	
 	// Persistent Properties
 	property name="accountLoyaltyProgramID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -44,6 +44,7 @@ component displayname="AccountLoyaltyProgram" entityname="SlatwallAccountLoyalty
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="loyaltyProgram" cfc="loyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
+	//property name="accountLoyaltyProgram" cfc="accountloyaltyProgram" fieldtype="many-to-one" fkcolumn="accountLoyaltyProgramID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -116,8 +117,8 @@ component displayname="AccountLoyaltyProgram" entityname="SlatwallAccountLoyalty
 
 	// ================== START: Overridden Methods ========================
 	
-	public string function getSimpleRepresentationPropertyName() {
-		return "accountLoyaltyProgram";
+	public string function getSimpleRepresentation() {
+		return "Account Loyalty Program";
 	}
 	
 	// ==================  END:  Overridden Methods ========================
