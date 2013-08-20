@@ -257,7 +257,9 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		var amountAuthorized = 0;
 			
 		for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
-			amountAuthorized = precisionEvaluate(amountAuthorized + getPaymentTransactions()[i].getAmountAuthorized());
+			if(isNull(getPaymentTransactions()[i].getAuthorizationCodeInvalidFlag()) || !getPaymentTransactions()[i].getAuthorizationCodeInvalidFlag()) {
+				amountAuthorized = precisionEvaluate(amountAuthorized + getPaymentTransactions()[i].getAmountAuthorized());	
+			}
 		}
 			
 		return amountAuthorized;

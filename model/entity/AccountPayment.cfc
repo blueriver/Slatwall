@@ -241,11 +241,11 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 		var amountAuthorized = 0;
 			
 		if( getAccountPaymentType().getSystemCode() == "aptCharge" ) {
-			
 			for(var i=1; i<=arrayLen(getPaymentTransactions()); i++) {
-				amountAuthorized = precisionEvaluate(amountAuthorized + getPaymentTransactions()[i].getAmountAuthorized());
+				if(isNull(getPaymentTransactions()[i].getAuthorizationCodeInvalidFlag()) || !getPaymentTransactions()[i].getAuthorizationCodeInvalidFlag()) {
+					amountAuthorized = precisionEvaluate(amountAuthorized + getPaymentTransactions()[i].getAmountAuthorized());
+				}
 			}
-			
 		}
 		
 		return amountAuthorized;

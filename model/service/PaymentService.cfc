@@ -389,7 +389,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							}
 							
 							// If the reposnse passes back an authorizationCode that was used, then add it to the transaction
-							if(!isNull(response.getAuthorizationCodeUsed())) {
+							if(!isNull(response.getAuthorizationCodeUsed()) && len(response.getAuthorizationCodeUsed())) {
 								arguments.paymentTransaction.setAuthorizationCodeUsed( arguments.data.preAuthorizationCode );
 								
 							// If the response didn't pass back an authorizationCode used, then we can check the transactionType, and if we passed in a preAuthorizationCode and then a value was set
@@ -399,7 +399,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							}
 							
 							// If this transaction used an authorizationCode, and the response has told us that the authorizationCode is now invalid then we should update any paymentTransactions with that authorizeCode and set them to now be invalid
-							if(!isNull(response.getAuthorizationCodeInvalidFlag()) && response.getAuthorizationCodeInvalidFlag() && !isNull(arguments.paymentTransaction.getAuthorizationCodeUsed())) {
+							if(!isNull(response.getAuthorizationCodeInvalidFlag()) && response.getAuthorizationCodeInvalidFlag() && !isNull(arguments.paymentTransaction.getAuthorizationCodeUsed()) && len(arguments.paymentTransaction.getAuthorizationCodeUsed())) {
 								if(arguments.paymentTransaction.getPayment().getClassName() eq "OrderPayment") {
 									getPaymentDAO().updateInvalidAuthorizationCode( autorizationCode=arguments.paymentTransaction.getAuthorizationCodeUsed(), orderPaymentID=arguments.paymentTransaction.getPayment().getOrderPaymentID() );	
 								} else if (arguments.paymentTransaction.getPayment().getClassName() eq "AccountPayment") {
@@ -420,15 +420,22 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 								
 							}
 							
+							// Set the successFlag in the transaction acordingly
+							arguments.paymentTransaction.setTransactionSuccessFlag( !response.hasErrors() );
+							
 							// Make sure that this transaction with all of it's info gets added to the DB
 							getHibachiDAO().flushORMSession();
 							
-							// If the response had errors then add them to the payment
+							// If the response had errors 
 							if(response.hasErrors()) {
+								// add errors to the paymentTransaction
 								arguments.paymentTransaction.addError('runTransaction', response.getErrors(), true);
 							}
 							
 						} catch (any e) {
+							
+							// Set the successFlag to false
+							arguments.paymentTransaction.setTransactionSuccessFlag( false );
 							
 							// Populate the orderPayment with the processing error and make it persistable
 							arguments.paymentTransaction.addError('runTransaction', rbKey('error.unexpected.checklog'), true);

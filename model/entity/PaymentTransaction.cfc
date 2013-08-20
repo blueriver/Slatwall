@@ -53,6 +53,7 @@ component entityname="SlatwallPaymentTransaction" table="SlatwallPaymentTransact
 	property name="transactionType" ormtype="string";
 	property name="transactionStartTickCount" ormtype="string";
 	property name="transactionEndTickCount" ormtype="string";
+	property name="transactionSuccessFlag" ormtype="boolean";
 	property name="providerTransactionID" ormtype="string";
 	property name="transactionDateTime" ormtype="timestamp";
 	property name="authorizationCode" ormtype="string";
