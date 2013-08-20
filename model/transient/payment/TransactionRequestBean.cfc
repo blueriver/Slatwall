@@ -133,7 +133,6 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		setExpirationMonth(arguments.accountPayment.getExpirationMonth());
 		setExpirationYear(arguments.accountPayment.getExpirationYear());
 		
-		
 		// Populate Account Info
 		setAccountFirstName(arguments.accountPayment.getAccount().getFirstName());
 		setAccountLastName(arguments.accountPayment.getAccount().getLastName());
@@ -174,8 +173,14 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		}
 		
 		// Populate relavent Misc Info
-		setAccountPaymentID(arguments.accountPayment.getAccountPaymentID());
-		setAccountID(arguments.accountPayment.getAccount().getAccountID());
+		setAccountPaymentID( arguments.accountPayment.getAccountPaymentID() );
+		setAccountID( arguments.accountPayment.getAccount().getAccountID() );
+		
+		// If this account payment has an original authorizationCode then we can use it.
+		if(len(arguments.accountPayment.getOriginalAuthorizationCode())) {
+			setOriginalAuthorizationCode(arguments.accountPayment.getOriginalAuthorizationCode());
+		}
+		
 	}
 	
 	public void function populatePaymentInfoWithOrderPayment(required any orderPayment) {
@@ -237,11 +242,15 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 			}
 		}
 		
-		
 		// Populate relavent Misc Info
 		setOrderPaymentID(arguments.orderPayment.getOrderPaymentID());
 		setOrderID(arguments.orderPayment.getOrder().getOrderID());
 		setAccountID(arguments.orderPayment.getOrder().getAccount().getAccountID());
+		
+		// If this order payment has an original authorizationCode then we can use it.
+		if(len(arguments.orderPayment.getOriginalAuthorizationCode())) {
+			setOriginalAuthorizationCode(arguments.orderPayment.getOriginalAuthorizationCode());
+		}
 	}
 	
 	public void function populatePaymentInfoWithAccountPaymentMethod(required any accountPaymentMethod) {

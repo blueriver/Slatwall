@@ -68,6 +68,8 @@ component displayname="Gateway Response"  accessors="true" output="false" extend
 		// Set Defaults
 		setTransactionID("");
 		setAuthorizationCode("");
+		setAuthorizationCodeUsed("");
+		setAuthorizationCodeInvalidFlag(false);
 		setAmountAuthorized(0);
 		setAmountReceived(0);
 		setAmountCredited(0);

@@ -111,6 +111,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="paymentMethodType" persistent="false";
 	property name="paymentMethodOptions" persistent="false";
 	property name="orderStatusCode" persistent="false";
+	property name="originalAuthorizationCode" persistent="false";
 	property name="statusCode" persistent="false";
 	property name="securityCode" persistent="false" hb_populateEnabled="public";
 	property name="orderAmountNeeded" persistent="false";
@@ -340,6 +341,13 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		return getOrder().getStatusCode();
 	}
 	
+	public any function getOriginalAuthorizationCode() {
+		if(!structKeyExists(variables,"originalAuthorizationCode")) {
+			variables.originalAuthorizationCode = getService( "paymentService" ).getOriginalAuthorizationCode( orderPaymentID=getOrderPaymentID() );
+		}
+		return variables.originalAuthorizationCode;
+	}
+	
 	public any function getStatusCode() {
 		return getOrderPaymentStatusType().getSystemCode();
 	}
@@ -391,7 +399,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	}
 	
 	public boolean function getCreditCardOrProviderTokenExistsFlag() {
-		if(isNull(getCreditCardNumber()) && isNull(getProviderToken())) {
+		if((isNull(getCreditCardNumber()) || !len(getCreditCardNumber())) && (isNull(getProviderToken()) || !len(getProviderToken()))) {
 			return false;
 		}
 		return true;

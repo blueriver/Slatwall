@@ -82,4 +82,52 @@ Notes:
 		<cfreturn rs.recordcount />
 	</cffunction>
 
+	<cffunction name="getOriginalAuthorizationCode">
+		<cfargument name="orderPaymentID" type="string" />
+		<cfargument name="accountPaymentID" type="string" />
+		
+		<cfset var hql = "SELECT NEW MAP(authorizationCode as authorizationCode) FROM SlatwallPaymentTransaction spt WHERE authroizationCode is not null and transactionType = :transactionType" />
+		<cfset hqlParams = {} />
+		<cfset hqlParams.transactionType = "authorize" />
+		
+		<cfif structKeyExists(arguments, "orderPaymentID")>
+			<cfset hql &= "spt.orderPayment.orderPaymentID = :orderPaymentID" />
+			<cfset hqlParam.orderPaymentID = arguments.orderPaymentID />	
+		<cfelseif structKeyExists(arguments, "accountPaymentID")>
+			<cfset hql &= "spt.accountPayment.accountPaymentID = :accountPaymentID" />
+			<cfset hqlParam.accountPaymentID = arguments.accountPaymentID />
+		</cfif>
+		
+		<cfset var results = ormExecuteQuery(hql, hqlParams) />
+		
+		<cfif arrayLen(results)>
+			<cfreturn results[1]['authorizationCode'] />
+		</cfif>
+		
+		<cfreturn "" />	
+	</cffunction>
+	
+	<cffunction name="updateInvalidAuthorizationCode">
+		<cfargument name="authorizationCode" type="string" required="true" />
+		<cfargument name="orderPaymentID" type="string" />
+		<cfargument name="accountPaymentID" type="string" />
+		
+		<cfset var hql = "UPDATE SlatwallPaymentTransaction SET authorizationCodeInvalidFlag = 1, modifiedDateTime = :now WHERE authorizationCode = :authorizationCode AND transactionType = :transactionType AND " />
+		
+		<cfset hqlParams = {} />
+		<cfset hqlParams.authorizationCode = arguments.authorizationCode />
+		<cfset hqlParams.transactionType = "authorize" />
+		<cfset hqlParams.now = now() />
+		
+		<cfif structKeyExists(arguments, "orderPaymentID")>
+			<cfset hql &= "orderPayment.orderPaymentID = :orderPaymentID" />
+			<cfset hqlParam.orderPaymentID = arguments.orderPaymentID />	
+		<cfelseif structKeyExists(arguments, "accountPaymentID")>
+			<cfset hql &= "accountPayment.accountPaymentID = :accountPaymentID" />
+			<cfset hqlParam.accountPaymentID = arguments.accountPaymentID />
+		</cfif>
+		
+		<cfset ormExecuteQuery(hql, hqlParams) />
+	</cffunction>
+	
 </cfcomponent>

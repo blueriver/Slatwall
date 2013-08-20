@@ -105,6 +105,7 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	property name="experationMonthOptions" persistent="false";
 	property name="expirationYearOptions" persistent="false";
 	property name="giftCardNumber" persistent="false";
+	property name="originalAuthorizationCode" persistent="false";
 	property name="paymentMethodType" persistent="false";
 	property name="securityCode" persistent="false";
 	property name="creditCardOrProviderTokenExistsFlag" persistent="false";
@@ -296,10 +297,17 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	}
 	
 	public boolean function getCreditCardOrProviderTokenExistsFlag() {
-		if(isNull(getCreditCardNumber()) && isNull(getProviderToken())) {
+		if((isNull(getCreditCardNumber()) || !len(getCreditCardNumber())) && (isNull(getProviderToken()) || !len(getProviderToken()))) {
 			return false;
 		}
 		return true;
+	}
+	
+	public any function getOriginalAuthorizationCode() {
+		if(!structKeyExists(variables,"originalAuthorizationCode")) {
+			variables.originalAuthorizationCode = getService( "paymentService" ).getOriginalAuthorizationCode( accountPaymentID=getAccountPaymentID() );
+		}
+		return variables.originalAuthorizationCode;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

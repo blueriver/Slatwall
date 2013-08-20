@@ -55,6 +55,81 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: Logical Methods ===========================
 	
+	public any function getUncapturedPreAuthorizations( required any payment ) {
+		var authorizations = [];
+		var sortedAuths = [];
+		var thisData = {};
+		var thisDataAdded = false;
+		var sortedFound = false;
+		
+		for(var paymentTransaction in arguments.payment.getPaymentTransactions()) {
+			
+			thisData = {};
+			
+			if(paymentTransaction.getTransactionType() eq 'authorize' &&
+				!isNull(paymentTransaction.getAuthorizationCode()) && 
+				len(paymentTransaction.getAuthorizationCode()) && 
+				!isNull(paymentTransaction.getAmountAuthorized()) && 
+				paymentTransaction.getAmountAuthorized() gt 0 &&
+				(isNull(paymentTransaction.getAuthorizationCodeInvalidFlag()) || !paymentTransaction.getAuthorizationCodeInvalidFlag())) {
+				
+					thisData.createdDateTime = paymentTransaction.getCreatedDateTime();	
+					thisData.authorizationCode = paymentTransaction.getAuthorizationCode();
+					thisData.amountAuthorized = paymentTransaction.getAmountAuthorized();
+					thisData.amountReceived = 0;
+				
+			} else if(paymentTransaction.getTransactionType() eq 'chargePreAuthorization' &&
+				!isNull(paymentTransaction.getAuthorizationCodeUsed()) && 
+				len(paymentTransaction.getAuthorizationCodeUsed()) && 
+				!isNull(paymentTransaction.getAmountReceived()) && 
+				paymentTransaction.getAmountReceived() gt 0) {
+				
+					thisData.createdDateTime = paymentTransaction.getCreatedDateTime();
+					thisData.authorizationCode = paymentTransaction.getAuthorizationCodeUsed();
+					thisData.amountAuthorized = 0;
+					thisData.amountReceived = paymentTransaction.getAmountReceived();
+				
+			}
+			
+			if(structKeyExists(thisData, "authorizationCode")) {
+				thisDataAdded = false;
+				for(var a=1; a<=arrayLen(authorizations); a++) {
+					if(thisData.authorizationCode eq authorizations[a].authorizationCode) {
+						if(thisData.createdDateTime lt authorizations[a].createdDateTime) {
+							authorizations[a].createdDateTime = thisData.createdDateTime;
+						}
+						authorizations[a].amountAuthorized = precisionEvaluate(authorizations[a].amountAuthorized + thisData.amountAuthorized);
+						authorizations[a].amountReceived = precisionEvaluate(authorizations[a].amountReceived + thisData.amountReceived);
+						thisDataAdded = true;
+						break;
+					}
+				}
+				if(!thisDataAdded) {
+					arrayAppend(authorizations, thisData);
+				}
+			}
+		}
+		
+		for(var a=1; a<=arrayLen(authorizations); a++) {
+			if(authorizations[a].amountAuthorized gt authorizations[a].amountReceived) {
+				sortedFound = false;
+				authorizations[a].chargeableAmount = precisionEvaluate(authorizations[a].amountAuthorized - authorizations[a].amountReceived);
+				for(var s=1; s<=arrayLen(sortedAuths); s++) {
+					if(sortedAuths[s].createdDateTime gt authorizations[a].createdDateTime) {
+						arrayInsertAt(sortedAuths, s, authorizations[a]);
+						sortedFound = true;
+						break;
+					}
+				}
+				if(!sortedFound) {
+					arrayAppend(sortedAuths, authorizations[a]);
+				}
+			}
+		}
+		
+		return sortedAuths;
+	}
+	
 	public any function getEligiblePaymentMethodDetailsForOrder(required any order) {
 		var paymentMethodMaxAmount = {};
 		var eligiblePaymentMethodDetails = [];
@@ -180,6 +255,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: DAO Passthrough ===========================
 	
+	public numeric function getOriginalAuthorizationCode( string orderPaymentID, string accountPaymentID ) {
+		return getPaymentDAO().getOriginalAuthorizationCode(argumentcollection=arguments);
+	}
+	
 	// ===================== START: DAO Passthrough ===========================
 	
 	// ===================== START: Process Methods ===========================
@@ -263,7 +342,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							// messages
 							arguments.paymentTransaction.setMessage(serializeJSON(response.getMessages()));
 							
-							// transactionID
+							// providerTransactionID
 							if(!isNull(response.getProviderTransactionID())) {
 								arguments.paymentTransaction.setProviderTransactionID( response.getProviderTransactionID() );	
 							}
@@ -290,6 +369,25 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							// avsCode
 							if(!isNull(response.getAVSCode())) {
 								arguments.paymentTransaction.setAVSCode(response.getAVSCode());
+							}
+							
+							// If the reposnse passes back an authorizationCode that was used, then add it to the transaction
+							if(!isNull(response.getAuthorizationCodeUsed())) {
+								arguments.paymentTransaction.setAuthorizationCodeUsed( arguments.data.preAuthorizationCode );
+								
+							// If the response didn't pass back an authorizationCode used, then we can check the transactionType, and if we passed in a preAuthorizationCode and then a value was set
+							} else if(listFindNoCase("chargePreAuthorization", arguments.data.transactionType) && structKeyExists(arguments.data, "preAuthorizationCode") && !isNull(response.getAmountReceived()) && isNumeric(response.getAmountReceived()) && response.getAmountReceived() gt 0) {
+								arguments.paymentTransaction.setAuthorizationCodeUsed( arguments.data.preAuthorizationCode );
+								
+							}
+							
+							// If this transaction used an authorizationCode, and the response has told us that the authorizationCode is now invalid then we should update any paymentTransactions with that authorizeCode and set them to now be invalid
+							if(!isNull(response.getAuthorizationCodeInvalidFlag()) && response.getAuthorizationCodeInvalidFlag() && !isNull(arguments.paymentTransaction.getAuthorizationCodeUsed())) {
+								if(arguments.paymentTransaction.getPayment().getClassName() eq "OrderPayment") {
+									getPaymentDAO().updateInvalidAuthorizationCode( autorizationCode=arguments.paymentTransaction.getAuthorizationCodeUsed(), orderPaymentID=arguments.paymentTransaction.getPayment().getOrderPaymentID() );	
+								} else if (arguments.paymentTransaction.getPayment().getClassName() eq "AccountPayment") {
+									getPaymentDAO().updateInvalidAuthorizationCode( autorizationCode=arguments.paymentTransaction.getAuthorizationCodeUsed(), orderPaymentID=arguments.paymentTransaction.getPayment().getOrderPaymentID() );
+								}
 							}
 							
 							// add the providerToken to the orderPayment & accountPayment
