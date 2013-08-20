@@ -46,11 +46,11 @@
 Notes:
 
 --->
-<cfparam name="rc.accountLoyaltyProgram" type="any">
+<!---<cfparam name="rc.accountLoyaltyProgram" type="any">
 <cfparam name="rc.account" type="any" default="#rc.accountLoyaltyProgram.getAccount()#">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.edit" type="boolean">--->
 
-<cfoutput>
+<!---<cfoutput>
 	<cf_HibachiEntityDetailForm object="#rc.accountLoyaltyProgram#" edit="#rc.edit#" saveActionQueryString="accountID=#rc.account.getAccountID()#">
 		<cf_HibachiEntityActionBar type="detail" object="#rc.accountLoyaltyProgram#" edit="#rc.edit#" 
 								   backAction="admin:entity.detailaccount"
@@ -69,7 +69,7 @@ Notes:
 		</cf_HibachiPropertyRow>	
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
-
+--->
 
 
 

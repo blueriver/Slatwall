@@ -45,6 +45,7 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 	
 	// Related Object Properties (one-to-many)
 	property name="loyaltyProgramAccruements" singularname="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
+	property name="accountLoyaltyPrograms" singularname="accountLoyaltyProgram" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" cfc="AccountLoyaltyProgram" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - inverse)
 	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountLoyaltyProgram" fkcolumn="loyaltyProgramID" inversejoincolumn="accountID" inverse="true";
@@ -69,10 +70,18 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 	
 	// LoyaltyProgramAccruement (one-to-many)
 	public void function addLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
-		arguments.attribute.setLoyaltyProgramAccruement( this );
+		arguments.loyaltyProgramAccruement.setLoyaltyProgramAccruement( this );
 	}
 	public void function removeLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
-		arguments.attribute.removeLoyaltyProgramAccruement( this );
+		arguments.loyaltyProgramAccruement.removeLoyaltyProgramAccruement( this );
+	}
+	
+	// Account Loyalty Programs (one-to-many)
+	public void function addAccountLoyaltyProgram(required any accountLoyaltyProgram) {    
+		arguments.accountLoyaltyProgram.setAccount( this );    
+	}    
+	public void function removeAccountLoyaltyProgram(required any accountLoyaltyProgram) {    
+		arguments.accountLoyaltyProgram.removeAccount( this );    
 	}
 	
 	// Accounts (many-to-many - inverse)

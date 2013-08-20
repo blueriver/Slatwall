@@ -70,7 +70,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountLoyaltyProgramTransaction" cascade="all-delete-orphan" inverse="true";
 	
 	// TODO [paul do first]: Add one-to-many for AccountLoyaltyProgram... MAKE SURE YOU UPDATE ENTITY OBJECTS WITH NEW NAMES
-	property name="accountLoyaltyPrograms" singularname="accountLoyaltyProgram" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountLoyaltyProgram" cascade="all" inverse="true";
+	property name="accountLoyaltyPrograms" hb_populateEnabled="public" singularname="accountLoyaltyProgram" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountLoyaltyProgram" cascade="all-delete-orphan" inverse="true";
 	
 	property name="accountPaymentMethods" hb_populateEnabled="public" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountPayments" singularname="accountPayment" cfc="AccountPayment" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all" inverse="true";
@@ -108,7 +108,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="adminIcon" persistent="false";
 	property name="adminAccountFlag" persistent="false" hb_formatType="yesno";
 	property name="emailAddress" persistent="false" hb_formatType="email";
-	property name="loyaltyProgram" persistent="false";
 	property name="fullName" persistent="false";
 	property name="gravatarURL" persistent="false"; 
 	property name="guestAccountFlag" persistent="false" hb_formatType="yesno";

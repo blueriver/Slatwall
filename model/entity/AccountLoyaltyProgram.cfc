@@ -42,8 +42,8 @@ component displayname="AccountLoyaltyProgram" entityname="SlatwallAccountLoyalty
 	property name="accountLoyaltyProgramNumber" ormtype="string";
 
 	// Related Object Properties (many-to-one)
-	property name="loyaltyProgram" cfc="loyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="loyaltyProgram" cfc="loyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -70,6 +70,7 @@ component displayname="AccountLoyaltyProgram" entityname="SlatwallAccountLoyalty
 			arrayAppend(arguments.account.getAccountLoyaltyPrograms(), this);
 		}
 	}
+	
 	public void function removeAccount(any account) {
 		if(!structKeyExists(arguments, "account")) {
 			arguments.account = variables.account;
@@ -81,6 +82,23 @@ component displayname="AccountLoyaltyProgram" entityname="SlatwallAccountLoyalty
 		structDelete(variables, "account");
 	}
 	
+	// loyalty Program (many-to-one)
+	public void function setLoyaltyProgram(required any loyaltyProgram) {
+		variables.loyaltyProgram = arguments.loyaltyProgram;
+		if(isNew() or !arguments.loyaltyProgram.hasAccountLoyaltyProgram( this )) {
+			arrayAppend(arguments.loyaltyProgram.getAccountLoyaltyPrograms(), this);
+		}
+	}
+	public void function removeLoyaltyProgram(any loyaltyProgram) {
+		if(!structKeyExists(arguments, "loyaltyProgram")) {
+			arguments.loyaltyProgram = variables.loyaltyProgram;
+		}
+		var index = arrayFind(arguments.loyaltyProgram.getAccountLoyaltyPrograms(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.loyaltyProgram.getAccountLoyaltyPrograms(), index);
+		}
+		structDelete(variables, "loyaltyProgram");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

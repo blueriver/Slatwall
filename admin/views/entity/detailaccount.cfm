@@ -104,7 +104,7 @@ Notes:
 			<cf_HibachiTab property="orders" count="#rc.ordersPlacedSmartList.getRecordsCount()#" />
 			<cf_HibachiTab view="admin:entity/accounttabs/cartsandquotes" count="#rc.ordersNotPlacedSmartList.getRecordsCount()#" />
 			<cf_HibachiTab property="accountPayments" />
-			<cf_HibachiTab view="admin:entity/accounttabs/loyaltyprograms" count="#rc.accountLoyaltyProgramsSmartList.getRecordsCount()#" />
+			<cf_HibachiTab view="admin:entity/accounttabs/accountloyaltyprograms" count="#rc.accountLoyaltyProgramsSmartList.getRecordsCount()#" />
 			<cf_HibachiTab property="productReviews" />
 			<cf_HibachiTab view="admin:entity/accounttabs/subscriptionusage" count="#rc.account.getSubscriptionUsagesSmartList().getRecordsCount()#" />
 			<cf_HibachiTab property="permissionGroups" />

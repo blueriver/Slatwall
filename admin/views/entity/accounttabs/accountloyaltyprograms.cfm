@@ -50,8 +50,11 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.account.getAccountLoyaltyProgramsSmartList()#"
-							   recordDetailAction="admin:entity.detailaccountloyaltyprogram"
-							   recordEditAction="admin:entity.editaccountloyaltyprogram">
+							  recordEditAction="admin:entity.editaccountloyaltyprogram"
+							  recordEditQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
+							  recordDeleteAction="admin:entity.deleteaccountloyaltyprogram"
+							  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
+							  edit="#rc.edit#">
 
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="loyaltyProgram.loyaltyProgramName" />
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accountloyaltyProgramNumber" />

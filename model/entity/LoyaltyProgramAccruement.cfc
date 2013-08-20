@@ -106,10 +106,10 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	
 	// promotionPeriods (one-to-many)
 	public void function addAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {
-		arguments.accountLoyaltyProgramTransaction.setLoyaltyProgram( this );
+		arguments.accountLoyaltyProgramTransaction.setLoyaltyProgramAccruement( this );
 	}
 	public void function removeAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {
-		arguments.accountLoyaltyProgramTransaction.removeLoyaltyProgram( this );
+		arguments.accountLoyaltyProgramTransaction.removeLoyaltyProgramAccruement( this );
 	}
 	
 	

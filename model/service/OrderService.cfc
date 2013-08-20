@@ -1080,7 +1080,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				};
 				
 				// Call the process method with 'itemsFulfilled' as context
-				getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, itemsFulfilledData, 'itemsFulfilled');
+				getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, itemsFulfilledData, 'itemFulfilled');
 			}
 			
 			// Check to see if this orderFulfillment is complete and fully 'fulfilled'
