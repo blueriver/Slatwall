@@ -207,8 +207,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				} else {
 					
 					// Setup the startTickCount & the transactionType
-					arguments.paymentTransaction.setTransactionType( arguments.data.transactionType );
 					arguments.paymentTransaction.setTransactionStartTickCount( getTickCount() );
+					arguments.paymentTransaction.setTransactionType( arguments.data.transactionType );
 					
 					// Add the transaction to the hibernate scope
 					getHibachiDAO().save(arguments.paymentTransaction);
@@ -232,6 +232,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						requestBean.setTransactionID( arguments.paymentTransaction.getPaymentTransactionID() );
 						requestBean.setTransactionType( arguments.data.transactionType );
 						requestBean.setTransactionAmount( arguments.data.amount );
+						if(structKeyExists(arguments.data, "preAuthorizationCode")) {
+							requestBean.setPreAuthorizationCode( arguments.data.preAuthorizationCode );
+						}
 						if(listFindNoCase("OrderPayment,AccountPayment", arguments.paymentTransaction.getPayment().getClassName())) {
 							requestBean.setTransactionCurrency( arguments.paymentTransaction.getPayment().getCurrencyCode() );	
 						}
@@ -260,9 +263,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							// messages
 							arguments.paymentTransaction.setMessage(serializeJSON(response.getMessages()));
 							
-							// TransactionID
-							if(!isNull(response.getTransactionID())) {
-								arguments.paymentTransaction.setProviderTransactionID(response.getTransactionID());	
+							// transactionID
+							if(!isNull(response.getProviderTransactionID())) {
+								arguments.paymentTransaction.setProviderTransactionID( response.getProviderTransactionID() );	
 							}
 							// amountAuthorized
 							if(!isNull(response.getAmountAuthorized())) {

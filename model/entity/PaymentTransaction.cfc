@@ -56,6 +56,8 @@ component entityname="SlatwallPaymentTransaction" table="SlatwallPaymentTransact
 	property name="providerTransactionID" ormtype="string";
 	property name="transactionDateTime" ormtype="timestamp";
 	property name="authorizationCode" ormtype="string";
+	property name="authorizationCodeUsed" ormtype="string";
+	property name="authorizationCodeInvalidFlag" ormtype="boolean";
 	property name="amountAuthorized" notnull="true" dbdefault="0" ormtype="big_decimal";
 	property name="amountReceived" notnull="true" dbdefault="0" ormtype="big_decimal";
 	property name="amountCredited" notnull="true" dbdefault="0" ormtype="big_decimal";

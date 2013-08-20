@@ -82,14 +82,24 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	property name="billingPostalCode" type="string";   
 	property name="billingCountryCode" type="string";   
 	
-	// Pertinent Reference Information
+	// Pertinent Reference Information (used for accountPayments)
 	property name="accountPaymentID" type="string";
+	
+	// Pertinent Reference Information (used for accountPaymentMethods)
 	property name="accountPaymentMethodID" type="string";
+	
+	// Pertinent Reference Information (used for orderPayments)
 	property name="orderPaymentID" type="string";
 	property name="orderID" type="string";
+	
+	// Pertinent Reference Information (used for all above)
 	property name="accountID" type="string";
-	property name="providerTransactionID" type="string";
-	property name="referencedPaymentTransactionID" type="string";
+	
+	// Only Used for 'chargePreAuthorization'
+	property name="preAuthorizationCode" type="string";
+	
+	// Always there if this Account Payment or Order Payment has previously had an authorization done
+	property name="originalAuthorizationCode" type="string";
 	
 	/*
 	Process Types
@@ -114,6 +124,9 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		}
 		if(!isNull(arguments.accountPayment.getProviderToken())) {
 			setProviderToken(arguments.accountPayment.getProviderToken());	
+		}
+		if(!isNull(arguments.accountPayment.getOriginalAuthorizationCode())) {
+			
 		}
 		setNameOnCreditCard(arguments.accountPayment.getNameOnCreditCard());
 		setCreditCardType(arguments.accountPayment.getCreditCardType());
