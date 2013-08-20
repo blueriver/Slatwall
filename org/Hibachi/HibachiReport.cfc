@@ -462,6 +462,10 @@
 			<cfset var thisDate = "" />
 			<cfset var m = 1 />
 			<cfset var loopdatepart = "d" />
+			<cfset var weekAdjustment = 0 />
+			<cfif getApplicationValue('databaseType') eq "MySQL">
+				<cfset var weekAdjustment = 1 />
+			</cfif>
 			
 			<cfif getReportDateTimeGroupBy() eq 'year'>
 				<cfset loopdatepart = "yyyy" />
@@ -525,7 +529,7 @@
 					<cfset arrayAppend(thisData, dateDiff("s", createdatetime( '1970','01','01','00','00','00' ), dateAdd("h", 1, thisDate))*1000) />
 					<cfif year(thisDate) eq chartDataQuery['reportDateTimeYear'][chartRow] and 
 							(!listFindNoCase('month,week,day,hour', getReportDateTimeGroupBy()) or month(thisDate) eq chartDataQuery['reportDateTimeMonth'][chartRow]) and
-							(!listFindNoCase('week,day,hour', getReportDateTimeGroupBy()) or (week(thisDate) - 1) eq chartDataQuery['reportDateTimeWeek'][chartRow]) and
+							(!listFindNoCase('week,day,hour', getReportDateTimeGroupBy()) or (week(thisDate) - weekAdjustment) eq chartDataQuery['reportDateTimeWeek'][chartRow]) and
 							(!listFindNoCase('day,hour', getReportDateTimeGroupBy()) or day(thisDate) eq chartDataQuery['reportDateTimeDay'][chartRow]) and
 							(!listFindNoCase('hour', getReportDateTimeGroupBy()) or hour(thisDate) eq chartDataQuery['reportDateTimeHour'][chartRow])>
 						<cfset arrayAppend(thisData, chartDataQuery[ metricDefinition.alias ][ chartRow ]) />
