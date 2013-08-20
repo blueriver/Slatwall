@@ -112,6 +112,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 	property name="paymentMethodOptions" persistent="false";
 	property name="orderStatusCode" persistent="false";
 	property name="originalAuthorizationCode" persistent="false";
+	property name="originalProviderTransactionID" persistent="false";
 	property name="statusCode" persistent="false";
 	property name="securityCode" persistent="false" hb_populateEnabled="public";
 	property name="orderAmountNeeded" persistent="false";
@@ -346,6 +347,13 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 			variables.originalAuthorizationCode = getService( "paymentService" ).getOriginalAuthorizationCode( orderPaymentID=getOrderPaymentID() );
 		}
 		return variables.originalAuthorizationCode;
+	}
+	
+	public any function getOriginalAuthorizationCode() {
+		if(!structKeyExists(variables,"originalProviderTransactionID")) {
+			variables.originalProviderTransactionID = getService( "paymentService" ).getOriginalProviderTransactionID( orderPaymentID=getOrderPaymentID() );
+		}
+		return variables.originalProviderTransactionID;
 	}
 	
 	public any function getStatusCode() {

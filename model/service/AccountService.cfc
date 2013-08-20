@@ -401,7 +401,8 @@ component extends="HibachiService" accessors="true" output="false" {
 				transactionData = {
 					transactionType = arguments.processObject.getTransactionType(),
 					amount = thisToCharge,
-					preAuthorizationCode = uncapturedAuthorizations[a].authorizationCode
+					preAuthorizationCode = uncapturedAuthorizations[a].authorizationCode,
+					preAuthorizationProviderTransactionID = uncapturedAuthorizations[a].providerTransactionID
 				};
 				
 				// Run the transaction
@@ -430,6 +431,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			
 			if(arguments.processObject.getTransactionType() eq "chargePreAuthorization" && arrayLen(uncapturedAuthorizations)) {
 				transactionData.preAuthorizationCode = uncapturedAuthorizations[1].authorizationCode;
+				preAuthorizationProviderTransactionID = uncapturedAuthorizations[1].providerTransactionID;
 			}
 			
 			// Run the transaction

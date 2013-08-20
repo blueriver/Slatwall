@@ -86,7 +86,7 @@ Notes:
 		<cfargument name="orderPaymentID" type="string" />
 		<cfargument name="accountPaymentID" type="string" />
 		
-		<cfset var hql = "SELECT NEW MAP(authorizationCode as authorizationCode) FROM SlatwallPaymentTransaction spt WHERE authroizationCode is not null and transactionType = :transactionType" />
+		<cfset var hql = "SELECT NEW MAP(spt.authorizationCode as authorizationCode) FROM SlatwallPaymentTransaction spt WHERE authroizationCode is not null and transactionType = :transactionType" />
 		<cfset hqlParams = {} />
 		<cfset hqlParams.transactionType = "authorize" />
 		
@@ -105,6 +105,32 @@ Notes:
 		</cfif>
 		
 		<cfreturn "" />	
+	</cffunction>
+	
+	<cffunction name="getOriginalProviderTransactionID">
+		<cfargument name="orderPaymentID" type="string" />
+		<cfargument name="accountPaymentID" type="string" />
+		
+		<cfset var hql = "SELECT NEW MAP(spt.providerTransactionID as providerTransactionID) FROM SlatwallPaymentTransaction spt WHERE " />
+		<cfset hqlParams = {} />
+		
+		<cfif structKeyExists(arguments, "orderPaymentID")>
+			<cfset hql &= "spt.orderPayment.orderPaymentID = :orderPaymentID" />
+			<cfset hqlParam.orderPaymentID = arguments.orderPaymentID />	
+		<cfelseif structKeyExists(arguments, "accountPaymentID")>
+			<cfset hql &= "spt.accountPayment.accountPaymentID = :accountPaymentID" />
+			<cfset hqlParam.accountPaymentID = arguments.accountPaymentID />
+		</cfif>
+		
+		<cfset hql &= " ORDER BY spt.createdDateTime" />
+		
+		<cfset var results = ormExecuteQuery(hql, hqlParams) />
+		
+		<cfif arrayLen(results)>
+			<cfreturn results[1]['providerTransactionID'] />
+		</cfif>
+		
+		<cfreturn "" />
 	</cffunction>
 	
 	<cffunction name="updateInvalidAuthorizationCode">

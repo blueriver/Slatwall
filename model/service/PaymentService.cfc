@@ -73,11 +73,15 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				paymentTransaction.getAmountAuthorized() gt 0 &&
 				(isNull(paymentTransaction.getAuthorizationCodeInvalidFlag()) || !paymentTransaction.getAuthorizationCodeInvalidFlag())) {
 				
-					thisData.createdDateTime = paymentTransaction.getCreatedDateTime();	
+					thisData.createdDateTime = paymentTransaction.getCreatedDateTime();
 					thisData.authorizationCode = paymentTransaction.getAuthorizationCode();
 					thisData.amountAuthorized = paymentTransaction.getAmountAuthorized();
 					thisData.amountReceived = 0;
-				
+					thisData.providerTransactionID = "";
+					if(!isNull(paymentTransaction.getProviderTransactionID())) {
+						thisData.providerTransactionID = paymentTransaction.getProviderTransactionID();
+					}
+					
 			} else if(paymentTransaction.getTransactionType() eq 'chargePreAuthorization' &&
 				!isNull(paymentTransaction.getAuthorizationCodeUsed()) && 
 				len(paymentTransaction.getAuthorizationCodeUsed()) && 
@@ -85,9 +89,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				paymentTransaction.getAmountReceived() gt 0) {
 				
 					thisData.createdDateTime = paymentTransaction.getCreatedDateTime();
+					thisData.providerTransactionID = paymentTransaction.providerTransactionID();
 					thisData.authorizationCode = paymentTransaction.getAuthorizationCodeUsed();
 					thisData.amountAuthorized = 0;
 					thisData.amountReceived = paymentTransaction.getAmountReceived();
+					thisData.providerTransactionID = "";
+					if(!isNull(paymentTransaction.getProviderTransactionID())) {
+						thisData.providerTransactionID = paymentTransaction.getProviderTransactionID();
+					}
 				
 			}
 			
@@ -97,6 +106,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					if(thisData.authorizationCode eq authorizations[a].authorizationCode) {
 						if(thisData.createdDateTime lt authorizations[a].createdDateTime) {
 							authorizations[a].createdDateTime = thisData.createdDateTime;
+							authorizations[a].providerTransactionID = thisData.providerTransactionID;
 						}
 						authorizations[a].amountAuthorized = precisionEvaluate(authorizations[a].amountAuthorized + thisData.amountAuthorized);
 						authorizations[a].amountReceived = precisionEvaluate(authorizations[a].amountReceived + thisData.amountReceived);
@@ -259,6 +269,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return getPaymentDAO().getOriginalAuthorizationCode(argumentcollection=arguments);
 	}
 	
+	public numeric function getOriginalProviderTransactionID( string orderPaymentID, string accountPaymentID ) {
+		return getPaymentDAO().getOriginalProviderTransactionID(argumentcollection=arguments);
+	}
+	
 	// ===================== START: DAO Passthrough ===========================
 	
 	// ===================== START: Process Methods ===========================
@@ -313,6 +327,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 						requestBean.setTransactionAmount( arguments.data.amount );
 						if(structKeyExists(arguments.data, "preAuthorizationCode")) {
 							requestBean.setPreAuthorizationCode( arguments.data.preAuthorizationCode );
+						}
+						if(structKeyExists(arguments.data, "preAuthorizationProviderTransactionID")) {
+							requestBean.setPreAuthorizationProviderTransactionID( arguments.data.preAuthorizationProviderTransactionID );
 						}
 						if(listFindNoCase("OrderPayment,AccountPayment", arguments.paymentTransaction.getPayment().getClassName())) {
 							requestBean.setTransactionCurrency( arguments.paymentTransaction.getPayment().getCurrencyCode() );	
