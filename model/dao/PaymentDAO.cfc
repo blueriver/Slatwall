@@ -141,16 +141,16 @@ Notes:
 		<cfset var hql = "UPDATE SlatwallPaymentTransaction SET authorizationCodeInvalidFlag = 1, modifiedDateTime = :now WHERE authorizationCode = :authorizationCode AND transactionType = :transactionType AND " />
 		
 		<cfset hqlParams = {} />
-		<cfset hqlParams.authorizationCode = arguments.authorizationCode />
-		<cfset hqlParams.transactionType = "authorize" />
+		<cfset hqlParams['authorizationCode'] = arguments.authorizationCode />
+		<cfset hqlParams['transactionType'] = "authorize" />
 		<cfset hqlParams.now = now() />
 		
 		<cfif structKeyExists(arguments, "orderPaymentID")>
 			<cfset hql &= "orderPayment.orderPaymentID = :orderPaymentID" />
-			<cfset hqlParam.orderPaymentID = arguments.orderPaymentID />	
+			<cfset hqlParams['orderPaymentID'] = arguments.orderPaymentID />
 		<cfelseif structKeyExists(arguments, "accountPaymentID")>
 			<cfset hql &= "accountPayment.accountPaymentID = :accountPaymentID" />
-			<cfset hqlParam.accountPaymentID = arguments.accountPaymentID />
+			<cfset hqlParams['accountPaymentID'] = arguments.accountPaymentID />
 		</cfif>
 		
 		<cfset ormExecuteQuery(hql, hqlParams) />
