@@ -114,13 +114,13 @@ component extends="FW1.framework" {
 	// Allow For Instance Config
 	try{include "../../custom/config/configORM.cfm";}catch(any e){}
 	
-	if(!fileExists(expandPath('/#variables.framework.applicationKey#/config/lastFullUpdate.txt.cfm')) || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)) {
-		this.ormSettings.secondaryCacheEnabled = false;
-	}
-	
 	// ==================== START: PRE UPDATE SCRIPTS ======================
-	if(!fileExists("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/lastFullUpdate.txt.cfm") || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
+	if(!fileExists("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/lastFullUpdate.txt.cfm") || !fileExists("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/preUpdatesRun.txt.cfm") || (structKeyExists(url, variables.framework.hibachi.fullUpdateKey) && url[ variables.framework.hibachi.fullUpdateKey ] == variables.framework.hibachi.fullUpdatePassword)){
+		
+		this.ormSettings.secondaryCacheEnabled = false;
+		
 		variables.preupdate = {};
+		
 		if(!fileExists("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/preUpdatesRun.txt.cfm")) {
 			fileWrite("#this.mappings[ '/#variables.framework.applicationKey#' ]#/custom/config/preUpdatesRun.txt.cfm", "");
 		}
