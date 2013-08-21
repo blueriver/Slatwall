@@ -50,7 +50,6 @@ Notes:
 <cfparam name="rc.addOrderPaymentProcessObject" type="any" />
 
 <cfoutput>
-	
 	<cfif arrayLen(rc.addOrderPaymentProcessObject.getAccountPaymentMethodIDOptions()) gt 1>
 		<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject#" property="accountPaymentMethodID" edit="#rc.edit#">
 	</cfif>
@@ -61,7 +60,7 @@ Notes:
 		<input type="hidden" name="newOrderPayment.orderPaymentID" value="#rc.addOrderPaymentProcessObject.getNewOrderPayment().getOrderPaymentID()#" />
 		
 		<!--- New Payment Type --->
-		<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="paymentMethod" fieldName="newOrderPayment.paymentMethod.paymentMethodID" edit="#rc.edit#">
+		<cf_HibachiPropertyDisplay object="#rc.addOrderPaymentProcessObject.getNewOrderPayment()#" property="paymentMethod" fieldName="newOrderPayment.paymentMethod.paymentMethodID" valueOptions="#rc.addOrderPaymentProcessObject.getPaymentMethodIDOptions()#" edit="#rc.edit#">
 		
 		<cfset loadPaymentMethodType = rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethodOptions()[1]['paymentmethodtype'] />
 		<cfif !isNull(rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethod())>
@@ -109,7 +108,10 @@ Notes:
 		</cf_HibachiDisplayToggle>
 		
 		<!--- Save Order Payment as Account Payment Method --->
-		<cfset loadVisable = rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethodOptions()[1]['allowsave'] />
+		<cfset loadVisable = 0 />
+		<cfif structKeyExists(rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethodOptions()[1], 'allowsave') and rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethodOptions()[1]['allowsave']> 
+			<cfset loadVisable = 1 />
+		</cfif>
 		<cfif !isNull(rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethod())>
 			<cfset loadVisable = rc.addOrderPaymentProcessObject.getNewOrderPayment().getPaymentMethod().getAllowSaveFlag() />
 		</cfif>

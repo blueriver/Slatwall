@@ -46,7 +46,7 @@
 Notes:
 
 */
-component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="true" accessors="true" output="false" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="orderService" hb_permission="order.orderItems" {
+component entityname="SlatwallOrderItem" table="SwOrderItem" persistent="true" accessors="true" output="false" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="orderService" hb_permission="order.orderItems" {
 	
 	// Persistent Properties
 	property name="orderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -253,6 +253,24 @@ component entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="t
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Applied Price Group (many-to-one)    
+	public void function setAppliedPriceGroup(required any appliedPriceGroup) {    
+		variables.appliedPriceGroup = arguments.appliedPriceGroup;    
+		if(isNew() or !arguments.appliedPriceGroup.hasAppliedOrderItem( this )) {    
+			arrayAppend(arguments.appliedPriceGroup.getAppliedOrderItems(), this);    
+		}    
+	}    
+	public void function removeAppliedPriceGroup(any appliedPriceGroup) {    
+		if(!structKeyExists(arguments, "appliedPriceGroup")) {    
+			arguments.appliedPriceGroup = variables.appliedPriceGroup;    
+		}    
+		var index = arrayFind(arguments.appliedPriceGroup.getAppliedOrderItems(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.appliedPriceGroup.getAppliedOrderItems(), index);    
+		}    
+		structDelete(variables, "appliedPriceGroup");    
+	}
 	
 	// Order (many-to-one)
 	public void function setOrder(required any order) {
