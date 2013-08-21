@@ -61,7 +61,7 @@ Notes:
 		chargePreAuthorization	
 		generateToken
 */
-component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persistent=true output=false accessors=true extends="HibachiEntity" cacheuse="transactional" hb_serviceName="paymentService" hb_permission="this" hb_processContexts="processPayment,processCashPayment,processCheckPayment,processCreditCardPayment,processExternalPayment,processGiftCardPayment,processTermAccountPayment" {
+component entityname="SlatwallPaymentMethod" table="SwPaymentMethod" persistent=true output=false accessors=true extends="HibachiEntity" cacheuse="transactional" hb_serviceName="paymentService" hb_permission="this" hb_processContexts="processPayment,processCashPayment,processCheckPayment,processCreditCardPayment,processExternalPayment,processGiftCardPayment,processTermAccountPayment" {
 	
 	// Persistent Properties
 	property name="paymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -70,12 +70,12 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 	property name="allowSaveFlag" ormtype="boolean" default="false";
 	property name="activeFlag" ormtype="boolean" default="false";
 	property name="sortOrder" ormtype="integer";
-	property name="saveAccountPaymentMethodTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
-	property name="saveAccountPaymentMethodEncryptFlag" ormtype="boolean";
-	property name="saveOrderPaymentTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
+	property name="saveAccountPaymentMethodTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey" column="saveAccountPaymentMethodTxType";
+	property name="saveAccountPaymentMethodEncryptFlag" ormtype="boolean" column="saveAccPaymentMethodEncFlag";
+	property name="saveOrderPaymentTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey" column="saveOrderPaymentTxType";
 	property name="saveOrderPaymentEncryptFlag" ormtype="boolean";
-	property name="placeOrderChargeTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
-	property name="placeOrderCreditTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey";
+	property name="placeOrderChargeTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey" column="placeOrderChargeTxType";
+	property name="placeOrderCreditTransactionType" ormtype="string" hb_formFieldType="select" hb_formatType="rbKey" column="placeOrderCreditTxType";
 	
 	// Related Object Properties (many-to-one)
 	property name="paymentIntegration" cfc="Integration" fieldtype="many-to-one" fkcolumn="paymentIntegrationID";
