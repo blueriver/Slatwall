@@ -51,6 +51,8 @@ Notes:
 <cfparam name="this.datasource.username" default="" />
 <cfparam name="this.datasource.password" default="" />
 
+<cfsetting requesttimeout="1200" />
+
 <cfif this.ormSettings.dialect eq "MySQL">
 	<!--- drop all constraints and index on mysql --->
 	<cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="tables" name="infoTables" />
