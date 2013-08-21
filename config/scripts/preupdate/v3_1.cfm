@@ -77,7 +77,7 @@ Notes:
 </cfif>
 
 <!--- Rename DB Table --->
-<cfset local.lookupValues = ['Slatwall','PromotionReward','PromotionQualifier','SubscriptionUsage','SubscriptionBenefit','Exclusion','Excluded','PriceGroupRateExcludedProductType','PromoRewardEligiblePriceGroup','PromoRewardShippingAddressZone','PromoQualShippingAddressZone'] />
+<cfset local.lookupValues = ['Slatwall','PromotionReward','PromotionQualifier','SubscriptionUsage','SubscriptionBenefit','Exclusion','Excluded','PriceGroupRateExclProductType','PromoRewardEligiblePriceGroup','PromoRewardShippingAddressZone','PromoQualShippingAddressZone'] />
 <cfset local.newValues = ['Sw','PromoReward','PromoQual','SubsUsage','SubsBenefit','Excl','Excl','PriceGrpRateExclProductType','PromoRewardEligiblePriceGrp','PromoRewardShipAddressZone','PromoQualShipAddressZone'] />
 <cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="tables" name="local.tables" />
 
