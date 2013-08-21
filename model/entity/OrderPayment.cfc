@@ -351,7 +351,7 @@ component entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persist
 		return variables.originalAuthorizationCode;
 	}
 	
-	public any function getOriginalAuthorizationCode() {
+	public any function getOriginalProviderTransactionID() {
 		if(!structKeyExists(variables,"originalProviderTransactionID")) {
 			variables.originalProviderTransactionID = getService( "paymentService" ).getOriginalProviderTransactionID( orderPaymentID=getOrderPaymentID() );
 		}
