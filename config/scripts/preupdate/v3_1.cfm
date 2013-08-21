@@ -51,6 +51,31 @@ Notes:
 <cfparam name="this.datasource.username" default="" />
 <cfparam name="this.datasource.password" default="" />
 
+<cfif this.ormSettings.dialect eq "MySQL">
+	<!--- drop all constraints and index on mysql --->
+	<cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="tables" name="infoTables" />
+	<cfloop query="infoTables">
+		<cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="index" table="#infoTables.table_name#" name="local.indexes" />
+		<cfloop query="local.indexes">
+			<cfif left(local.indexes.INDEX_NAME,"2") EQ "FK">
+				<cftry>
+				<cfquery name="dropConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
+					ALTER TABLE #infoTables.table_name#
+					DROP FOREIGN KEY #local.indexes.INDEX_NAME#
+				</cfquery>
+				<cfcatch></cfcatch>
+				</cftry>
+				<cftry>
+				<cfquery name="dropIndex" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
+					DROP INDEX #local.indexes.INDEX_NAME# ON #infoTables.table_name#
+				</cfquery>
+				<cfcatch></cfcatch>
+				</cftry>
+			</cfif>
+		</cfloop>
+	</cfloop>
+</cfif>
+
 <!--- Rename DB Table --->
 <cfset local.lookupValues = ['Slatwall','PromotionReward','PromotionQualifier','SubscriptionUsage','SubscriptionBenefit','Exclusion','Excluded','PriceGroupRateExcludedProductType','PromoRewardEligiblePriceGroup','PromoRewardShippingAddressZone','PromoQualShippingAddressZone'] />
 <cfset local.newValues = ['Sw','PromoReward','PromoQual','SubsUsage','SubsBenefit','Excl','Excl','PriceGrpRateExclProductType','PromoRewardEligiblePriceGrp','PromoRewardShipAddressZone','PromoQualShipAddressZone'] />
@@ -87,22 +112,12 @@ Notes:
 	
 	<cfloop query="local.columns">
 		<cfif local.columns.column_name EQ listLast(local.lookupValues[i],'.')>
-			<!--- for mysql first drop the constraints --->
-			<cfif this.ormSettings.dialect eq "MySQL">
-				<cfdbinfo datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#" type="index" table="#listFirst(local.lookupValues[i],'.')#" name="local.indexes" />
-				<cfquery name="getConstraint" dbtype="query">
-					SELECT INDEX_NAME 
-					FROM indexes
-					WHERE COLUMN_NAME = '#listLast(local.lookupValues[i],'.')#'
+			<!--- for mysql first drop the primary key constraints --->
+			<cfif local.columns.IS_PRIMARYKEY AND this.ormSettings.dialect eq "MySQL">
+				<cfquery name="dropConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
+					ALTER TABLE #listFirst(local.lookupValues[i],'.')#
+					DROP PRIMARY KEY
 				</cfquery>
-				<cfif getConstraint.recordcount>
-					<cfloop query="getConstraint">
-						<cfquery name="dropConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
-							ALTER TABLE #listFirst(local.lookupValues[i],'.')#
-							DROP <cfif getConstraint.INDEX_NAME EQ "PRIMARY">PRIMARY KEY<cfelse>FOREIGN KEY #getConstraint.INDEX_NAME#</cfif>
-						</cfquery>
-					</cfloop>
-				</cfif>
 			</cfif>
 			<!--- update column names --->
 			<cfif this.ormSettings.dialect eq "MySQL">
@@ -114,7 +129,7 @@ Notes:
 					EXEC sp_rename '#listFirst(local.lookupValues[i],'.')#.#listLast(local.lookupValues[i],'.')#','#listLast(local.newValues[i],'.')#','COLUMN'
 				</cfquery>
 			</cfif>
-			<!--- create primary key --->
+			<!--- for mysql create primary key --->
 			<cfif local.columns.IS_PRIMARYKEY AND this.ormSettings.dialect eq "MySQL">
 				<cfquery name="addConstraint" datasource="#this.datasource.name#" username="#this.datasource.username#" password="#this.datasource.password#">
 					ALTER TABLE #listFirst(local.lookupValues[i],'.')# ADD PRIMARY KEY(#listLast(local.newValues[i],'.')#)
