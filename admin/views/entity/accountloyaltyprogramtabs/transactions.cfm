@@ -47,10 +47,9 @@ Notes:
 
 --->
 <cfparam name="rc.accountLoyaltyProgram" type="any" />
-<cfparam name="rc.account" type="any" default="#rc.accountLoyaltyProgram.getAccount()#">
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.account.getAccountLoyaltyProgramTransactionsSmartList()#">
+	<cf_HibachiListingDisplay smartList="#rc.accountLoyaltyProgram.getAccountLoyaltyProgramTransactionsSmartList()#">
 		
 		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accruementType" />
 		<cf_HibachiListingColumn propertyIdentifier="pointsIn" />

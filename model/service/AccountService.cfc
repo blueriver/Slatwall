@@ -450,7 +450,7 @@ component extends="HibachiService" accessors="true" output="false" {
 						
 						// Setup the transaction
 						accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
-						accountLoyaltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
+						accountLoyaltyTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
 						accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
 						accountLoyaltyTransaction.setOrder( orderDeliveryItem.getOrderItem().getOrder() );
 						accountLoyaltyTransaction.setOrderItem( orderDeliveryItem.getOrderItem() );
@@ -489,7 +489,7 @@ component extends="HibachiService" accessors="true" output="false" {
 					
 					// Setup the transaction
 					accountLoyaltyTransaction.setAccruementType( "orderClosed" );
-					accountLoyaltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
+					accountLoyaltyTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
 					accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
 					accountLoyaltyTransaction.setOrder( arguments.data.order );
 					
@@ -522,7 +522,7 @@ component extends="HibachiService" accessors="true" output="false" {
 				var accountLoyaltyTransaction = this.newAccountLoyaltyProgramTransaction();
 				
 				accountLoyaltyTransaction.setAccruementType( "fulfillmentMethodUsed" );
-				accountLoyaltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
+				accountLoyaltyTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
 				accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
 				accountLoyaltyTransaction.setOrderFulfillment( arguments.data.orderFulfillment );
 				
@@ -550,8 +550,8 @@ component extends="HibachiService" accessors="true" output="false" {
 				var accountLoyaltyTransaction = this.newAccountLoyaltyProgramTransaction();
 				
 				accountLoyaltyTransaction.setAccruementType( "enrollment" );
-				accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement.getLoyaltyProgramAccruementID() );
-				accountLoyaltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
+				accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
+				accountLoyaltyTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
 				accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
 			}
 		}

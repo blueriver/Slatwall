@@ -67,7 +67,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="accountAuthentications" singularname="accountAuthentication" cfc="AccountAuthentication" type="array" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="accountContentAccesses" hb_populateEnabled="false" singularname="accountContentAccess" cfc="AccountContentAccess" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountEmailAddresses" hb_populateEnabled="public" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
-	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountLoyaltyProgramTransaction" cascade="all-delete-orphan" inverse="true";
 	
 	// TODO [paul do first]: Add one-to-many for AccountLoyaltyProgram... MAKE SURE YOU UPDATE ENTITY OBJECTS WITH NEW NAMES
 	property name="accountLoyaltyPrograms" hb_populateEnabled="public" singularname="accountLoyaltyProgram" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountLoyaltyProgram" cascade="all-delete-orphan" inverse="true";
@@ -445,14 +444,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}    
 	public void function removeAccountLoyaltyProgram(required any accountLoyaltyProgram) {    
 		arguments.accountLoyaltyProgram.removeAccount( this );    
-	}
-	
-	// Account Loyalty Programs Transactions (one-to-many)
-	public void function addAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {    
-		arguments.accountLoyaltyProgramTransaction.setAccount( this );    
-	}    
-	public void function removeAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {    
-		arguments.accountLoyaltyProgramTransaction.removeAccount( this );    
 	}
 	
 	// Price Groups (many-to-many - owner)

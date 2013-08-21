@@ -56,7 +56,8 @@ Notes:
 								   backAction="admin:entity.detailaccount"
 								   backQueryString="accountID=#rc.account.getAccountID()#"
 								   cancelAction="admin:entity.detailaccount"
-								   cancelQueryString="accountID=#rc.account.getAccountID()#" />
+								   cancelQueryString="accountID=#rc.account.getAccountID()#" 
+								   deleteQueryString="redirectAction=admin:entity.detaildetailaccount&accountID=#rc.account.getAccountID()#" />
 		
 		<!--- Hidden field to attach this to the account --->
 		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />

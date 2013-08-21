@@ -53,7 +53,7 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	property name="expirationTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="termID";
 	
 	// Related Object Properties (one-to-many)
-	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" cfc="AccountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramAccruementID" cascade="all" inverse="true";
+	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" cfc="AccountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramAccruementID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallLoyaltyProgramAccruementBrand" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="brandID";

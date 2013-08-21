@@ -45,6 +45,9 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="loyaltyProgram" cfc="loyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
 	
+	// Related Object Properties (one-to-many)
+	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountLoyaltyProgramID" cfc="AccountLoyaltyProgramTransaction" cascade="all-delete-orphan" inverse="true";
+	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
@@ -62,6 +65,14 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account Loyalty Programs Transactions (one-to-many)
+	public void function addAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {    
+		arguments.accountLoyaltyProgramTransaction.setAccountLoyaltyProgram( this );    
+	}    
+	public void function removeAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {    
+		arguments.accountLoyaltyProgramTransaction.removeAccountLoyaltyProgram( this );    
+	}
 	
 	// Account (many-to-one)
 	public void function setAccount(required any account) {
@@ -117,7 +128,7 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	// ================== START: Overridden Methods ========================
 	
 	public string function getSimpleRepresentation() {
-		return "Account Loyalty Program";
+		return getLoyaltyProgram().getLoyaltyProgramName();
 	}
 	
 	// ==================  END:  Overridden Methods ========================

@@ -47,12 +47,13 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAcc
 	property name="expirationDateTime" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="loyaltyProgramAccruement" cfc="loyaltyProgramAccruement" fieldtype="many-to-one" fkcolumn="loyaltyProgramAccruementID";
+	property name="accountLoyaltyProgram" cfc="AccountLoyaltyProgram" fieldtype="many-to-one" fkcolumn="accountLoyaltyProgramID";
+	property name="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" fieldtype="many-to-one" fkcolumn="loyaltyProgramAccruementID";
 	//property name="loyaltyProgramRedemption" cfc="LoyaltyProgramRedemption" fieldtype="many-to-one" fkcolumn="loyaltyProgramRedemptionID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
+	
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -88,23 +89,24 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAcc
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// account (many-to-one)
-	public void function setAccount(required any account) {
-		variables.account = arguments.account;
-		if(isNew() or !arguments.account.hasAccountLoyaltyProgramTransaction( this )) {
-			arrayAppend(arguments.account.getAccountLoyaltyProgramTransactions(), this);
+	// accountLoyaltyProgram (many-to-one)
+	public void function setAccountLoyaltyProgram(required any accountLoyaltyProgram) {
+		variables.accountLoyaltyProgram = arguments.accountLoyaltyProgram;
+		if(isNew() or !arguments.accountLoyaltyProgram.hasAccountLoyaltyProgramTransaction( this )) {
+			arrayAppend(arguments.accountLoyaltyProgram.getAccountLoyaltyProgramTransactions(), this);
 		}
 	}
-	public void function removeAccount(any account) {
-	   if(!structKeyExists(arguments, "account")) {
-	   		arguments.account = variables.account;
+	public void function removeAccountLoyaltyProgram(any accountLoyaltyProgram) {
+	   if(!structKeyExists(arguments, "accountLoyaltyProgram")) {
+	   		arguments.accountLoyaltyProgram = variables.accountLoyaltyProgram;
 	   }
-       var index = arrayFind(arguments.account.getAccountLoyaltyProgramTransactions(),this);
+       var index = arrayFind(arguments.accountLoyaltyProgram.getAccountLoyaltyProgramTransactions(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.account.getAccountLoyaltyProgramTransactions(), index);
+           arrayDeleteAt(arguments.accountLoyaltyProgram.getAccountLoyaltyProgramTransactions(), index);
        }
-       structDelete(variables,"account");
+       structDelete(variables,"accountLoyaltyProgram");
     }
+
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
