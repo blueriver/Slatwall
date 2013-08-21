@@ -86,16 +86,16 @@ Notes:
 		<cfargument name="orderPaymentID" type="string" />
 		<cfargument name="accountPaymentID" type="string" />
 		
-		<cfset var hql = "SELECT NEW MAP(spt.authorizationCode as authorizationCode) FROM SlatwallPaymentTransaction spt WHERE spt.transactionSuccessFlag = 1 AND spt.authroizationCode is not null and spt.transactionType = :transactionType" />
+		<cfset var hql = "SELECT NEW MAP(spt.authorizationCode as authorizationCode) FROM SlatwallPaymentTransaction spt WHERE spt.transactionSuccessFlag = 1 AND spt.authorizationCode is not null AND spt.transactionType = :transactionType AND " />
 		<cfset hqlParams = {} />
-		<cfset hqlParams.transactionType = "authorize" />
+		<cfset hqlParams['transactionType'] = "authorize" />
 		
 		<cfif structKeyExists(arguments, "orderPaymentID")>
 			<cfset hql &= "spt.orderPayment.orderPaymentID = :orderPaymentID" />
-			<cfset hqlParam.orderPaymentID = arguments.orderPaymentID />	
+			<cfset hqlParams['orderPaymentID'] = arguments.orderPaymentID />
 		<cfelseif structKeyExists(arguments, "accountPaymentID")>
 			<cfset hql &= "spt.accountPayment.accountPaymentID = :accountPaymentID" />
-			<cfset hqlParam.accountPaymentID = arguments.accountPaymentID />
+			<cfset hqlParams['accountPaymentID'] = arguments.accountPaymentID />
 		</cfif>
 		
 		<cfset var results = ormExecuteQuery(hql, hqlParams) />

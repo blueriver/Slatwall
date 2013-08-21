@@ -48,15 +48,18 @@ Notes:
 */
 component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
-
 	public void function setUp() {
 		super.setup();
 		
-		variables.dao = request.slatwallScope.getDAO("accountDAO");
+		variables.dao = request.slatwallScope.getDAO("paymentDAO");
 	}
-	
+
 	public void function inst_ok() {
 		assert(isObject(variables.dao));
+	}
+	
+	public void function getOriginalAuthorizationCode_returns_empty_string_using_orderPaymentID() {
+		assert(variables.dao.getOriginalAuthorizationCode( orderPaymentID="this-is-fake" ) eq "");
 	}
 }
 
