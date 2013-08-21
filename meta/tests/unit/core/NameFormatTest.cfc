@@ -49,17 +49,17 @@ Notes:
 component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 	// Oracle Naming tests
-	public void function oracle_entity_table_name_max_len_31() {
+	public void function oracle_entity_table_name_max_len_30() {
 		var ormClassMetaData = ORMGetSessionFactory().getAllClassMetadata();
 		var ormEntityNames = listToarray(structKeyList(ormClassMetaData));
 		
 		for(var entityName in ormEntityNames) {
 			var entity = entityNew( entityName );
-			assert(len(getMetaData(entity).table) <= 31, "The table name for the #entityName# entity is longer than 31 characters in length which would break oracle support.  Table Name: #getMetaData(entity).table# Length:#len(getMetaData(entity).table)#");
+			assert(len(getMetaData(entity).table) <= 30, "The table name for the #entityName# entity is longer than 30 characters in length which would break oracle support.  Table Name: #getMetaData(entity).table# Length:#len(getMetaData(entity).table)#");
 		}
 	}
 	
-	public void function oracle_entity_table_name_many_to_many_link_table_max_len_31() {
+	public void function oracle_entity_table_name_many_to_many_link_table_max_len_30() {
 		var ormClassMetaData = ORMGetSessionFactory().getAllClassMetadata();
 		var ormEntityNames = listToarray(structKeyList(ormClassMetaData));
 		
@@ -67,13 +67,13 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			var entity = entityNew( entityName );
 			for(var property in entity.getProperties()) {
 				if(structKeyExists(property, "fieldtype") && property.fieldtype == "many-to-many") {
-					assert(len(property.linktable) <= 31, "In #entityName# entity the many-to-many property '#property.name#' has a link table that is longer than 31 characters in length which would break oracle support. Table Name: #property.linktable# Length:#len(property.linktable)#");
+					assert(len(property.linktable) <= 30, "In #entityName# entity the many-to-many property '#property.name#' has a link table that is longer than 30 characters in length which would break oracle support. Table Name: #property.linktable# Length:#len(property.linktable)#");
 				}
 			}
 		}
 	}
 	
-	public void function oracle_entity_column_name_max_len_31() {
+	public void function oracle_entity_column_name_max_len_30() {
 		var ormClassMetaData = ORMGetSessionFactory().getAllClassMetadata();
 		var ormEntityNames = listToarray(structKeyList(ormClassMetaData));
 		
@@ -82,10 +82,40 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 			for(var property in entity.getProperties()) {
 				if(!structKeyExists(property, "persistent") || property.persistent) {
 					if(structKeyExists(property, "column")) {
-						assert(len(property.column) <= 31, "In #entityName# entity the property '#property.name#' has a column name definition that is longer than 31 characters in length which would break oracle support. Length:#len(property.column)#");
+						assert(len(property.column) <= 30, "In #entityName# entity the property '#property.name#' has a column name definition that is longer than 30 characters in length which would break oracle support. Length:#len(property.column)#");
+					} else if(structKeyExists(property, "fieldtype") && listFindNoCase("many-to-one,one-to-many", property.fieldtype)) {
+						assert(len(property.fkcolumn) <= 30, "In #entityName# entity the property '#property.name#' has a fkcolumn name definition that is longer than 30 characters in length which would break oracle support. Length:#len(property.fkcolumn)#");
+					} else if(structKeyExists(property, "fieldtype") && listFindNoCase("many-to-many", property.fieldtype)) {
+						assert(len(property.fkcolumn) <= 30, "In #entityName# entity the property '#property.name#' has a fkcolumn name definition that is longer than 30 characters in length which would break oracle support. Length:#len(property.fkcolumn)#");
+						assert(len(property.inversejoincolumn) <= 30, "In #entityName# entity the property '#property.name#' has a fkcolumn name definition that is longer than 30 characters in length which would break oracle support. Length:#len(property.inversejoincolumn)#");
 					} else {
-						assert(len(property.column) <= 31, "In #entityName# entity the property '#property.name#' has a column name definition that is longer than 31 characters in length which would break oracle support. Length:#len(property.column)#");
+						assert(len(property.name) <= 30, "In #entityName# entity the property '#property.name#' has a column name definition that is longer than 30 characters in length which would break oracle support. Length:#len(property.name)#");
 					}
+				}
+			}
+		}
+	}
+	
+	// Table Name Prefixes
+	public void function table_name_starts_with_sw() {
+		var ormClassMetaData = ORMGetSessionFactory().getAllClassMetadata();
+		var ormEntityNames = listToarray(structKeyList(ormClassMetaData));
+		
+		for(var entityName in ormEntityNames) {
+			var entity = entityNew( entityName );
+			assert(left(getMetaData(entity).table,2) == "Sw", "The table name for the #entityName# entity is longer than 30 characters in length which would break oracle support.  Table Name: #getMetaData(entity).table# Length:#len(getMetaData(entity).table)#");
+		}
+	}
+	
+	public void function table_name_starts_with_sw_on_many_to_many_link_table() {
+		var ormClassMetaData = ORMGetSessionFactory().getAllClassMetadata();
+		var ormEntityNames = listToarray(structKeyList(ormClassMetaData));
+		
+		for(var entityName in ormEntityNames) {
+			var entity = entityNew( entityName );
+			for(var property in entity.getProperties()) {
+				if(structKeyExists(property, "fieldtype") && property.fieldtype == "many-to-many") {
+					assert(left(property.linktable,2) == "Sw", "In #entityName# entity the many-to-many property '#property.name#' has a link table that is longer than 30 characters in length which would break oracle support. Table Name: #property.linktable# Length:#len(property.linktable)#");
 				}
 			}
 		}
