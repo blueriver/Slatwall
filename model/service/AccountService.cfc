@@ -376,7 +376,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	// Account Loyalty Programs
 	public any function processAccountLoyaltyProgram_itemFulfilled(required any accountLoyaltyProgram, required struct data) {
 		
-		// Loop Over arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
+		// Loop over arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
 		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements()) {	
 			
 			// If loyaltyProgramAccruement eq 'fulfillItem' as the type, then based on the amount create a new transaction and apply that amount
@@ -451,6 +451,7 @@ component extends="HibachiService" accessors="true" output="false" {
 						// Setup the transaction
 						accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
 						accountLoyaltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
+						accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
 						accountLoyaltyTransaction.setOrder( orderDeliveryItem.getOrderItem().getOrder() );
 						accountLoyaltyTransaction.setOrderItem( orderDeliveryItem.getOrderItem() );
 						
@@ -459,7 +460,7 @@ component extends="HibachiService" accessors="true" output="false" {
 							accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
 						} // If pointType is 'pointPerDollar' set point times the qty times the item price
 						else if ( loyaltyProgramAccruement.getPointType() eq 'pointPerDollar' ) {
-							accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * (orderDeliveryItem.getQuantity() * orderDeliveryItem().getOrderItem().getPrice()) );
+							accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * (orderDeliveryItem.getQuantity() * orderDeliveryItem.getOrderItem().getPrice()) );
 						}
 					}
 				}
@@ -471,7 +472,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public any function processAccountLoyaltyProgram_orderClosed(required any accountLoyaltyProgram, required struct data) {
 		
-		// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
+		// Loop over arguments.accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
 		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements()) {	
 			
 			// If loyaltyProgramAccruement eq 'orderClosed' as the type
@@ -489,6 +490,7 @@ component extends="HibachiService" accessors="true" output="false" {
 					// Setup the transaction
 					accountLoyaltyTransaction.setAccruementType( "orderClosed" );
 					accountLoyaltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
+					accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
 					accountLoyaltyTransaction.setOrder( arguments.data.order );
 					
 					// If pointType is 'fixed' set points
@@ -507,20 +509,21 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public any function processAccountLoyaltyProgram_fulfillmentMethodUsed(required any accountLoyaltyProgram, required struct data) {
 		
-		// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
+		// Loop over arguments.accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
 		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements()) {	
 			
 			// If loyaltyProgramAccruement eq 'fulfillmentMetodUsed' as the type
-			if (loyaltyProgramAccruement.getAccruementType() eq 'fulfillmentMetodUsed') {
-				
+			if (loyaltyProgramAccruement.getAccruementType() eq 'fulfillmentMethodUsed') {
+
 				// TODO [paul]: Same here, you don't need to check on the delivery items.  You just need to know if all the orderItems have a status of 'fulfilled'
 				// If all the items are fulfilled then set accruement points
 					
 				// Create a new accountLoayltyTransaction and set it up
 				var accountLoyaltyTransaction = this.newAccountLoyaltyProgramTransaction();
 				
-				accountLoyaltyTransaction.setAccruementType( "fulfillmentMetodUsed" );
+				accountLoyaltyTransaction.setAccruementType( "fulfillmentMethodUsed" );
 				accountLoyaltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
+				accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
 				accountLoyaltyTransaction.setOrderFulfillment( arguments.data.orderFulfillment );
 				
 				// If pointType is 'fixed' set points
@@ -538,14 +541,16 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public any function processAccountLoyaltyProgram_enrollment(required any accountLoyaltyProgram) {
 		
-		// Loop Over accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
+		// Loop over arguments.accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
 		for(var loyaltyProgramAccruement in arguments.accountLoyaltyProgram.getLoyaltyProgram().getLoyaltyProgramAccruements()) {	
 			
 			// If loyaltyProgramAccruement eq 'enrollment' as the type
 			if (loyaltyProgramAccruement.getAccruementType() eq 'enrollment') {
 				
-				// TODO [paul]: THERE IS NO ORDERDELIVERY!
 				var accountLoyaltyTransaction = this.newAccountLoyaltyProgramTransaction();
+				
+				accountLoyaltyTransaction.setAccruementType( "enrollment" );
+				accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement.getLoyaltyProgramAccruementID() );
 				accountLoyaltyTransaction.setAccount( accountLoyaltyProgram.getAccount() );
 				accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
 			}

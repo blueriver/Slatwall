@@ -40,8 +40,8 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAcc
 	
 	// Persistent Properties
 	property name="accountLoyaltyProgramTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="accruementType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
-	property name="redemptionType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
+	property name="accruementType" ormType="string";
+	property name="redemptionType" ormType="string";
 	property name="pointsIn" ormType="integer";
 	property name="pointsOut" ormType="integer";		
 	property name="expirationDateTime" ormtype="timestamp";

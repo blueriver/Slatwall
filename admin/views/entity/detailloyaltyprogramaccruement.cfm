@@ -65,12 +65,13 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
-		<cf_HibachiTabGroup object="#rc.loyaltyProgramAccruement#">
-			<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/producttypes" />
-			<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/products" />
-			<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/skus" />
-			<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/brands" />
-		</cf_HibachiTabGroup>
-		
+		<cfif not listFindNoCase("orderClosed,enrollment", rc.loyaltyProgramAccruement.getAccruementType())>
+			<cf_HibachiTabGroup object="#rc.loyaltyProgramAccruement#">
+				<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/producttypes" />
+				<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/products" />
+				<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/skus" />
+				<cf_HibachiTab view="admin:entity/loyaltyProgramAccruementtabs/brands" />
+			</cf_HibachiTabGroup>
+		</cfif>
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

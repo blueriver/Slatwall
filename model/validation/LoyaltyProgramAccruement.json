@@ -1,0 +1,5 @@
+{
+	"properties":{
+		"accruementType":							[{"contexts":"save","required":true,"unique":true}]
+	}
+}

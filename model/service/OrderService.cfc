@@ -1088,12 +1088,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			var orderFulfillment = arguments.orderDelivery.getOrderDeliveryItems()[1].getOrderItem().getOrderFulfillment();
 			
 			for(var orderfulfillmentItem in orderFulfillment.getOrderFulfillmentItems()) {
+				
 				if(!listFindNoCase("oistFulfilled",orderfulfillmentItem.getOrderItemStatusType().getSystemCode())){
 					allOrderItemsFulfilled = false;
 					break;
 				}
 			}
-			
+
 			// If all items in an order have been fulfilled 
 			if( allOrderItemsFulfilled ){
 				

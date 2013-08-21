@@ -44,7 +44,6 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="loyaltyProgram" cfc="loyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
-	//property name="accountLoyaltyProgram" cfc="accountloyaltyProgram" fieldtype="many-to-one" fkcolumn="accountLoyaltyProgramID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";

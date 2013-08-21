@@ -67,9 +67,9 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
-		<!---<cf_HibachiTabGroup object="#rc.accountLoyaltyProgram#">
-			<cf_HibachiTab view="admin:entity/AccountLoyaltyProgramtabs/AccruePoints" />
-		</cf_HibachiTabGroup>--->
+		<cf_HibachiTabGroup object="#rc.accountLoyaltyProgram#">
+			<cf_HibachiTab view="admin:entity/accountloyaltyprogramtabs/transactions" />
+		</cf_HibachiTabGroup>
 			
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
