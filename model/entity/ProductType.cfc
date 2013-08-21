@@ -72,6 +72,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="SwP
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SwPromoQualProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SwPromoQualExclProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SwPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
+	property name="priceGroupRateExclusions" singularname="priceGroupRateExclusion" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SwPriceGrpRateExclProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
 	property name="attributeSets" singularname="attributeSet" cfc="AttributeSet" type="array" fieldtype="many-to-many" linktable="SwAttributeSetProductType" fkcolumn="productTypeID" inversejoincolumn="attributeSetID" inverse="true";
 	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SwPhysicalProductType" fkcolumn="productTypeID" inversejoincolumn="physicalID" inverse="true";
 	
@@ -216,6 +217,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="SwP
 	}
 	public void function removePriceGroupRate(required any priceGroupRate) {
 		arguments.priceGroupRate.removeProductType( this );
+	}
+	
+	// Price Group Rate Exclusion (many-to-many - inverse)    
+	public void function addPriceGroupRateExclusion(required any priceGroupRate) {    
+		arguments.priceGroupRate.addExcludedProductType( this );    
+	}    
+	public void function removePriceGroupRateExclusion(required any priceGroupRate) {    
+		arguments.priceGroupRate.removeExcludedProductType( this );    
 	}
 	
 	// Attribute Sets (many-to-many - inverse)
