@@ -35,7 +35,7 @@
 Notes:
 
 */
-component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyaltyProgram" table="SlatwallAccountLoyaltyProgram" persistent="true" accessors="true"  output="false" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="account.accountLoyaltyPrograms" {
+component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyaltyProgram" table="SwAccountLoyaltyProgram" persistent="true" accessors="true"  output="false" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="account.accountLoyaltyPrograms" {
 	
 	// Persistent Properties
 	property name="accountLoyaltyProgramID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
