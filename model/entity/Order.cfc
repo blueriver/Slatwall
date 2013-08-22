@@ -46,7 +46,7 @@
 Notes:
 
 */
-component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" persistent=true output=false accessors=true extends="HibachiEntity" cacheuse="transactional" hb_serviceName="orderService" hb_permission="this" hb_processContexts="create,addSaleOrderItem,placeOrder,createReturn,placeOnHold,takeOffHold,cancelOrder,addPromotionCode" {
+component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persistent=true output=false accessors=true extends="HibachiEntity" cacheuse="transactional" hb_serviceName="orderService" hb_permission="this" hb_processContexts="create,addSaleOrderItem,placeOrder,createReturn,placeOnHold,takeOffHold,cancelOrder,addPromotionCode" {
 	
 	// Persistent Properties
 	property name="orderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -79,7 +79,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" cfc="AccountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-To-many - owner)
-	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
+	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SwOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
 	
 	// Related Object Properties (many-to-many - inverse)
 	
