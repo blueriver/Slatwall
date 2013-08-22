@@ -253,6 +253,22 @@ component displayname="Product Type" entityname="SlatwallProductType" table="SwP
 		arguments.physical.removeProductType( this );
 	}
 	
+	// Loyalty Program Accruements (many-to-many - inverse)
+	public void function addLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
+		arguments.loyaltyProgramAccruement.addProductType( this );
+	}
+	public void function removeloyaltyProgramAccruement(required any loyaltyProgramAccruement) {
+		arguments.loyaltyProgramAccruement.removeProductType( this );
+	}
+	
+	// Loyalty Program Accruements Exclusions (many-to-many - inverse)
+	public void function addLoyaltyProgramAccruementExclusion(required any loyaltyProgramAccruementExclusion) {
+		arguments.loyaltyProgramAccruementExclusion.addProductType( this );
+	}
+	public void function removeloyaltyProgramAccruementExclusion(required any loyaltyProgramAccruementExclusion) {
+		arguments.loyaltyProgramAccruementExclusion.removeProductType( this );
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ============== START: Overridden Implicet Getters ===================

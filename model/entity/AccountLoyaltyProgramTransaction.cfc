@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="AccountLoyaltyProgramTransaction" entityname="SwAccountLoyaltyProgramTransaction" table="SlatwallAccountLoyaltyProgramTransaction" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="account.accountLoyaltyProgramTransaction" {
+component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAccountLoyaltyProgramTransaction" table="SwAccountLoyaltyProgramTransaction" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="account.accountLoyaltyProgramTransaction" {
 	
 	// Persistent Properties
 	property name="accountLoyaltyProgramTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -89,7 +89,7 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SwAccountLo
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// accountLoyaltyProgram (many-to-one)
+	// Account Loyalty Program (many-to-one)
 	public void function setAccountLoyaltyProgram(required any accountLoyaltyProgram) {
 		variables.accountLoyaltyProgram = arguments.accountLoyaltyProgram;
 		if(isNew() or !arguments.accountLoyaltyProgram.hasAccountLoyaltyProgramTransaction( this )) {
@@ -108,7 +108,7 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SwAccountLo
     }
     
     // loyaltyProgramAccruement (many-to-one)
-	/*public void function setLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
+	public void function setLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
 		variables.loyaltyProgramAccruement = arguments.loyaltyProgramAccruement;
 		if(isNew() or !arguments.loyaltyProgramAccruement.hasAccountLoyaltyProgramTransaction( this )) {
 			arrayAppend(arguments.loyaltyProgramAccruement.getAccountLoyaltyProgramTransactions(), this);
@@ -123,7 +123,61 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SwAccountLo
            arrayDeleteAt(arguments.loyaltyProgramAccruement.getAccountLoyaltyProgramTransactions(), index);
        }
        structDelete(variables,"loyaltyProgramAccruement");
-    }*/
+    }
+    
+    // Order (many-to-one)
+	public void function setOrder(required any order) {
+		variables.order = arguments.order;
+		if(isNew() or !arguments.order.hasAccountLoyaltyProgramTransaction( this )) {
+			arrayAppend(arguments.order.getAccountLoyaltyProgramTransactions(), this);
+		}
+	}
+	public void function removeOrder(any order) {
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = variables.order;
+		}
+		var index = arrayFind(arguments.order.getAccountLoyaltyProgramTransactions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.order.getAccountLoyaltyProgramTransactions(), index);
+		}
+		structDelete(variables, "order");
+	}
+	
+	// Order Item (many-to-one)
+	public void function setOrderItem(required any orderItem) {
+		variables.orderItem = arguments.orderItem;
+		if(isNew() or !arguments.orderItem.hasAccountLoyaltyProgramTransaction( this )) {
+			arrayAppend(arguments.orderItem.getAccountLoyaltyProgramTransactions(), this);
+		}
+	}
+	public void function removeOrderItem(any orderItem) {
+		if(!structKeyExists(arguments, "orderItem")) {
+			arguments.orderItem = variables.orderItem;
+		}
+		var index = arrayFind(arguments.orderItem.getAccountLoyaltyProgramTransactions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderItem.getAccountLoyaltyProgramTransactions(), index);
+		}
+		structDelete(variables, "orderItem");
+	}
+	
+	// Order Fulfillment (many-to-one)
+	public void function setOrderFulfillment(required any orderFulfillment) {
+		variables.orderFulfillment = arguments.orderFulfillment;
+		if(isNew() or !arguments.orderFulfillment.hasAccountLoyaltyProgramTransaction( this )) {
+			arrayAppend(arguments.orderFulfillment.getAccountLoyaltyProgramTransactions(), this);
+		}
+	}
+	public void function removeOrderFulfillment(any order) {
+		if(!structKeyExists(arguments, "orderFulfillment")) {
+			arguments.orderFulfillment = variables.orderFulfillment;
+		}
+		var index = arrayFind(arguments.orderFulfillment.getAccountLoyaltyProgramTransactions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderFulfillment.getAccountLoyaltyProgramTransactions(), index);
+		}
+		structDelete(variables, "orderFulfillment");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

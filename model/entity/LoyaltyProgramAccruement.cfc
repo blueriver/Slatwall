@@ -50,7 +50,7 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	
 	// Related Object Properties (many-to-one)
 	property name="loyaltyProgram" cfc="LoyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
-	property name="expirationTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="termID";
+	property name="expirationTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="expirationTermID";
 	
 	// Related Object Properties (one-to-many)
 	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" cfc="AccountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramAccruementID" cascade="all-delete-orphan" inverse="true";
@@ -132,21 +132,21 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	}
 	
 	// Expiration Term (many-to-one)
-	public void function setTerm(required any term) {
-		variables.term = arguments.term;
-		if(isNew() or !arguments.term.hasExpirationTerm( this )) {
-			arrayAppend(arguments.term.getExpirationTerms(), this);
+	public void function setExpirationTerm(required any expirationTerm) {
+		variables.expirationTerm = arguments.expirationTerm;
+		if(isNew() or !arguments.expirationTerm.hasLoyaltyProgramExpirationTerm( this )) {
+			arrayAppend(arguments.expirationTerm.getLoyaltyProgramExpirationTerms(), this);
 		}
 	}
 	public void function removeTerm(any term) {
-		if(!structKeyExists(arguments, "term")) {
-			arguments.term = variables.term;
+		if(!structKeyExists(arguments, "expirationTerm")) {
+			arguments.expirationTerm = variables.expirationTerm;
 		}
-		var index = arrayFind(arguments.term.getExpirationTerms(), this);
+		var index = arrayFind(arguments.expirationTerm.getLoyaltyProgramExpirationTerms(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.term.getExpirationTerms(), index);
+			arrayDeleteAt(arguments.expirationTerm.getLoyaltyProgramExpirationTerms(), index);
 		}
-		structDelete(variables, "term");
+		structDelete(variables, "expirationTerm");
 	}
 	
 	// Brands (many-to-many - owner)

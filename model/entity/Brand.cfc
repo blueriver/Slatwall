@@ -154,6 +154,22 @@ component displayname="Brand" entityname="SlatwallBrand" table="SwBrand" persist
 		arguments.physical.removeBrand( this );
 	}
 	
+	// Loyalty Program Accruements (many-to-many - inverse)
+	public void function addLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
+		arguments.loyaltyProgramAccruement.addBrand( this );
+	}
+	public void function removeloyaltyProgramAccruement(required any loyaltyProgramAccruement) {
+		arguments.loyaltyProgramAccruement.removeBrand( this );
+	}
+	
+	// Loyalty Program Accruements Exclusions (many-to-many - inverse)
+	public void function addLoyaltyProgramAccruementExclusion(required any loyaltyProgramAccruementExclusion) {
+		arguments.loyaltyProgramAccruementExclusion.addBrand( this );
+	}
+	public void function removeloyaltyProgramAccruementExclusion(required any loyaltyProgramAccruementExclusion) {
+		arguments.loyaltyProgramAccruementExclusion.removeBrand( this );
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================

@@ -93,7 +93,7 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 		structDelete(variables, "account");
 	}
 	
-	// loyalty Program (many-to-one)
+	// Loyalty Program (many-to-one)
 	public void function setLoyaltyProgram(required any loyaltyProgram) {
 		variables.loyaltyProgram = arguments.loyaltyProgram;
 		if(isNew() or !arguments.loyaltyProgram.hasAccountLoyaltyProgram( this )) {

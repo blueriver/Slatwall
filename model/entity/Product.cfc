@@ -816,6 +816,22 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 		arguments.physical.removeProduct( this );
 	}
 	
+	// Loyalty Program Accruements (many-to-many - inverse)
+	public void function addLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
+		arguments.loyaltyProgramAccruement.addProduct( this );
+	}
+	public void function removeloyaltyProgramAccruement(required any loyaltyProgramAccruement) {
+		arguments.loyaltyProgramAccruement.removeProduct( this );
+	}
+	
+	// Loyalty Program Accruements Exclusions (many-to-many - inverse)
+	public void function addLoyaltyProgramAccruementExclusion(required any loyaltyProgramAccruementExclusion) {
+		arguments.loyaltyProgramAccruementExclusion.addProduct( this );
+	}
+	public void function removeloyaltyProgramAccruementExclusion(required any loyaltyProgramAccruementExclusion) {
+		arguments.loyaltyProgramAccruementExclusion.removeProduct( this );
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================

@@ -47,9 +47,6 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 	property name="loyaltyProgramAccruements" singularname="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
 	property name="accountLoyaltyPrograms" singularname="accountLoyaltyProgram" cfc="AccountLoyaltyProgram" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
 	
-	// Related Object Properties (many-to-many - inverse)
-	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountLoyaltyProgram" fkcolumn="loyaltyProgramID" inversejoincolumn="accountID" inverse="true";
-	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
@@ -68,29 +65,22 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// LoyaltyProgramAccruement (one-to-many)
+	// Loyalty Program Accruements (one-to-many)
 	public void function addLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
-		arguments.loyaltyProgramAccruement.setLoyaltyProgramAccruement( this );
+		arguments.loyaltyProgramAccruement.setLoyaltyProgram( this );
 	}
 	public void function removeLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
-		arguments.loyaltyProgramAccruement.removeLoyaltyProgramAccruement( this );
+		arguments.loyaltyProgramAccruement.removeLoyaltyProgram( this );
 	}
 	
 	// Account Loyalty Programs (one-to-many)
 	public void function addAccountLoyaltyProgram(required any accountLoyaltyProgram) {    
-		arguments.accountLoyaltyProgram.setAccount( this );    
+		arguments.accountLoyaltyProgram.setLoyaltyProgram( this );    
 	}    
 	public void function removeAccountLoyaltyProgram(required any accountLoyaltyProgram) {    
-		arguments.accountLoyaltyProgram.removeAccount( this );    
+		arguments.accountLoyaltyProgram.removeLoyaltyProgram( this );    
 	}
-	
-	// Accounts (many-to-many - inverse)
-	public void function addAccount(required any account) {
-		arguments.account.addLoyaltyProgram( this );
-	}
-	public void function removeAccount(required any account) {
-		arguments.account.removeLoyaltyProgram( this );
-	}
+
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
