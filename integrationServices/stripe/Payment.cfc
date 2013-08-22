@@ -103,18 +103,22 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 			createCardTokenRequest.setMethod("post");
 			createCardTokenRequest.setCharset("utf-8");
 			createCardTokenRequest.setUrl("#setting('apiUrl')#/#setting('apiVersion')#/tokens");
+			
 			createCardTokenRequest.addParam(type="header", name="authorization", value="bearer #activePublicKey#");
 			createCardTokenRequest.addParam(type="formfield", name="card[number]", value="#requestBean.getCreditCardNumber()#");
 			createCardTokenRequest.addParam(type="formfield", name="card[cvc]", value="#requestBean.getSecurityCode()#");
 			createCardTokenRequest.addParam(type="formfield", name="card[exp_month]", value="#requestBean.getExpirationMonth()#");
 			createCardTokenRequest.addParam(type="formfield", name="card[exp_year]", value="#requestBean.getExpirationYear()#");
 			createCardTokenRequest.addParam(type="formfield", name="card[name]", value="#requestBean.getNameOnCreditCard()#");
-			createCardTokenRequest.addParam(type="formfield", name="card[address_line1]", value="#requestBean.getBillingStreetAddress()#");
-			createCardTokenRequest.addParam(type="formfield", name="card[address_line2]", value="#requestBean.getBillingStreet2Address()#");
+			createCardTokenRequest.addParam(type="formfield", name="card[address_line1]", value="#requestBean.getBillingStreetAddress()#");	
+			if(!isNull(requestBean.getBillingStreet2Address())) {
+				createCardTokenRequest.addParam(type="formfield", name="card[address_line2]", value="#requestBean.getBillingStreet2Address()#");
+			}
 			createCardTokenRequest.addParam(type="formfield", name="card[address_city]", value="#requestBean.getBillingCity()#");
 			createCardTokenRequest.addParam(type="formfield", name="card[address_state]", value="#requestBean.getBillingStateCode()#");
 			createCardTokenRequest.addParam(type="formfield", name="card[address_zip]", value="#requestBean.getBillingPostalCode()#");
 			createCardTokenRequest.addParam(type="formfield", name="card[address_country]", value="#requestBean.getBillingCountryCode()#");
+			
 			responseData = deserializeResponse(createCardTokenRequest.send().getPrefix());
 			
 			// populate response
@@ -224,6 +228,7 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 	
 	private struct function deserializeResponse(required any httpResponse)
 	{
+		
 		var response = {
 			statusCode = arguments.httpResponse.status_code,
 			statusText = arguments.httpResponse.status_text,
