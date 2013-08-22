@@ -106,7 +106,24 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAcc
        }
        structDelete(variables,"accountLoyaltyProgram");
     }
-
+    
+    // loyaltyProgramAccruement (many-to-one)
+	/*public void function setLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
+		variables.loyaltyProgramAccruement = arguments.loyaltyProgramAccruement;
+		if(isNew() or !arguments.loyaltyProgramAccruement.hasAccountLoyaltyProgramTransaction( this )) {
+			arrayAppend(arguments.loyaltyProgramAccruement.getAccountLoyaltyProgramTransactions(), this);
+		}
+	}
+	public void function removeLoyaltyProgramAccruement(any loyaltyProgramAccruement) {
+	   if(!structKeyExists(arguments, "loyaltyProgramAccruement")) {
+	   		arguments.loyaltyProgramAccruement = variables.loyaltyProgramAccruement;
+	   }
+       var index = arrayFind(arguments.loyaltyProgramAccruement.getAccountLoyaltyProgramTransactions(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.loyaltyProgramAccruement.getAccountLoyaltyProgramTransactions(), index);
+       }
+       structDelete(variables,"loyaltyProgramAccruement");
+    }*/
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
