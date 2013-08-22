@@ -116,10 +116,10 @@ Notes:
 		
 		<cfif structKeyExists(arguments, "orderPaymentID")>
 			<cfset hql &= "spt.orderPayment.orderPaymentID = :orderPaymentID" />
-			<cfset hqlParam.orderPaymentID = arguments.orderPaymentID />	
+			<cfset hqlParams['orderPaymentID'] = arguments.orderPaymentID />
 		<cfelseif structKeyExists(arguments, "accountPaymentID")>
 			<cfset hql &= "spt.accountPayment.accountPaymentID = :accountPaymentID" />
-			<cfset hqlParam.accountPaymentID = arguments.accountPaymentID />
+			<cfset hqlParams['accountPaymentID'] = arguments.accountPaymentID />
 		</cfif>
 		
 		<cfset hql &= " ORDER BY spt.createdDateTime" />

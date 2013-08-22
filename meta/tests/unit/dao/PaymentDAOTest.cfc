@@ -67,11 +67,11 @@ component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 	}
 	
 	public void function getOriginalProviderTransactionID_returns_empty_string_using_orderPaymentID() {
-		assert(variables.dao.getOriginalAuthorizationCode( orderPaymentID="this-is-fake" ) eq "");
+		assert(variables.dao.getOriginalProviderTransactionID( orderPaymentID="this-is-fake" ) eq "");
 	}
 	
 	public void function getOriginalProviderTransactionID_returns_empty_string_using_accountPaymentID() {
-		assert(variables.dao.getOriginalAuthorizationCode( accountPaymentID="this-is-fake" ) eq "");
+		assert(variables.dao.getOriginalProviderTransactionID( accountPaymentID="this-is-fake" ) eq "");
 	}
 	
 	public void function updateInvalidAuthorizationCode_fails_if_only_authorization_code_is_passed() {
