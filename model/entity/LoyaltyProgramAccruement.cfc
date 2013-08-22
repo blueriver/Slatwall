@@ -61,10 +61,10 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementProduct" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productID";
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementProductType" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productTypeID";
 	
-	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExcludedBrand" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="brandID";
-	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExcludedSku" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="skuID";
-	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExcludedProduct" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productID";
-	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExcludedProductType" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productTypeID";
+	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExclBrand" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="brandID";
+	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExclSku" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="skuID";
+	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExclProduct" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productID";
+	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExclProductType" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productTypeID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
