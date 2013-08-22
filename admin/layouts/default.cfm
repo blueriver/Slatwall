@@ -53,15 +53,17 @@ Notes:
 	<head>
 		<meta charset="utf-8">
 		<title>#rc.pageTitle# &##124; Slatwall</title>
-		
+
 		<link rel="icon" href="#request.slatwallScope.getBaseURL()#/assets/images/favicon.png" type="image/png" />
 		<link rel="shortcut icon" href="#request.slatwallScope.getBaseURL()#/assets/images/favicon.png" type="image/png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		
+
 		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/bootstrap.2.3.2.min.css" rel="stylesheet">
 		<!---<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/bootstrap.min.css" rel="stylesheet">--->
-		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/jquery-ui-1.8.16.custom.css" rel="stylesheet">
+		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/jquery-ui-1.9.2.custom.css" rel="stylesheet">
 		<link href="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/css/global.css" rel="stylesheet">
+
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-1.7.1.min.js"></script>
 		
 		<cfif arrayLen($.slatwall.getPrintQueue()) and request.context.slatAction neq "admin:print.default">
 			<script type="text/javascript">
@@ -166,12 +168,13 @@ Notes:
 						</cf_HibachiActionCallerDropdown>
 						<cf_HibachiActionCallerDropdown title="#$.slatwall.rbKey('admin.default.tools_nav')#" icon="magnet icon-white" type="nav">
 							<cf_HibachiDividerHider>
-								<cf_HibachiActionCaller action="admin:main.ckfinder" type="list" modal="true" />
+								<cf_HibachiActionCaller action="admin:report" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listeventtrigger" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listschedule" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listsession" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listtask" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listtaskhistory" type="list">
+								<cf_HibachiActionCaller action="admin:main.ckfinder" type="list" modal="true" />
 								<cf_HibachiActionCaller action="admin:main.log" type="list">
 								<cf_HibachiActionCaller action="admin:main.update" type="list">
 								<cfif $.slatwall.getAccount().getSuperUserFlag()>
@@ -200,11 +203,11 @@ Notes:
 				</div>
 			</div>
 		</div>
-		
+
 		<div id="search-results" class="search-results">
 			<div class="container-fluid">
 				<div class="row-fluid">
-				
+
 					<div class="span3 result-bucket">
 						<h5>#$.slatwall.rbKey('entity.product_plural')#</h5>
 						<ul class="nav" id="golbalsr-product">
@@ -213,7 +216,7 @@ Notes:
 							</cfif>
 						</ul>
 					</div>
-				
+
 					<div class="span3 result-bucket">
 						<h5>#$.slatwall.rbKey('entity.productType_plural')#</h5>
 						<ul class="nav" id="golbalsr-productType">
@@ -222,7 +225,7 @@ Notes:
 							</cfif>
 						</ul>
 					</div>
-				
+
 					<div class="span3  result-bucket">
 						<h5>#$.slatwall.rbKey('entity.brand_plural')#</h5>
 						<ul class="nav" id="golbalsr-brand">
@@ -231,7 +234,7 @@ Notes:
 							</cfif>
 						</ul>
 					</div>
-				
+
 					<div class="span3 result-bucket">
 						<h5>#$.slatwall.rbKey('entity.promotion_plural')#</h5>
 						<ul class="nav" id="golbalsr-promotion">
@@ -240,10 +243,10 @@ Notes:
 							</cfif>
 						</ul>
 					</div>
-				
+
 				</div>
 				<div class="row-fluid">
-					
+
 					<div class="span3 result-bucket">
 						<h5>#$.slatwall.rbKey('entity.order_plural')#</h5>
 						<ul class="nav" id="golbalsr-order">
@@ -252,7 +255,7 @@ Notes:
 							</cfif>
 						</ul>
 					</div>
-				
+
 					<div class="span3 result-bucket">
 						<h5>#$.slatwall.rbKey('entity.account_plural')#</h5>
 						<ul class="nav" id="golbalsr-account">
@@ -261,7 +264,7 @@ Notes:
 							</cfif>
 						</ul>
 					</div>
-				
+
 					<div class="span3 result-bucket">
 						<h5>#$.slatwall.rbKey('entity.vendorOrder_plural')#</h5>
 						<ul class="nav" id="golbalsr-vendorOrder">
@@ -270,7 +273,7 @@ Notes:
 							</cfif>
 						</ul>
 					</div>
-				
+
 					<div class="span3 result-bucket">
 						<h5>#$.slatwall.rbKey('entity.vendor_plural')#</h5>
 						<ul class="nav" id="golbalsr-vendor">
@@ -279,7 +282,7 @@ Notes:
 							</cfif>
 						</ul>
 					</div>
-					
+
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
@@ -288,7 +291,7 @@ Notes:
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span12">
@@ -312,10 +315,9 @@ Notes:
 				<a href="##" class="btn btn-primary"><i class="icon-ok icon-white"></i> #request.slatwallScope.rbKey('define.yes')#</a>
 			</div>
 		</div>
-		
-		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-1.7.1.min.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-ui-1.8.20.custom.min.js"></script>
-		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-ui-timepicker-addon-0.9.9.js"></script>
+
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-ui-1.9.2.custom.min.js"></script>
+		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-ui-timepicker-addon-1.3.1.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-validate-1.9.0.min.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-hashchange-1.3.min.js"></script>
 		<script type="text/javascript" src="#request.slatwallScope.getBaseURL()#/org/Hibachi/HibachiAssets/js/jquery-typewatch-2.0.js"></script>
@@ -338,7 +340,7 @@ Notes:
 				_gaq.push(['_setCustomVar', 1, 'instance', '#HASH(CGI.HTTP_HOST)#']);
 				_gaq.push(["_set", "title", "#request.context.slatAction#"]);
 				_gaq.push(['_trackPageview']);
-				
+
 				(function() {
 				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
 				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
