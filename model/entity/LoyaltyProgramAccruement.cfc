@@ -44,7 +44,7 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	property name="endDateTime" ormtype="timestamp";
 	property name="accruementType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="pointType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
-	property name="point" ormType="integer";
+	property name="pointQuantity" ormType="integer";
 	property name="activeFlag" ormtype="boolean" default="1";
 	
 	// Related Object Properties (many-to-one)

@@ -48,7 +48,7 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="expirationTerm.termName" />
 		<cf_HibachiListingColumn propertyIdentifier="accruementType" />
 		<cf_HibachiListingColumn propertyIdentifier="pointType" />
-		<cf_HibachiListingColumn propertyIdentifier="point" />
+		<cf_HibachiListingColumn propertyIdentifier="pointQuantity" />
 		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 	</cf_HibachiListingDisplay>
 	
