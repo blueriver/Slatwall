@@ -156,28 +156,28 @@ component entityname="SlatwallTerm" table="SwTerm" persistent="true" accessors="
 		arguments.gracePeriodSubscriptionUsageTerm.removeGracePeriodTerm( this );
 	}
 	
-	// Loyalty Progrm Expiration Terms (one-to-many)
-	public void function addLoyaltyProgramExpirationTerm(required any loyaltyProgramExpirationTerm) {
-		arguments.loyaltyProgramExpirationTerm.setExpirationTerm( this );
+	// Loyalty Program Expiration Terms (one-to-many)
+	public void function addLoyaltyProgramAccruementExpirationTerm(required any loyaltyProgramAccruementExpirationTerm) {
+		arguments.loyaltyProgramAccruementExpirationTerm.setExpirationTerm( this );
 	}
-	public void function removeLoyaltyProgramExpirationTerm(required any loyaltyProgramExpirationTerm) {
-		arguments.loyaltyProgramExpirationTerm.removeExpirationTerm( this );
+	public void function removeLoyaltyProgramAccruementExpirationTerm(required any loyaltyProgramAccruementExpirationTerm) {
+		arguments.loyaltyProgramAccruementExpirationTerm.removeExpirationTerm( this );
 	}
 	
 	// Loyalty Program Auto Redemption Terms (one-to-many)    
-	public void function addloyaltyProgramAutoRedemptionTerm(required any loyaltyProgramAutoRedemptionTerm) {    
-		arguments.loyaltyProgramAutoRedemptionTerm.setAutoRedemptionTerm( this );    
+	public void function addloyaltyProgramRedemptionAutoRedemptionTerm(required any loyaltyProgramRedemptionAutoRedemptionTerm) {    
+		arguments.loyaltyProgramRedemptionAutoRedemptionTerm.setAutoRedemptionTerm( this );    
 	}    
 	public void function removeloyaltyProgramAutoRedemptionTerm(required any loyaltyProgramAutoRedemptionTerm) {    
-		arguments.loyaltyProgramAutoRedemptionTerm.removeAutoRedemptionTerm( this );    
+		arguments.loyaltyProgramRedemptionAutoRedemptionTerm.removeAutoRedemptionTerm( this );    
 	}
 
 	// Loyalty Program Balance Terms (one-to-many)
-	public void function addloyaltyProgramBalanceTerm(required any loyaltyProgramBalanceTerm) {
-		arguments.loyaltyProgramBalanceTerm.setbalanceTerm( this );
+	public void function addloyaltyProgramRedemptionBalanceTerm(required any loyaltyProgramRedemptionBalanceTerm) {
+		arguments.loyaltyProgramRedemptionBalanceTerm.setbalanceTerm( this );
 	}
-	public void function removeloyaltyProgramBalanceTerm(required any loyaltyProgramBalanceTerm) {
-		arguments.loyaltyProgramBalanceTerm.removebalanceTerm( this );
+	public void function removeloyaltyProgramRedemptionBalanceTerm(required any loyaltyProgramRedemptionBalanceTerm) {
+		arguments.loyaltyProgramRedemptionBalanceTerm.removebalanceTerm( this );
 	}
 
 	// =============  END:  Bidirectional Helper Methods ===================

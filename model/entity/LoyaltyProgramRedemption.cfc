@@ -96,7 +96,7 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 	
 	public array function getRedemptionTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyProgramRedemption.redemptionType.productPurchace'), value="productPurchace"},
+			{name=rbKey('entity.loyaltyProgramRedemption.redemptionType.productPurchase'), value="productPurchase"},
 			{name=rbKey('entity.loyaltyProgramRedemption.redemptionType.cashCouponCreation'), value="cashCouponCreation"},
 			{name=rbKey('entity.loyaltyProgramRedemption.redemptionType.priceGroupAssignment'), value="priceGroupAssignment"}
 		];
