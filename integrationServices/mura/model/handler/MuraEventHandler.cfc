@@ -818,7 +818,7 @@
 			  AND
 				NOT EXISTS( SELECT contentID FROM SwContent WHERE SwContent.cmsContentID = tcontent.contentID AND SwContent.siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.slatwallSite.getSiteID()#" /> )
 			ORDER BY
-				<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
+				<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL" OR  $.slatwall.getApplicationValue("databaseType") eq "Oracle10g">
 					LENGTH( tcontent.path )
 				<cfelse>
 					LEN( tcontent.path )
@@ -947,7 +947,7 @@
 		<cfset var parentMappingCache = {} />
 		<cfset var missingCategoryQuery = "" />
 		
-		<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL">
+		<cfif $.slatwall.getApplicationValue("databaseType") eq "MySQL" OR  $.slatwall.getApplicationValue("databaseType") eq "Oracle10g">
 			<cfquery name="missingCategoryQuery">
 				SELECT
 					tcontentcategories.categoryID,
