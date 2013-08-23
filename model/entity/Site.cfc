@@ -56,7 +56,7 @@ component entityname="SlatwallSite" table="SwSite" persistent="true" accessors="
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
-	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="one-to-many" fkcolumn="siteID" cascade="all" inverse="true" lazy="true";
+	property name="contents" singularname="content" cfc="Content" type="array" fieldtype="one-to-many" fkcolumn="siteID" cascade="all" inverse="true" lazy="extra";
 	
 	// Related Object Properties (many-to-many - owner)
 
