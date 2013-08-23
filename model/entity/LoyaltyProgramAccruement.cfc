@@ -46,7 +46,6 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	property name="pointType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="point" ormType="integer";
 	property name="activeFlag" ormtype="boolean" default="1";
-	property name="globalFlag" ormtype="boolean" default="1";
 	
 	// Related Object Properties (many-to-one)
 	property name="loyaltyProgram" cfc="LoyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";

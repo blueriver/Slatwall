@@ -50,7 +50,6 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="pointType" />
 		<cf_HibachiListingColumn propertyIdentifier="point" />
 		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
-		<cf_HibachiListingColumn propertyIdentifier="globalFlag" />
 	</cf_HibachiListingDisplay>
 	
 	<cf_HibachiActionCaller action="admin:entity.createloyaltyprogramaccruement" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailloyaltyprogram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#" modal="true"  />
