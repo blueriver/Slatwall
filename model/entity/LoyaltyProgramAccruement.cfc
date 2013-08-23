@@ -134,17 +134,17 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	// Expiration Term (many-to-one)
 	public void function setExpirationTerm(required any expirationTerm) {
 		variables.expirationTerm = arguments.expirationTerm;
-		if(isNew() or !arguments.expirationTerm.hasLoyaltyProgramExpirationTerm( this )) {
-			arrayAppend(arguments.expirationTerm.getLoyaltyProgramExpirationTerms(), this);
+		if(isNew() or !arguments.expirationTerm.hasLoyaltyProgramAccruementExpirationTerm( this )) {
+			arrayAppend(arguments.expirationTerm.getLoyaltyProgramAccruementExpirationTerms(), this);
 		}
 	}
-	public void function removeTerm(any term) {
+	public void function removeExpirationTerm(any Expirationterm) {
 		if(!structKeyExists(arguments, "expirationTerm")) {
 			arguments.expirationTerm = variables.expirationTerm;
 		}
-		var index = arrayFind(arguments.expirationTerm.getLoyaltyProgramExpirationTerms(), this);
+		var index = arrayFind(arguments.expirationTerm.getLoyaltyProgramAccruementExpirationTerms(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.expirationTerm.getLoyaltyProgramExpirationTerms(), index);
+			arrayDeleteAt(arguments.expirationTerm.getLoyaltyProgramAccruementExpirationTerms(), index);
 		}
 		structDelete(variables, "expirationTerm");
 	}

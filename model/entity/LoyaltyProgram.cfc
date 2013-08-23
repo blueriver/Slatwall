@@ -45,6 +45,7 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 	
 	// Related Object Properties (one-to-many)
 	property name="loyaltyProgramAccruements" singularname="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
+	property name="loyaltyProgramRedemptions" singularname="loyaltyProgramRedemption" cfc="LoyaltyProgramRedemption" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramRedemptionID" cascade="all-delete-orphan" inverse="true";
 	property name="accountLoyaltyPrograms" singularname="accountLoyaltyProgram" cfc="AccountLoyaltyProgram" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
 	
 	// Remote Properties
@@ -71,6 +72,14 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 	}
 	public void function removeLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
 		arguments.loyaltyProgramAccruement.removeLoyaltyProgram( this );
+	}
+	
+	// Loyalty Program Redemptions (one-to-many)    
+	public void function addLoyaltyProgramRedemption(required any loyaltyProgramRedemption) {    
+		arguments.loyaltyProgramRedemption.setLoyaltyProgram( this );    
+	}    
+	public void function removeLoyaltyProgramRedemption(required any loyaltyProgramRedemption) {    
+		arguments.loyaltyProgramRedemption.removeLoyaltyProgram( this );    
 	}
 	
 	// Account Loyalty Programs (one-to-many)

@@ -40,19 +40,19 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.loyaltyProgram.getloyaltyProgramAccruementsSmartList()#"
-							   recordEditAction="admin:entity.editloyaltyProgramAccruement"
-							   recorddetailaction="admin:entity.detailloyaltyProgramAccruement">
-		<cf_HibachiListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
-		<cf_HibachiListingColumn propertyIdentifier="endDateTime" />
-		<cf_HibachiListingColumn propertyIdentifier="expirationTerm.termName" />
-		<cf_HibachiListingColumn propertyIdentifier="accruementType" />
-		<cf_HibachiListingColumn propertyIdentifier="pointType" />
-		<cf_HibachiListingColumn propertyIdentifier="point" />
+	<cf_HibachiListingDisplay smartList="#rc.loyaltyProgram.getloyaltyProgramRedemptionsSmartList()#"
+							   recordEditAction="admin:entity.editloyaltyProgramRedemption"
+							   recorddetailaction="admin:entity.detailloyaltyProgramRedemption">
+		<cf_HibachiListingColumn propertyIdentifier="nextRedemptionDateTime" tdclass="primary" />
+		<cf_HibachiListingColumn propertyIdentifier="redemptionPointType" />
+		<cf_HibachiListingColumn propertyIdentifier="autoredemptionType" />
+		<cf_HibachiListingColumn propertyIdentifier="redemptionType" />
+		<cf_HibachiListingColumn propertyIdentifier="amountType" />
+		<cf_HibachiListingColumn propertyIdentifier="amount" />
 		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 		<cf_HibachiListingColumn propertyIdentifier="globalFlag" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createloyaltyprogramaccruement" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailloyaltyprogram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#" modal="true"  />
+	<cf_HibachiActionCaller action="admin:entity.createloyaltyprogramredemption" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailloyaltyprogram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#" modal="true"  />
 
 </cfoutput>

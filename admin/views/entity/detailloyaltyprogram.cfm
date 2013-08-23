@@ -55,6 +55,7 @@ Notes:
 		
 		<cf_HibachiTabGroup object="#rc.loyaltyProgram#">
 			<cf_HibachiTab view="admin:entity/loyaltyProgramtabs/loyaltyProgramAccruement" />
+			<cf_HibachiTab view="admin:entity/loyaltyProgramtabs/loyaltyProgramRedemption" />
 		</cf_HibachiTabGroup>
 		
 	</cf_HibachiEntityDetailForm>
