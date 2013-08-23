@@ -156,10 +156,20 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 
 	// ==========================  END: ERRORS / MESSAGES ===========================================
 	// ======================= START: POPULATION & VALIDATION =======================================
+	
+	public any function beforePopulate() {
+		// Left Blank to be overridden by objects
+	}
+	
+	public any function afterPopulate() {
+		// Left Blank to be overridden by objects
+	}
 
 	// @hint Public populate method to utilize a struct of data that follows the standard property form format
 	public any function populate( required struct data={} ) {
 
+		// Call beforePopulate
+		beforePopulate();
 
 		// Get an array of All the properties for this object
 		var properties = getProperties();
@@ -378,6 +388,9 @@ component output="false" accessors="true" persistent="false" extends="HibachiObj
 				}
 			}
 		}
+		
+		// Call afterPopulate
+		afterPopulate();
 
 		// Return this object
 		return this;
