@@ -1,6 +1,6 @@
 {
 	"properties":{
 		"accruementType":							[{"contexts":"save","required":true}],
-		"Point":									[{"contexts":"save","required":true,"dataType":"numeric"}]
+		"pointQuantity":							[{"contexts":"save","required":true,"dataType":"numeric"}]
 	}
 }
