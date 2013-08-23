@@ -128,7 +128,12 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	// ================== START: Overridden Methods ========================
 	
 	public string function getSimpleRepresentation() {
-		return getLoyaltyProgram().getLoyaltyProgramName();
+		var simpleRep = getLoyaltyProgram().getLoyaltyProgramName();
+		
+		if( len(getAccountLoyaltyProgramNumber()) ){
+			simpleRep = simpleRep & " - " & getAccountLoyaltyProgramNumber();
+		}
+		return simpleRep;
 	}
 	
 	// ==================  END:  Overridden Methods ========================

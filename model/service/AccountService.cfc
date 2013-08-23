@@ -559,6 +559,19 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.accountLoyaltyProgram;	
 	}
 	
+	// Account Loyalty Program
+	public any function processAccountLoyaltyProgram_createTransaction(required any accountLoyaltyProgram, required any processObject) {
+		
+		// Create a new transaction
+		var loyaltyTransaction = this.newAccountLoyaltyProgramTransaction();
+		
+		loyaltyTransaction.setAccountLoyaltyProgram( arguments.accountLoyaltyProgram );
+		loyaltyTransaction.setaccruementType( processObject.getAccruementType() );
+		loyaltyTransaction.setpointsIn( processObject.getPointsIn() );
+
+		return arguments.accountLoyaltyProgram;	
+	}
+	
 	// Account Payment
 	public any function processAccountPayment_createTransaction(required any accountPayment, required any processObject) {
 		

@@ -46,16 +46,21 @@
 Notes:
 
 --->
-<cfparam name="rc.accountLoyaltyProgram" type="any" />
+<cfparam name="rc.accountloyaltyProgram" type="any" />
+<cfparam name="rc.processObject" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-<cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.accountLoyaltyProgram.getAccountLoyaltyProgramTransactionsSmartList()#">
-		
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="createdDateTime" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accruementType" />
-		<cf_HibachiListingColumn propertyIdentifier="pointsIn" />
-		
-	</cf_HibachiListingDisplay>
+<cf_HibachiEntityProcessForm entity="#rc.accountloyaltyProgram#" edit="#rc.edit#">
 	
-	<cf_HibachiProcessCaller action="admin:entity.preprocessaccountloyaltyprogram" entity="#rc.accountLoyaltyProgram#" processContext="createTransaction" class="btn" icon="plus" modal="true" />
-</cfoutput>
+	<cf_HibachiEntityActionBar type="preprocess" object="#rc.accountloyaltyProgram#">
+	</cf_HibachiEntityActionBar>
+	
+	<cf_HibachiPropertyRow>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accruementType" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="pointsIn" edit="#rc.edit#">
+		</cf_HibachiPropertyList>
+	</cf_HibachiPropertyRow>
+	
+</cf_HibachiEntityProcessForm>
+

@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) ten24, LLC
@@ -45,17 +45,37 @@
 
 Notes:
 
---->
-<cfparam name="rc.accountLoyaltyProgram" type="any" />
-
-<cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.accountLoyaltyProgram.getAccountLoyaltyProgramTransactionsSmartList()#">
-		
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="createdDateTime" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accruementType" />
-		<cf_HibachiListingColumn propertyIdentifier="pointsIn" />
-		
-	</cf_HibachiListingDisplay>
+*/
+component output="false" accessors="true" extends="HibachiProcess" {
 	
-	<cf_HibachiProcessCaller action="admin:entity.preprocessaccountloyaltyprogram" entity="#rc.accountLoyaltyProgram#" processContext="createTransaction" class="btn" icon="plus" modal="true" />
-</cfoutput>
+	// Injected Entity
+	property name="accountLoyaltyProgram";
+
+	// Data Properties
+	property name="pointsIn";
+	property name="accruementType" hb_formFieldType="select";
+	
+	// Option Properties
+	property name="accruementTypeOptions";
+	
+	public array function getAccruementTypeOptions() {
+		if(!structKeyExists(variables, "accruementTypeOptions")) {
+			
+			variables.accruementTypeOptions = [];
+			
+			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.itemFulfilled'), value="itemFulfilled"});
+			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.orderClosed'), value="orderClosed"});
+			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillementMethodeUsed"});
+			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.enrollment'), value="enrollment"});
+		}
+		return variables.accruementTypeOptions;
+	}
+	
+	public numeric function getpointsIn() {
+		if(!structKeyExists(variables, "pointsIn")) {
+			variables.pointsIn = 0;
+		}
+		return variables.pointsIn;
+	}
+		
+}

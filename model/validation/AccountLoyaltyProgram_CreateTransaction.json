@@ -1,0 +1,6 @@
+{
+	"properties":{
+		"pointsIn":					[{"contexts":"save","required":true,"dataType":"numeric","minValue":0}],
+		"accruementType":			[{"contexts":"save","required":true}]
+	}
+}
