@@ -138,7 +138,7 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 			arrayAppend(arguments.expirationTerm.getLoyaltyProgramExpirationTerms(), this);
 		}
 	}
-	public void function removeTerm(any term) {
+	public void function removeExpirationTerm(any Expirationterm) {
 		if(!structKeyExists(arguments, "expirationTerm")) {
 			arguments.expirationTerm = variables.expirationTerm;
 		}

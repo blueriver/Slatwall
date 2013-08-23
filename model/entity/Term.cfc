@@ -68,6 +68,8 @@ component entityname="SlatwallTerm" table="SwTerm" persistent="true" accessors="
 	property name="renewalSubscriptionUsageTerms" hb_populateEnabled="false" singularname="renewalSubscriptionUsageTerm" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="renewalTermID" cascade="all" inverse="true" lazy="extra";				// Extra Lazy because it is only used for validation
 	property name="gracePeriodSubscriptionUsageTerms" hb_populateEnabled="false" singularname="gracePeriodSubscriptionUsageTerm" cfc="SubscriptionUsage" type="array" fieldtype="one-to-many" fkcolumn="gracePeriodTermID" cascade="all" inverse="true" lazy="extra";	// Extra Lazy because it is only used for validation
 	property name="loyaltyProgramAccruementExpirationTerms" singularname="loyaltyProgramAccruementExpirationTerm" cfc="LoyaltyProgramAccruement" type="array" fieldtype="one-to-many" fkcolumn="expirationTermID" cascade="all" inverse="true";
+	property name="loyaltyProgramRedemptionBalanceTerms" singularname="loyaltyProgramAccruementBalanceTerm" cfc="LoyaltyProgramRedemption" type="array" fieldtype="one-to-many" fkcolumn="balanceTermID" cascade="all" inverse="true";
+	property name="loyaltyProgramAccruementAutoRedemptionTerms" singularname="loyaltyProgramAccruementAutoRedemptionTerm" cfc="LoyaltyProgramRedemption" type="array" fieldtype="one-to-many" fkcolumn="autoRedemptionTermID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	
@@ -156,12 +158,27 @@ component entityname="SlatwallTerm" table="SwTerm" persistent="true" accessors="
 	
 	// Loyalty Progrm Expiration Terms (one-to-many)
 	public void function addLoyaltyProgramExpirationTerm(required any loyaltyProgramExpirationTerm) {
-		arguments.loyaltyProgramExpirationTerm.setLoyaltyProgramExpirationTerm( this );
+		arguments.loyaltyProgramExpirationTerm.setExpirationTerm( this );
 	}
 	public void function removeLoyaltyProgramExpirationTerm(required any loyaltyProgramExpirationTerm) {
-		arguments.loyaltyProgramExpirationTerm.removeLoyaltyProgramExpirationTerm( this );
+		arguments.loyaltyProgramExpirationTerm.removeExpirationTerm( this );
+	}
+	
+	// Loyalty Program Auto Redemption Terms (one-to-many)    
+	public void function addloyaltyProgramAutoRedemptionTerm(required any loyaltyProgramAutoRedemptionTerm) {    
+		arguments.loyaltyProgramAutoRedemptionTerm.setAutoRedemptionTerm( this );    
+	}    
+	public void function removeloyaltyProgramAutoRedemptionTerm(required any loyaltyProgramAutoRedemptionTerm) {    
+		arguments.loyaltyProgramAutoRedemptionTerm.removeAutoRedemptionTerm( this );    
 	}
 
+	// Loyalty Program Balance Terms (one-to-many)
+	public void function addloyaltyProgramBalanceTerm(required any loyaltyProgramBalanceTerm) {
+		arguments.loyaltyProgramBalanceTerm.setbalanceTerm( this );
+	}
+	public void function removeloyaltyProgramBalanceTerm(required any loyaltyProgramBalanceTerm) {
+		arguments.loyaltyProgramBalanceTerm.removebalanceTerm( this );
+	}
 
 	// =============  END:  Bidirectional Helper Methods ===================
 
