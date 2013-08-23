@@ -136,7 +136,23 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 			authorizeChargeRequest.setCharset("utf-8");
 			authorizeChargeRequest.setUrl("#setting('apiUrl')#/#setting('apiVersion')#/charges");
 			authorizeChargeRequest.addParam(type="header", name="authorization", value="bearer #activeSecretKey#");
-			authorizeChargeRequest.addParam(type="formfield", name="card", value="#requestBean.getProviderToken()#");
+			if(!isNull(requestBean.getProviderToken())) {
+				authorizeChargeRequest.addParam(type="formfield", name="card", value="#requestBean.getProviderToken()#");	
+			} else {
+				createCardTokenRequest.addParam(type="formfield", name="card[number]", value="#requestBean.getCreditCardNumber()#");
+				createCardTokenRequest.addParam(type="formfield", name="card[cvc]", value="#requestBean.getSecurityCode()#");
+				createCardTokenRequest.addParam(type="formfield", name="card[exp_month]", value="#requestBean.getExpirationMonth()#");
+				createCardTokenRequest.addParam(type="formfield", name="card[exp_year]", value="#requestBean.getExpirationYear()#");
+				createCardTokenRequest.addParam(type="formfield", name="card[name]", value="#requestBean.getNameOnCreditCard()#");
+				createCardTokenRequest.addParam(type="formfield", name="card[address_line1]", value="#requestBean.getBillingStreetAddress()#");	
+				if(!isNull(requestBean.getBillingStreet2Address())) {
+					createCardTokenRequest.addParam(type="formfield", name="card[address_line2]", value="#requestBean.getBillingStreet2Address()#");
+				}
+				createCardTokenRequest.addParam(type="formfield", name="card[address_city]", value="#requestBean.getBillingCity()#");
+				createCardTokenRequest.addParam(type="formfield", name="card[address_state]", value="#requestBean.getBillingStateCode()#");
+				createCardTokenRequest.addParam(type="formfield", name="card[address_zip]", value="#requestBean.getBillingPostalCode()#");
+				createCardTokenRequest.addParam(type="formfield", name="card[address_country]", value="#requestBean.getBillingCountryCode()#");
+			}
 			authorizeChargeRequest.addParam(type="formfield", name="currency", value="#requestBean.getTransactionCurrency()#");
 			authorizeChargeRequest.addParam(type="formfield", name="amount", value="#int(requestBean.getTransactionAmount() * 100)#"); // amount as integer (eg. eliminate cents)
 			authorizeChargeRequest.addParam(type="formfield", name="description", value="TODO description");
@@ -230,11 +246,15 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 	{
 		
 		var response = {
-			statusCode = arguments.httpResponse.status_code,
-			statusText = arguments.httpResponse.status_text,
-			rawResponse = arguments.httpResponse.filecontent,
-			success = arguments.httpResponse.status_code eq 200
+			statusCode = arguments.httpResponse.responseheader.status_code,
+			success = arguments.httpResponse.responseheader.status_code eq 200
 		};
+		
+		if(isSimpleValue(arguments.httpResponse.filecontent)) {
+			response.rawResponse = arguments.httpResponse.filecontent;
+		} else {
+			response.rawResponse = arguments.httpResponse.filecontent.toString("UTF-8");
+		}
 		
 		if (response.success)
 		{

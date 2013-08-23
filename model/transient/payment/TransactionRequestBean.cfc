@@ -53,7 +53,7 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	property name="transactionID" type="string" ;
 	property name="transactionType" type="string" ;
 	property name="transactionAmount" ormtype="float";
-	property name="transactionCurrency" ormtype="float";
+	property name="transactionCurrencyCode" ormtype="string";
 	property name="isDuplicateFlag" type="boolean";
 	
 	// Credit Card Info
@@ -102,6 +102,9 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	// Only Used for 'chargePreAuthorization'
 	property name="preAuthorizationCode" type="string";
 	property name="preAuthorizationProviderTransactionID" type="string";
+	
+	// Deprecated
+	property name="transactionCurrency" ormtype="string";
 	
 	/*
 	Process Types
@@ -325,5 +328,9 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		setAccountPaymentMethodID( arguments.accountPaymentMethod.getAccountPaymentMethodID() );
 		setAccountID( arguments.accountPaymentMethod.getAccount().getAccountID() );
 	}
-
+	
+	// Deprecated
+	public string function getTransactionCurrency() {
+		return getTransactionCurrencyCode();
+	}
 }

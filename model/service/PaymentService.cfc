@@ -332,7 +332,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 							requestBean.setPreAuthorizationProviderTransactionID( arguments.data.preAuthorizationProviderTransactionID );
 						}
 						if(listFindNoCase("OrderPayment,AccountPayment", arguments.paymentTransaction.getPayment().getClassName())) {
-							requestBean.setTransactionCurrency( arguments.paymentTransaction.getPayment().getCurrencyCode() );	
+							requestBean.setTransactionCurrencyCode( arguments.paymentTransaction.getPayment().getCurrencyCode() );	
 						}
 						
 						// Move all of the info into the new request bean
