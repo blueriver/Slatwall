@@ -44,6 +44,7 @@ Notes:
 		
 		<cf_HibachiEntityActionBar type="detail" object="#rc.loyaltyProgram#" edit="#rc.edit#">
 			<cf_HibachiActionCaller action="admin:entity.createloyaltyprogramaccruement" queryString="redirectAction=admin:entity.detailloyaltyprogram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#"type="list" modal="true" />
+			<cf_HibachiActionCaller action="admin:entity.createloyaltyprogramredemption" queryString="redirectAction=admin:entity.detailloyaltyprogram&loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#"type="list" modal="true" />		
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
