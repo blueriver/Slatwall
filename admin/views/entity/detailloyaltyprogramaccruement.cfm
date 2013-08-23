@@ -61,7 +61,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="accruementType" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="pointType" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="point" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="globalFlag" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="activeFlag" edit="#rc.edit#">
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
