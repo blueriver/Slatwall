@@ -51,7 +51,7 @@ Notes:
 <cfparam name="this.datasource.username" default="" />
 <cfparam name="this.datasource.password" default="" />
 
-<cfif this.ormSettings.dialect eq "Oracle10g">
+<cfif this.ormSettings.dialect neq "Oracle10g">
 	<cfsetting requesttimeout="1200" />
 	
 	<cfif this.ormSettings.dialect eq "MySQL">
