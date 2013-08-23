@@ -56,7 +56,7 @@ Notes:
 							  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
 							  edit="#rc.edit#">
 
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="loyaltyProgram.loyaltyProgramName" />
+		<cf_HibachiListingColumn propertyIdentifier="loyaltyProgram.loyaltyProgramName" />
 		<cf_HibachiListingColumn propertyIdentifier="loyaltyProgram.activeFlag" />
 
 	</cf_HibachiListingDisplay>

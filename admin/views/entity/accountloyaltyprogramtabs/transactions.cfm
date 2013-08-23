@@ -51,8 +51,8 @@ Notes:
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.accountLoyaltyProgram.getAccountLoyaltyProgramTransactionsSmartList()#">
 		
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="createdDateTime" />
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="accruementType" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="accruementType" />
 		<cf_HibachiListingColumn propertyIdentifier="pointsIn" />
 		
 	</cf_HibachiListingDisplay>

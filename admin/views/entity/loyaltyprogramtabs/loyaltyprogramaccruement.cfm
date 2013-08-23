@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.loyaltyProgram.getloyaltyProgramAccruementsSmartList()#"
 							   recordEditAction="admin:entity.editloyaltyProgramAccruement"
 							   recorddetailaction="admin:entity.detailloyaltyProgramAccruement">
-		<cf_HibachiListingColumn propertyIdentifier="startDateTime" tdclass="primary" />
+		<cf_HibachiListingColumn propertyIdentifier="startDateTime" />
 		<cf_HibachiListingColumn propertyIdentifier="endDateTime" />
 		<cf_HibachiListingColumn propertyIdentifier="expirationTerm.termName" />
 		<cf_HibachiListingColumn propertyIdentifier="accruementType" />
