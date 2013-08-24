@@ -50,21 +50,8 @@ Notes:
 component accessors="true" output="false" displayname="Stripe" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
 	//Global variables
-	variables.version = "v1";
-	variables.timeout = "45";
-	variables.responseDelimiter = "|";
-	variables.transactionCodes = {};
 
 	public any function init(){
-		variables.transactionCodes = {
-			authorize="AUTH_ONLY",
-			authorizeAndCharge="AUTH_CAPTURE",
-			chargePreAuthorization="PRIOR_AUTH_CAPTURE",
-			credit="CREDIT",
-			void="VOID",
-			inquiry="INQUIRY"
-		};
-		
 		return this;
 	}
 	
@@ -74,6 +61,8 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 	
 	public any function processCreditCard(required any requestBean){
 		var responseBean = new Slatwall.model.transient.payment.CreditCardTransactionResponseBean();
+		
+		var logEnabled = setting("logEnabled");
 		
 		// Notes for future reference
 		// inquiry, void, credit, receive, authorize, authorizeAndCharge, chargePreAuthorization, generateToken
@@ -112,6 +101,7 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 			if (responseData.success)
 			{
 				responseBean.setProviderToken(responseData.result.id);
+				//responseBean.addMessage(messageName="stripe.cardToken", message="");
 			}
 		}
 		else if (requestBean.getTransactionType() == "authorize" || requestBean.getTransactionType() == "authorizeAndCharge")

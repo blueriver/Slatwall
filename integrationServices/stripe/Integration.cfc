@@ -57,6 +57,7 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 			liveSecretKey = {fieldType="text"},
 			livePublicKey = {fieldType="text"},
 			testMode = {fieldType="yesno", defaultValue="1"},
+			logEnabled = {fieldType="yesno", defaultValue="0"},
 			apiUrl = {fieldType="text", defaultValue="https://api.stripe.com"},
 			apiVersion = {fieldType="select", defaultValue="v1", valueOptions=[
 				{name="v1",value="v1"}
