@@ -81,6 +81,21 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 			activeSecretKey = setting("liveSecretKey");
 		}
 		
+		var props = requestBean.getPropertiesStruct();
+		var pairs = structNew();
+		for (var p in props)
+		{
+			try
+			{
+				var getterMethod = requestBean["get" & props[p].name];
+				structInsert(pairs, props[p].name, getterMethod());
+			}
+			catch (any e)
+			{
+				
+			}
+		}
+		
 		if (requestBean.getTransactionType() == "generateToken")
 		{
 			// TODO create customer in stripe and set as provider token
@@ -91,17 +106,28 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 			createCardTokenRequest.setMethod("post");
 			createCardTokenRequest.setCharset("utf-8");
 			createCardTokenRequest.setUrl("#setting('apiUrl')#/#setting('apiVersion')#/tokens");
+			createCardTokenRequest.setUrl("#setting('apiUrl')#/#setting('apiVersion')#/customers");
 			
 			createCardTokenRequest.addParam(type="header", name="authorization", value="bearer #activePublicKey#");
 			populateRequestParamsWithCardInfo(requestBean, createCardTokenRequest);
+			// createCardTokenRequest.addParam(type="formfield", name="email", value="#requestBean.getEmail()#");
+			// createCardTokenRequest.addParam(type="formfield", name="description", value="#requestBean.getEmail()#");
 			
 			responseData = deserializeResponse(createCardTokenRequest.send().getPrefix());
+			
+			writeDump(responseData);
+			writeDump(pairs);
+			abort;
 			
 			// populate response
 			if (responseData.success)
 			{
-				responseBean.setProviderToken(responseData.result.id);
-				//responseBean.addMessage(messageName="stripe.cardToken", message="");
+				responseBean.setProviderToken(responseData.result.card.id);
+				responseBean.addMessage(messageName="stripe.token.id", message="#responseData.result.id#");
+				responseBean.addMessage(messageName="stripe.card.id", message="#responseData.result.card.id#");
+				responseBean.addMessage(messageName="stripe.livemode", message="#responseData.result.livemode#");
+				responseBean.addMessage(messageName="stripe.object", message="#responseData.result.object#");
+				responseBean.addMessage(messageName="stripe.type", message="#responseData.result.type#");
 			}
 		}
 		else if (requestBean.getTransactionType() == "authorize" || requestBean.getTransactionType() == "authorizeAndCharge")
