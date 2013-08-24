@@ -52,8 +52,8 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	// Process Info
 	property name="transactionID" type="string" ;
 	property name="transactionType" type="string" ;
-	property name="transactionAmount" ormtype="float";
-	property name="transactionCurrencyCode" ormtype="string";
+	property name="transactionAmount" type="float";
+	property name="transactionCurrencyCode" type="string";
 	property name="isDuplicateFlag" type="boolean";
 	
 	// Credit Card Info
@@ -130,13 +130,18 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		if(!isNull(arguments.accountPayment.getProviderToken())) {
 			setProviderToken(arguments.accountPayment.getProviderToken());	
 		}
-		if(!isNull(arguments.accountPayment.getOriginalAuthorizationCode())) {
-			
+		if(!isNull(arguments.accountPayment.getNameOnCreditCard())) {
+			setNameOnCreditCard(arguments.accountPayment.getNameOnCreditCard());	
 		}
-		setNameOnCreditCard(arguments.accountPayment.getNameOnCreditCard());
-		setCreditCardType(arguments.accountPayment.getCreditCardType());
-		setExpirationMonth(arguments.accountPayment.getExpirationMonth());
-		setExpirationYear(arguments.accountPayment.getExpirationYear());
+		if(!isNull(arguments.accountPayment.getCreditCardType())) {
+			setCreditCardType(arguments.accountPayment.getCreditCardType());
+		}
+		if(!isNull(arguments.accountPayment.getExpirationMonth())) {
+			setExpirationMonth(arguments.accountPayment.getExpirationMonth());	
+		}
+		if(!isNull(arguments.accountPayment.getExpirationYear())) {
+			setExpirationYear(arguments.accountPayment.getExpirationYear());	
+		}
 		
 		// Populate Account Info
 		setAccountFirstName(arguments.accountPayment.getAccount().getFirstName());
@@ -204,11 +209,18 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		if(!isNull(arguments.orderPayment.getProviderToken())) {
 			setProviderToken(arguments.orderPayment.getProviderToken());	
 		}
-		setNameOnCreditCard(arguments.orderPayment.getNameOnCreditCard());
-		setCreditCardType(arguments.orderPayment.getCreditCardType());
-		setExpirationMonth(arguments.orderPayment.getExpirationMonth());
-		setExpirationYear(arguments.orderPayment.getExpirationYear());
-		
+		if(!isNull(arguments.orderPayment.getNameOnCreditCard())) {
+			setNameOnCreditCard(arguments.orderPayment.getNameOnCreditCard());	
+		}
+		if(!isNull(arguments.orderPayment.getCreditCardType())) {
+			setCreditCardType(arguments.orderPayment.getCreditCardType());	
+		}
+		if(!isNull(arguments.orderPayment.getExpirationMonth())) {
+			setExpirationMonth(arguments.orderPayment.getExpirationMonth());	
+		}
+		if(!isNull(arguments.orderPayment.getExpirationYear())) {
+			setExpirationYear(arguments.orderPayment.getExpirationYear());	
+		}
 		
 		// Populate Account Info
 		setAccountFirstName(arguments.orderPayment.getOrder().getAccount().getFirstName());
