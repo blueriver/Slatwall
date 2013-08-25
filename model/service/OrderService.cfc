@@ -463,6 +463,10 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Make sure that the currencyCode matches the order
 		newOrderPayment.setCurrencyCode( arguments.order.getCurrencyCode() );
 		
+		// If this was a termPayment
+		if(!isNull(newOrderPayment.getPaymentMethod()) && newOrderPayment.getPaymentMethod().getPaymentMethodType() eq 'termPayment' && isNull(newOrderPayment.getTermPaymentAccount())) {
+			newOrderPayment.setTermPaymentAccount( arguments.order.getAccount() );
+		}
 		
 		// Save the newOrderPayment
 		newOrderPayment = this.saveOrderPayment( newOrderPayment );
