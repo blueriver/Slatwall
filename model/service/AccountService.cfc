@@ -373,7 +373,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.account;
 	}
 	
-	// Account Loyalty Programs
+	// Account Loyalty Program
 	public any function processAccountLoyaltyProgram_itemFulfilled(required any accountLoyaltyProgram, required struct data) {
 		
 		// Loop over arguments.accountLoyaltyProgram.getLoyaltyProgramAccruements() as 'loyaltyProgramAccruement'
@@ -444,23 +444,27 @@ component extends="HibachiService" accessors="true" output="false" {
 						// TODO [paul]:Neet to add a check for excludes
 						// TODO [paul]:THIS WILL NOT WORK -> loyaltyProgramAccruement.hasProductType(orderDeliveryItem.getOrderItem().getSku().getProduct().getProductType())
 						
-						// For each orderItem add a transaction record for the points accrued
-						// Create a new newAccountLoyaltyProgramTransaction
-						var accountLoyaltyTransaction = this.newAccountLoyaltyProgramTransaction();
+						// Create a new transaction
+						var accountLoyaltyProgramTransaction = this.newAccountLoyaltyProgramTransaction();
 						
 						// Setup the transaction
-						accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
-						accountLoyaltyTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
-						accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
-						accountLoyaltyTransaction.setOrder( orderDeliveryItem.getOrderItem().getOrder() );
-						accountLoyaltyTransaction.setOrderItem( orderDeliveryItem.getOrderItem() );
+						accountLoyaltyProgramTransaction.setAccruementType( "itemFulfilled" );
+						accountLoyaltyProgramTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
+						accountLoyaltyProgramTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
+						accountLoyaltyProgramTransaction.setOrder( orderDeliveryItem.getOrderItem().getOrder() );
+						accountLoyaltyProgramTransaction.setOrderItem( orderDeliveryItem.getOrderItem() );
+						
+						// Set up loyalty program expiration date / time based upon the expiration term
+						if( !isNull(loyaltyProgramAccruement.getExpirationTerm()) ){
+						    accountLoyaltyProgramTransaction.setExpirationDateTime( loyaltyProgramAccruement.getExpirationTerm().getEndDate() );
+						}
 						
 						// If pointType is 'fixed' set points
 						if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
-							accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
+							accountLoyaltyProgramTransaction.setPointsIn( loyaltyProgramAccruement.getPointQuantity() );
 						} // If pointType is 'pointPerDollar' set point times the qty times the item price
 						else if ( loyaltyProgramAccruement.getPointType() eq 'pointPerDollar' ) {
-							accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * (orderDeliveryItem.getQuantity() * orderDeliveryItem.getOrderItem().getPrice()) );
+							accountLoyaltyProgramTransaction.setPointsIn( loyaltyProgramAccruement.getPointQuantity() * (orderDeliveryItem.getQuantity() * orderDeliveryItem.getOrderItem().getPrice()) );
 						}
 					}
 				}
@@ -484,21 +488,26 @@ component extends="HibachiService" accessors="true" output="false" {
 				
 				if ( listFindNoCase("ostClosed",arguments.data.order.getorderStatusType().getSystemCode()) ){
 					
-					// Create a new accountLoayltyTransaction
-					var accountLoyaltyTransaction = this.newAccountLoyaltyProgramTransaction();
+					// Create a new transaction
+					var accountLoyaltyProgramTransaction = this.newAccountLoyaltyProgramTransaction();
 					
 					// Setup the transaction
-					accountLoyaltyTransaction.setAccruementType( "orderClosed" );
-					accountLoyaltyTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
-					accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
-					accountLoyaltyTransaction.setOrder( arguments.data.order );
+					accountLoyaltyProgramTransaction.setAccruementType( "orderClosed" );
+					accountLoyaltyProgramTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
+					accountLoyaltyProgramTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
+					accountLoyaltyProgramTransaction.setOrder( arguments.data.order );
 					
-					// If pointType is 'fixed' set points
+					// Set up loyalty program expiration date / time based upon the expiration term
+					if( !isNull(loyaltyProgramAccruement.getExpirationTerm()) ){
+					    accountLoyaltyProgramTransaction.setExpirationDateTime( loyaltyProgramAccruement.getExpirationTerm().getEndDate() );
+					}
+				
+					// If pointType is 'fixed' set pointsIn
 					if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
-						accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
+						accountLoyaltyProgramTransaction.setPointsIn( loyaltyProgramAccruement.getPointQuantity() );
 					} // If pointType is 'pointPerDollar' set point times the order total
 					else if ( loyaltyProgramAccruement.getPointType() eq 'pointPerDollar' ) {
-						accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * arguments.data.order.getTotal() );
+						accountLoyaltyProgramTransaction.setPointsIn( loyaltyProgramAccruement.getPointQuantity() * arguments.data.order.getTotal() );
 					}	
 				}	
 			}
@@ -518,20 +527,25 @@ component extends="HibachiService" accessors="true" output="false" {
 				// TODO [paul]: Same here, you don't need to check on the delivery items.  You just need to know if all the orderItems have a status of 'fulfilled'
 				// If all the items are fulfilled then set accruement points
 					
-				// Create a new accountLoayltyTransaction and set it up
-				var accountLoyaltyTransaction = this.newAccountLoyaltyProgramTransaction();
+				// Create and setup a new transaction 
+				var accountLoyaltyProgramTransaction = this.newAccountLoyaltyProgramTransaction();
 				
-				accountLoyaltyTransaction.setAccruementType( "fulfillmentMethodUsed" );
-				accountLoyaltyTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
-				accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
-				accountLoyaltyTransaction.setOrderFulfillment( arguments.data.orderFulfillment );
+				accountLoyaltyProgramTransaction.setAccruementType( "fulfillmentMethodUsed" );
+				accountLoyaltyProgramTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
+				accountLoyaltyProgramTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
+				accountLoyaltyProgramTransaction.setOrderFulfillment( arguments.data.orderFulfillment );
 				
-				// If pointType is 'fixed' set points
+				// Set up loyalty program expiration date / time based upon the expiration term
+				if( !isNull(loyaltyProgramAccruement.getExpirationTerm()) ){
+				    accountLoyaltyProgramTransaction.setExpirationDateTime( loyaltyProgramAccruement.getExpirationTerm().getEndDate() );
+				}
+				
+				// If pointType is 'fixed' set pointsIn
 				if ( loyaltyProgramAccruement.getPointType() eq 'fixed' ){
-					accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
+					accountLoyaltyProgramTransaction.setPointsIn( loyaltyProgramAccruement.getPointQuantity() );
 				} // If pointType is 'pointPerDollar' set point times the fulfillmentcharge
 				else if ( loyaltyProgramAccruement.getPointType() eq 'pointPerDollar' ) {
-					accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() * arguments.data.orderFulfillment.getFulFillmentCharge() );
+					accountLoyaltyProgramTransaction.setPointsIn( loyaltyProgramAccruement.getPointQuantity() * arguments.data.orderFulfillment.getFulFillmentCharge() );
 				}
 			}
 		}
@@ -547,27 +561,31 @@ component extends="HibachiService" accessors="true" output="false" {
 			// If loyaltyProgramAccruement eq 'enrollment' as the type
 			if (loyaltyProgramAccruement.getAccruementType() eq 'enrollment') {
 				
-				var accountLoyaltyTransaction = this.newAccountLoyaltyProgramTransaction();
+				var accountLoyaltyProgramTransaction = this.newAccountLoyaltyProgramTransaction();
 				
-				accountLoyaltyTransaction.setAccruementType( "enrollment" );
-				accountLoyaltyTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
-				accountLoyaltyTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
-				accountLoyaltyTransaction.setPointsIn( loyaltyProgramAccruement.getPoint() );
+				accountLoyaltyProgramTransaction.setAccruementType( "enrollment" );
+				accountLoyaltyProgramTransaction.setLoyaltyProgramAccruement( loyaltyProgramAccruement );
+				accountLoyaltyProgramTransaction.setAccountLoyaltyProgram( accountLoyaltyProgram );
+				accountLoyaltyProgramTransaction.setPointsIn( loyaltyProgramAccruement.getPointQuantity() );
+				
+				// Set up loyalty program expiration date / time based upon the expiration term
+				if( !isNull(loyaltyProgramAccruement.getExpirationTerm()) ){
+				    accountLoyaltyProgramTransaction.setExpirationDateTime( loyaltyProgramAccruement.getExpirationTerm().getEndDate() );
+				}
 			}
 		}
 		
 		return arguments.accountLoyaltyProgram;	
 	}
 	
-	// Account Loyalty Program
 	public any function processAccountLoyaltyProgram_createTransaction(required any accountLoyaltyProgram, required any processObject) {
 		
 		// Create a new transaction
-		var loyaltyTransaction = this.newAccountLoyaltyProgramTransaction();
+		var accountLoyaltyProgramTransaction = this.newAccountLoyaltyProgramTransaction();
 		
-		loyaltyTransaction.setAccountLoyaltyProgram( arguments.accountLoyaltyProgram );
-		loyaltyTransaction.setaccruementType( processObject.getAccruementType() );
-		loyaltyTransaction.setpointsIn( processObject.getPointsIn() );
+		accountLoyaltyProgramTransaction.setAccountLoyaltyProgram( arguments.accountLoyaltyProgram );
+		accountLoyaltyProgramTransaction.setaccruementType( processObject.getAccruementType() );
+		accountLoyaltyProgramTransaction.setpointsIn( processObject.getPointsIn() );
 
 		return arguments.accountLoyaltyProgram;	
 	}

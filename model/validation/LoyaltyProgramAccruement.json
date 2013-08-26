@@ -1,6 +1,14 @@
 {
+	"conditions":{
+	    "needsEndAfterStart":{
+	        "startDateTime":{"required":true},
+	        "endDateTime":{"required":true}
+	    }
+	},
 	"properties":{
-		"accruementType":							[{"contexts":"save","required":true}],
-		"pointQuantity":							[{"contexts":"save","required":true,"dataType":"numeric"}]
+		"accruementType":			[{"contexts":"save","required":true}],
+		"pointQuantity":			[{"contexts":"save","required":true,"dataType":"numeric"}],
+		"startDateTime":			[{"contexts":"save","dataType":"date"}],
+		"endDateTime":				[{"contexts":"save","dataType":"date"},{"contexts":"save","conditions":"needsEndAfterStart","gtProperty":"startDateTime"}]
 	}
 }
