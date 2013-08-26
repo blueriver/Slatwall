@@ -1415,7 +1415,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		arguments.orderPayment = save(arguments.orderPayment, arguments.data, arguments.context);
 		
 		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
-		if((wasNew || arguments.orderPayment.getStatusCode() == 'opstInvalid') && !arguments.orderPayment.hasErrors() && isNull(arguments.orderPayment.getAccountPaymentMethod()) && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
+		if((arguments.orderPayment.getStatusCode() == 'opstInvalid' || wasNew) && !arguments.orderPayment.hasErrors() && isNull(arguments.orderPayment.getAccountPaymentMethod()) && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
 			
 			// In case we are trying to re-submit an orderPayment that was previously marked as invalid, we set it back to active
 			arguments.orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );

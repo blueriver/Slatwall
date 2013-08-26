@@ -589,6 +589,7 @@ component entityname="SlatwallOrderPayment" table="SwOrderPayment" persistent="t
 		
 		// Verify Defaults are Set
 		getOrderPaymentType();
+		getOrderPaymentStatusType();
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
