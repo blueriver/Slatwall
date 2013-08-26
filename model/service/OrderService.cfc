@@ -111,22 +111,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return orderRequirementsList;
 	}
 	
-	public void function removeAccountSpecificOrderDetails(required any order) {
-	
-		// Loop over fulfillments and remove any account specific details
-		for(var i = 1; i <= arrayLen(arguments.order.getOrderFulfillments()); i++) {
-			if(arguments.order.getOrderFulfillments()[i].getFulfillmentMethodID() == "shipping") {
-				arguments.order.getOrderFulfillments()[i].setShippingAddress(javaCast("null", ""));
-				arguments.order.getOrderFulfillments()[i].setAccountAddress(javaCast("null", ""));
-			}
-		}
-	
-		// TODO [issue #1767]: Loop over payments and remove any account specific details
-		
-		// Recalculate the order amounts for tax and promotions
-		recalculateOrderAmounts(arguments.order);
-	}
-	
 	public void function recalculateOrderAmounts(required any order) {
 		
 		if(!listFindNoCase("ostCanceled,ostClosed", arguments.order.getOrderStatusType().getSystemCode())) {
