@@ -66,7 +66,7 @@ Notes:
 			<cfzip action="zip" file="#getTempDirectory()#slatwall_bak.zip" source="#slatwallRootPath#" recurse="yes" overwrite="yes" />
 			
 			<!--- start download --->
-			<cfhttp url="#downloadURL#" method="get" path="#getTempDirectory()#" file="#downloadFileName#" />
+			<cfhttp url="#downloadURL#" method="get" path="#getTempDirectory()#" file="#downloadFileName#" throwonerror="true" />
 			
 			<!--- now read and unzip the downloaded file --->
 			<cfset var dirList = "" />

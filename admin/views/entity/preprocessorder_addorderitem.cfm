@@ -99,6 +99,20 @@ Notes:
 								</cfif> 	
 							</cfloop>
 							
+							<!--- Email Fulfillment Details --->
+							<cf_HibachiDisplayToggle selector="select[name='fulfillmentMethodID']" valueAttribute="fulfillmentmethodtype" showValues="email" loadVisable="#loadFulfillmentMethodType eq 'email'#">
+								
+								<!--- Email Address --->
+								<cf_HibachiPropertyDisplay object="#rc.processObject#" property="emailAddress" edit="#rc.edit#" />
+							</cf_HibachiDisplayToggle>
+							
+							<!--- Pickup Fulfillment Details --->
+							<cf_HibachiDisplayToggle selector="select[name='fulfillmentMethodID']" valueAttribute="fulfillmentmethodtype" showValues="pickup" loadVisable="#loadFulfillmentMethodType eq 'pickup'#">
+								
+								<!--- Pickup Location --->
+								<cf_HibachiPropertyDisplay object="#rc.processObject#" property="pickupLocationID" edit="#rc.edit#" />
+							</cf_HibachiDisplayToggle>
+							
 							<!--- Shipping Fulfillment Details --->
 							<cf_HibachiDisplayToggle selector="select[name='fulfillmentMethodID']" valueAttribute="fulfillmentmethodtype" showValues="shipping" loadVisable="#loadFulfillmentMethodType eq 'shipping'#">
 								
@@ -130,6 +144,8 @@ Notes:
 								</cf_HibachiDisplayToggle>
 								
 							</cf_HibachiDisplayToggle>
+							
+							
 							
 						</cf_HibachiDisplayToggle>
 					<cfelse>
