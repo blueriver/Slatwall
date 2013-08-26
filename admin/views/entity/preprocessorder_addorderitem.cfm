@@ -60,7 +60,12 @@ Notes:
 			<cf_HibachiPropertyRow>
 				<cf_HibachiPropertyList>
 					<!--- Add the SkuID & orderItemTypeSystemCode --->
-					<input type="hidden" name="skuID" value="#rc.processObject.getSkuID()#" />
+					<cfif not isNull(rc.processObject.getStockID())>
+						<input type="hidden" name="stockID" value="#rc.processObject.getStockID()#" />
+					</cfif>
+					<cfif not isNull(rc.processObject.getSkuID())>
+						<input type="hidden" name="skuID" value="#rc.processObject.getSkuID()#" />
+					</cfif>
 					<input type="hidden" name="orderItemTypeSystemCode" value="#rc.processObject.getOrderItemTypeSystemCode()#" />
 					
 					<h5>#$.slatwall.rbKey('admin.entity.preprocessorder_addorderitem.itemDetails')#</h5>
