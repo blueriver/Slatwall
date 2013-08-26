@@ -40,8 +40,8 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	
 	// Persistent Properties
 	property name="loyaltyProgramAccruementID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="startDateTime" ormtype="timestamp";
-	property name="endDateTime" ormtype="timestamp";
+	property name="startDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
+	property name="endDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
 	property name="accruementType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="pointType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="pointQuantity" ormType="integer";
