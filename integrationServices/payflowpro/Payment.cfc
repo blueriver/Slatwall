@@ -127,15 +127,20 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		if(len(requestBean.getCreditCardNumber())) {
 			arrayAppend(paymentData,"ACCT[#len(requestBean.getCreditCardNumber())#]=#requestBean.getCreditCardNumber()#");
 			arrayAppend(paymentData,"EXPDATE[4]=#numberFormat(Left(requestBean.getExpirationMonth(),2),'00')##Right(requestBean.getExpirationYear(),2)#");
+		}
+		
+		// If this is a credit, then we want to use the originalAuthorizationID
+		if(arguments.requestBean.getTransactionType() eq "credit") {
+			arrayAppend(paymentData,"ORIGID=#requestBean.getOriginalProviderTransactionID()#");
 			
-			// If this is a credit or delayed capture we still want to use the provider token
-			if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
-				arrayAppend(paymentData,"ORIGID=#requestBean.getProviderToken()#");	
-			}
+		// If this is a delayed capture we want to use the preAuthorizationTransactionID
+		} else if (arguments.requestBean.getTransactionType() eq "chargePreAuthorization") {
+			arrayAppend(paymentData,"ORIGID=#requestBean.getPreAuthorizationProviderTransactionID()#");
+		
+		// If there was no creditCardNumber passed, then use the providerToken
+		} else if(!len(requestBean.getCreditCardNumber()) && !isNull(requestBean.getCreditCardNumber()) && len(requestBean.getCreditCardNumber())) {
+			arrayAppend(paymentData,"ORIGID=#requestBean.getProviderToken()#");
 			
-		// Otherwise use the provider token
-		} else {
-			arrayAppend(paymentData,"ORIGID=#requestBean.getProviderToken()#");	
 		}
 		
 		// Always add a CVV2 in case one was passed in
