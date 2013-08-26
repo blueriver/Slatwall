@@ -46,47 +46,21 @@
 Notes:
 
 --->
-<cfparam name="rc.accountLoyaltyProgram" type="any">
-<cfparam name="rc.account" type="any" default="#rc.accountLoyaltyProgram.getAccount()#">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.accountloyalty" type="any" />
+<cfparam name="rc.processObject" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-<cfoutput>
-	<cf_HibachiEntityDetailForm object="#rc.accountLoyaltyProgram#" edit="#rc.edit#" saveActionQueryString="accountID=#rc.account.getAccountID()#">
-		<cf_HibachiEntityActionBar type="detail" object="#rc.accountLoyaltyProgram#" edit="#rc.edit#" 
-								   backAction="admin:entity.detailaccount"
-								   backQueryString="accountID=#rc.account.getAccountID()#"
-								   cancelAction="admin:entity.detailaccount"
-								   cancelQueryString="accountID=#rc.account.getAccountID()#" 
-								   deleteQueryString="redirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" />
-		
-		<!--- Hidden field to attach this to the account --->
-		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
-		
-		<cf_HibachiPropertyRow>
-			<cf_HibachiPropertyList>
-				<cf_HibachiPropertyDisplay object="#rc.accountLoyaltyProgram#" property="loyaltyProgram" edit="#rc.edit#">
-			</cf_HibachiPropertyList>
-		</cf_HibachiPropertyRow>
-		
-		<cf_HibachiTabGroup object="#rc.accountLoyaltyProgram#">
-			<cf_HibachiTab view="admin:entity/accountloyaltyprogramtabs/transactions" />
-		</cf_HibachiTabGroup>
-			
-	</cf_HibachiEntityDetailForm>
-</cfoutput>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<cf_HibachiEntityProcessForm entity="#rc.accountloyalty#" edit="#rc.edit#">
+	
+	<cf_HibachiEntityActionBar type="preprocess" object="#rc.accountloyalty#">
+	</cf_HibachiEntityActionBar>
+	
+	<cf_HibachiPropertyRow>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accruementType" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="pointsIn" edit="#rc.edit#">
+		</cf_HibachiPropertyList>
+	</cf_HibachiPropertyRow>
+	
+</cf_HibachiEntityProcessForm>
 

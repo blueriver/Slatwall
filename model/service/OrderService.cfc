@@ -937,18 +937,18 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 		
 		// check for orderStatus 
-		// TODO [paul]: If the order wasn't closed before... but now, same thing... loop over the loyaltyPrograms that the account on the order has, and call the processLoyaltyProgram with context of 'orderClosed'
+		// TODO [paul]: If the order wasn't closed before... but now, same thing... loop over the loyaltys that the account on the order has, and call the processLoyalty with context of 'orderClosed'
 		// If the order status is not 'closed'
 		if( !( listFindNoCase("ostClosed", arguments.order.getOrderStatusType().getSystemCode()) && listFindNoCase("ostClosed", originalOrderStatus) ) ) {
 			
-			// Loop over the loyaltyPrograms that the account on the order has and call the processAccountLoyaltyProgram with context of 'orderClosed'
-			for(var accountLoyaltyProgram in arguments.order.getAccount().getAccountLoyaltyPrograms()) {
+			// Loop over the loyalties that the account on the order has and call the processAccountLoyalty with context of 'orderClosed'
+			for(var accountLoyalty in arguments.order.getAccount().getAccountLoyalties()) {
 				var orderClosedData = {
 					order = arguments.order
 				};
 				
 				// // Call the process method with 'orderClosed' as context
-				getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, orderClosedData, 'orderClosed');
+				getAccountService().processAccountLoyalty(accountLoyalty, orderClosedData, 'orderClosed');
 			}
 		}
 		return arguments.order;
@@ -1075,13 +1075,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		if (!arguments.orderDelivery.hasErrors()) {
 			
 			// Loop over the accounts loyalty programs
-			for(var accountLoyaltyProgram in arguments.orderDelivery.getOrder().getAccount().getAccountLoyaltyPrograms()) {
+			for(var accountLoyalty in arguments.orderDelivery.getOrder().getAccount().getAccountLoyalties()) {
 				var itemsFulfilledData = {
 					orderDelivery = arguments.orderDelivery
 				};
 				
 				// Call the process method with 'itemsFulfilled' as context
-				getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, itemsFulfilledData, 'itemFulfilled');
+				getAccountService().processAccountLoyalty(accountLoyalty, itemsFulfilledData, 'itemFulfilled');
 			}
 			
 			// Check to see if this orderFulfillment is complete and fully 'fulfilled'
@@ -1099,12 +1099,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			// If all items in an order have been fulfilled 
 			if( allOrderItemsFulfilled ){
 				
-				for(var accountLoyaltyProgram in arguments.orderDelivery.getOrder().getAccount().getAccountLoyaltyPrograms()) {
+				for(var accountLoyalty in arguments.orderDelivery.getOrder().getAccount().getAccountLoyalties()) {
 					var fulfillmentMethodUsedData = {
 						orderFulfillment = orderFulfillment
 					};
 					// Call the process method with 'fulfillmentMethodUsed' as context
-					getAccountService().processAccountLoyaltyProgram(accountLoyaltyProgram, fulfillmentMethodUsedData, 'fulfillmentMethodUsed'); 
+					getAccountService().processAccountLoyalty(accountLoyalty, fulfillmentMethodUsedData, 'fulfillmentMethodUsed'); 
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) ten24, LLC
@@ -45,22 +45,37 @@
 
 Notes:
 
---->
-<cfparam name="rc.accountloyaltyProgram" type="any" />
-<cfparam name="rc.processObject" type="any" />
-<cfparam name="rc.edit" type="boolean" />
+*/
+component output="false" accessors="true" extends="HibachiProcess" {
+	
+	// Injected Entity
+	property name="accountLoyalty";
 
-<cf_HibachiEntityProcessForm entity="#rc.accountloyaltyProgram#" edit="#rc.edit#">
+	// Data Properties
+	property name="pointsIn";
+	property name="accruementType" hb_formFieldType="select";
 	
-	<cf_HibachiEntityActionBar type="preprocess" object="#rc.accountloyaltyProgram#">
-	</cf_HibachiEntityActionBar>
+	// Option Properties
+	property name="accruementTypeOptions";
 	
-	<cf_HibachiPropertyRow>
-		<cf_HibachiPropertyList>
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accruementType" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="pointsIn" edit="#rc.edit#">
-		</cf_HibachiPropertyList>
-	</cf_HibachiPropertyRow>
+	public array function getAccruementTypeOptions() {
+		if(!structKeyExists(variables, "accruementTypeOptions")) {
+			
+			variables.accruementTypeOptions = [];
+			
+			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyAccruement.accruementType.itemFulfilled'), value="itemFulfilled"});
+			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyAccruement.accruementType.orderClosed'), value="orderClosed"});
+			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillementMethodeUsed"});
+			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyAccruement.accruementType.enrollment'), value="enrollment"});
+		}
+		return variables.accruementTypeOptions;
+	}
 	
-</cf_HibachiEntityProcessForm>
-
+	public numeric function getpointsIn() {
+		if(!structKeyExists(variables, "pointsIn")) {
+			variables.pointsIn = 0;
+		}
+		return variables.pointsIn;
+	}
+		
+}

@@ -85,8 +85,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SwPromoRewardExclProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SwPromoQualProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SwPromoQualExclProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
-	property name="loyaltyProgramAccruements" singularname="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementProduct" fkcolumn="productID" inversejoincolumn="loyaltyProgramAccruementID" inverse="true";
-	property name="loyaltyProgramAccruementExclusions" singularname="loyaltyProgramAccruementExclusion" cfc="LoyaltyProgramAccruement" type="array" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExclProduct" fkcolumn="productID" inversejoincolumn="loyaltyProgramAccruementID" inverse="true";
+	property name="loyaltyAccruements" singularname="loyaltyAccruement" cfc="LoyaltyAccruement" fieldtype="many-to-many" linktable="SwLoyaltyAccruProduct" fkcolumn="productID" inversejoincolumn="loyaltyAccruementID" inverse="true";
+	property name="loyaltyAccruementExclusions" singularname="loyaltyAccruementExclusion" cfc="LoyaltyAccruement" type="array" fieldtype="many-to-many" linktable="SwLoyaltyAccruExclProduct" fkcolumn="productID" inversejoincolumn="loyaltyAccruementID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SwPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
 	property name="vendors" singularname="vendor" cfc="Vendor" type="array" fieldtype="many-to-many" linktable="SwVendorProduct" fkcolumn="productID" inversejoincolumn="vendorID" inverse="true";
 	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SwPhysicalProduct" fkcolumn="productID" inversejoincolumn="physicalID" inverse="true";
@@ -799,19 +799,19 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 	}
 	
 	// Loyalty Program Accruements (many-to-many - inverse)
-	public void function addLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
-		arguments.loyaltyProgramAccruement.addProduct( this );
+	public void function addLoyaltyAccruement(required any loyaltyAccruement) {
+		arguments.loyaltyAccruement.addProduct( this );
 	}
-	public void function removeloyaltyProgramAccruement(required any loyaltyProgramAccruement) {
-		arguments.loyaltyProgramAccruement.removeProduct( this );
+	public void function removeloyaltyAccruement(required any loyaltyAccruement) {
+		arguments.loyaltyAccruement.removeProduct( this );
 	}
 	
 	// Loyalty Program Accruements Exclusions (many-to-many - inverse)
-	public void function addLoyaltyProgramAccruementExclusion(required any loyaltyProgramAccruementExclusion) {
-		arguments.loyaltyProgramAccruementExclusion.addProduct( this );
+	public void function addLoyaltyAccruementExclusion(required any loyaltyAccruementExclusion) {
+		arguments.loyaltyAccruementExclusion.addProduct( this );
 	}
-	public void function removeloyaltyProgramAccruementExclusion(required any loyaltyProgramAccruementExclusion) {
-		arguments.loyaltyProgramAccruementExclusion.removeProduct( this );
+	public void function removeloyaltyAccruementExclusion(required any loyaltyAccruementExclusion) {
+		arguments.loyaltyAccruementExclusion.removeProduct( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

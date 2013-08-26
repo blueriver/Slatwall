@@ -49,18 +49,18 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.account.getAccountLoyaltyProgramsSmartList()#"
+	<cf_HibachiListingDisplay smartList="#rc.account.getAccountLoyaltiesSmartList()#"
 							  recorddetailAction="admin:entity.detailaccountloyaltyprogram"
 							  recordEditAction="admin:entity.editaccountloyaltyprogram"
 							  recordEditQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
 							  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
 							  edit="#rc.edit#">
 
-		<cf_HibachiListingColumn propertyIdentifier="loyaltyProgram.loyaltyProgramName" />
-		<cf_HibachiListingColumn propertyIdentifier="loyaltyProgram.activeFlag" />
+		<cf_HibachiListingColumn propertyIdentifier="loyalty.loyaltyName" />
+		<cf_HibachiListingColumn propertyIdentifier="loyalty.activeFlag" />
 
 	</cf_HibachiListingDisplay>
 
 
-	<cf_HibachiActionCaller action="admin:entity.createaccountloyaltyprogram" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal="true"  />
+	<cf_HibachiActionCaller action="admin:entity.createaccountloyalty" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal="true"  />
 </cfoutput>

@@ -36,10 +36,10 @@
 Notes:
 
 */
-component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProgramRedemption" table="SwLoyaltyProgramRedemption" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
+component displayname="LoyaltyRedemption" entityname="SlatwallLoyaltyRedemption" table="SwLoyaltyRedemption" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
 	
 	// Persistent Properties
-	property name="loyaltyProgramRedemptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="loyaltyRedemptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="RedemptionPointType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="RedemptionType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="autoRedemptionType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
@@ -50,23 +50,23 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 	property name="nextRedemptionDateTime" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
-	property name="loyaltyProgram" cfc="LoyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
+	property name="loyalty" cfc="Loyalty" fieldtype="many-to-one" fkcolumn="loyaltyID";
 	property name="balanceTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="balanceTermID";
 	property name="autoRedemptionTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="autoRedemptionTermID";
 	
 	// Related Object Properties (one-to-many)
-	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" cfc="AccountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramRedemptionID" cascade="all-delete-orphan" inverse="true";
+	property name="accountLoyaltyTransactions" singularname="accountLoyaltyTransaction" cfc="AccountLoyaltyTransaction" type="array" fieldtype="one-to-many" fkcolumn="loyaltyRedemptionID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SwProgramRedemptionBrand" fkcolumn="loyaltyProgramRedemptionID" inversejoincolumn="brandID";
-	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SwProgramRedemptionSku" fkcolumn="loyaltyProgramRedemptionID" inversejoincolumn="skuID";
-	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyProgramRedemptionProduct" fkcolumn="loyaltyProgramRedemptionID" inversejoincolumn="productID";
-	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyProgramRedemptionProductType" fkcolumn="loyaltyProgramRedemptionID" inversejoincolumn="productTypeID";
+	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionBrand" fkcolumn="loyaltyRedemptionID" inversejoincolumn="brandID";
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionSku" fkcolumn="loyaltyRedemptionID" inversejoincolumn="skuID";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionProduct" fkcolumn="loyaltyRedemptionID" inversejoincolumn="productID";
+	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionProductType" fkcolumn="loyaltyRedemptionID" inversejoincolumn="productTypeID";
 	
-	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SwLoyaltyProgramRedemptionExclBrand" fkcolumn="loyaltyProgramRedemptionID" inversejoincolumn="brandID";
-	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SwLoyaltyProgramRedemptionExclSku" fkcolumn="loyaltyProgramRedemptionID" inversejoincolumn="skuID";
-	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyProgramRedemptionExclProduct" fkcolumn="loyaltyProgramRedemptionID" inversejoincolumn="productID";
-	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyProgramRedemptionExclProductType" fkcolumn="loyaltyProgramRedemptionID" inversejoincolumn="productTypeID";
+	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionExclBrand" fkcolumn="loyaltyRedemptionID" inversejoincolumn="brandID";
+	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionExclSku" fkcolumn="loyaltyRedemptionID" inversejoincolumn="skuID";
+	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionExclProduct" fkcolumn="loyaltyRedemptionID" inversejoincolumn="productID";
+	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionExclProductType" fkcolumn="loyaltyRedemptionID" inversejoincolumn="productTypeID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -81,38 +81,38 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 
 
 	public string function getSimpleRepresentation() {
-		return "#rbKey('entity.loyaltyProgramRedemption')#";
+		return "#rbKey('entity.loyaltyRedemption')#";
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public array function getRedemptionPointTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyProgramRedemption.redemptionPointType.lifeTimePoints'), value="lifeTimePoints"},
-			{name=rbKey('entity.loyaltyProgramRedemption.redemptionPointType.pointBalance'), value="pointBalance"},
-			{name=rbKey('entity.loyaltyProgramRedemption.redemptionPointType.termBalance'), value="termBalance"}
+			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.lifeTimePoints'), value="lifeTimePoints"},
+			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.pointBalance'), value="pointBalance"},
+			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.termBalance'), value="termBalance"}
 		];
 	}
 	
 	public array function getRedemptionTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyProgramRedemption.redemptionType.productPurchase'), value="productPurchase"},
-			{name=rbKey('entity.loyaltyProgramRedemption.redemptionType.cashCouponCreation'), value="cashCouponCreation"},
-			{name=rbKey('entity.loyaltyProgramRedemption.redemptionType.priceGroupAssignment'), value="priceGroupAssignment"}
+			{name=rbKey('entity.loyaltyRedemption.redemptionType.productPurchase'), value="productPurchase"},
+			{name=rbKey('entity.loyaltyRedemption.redemptionType.cashCouponCreation'), value="cashCouponCreation"},
+			{name=rbKey('entity.loyaltyRedemption.redemptionType.priceGroupAssignment'), value="priceGroupAssignment"}
 		];
 	}
 	
 	public array function getAutoRedemptionTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyProgramRedemption.autoRedemptionType.accountPlacesOrder'), value="accountPlacesOrder"},
-			{name=rbKey('entity.loyaltyProgramRedemption.autoRedemptionType.term'), value="term"}
+			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.accountPlacesOrder'), value="accountPlacesOrder"},
+			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.term'), value="term"}
 		];
 	}
 	
 	public array function getAmountTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyProgramRedemption.amountType.fixed'), value="fixed"},
-			{name=rbKey('entity.loyaltyProgramRedemption.amountType.pointPerDollar'), value="pointPerDollar"}
+			{name=rbKey('entity.loyaltyRedemption.amountType.fixed'), value="fixed"},
+			{name=rbKey('entity.loyaltyRedemption.amountType.pointPerDollar'), value="pointPerDollar"}
 		];
 	}
 	
@@ -120,47 +120,47 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// AccountLoyaltyProgramTransaction (one-to-many)
-	public void function addAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {
-		arguments.accountLoyaltyProgramTransaction.setLoyaltyProgramRedemption( this );
+	// AccountLoyaltyTransaction (one-to-many)
+	public void function addAccountLoyaltyTransaction(required any accountLoyaltyTransaction) {
+		arguments.accountLoyaltyTransaction.setLoyaltyRedemption( this );
 	}
-	public void function removeAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {
-		arguments.accountLoyaltyProgramTransaction.removeLoyaltyProgramRedemption( this );
+	public void function removeAccountLoyaltyTransaction(required any accountLoyaltyTransaction) {
+		arguments.accountLoyaltyTransaction.removeLoyaltyRedemption( this );
 	}
 	
 	
 	// loyalty Program (many-to-one)
-	public void function setLoyaltyProgram(required any loyaltyProgram) {
-		variables.loyaltyProgram = arguments.loyaltyProgram;
-		if(isNew() or !arguments.loyaltyProgram.hasLoyaltyProgramRedemption( this )) {
-			arrayAppend(arguments.loyaltyProgram.getLoyaltyProgramRedemptions(), this);
+	public void function setLoyalty(required any loyalty) {
+		variables.loyalty = arguments.loyalty;
+		if(isNew() or !arguments.loyalty.hasLoyaltyRedemption( this )) {
+			arrayAppend(arguments.loyalty.getLoyaltyRedemptions(), this);
 		}
 	}
-	public void function removeLoyaltyProgram(any loyaltyProgram) {
-		if(!structKeyExists(arguments, "loyaltyProgram")) {
-			arguments.loyaltyProgram = variables.loyaltyProgram;
+	public void function removeLoyalty(any loyalty) {
+		if(!structKeyExists(arguments, "loyalty")) {
+			arguments.loyalty = variables.loyalty;
 		}
-		var index = arrayFind(arguments.loyaltyProgram.getLoyaltyProgramRedemptions(), this);
+		var index = arrayFind(arguments.loyalty.getLoyaltyRedemptions(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.loyaltyProgram.getLoyaltyProgramRedemptions(), index);
+			arrayDeleteAt(arguments.loyalty.getLoyaltyRedemptions(), index);
 		}
-		structDelete(variables, "loyaltyProgram");
+		structDelete(variables, "loyalty");
 	}
 	
 	// Balance Term (many-to-one)
 	public void function setBalanceTerm(required any balanceTerm) {
 		variables.balanceTerm = arguments.balanceTerm;
-		if(isNew() or !arguments.balanceTerm.hasLoyaltyProgramBalanceTerm( this )) {
-			arrayAppend(arguments.balanceTerm.getLoyaltyProgramBalanceTerms(), this);
+		if(isNew() or !arguments.balanceTerm.hasLoyaltyBalanceTerm( this )) {
+			arrayAppend(arguments.balanceTerm.getLoyaltyBalanceTerms(), this);
 		}
 	}
 	public void function removeBalanceTerm(any balanceTerm) {
 		if(!structKeyExists(arguments, "balanceTerm")) {
 			arguments.balanceTerm = variables.balanceTerm;
 		}
-		var index = arrayFind(arguments.balanceTerm.getLoyaltyProgramBalanceTerms(), this);
+		var index = arrayFind(arguments.balanceTerm.getLoyaltyBalanceTerms(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.balanceTerm.getLoyaltyProgramBalanceTerms(), index);
+			arrayDeleteAt(arguments.balanceTerm.getLoyaltyBalanceTerms(), index);
 		}
 		structDelete(variables, "balanceTerm");
 	}	
@@ -168,17 +168,17 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 	// Auto Redemption Term (many-to-one)         
  	public void function setAutoRedemptionTerm(required any autoRedemptionTerm) {         
  		variables.autoRedemptionTerm = arguments.autoRedemptionTerm;         
- 		if(isNew() or !arguments.autoRedemptionTerm.hasLoyaltyProgramAutoRedemptionTerm( this )) {         
- 			arrayAppend(arguments.autoRedemptionTerm.getLoyaltyProgramAutoRedemptionTerms(), this);         
+ 		if(isNew() or !arguments.autoRedemptionTerm.hasLoyaltyAutoRedemptionTerm( this )) {         
+ 			arrayAppend(arguments.autoRedemptionTerm.getLoyaltyAutoRedemptionTerms(), this);         
  		}         
  	}         
  	public void function removeAutoRedemptionTerm(any autoRedemptionTerm) {         
  		if(!structKeyExists(arguments, "autoRedemptionTerm")) {         
  			arguments.autoRedemptionTerm = variables.autoRedemptionTerm;         
  		}         
- 		var index = arrayFind(arguments.autoRedemptionTerm.getLoyaltyProgramAutoRedemptionTerms(), this);         
+ 		var index = arrayFind(arguments.autoRedemptionTerm.getLoyaltyAutoRedemptionTerms(), this);         
  		if(index > 0) {         
- 			arrayDeleteAt(arguments.autoRedemptionTerm.getLoyaltyProgramAutoRedemptionTerms(), index);         
+ 			arrayDeleteAt(arguments.autoRedemptionTerm.getLoyaltyAutoRedemptionTerms(), index);         
  		}         
  		structDelete(variables, "autoRedemptionTerm");         
  	}
@@ -188,8 +188,8 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(arguments.brand.isNew() or !hasBrand(arguments.brand)) {
 			arrayAppend(variables.brands, arguments.brand);
 		}
-		if(isNew() or !arguments.brand.hasLoyaltyProgramRedemption( this )) {
-			arrayAppend(arguments.brand.getLoyaltyProgramRedemptions(), this);
+		if(isNew() or !arguments.brand.hasLoyaltyRedemption( this )) {
+			arrayAppend(arguments.brand.getLoyaltyRedemptions(), this);
 		}
 	}
 	public void function removeBrand(required any brand) {
@@ -197,9 +197,9 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.brands, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.brand.getLoyaltyProgramRedemption(), this);
+		var thatIndex = arrayFind(arguments.brand.getLoyaltyRedemption(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.brand.getLoyaltyProgramRedemptions(), thatIndex);
+			arrayDeleteAt(arguments.brand.getLoyaltyRedemptions(), thatIndex);
 		}
 	}
 	
@@ -208,8 +208,8 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(arguments.sku.isNew() or !hasSku(arguments.sku)) {    
 			arrayAppend(variables.skus, arguments.sku);    
 		}
-		if(isNew() or !arguments.sku.hasLoyaltyProgramRedemption( this )) {
-			arrayAppend(arguments.sku.getLoyaltyProgramRedemptions(), this);
+		if(isNew() or !arguments.sku.hasLoyaltyRedemption( this )) {
+			arrayAppend(arguments.sku.getLoyaltyRedemptions(), this);
 		}   
 	}    
 	public void function removeSku(required any sku) {    
@@ -217,9 +217,9 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {    
 			arrayDeleteAt(variables.skus, thisIndex);    
 		}
-		var thatIndex = arrayFind(arguments.sku.getLoyaltyProgramRedemption(), this);
+		var thatIndex = arrayFind(arguments.sku.getLoyaltyRedemption(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.sku.getLoyaltyProgramRedemptions(), thatIndex);
+			arrayDeleteAt(arguments.sku.getLoyaltyRedemptions(), thatIndex);
 		}   
 	}
 
@@ -228,8 +228,8 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(arguments.product.isNew() or !hasProduct(arguments.product)) {
 			arrayAppend(variables.products, arguments.product);
 		}
-		if(isNew() or !arguments.product.hasLoyaltyProgramRedemption( this )) {
-			arrayAppend(arguments.product.getLoyaltyProgramRedemptions(), this);
+		if(isNew() or !arguments.product.hasLoyaltyRedemption( this )) {
+			arrayAppend(arguments.product.getLoyaltyRedemptions(), this);
 		} 
 	}
 	public void function removeProduct(required any product) {
@@ -237,9 +237,9 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.products, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.products.getLoyaltyProgramRedemption(), this);
+		var thatIndex = arrayFind(arguments.products.getLoyaltyRedemption(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.products.getLoyaltyProgramRedemptions(), thatIndex);
+			arrayDeleteAt(arguments.products.getLoyaltyRedemptions(), thatIndex);
 		} 
 	}
 	
@@ -248,8 +248,8 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(arguments.productType.isNew() or !hasProductType(arguments.productType)) {
 			arrayAppend(variables.productTypes, arguments.productType);
 		}
-		if(isNew() or !arguments.productType.hasLoyaltyProgramRedemption( this )) {
-			arrayAppend(arguments.productType.getLoyaltyProgramRedemptions(), this);
+		if(isNew() or !arguments.productType.hasLoyaltyRedemption( this )) {
+			arrayAppend(arguments.productType.getLoyaltyRedemptions(), this);
 		} 
 	}
 	public void function removeProductType(required any productType) {
@@ -257,9 +257,9 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.productTypes, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.productType.getLoyaltyProgramRedemption(), this);
+		var thatIndex = arrayFind(arguments.productType.getLoyaltyRedemption(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.productType.getLoyaltyProgramRedemptions(), thatIndex);
+			arrayDeleteAt(arguments.productType.getLoyaltyRedemptions(), thatIndex);
 		}
 	}
 	
@@ -268,8 +268,8 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(arguments.brand.isNew() or !hasExcludedBrand(arguments.brand)) {    
 			arrayAppend(variables.excludedBrands, arguments.brand);    
 		}
-		if(isNew() or !arguments.brand.hasLoyaltyProgramRedemptionExclusion( this )) {    
-			arrayAppend(arguments.brand.getLoyaltyProgramRedemptionExclusions(), this);    
+		if(isNew() or !arguments.brand.hasLoyaltyRedemptionExclusion( this )) {    
+			arrayAppend(arguments.brand.getLoyaltyRedemptionExclusions(), this);    
 		}  
 	}    
 	public void function removeExcludedBrand(required any brand) {    
@@ -277,9 +277,9 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {    
 			arrayDeleteAt(variables.excludedBrands, thisIndex);    
 		}
-		var thatIndex = arrayFind(arguments.brand.getLoyaltyProgramRedemptionExclusion(), this);    
+		var thatIndex = arrayFind(arguments.brand.getLoyaltyRedemptionExclusion(), this);    
 		if(thatIndex > 0) {    
-			arrayDeleteAt(arguments.brand.getLoyaltyProgramRedemptionExclusions(), thatIndex);    
+			arrayDeleteAt(arguments.brand.getLoyaltyRedemptionExclusions(), thatIndex);    
 		}    
 	}
 	
@@ -288,8 +288,8 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(arguments.sku.isNew() or !hasExcludedSku(arguments.sku)) {
 			arrayAppend(variables.excludedSkus, arguments.sku);
 		}
-		if(isNew() or !arguments.sku.hasLoyaltyProgramRedemptionExclusion( this )) {    
-			arrayAppend(arguments.sku.getLoyaltyProgramRedemptionExclusions(), this);    
+		if(isNew() or !arguments.sku.hasLoyaltyRedemptionExclusion( this )) {    
+			arrayAppend(arguments.sku.getLoyaltyRedemptionExclusions(), this);    
 		}
 	}
 	public void function removeExcludedSku(required any sku) {
@@ -297,9 +297,9 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedSkus, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.sku.getLoyaltyProgramRedemptionExclusion(), this);    
+		var thatIndex = arrayFind(arguments.sku.getLoyaltyRedemptionExclusion(), this);    
 		if(thatIndex > 0) {    
-			arrayDeleteAt(arguments.sku.getLoyaltyProgramRedemptionExclusions(), thatIndex);    
+			arrayDeleteAt(arguments.sku.getLoyaltyRedemptionExclusions(), thatIndex);    
 		}  
 	}
 	
@@ -308,8 +308,8 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(arguments.product.isNew() or !hasExcludedProduct(arguments.product)) {
 			arrayAppend(variables.excludedProducts, arguments.product);
 		}
-		if(isNew() or !arguments.product.hasLoyaltyProgramRedemptionExclusion( this )) {    
-			arrayAppend(arguments.product.getLoyaltyProgramRedemptionExclusions(), this);    
+		if(isNew() or !arguments.product.hasLoyaltyRedemptionExclusion( this )) {    
+			arrayAppend(arguments.product.getLoyaltyRedemptionExclusions(), this);    
 		}
 	}
 	public void function removeExcludedProduct(required any product) {
@@ -317,9 +317,9 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedProducts, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.product.getLoyaltyProgramRedemptionExclusion(), this);    
+		var thatIndex = arrayFind(arguments.product.getLoyaltyRedemptionExclusion(), this);    
 		if(thatIndex > 0) {    
-			arrayDeleteAt(arguments.product.getLoyaltyProgramRedemptionExclusions(), thatIndex);    
+			arrayDeleteAt(arguments.product.getLoyaltyRedemptionExclusions(), thatIndex);    
 		}
 	}
 
@@ -328,8 +328,8 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(arguments.productType.isNew() or !hasExcludedProductType(arguments.productType)) {
 			arrayAppend(variables.excludedProductTypes, arguments.productType);
 		}
-		if(isNew() or !arguments.productType.hasLoyaltyProgramRedemptionExclusion( this )) {    
-			arrayAppend(arguments.productType.getLoyaltyProgramRedemptionExclusions(), this);    
+		if(isNew() or !arguments.productType.hasLoyaltyRedemptionExclusion( this )) {    
+			arrayAppend(arguments.productType.getLoyaltyRedemptionExclusions(), this);    
 		}
 	}
 	public void function removeExcludedProductType(required any productType) {
@@ -337,9 +337,9 @@ component displayname="LoyaltyProgramRedemption" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedProductTypes, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.productType.getLoyaltyProgramRedemptionExclusion(), this);    
+		var thatIndex = arrayFind(arguments.productType.getLoyaltyRedemptionExclusion(), this);    
 		if(thatIndex > 0) {    
-			arrayDeleteAt(arguments.productType.getLoyaltyProgramRedemptionExclusions(), thatIndex);    
+			arrayDeleteAt(arguments.productType.getLoyaltyRedemptionExclusions(), thatIndex);    
 		}
 	}
 	

@@ -35,18 +35,18 @@
 Notes:
 
 */
-component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyaltyProgram" table="SwAccountLoyaltyProgram" persistent="true" accessors="true"  output="false" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="account.accountLoyaltyPrograms" {
+component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyalty" table="SwAccountLoyalty" persistent="true" accessors="true"  output="false" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="account.accountLoyalties" {
 	
 	// Persistent Properties
-	property name="accountLoyaltyProgramID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="accountLoyaltyProgramNumber" ormtype="string";
+	property name="accountLoyaltyID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="accountLoyaltyNumber" ormtype="string";
 
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="loyaltyProgram" cfc="loyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
+	property name="loyalty" cfc="loyalty" fieldtype="many-to-one" fkcolumn="loyaltyID";
 	
 	// Related Object Properties (one-to-many)
-	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountLoyaltyProgramID" cfc="AccountLoyaltyProgramTransaction" cascade="all-delete-orphan" inverse="true";
+	property name="accountLoyaltyTransactions" singularname="accountLoyaltyTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountLoyaltyID" cfc="AccountLoyaltyTransaction" cascade="all-delete-orphan" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -67,18 +67,18 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Account Loyalty Programs Transactions (one-to-many)
-	public void function addAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {    
-		arguments.accountLoyaltyProgramTransaction.setAccountLoyaltyProgram( this );    
+	public void function addAccountLoyaltyTransaction(required any accountLoyaltyTransaction) {    
+		arguments.accountLoyaltyTransaction.setAccountLoyalty( this );    
 	}    
-	public void function removeAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {    
-		arguments.accountLoyaltyProgramTransaction.removeAccountLoyaltyProgram( this );    
+	public void function removeAccountLoyaltyTransaction(required any accountLoyaltyTransaction) {    
+		arguments.accountLoyaltyTransaction.removeAccountLoyalty( this );    
 	}
 	
 	// Account (many-to-one)
 	public void function setAccount(required any account) {
 		variables.account = arguments.account;
-		if(isNew() or !arguments.account.hasAccountLoyaltyProgram( this )) {
-			arrayAppend(arguments.account.getAccountLoyaltyPrograms(), this);
+		if(isNew() or !arguments.account.hasAccountLoyalty( this )) {
+			arrayAppend(arguments.account.getAccountLoyalties(), this);
 		}
 	}
 	
@@ -86,29 +86,29 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 		if(!structKeyExists(arguments, "account")) {
 			arguments.account = variables.account;
 		}
-		var index = arrayFind(arguments.account.getAccountLoyaltyPrograms(), this);
+		var index = arrayFind(arguments.account.getAccountLoyalties(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getAccountLoyaltyPrograms(), index);
+			arrayDeleteAt(arguments.account.getAccountLoyalties(), index);
 		}
 		structDelete(variables, "account");
 	}
 	
 	// Loyalty Program (many-to-one)
-	public void function setLoyaltyProgram(required any loyaltyProgram) {
-		variables.loyaltyProgram = arguments.loyaltyProgram;
-		if(isNew() or !arguments.loyaltyProgram.hasAccountLoyaltyProgram( this )) {
-			arrayAppend(arguments.loyaltyProgram.getAccountLoyaltyPrograms(), this);
+	public void function setLoyalty(required any loyalty) {
+		variables.loyalty = arguments.loyalty;
+		if(isNew() or !arguments.loyalty.hasAccountLoyalty( this )) {
+			arrayAppend(arguments.loyalty.getAccountLoyalties(), this);
 		}
 	}
-	public void function removeLoyaltyProgram(any loyaltyProgram) {
-		if(!structKeyExists(arguments, "loyaltyProgram")) {
-			arguments.loyaltyProgram = variables.loyaltyProgram;
+	public void function removeLoyalty(any loyalty) {
+		if(!structKeyExists(arguments, "loyalty")) {
+			arguments.loyalty = variables.loyalty;
 		}
-		var index = arrayFind(arguments.loyaltyProgram.getAccountLoyaltyPrograms(), this);
+		var index = arrayFind(arguments.loyalty.getAccountLoyalties(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.loyaltyProgram.getAccountLoyaltyPrograms(), index);
+			arrayDeleteAt(arguments.loyalty.getAccountLoyalties(), index);
 		}
-		structDelete(variables, "loyaltyProgram");
+		structDelete(variables, "loyalty");
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
@@ -128,10 +128,10 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	// ================== START: Overridden Methods ========================
 	
 	public string function getSimpleRepresentation() {
-		var simpleRep = getLoyaltyProgram().getLoyaltyProgramName();
+		var simpleRep = getLoyalty().getLoyaltyName();
 		
-		if( len(getAccountLoyaltyProgramNumber()) ){
-			simpleRep = simpleRep & " - " & getAccountLoyaltyProgramNumber();
+		if( len(getAccountLoyaltyNumber()) ){
+			simpleRep = simpleRep & " - " & getAccountLoyaltyNumber();
 		}
 		return simpleRep;
 	}
@@ -143,8 +143,8 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	// TODO [paul]: add a preInsert event hook so that we process an enrollment for the loyalty program.
 	
 	public void function preInsert() {
-		for(var accountLoyaltyProgram in getAccount().getAccountLoyaltyPrograms()) {
-			getService("accountService").processAccountLoyaltyProgram(accountLoyaltyProgram, 'enrollment'); 
+		for(var accountLoyalty in getAccount().getAccountLoyalties()) {
+			getService("accountService").processAccountLoyalty(accountLoyalty, 'enrollment'); 
 		}
 		
 		super.preInsert();

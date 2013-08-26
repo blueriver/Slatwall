@@ -124,7 +124,7 @@ Notes:
 								<cf_HibachiActionCaller action="admin:entity.listaccount" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listsubscriptionusage" type="list">
 								<cf_HibachiActionCaller action="admin:entity.listpermissiongroup" type="list">
-								<cf_HibachiActionCaller action="admin:entity.listloyaltyprogram" type="list">
+								<cf_HibachiActionCaller action="admin:entity.listloyalty" type="list">
 								<li class="divider"></li>
 								<cf_HibachiActionCaller action="admin:entity.listvendor" type="list">
 							</cf_HibachiDividerHider>

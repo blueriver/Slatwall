@@ -36,23 +36,16 @@
 Notes:
 
 --->
-<cfparam name="rc.loyaltyProgram" type="any">
+<cfparam name="rc.loyaltyAccruement" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.loyaltyProgram.getloyaltyProgramRedemptionsSmartList()#"
-							   recordEditAction="admin:entity.editloyaltyProgramRedemption"
-							   recorddetailaction="admin:entity.detailloyaltyProgramRedemption">
-		<cf_HibachiListingColumn propertyIdentifier="nextRedemptionDateTime" tdclass="primary" />
-		<cf_HibachiListingColumn propertyIdentifier="redemptionPointType" />
-		<cf_HibachiListingColumn propertyIdentifier="autoredemptionType" />
-		<cf_HibachiListingColumn propertyIdentifier="redemptionType" />
-		<cf_HibachiListingColumn propertyIdentifier="amountType" />
-		<cf_HibachiListingColumn propertyIdentifier="amount" />
-		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
-		<cf_HibachiListingColumn propertyIdentifier="globalFlag" />
-	</cf_HibachiListingDisplay>
-	
-	<cf_HibachiActionCaller action="admin:entity.createloyaltyprogramredemption" class="btn" icon="plus" queryString="loyaltyProgramID=#rc.loyaltyProgram.getLoyaltyProgramID()#" modal="true"  />
-
+	<div class="span6">
+		<h5>#$.slatwall.rbKey('entity.loyaltyAccruement.skus')#</h5>
+		<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="skus" edit="#rc.edit#" displayType="plain" />
+	</div>
+	<div class="span6">
+		<h5>#$.slatwall.rbKey('entity.loyaltyAccruement.excludedskus')#</h5>
+		<cf_HibachiPropertyDisplay object="#rc.loyaltyAccruement#" property="excludedSkus" edit="#rc.edit#" displayType="plain" />
+	</div>
 </cfoutput>

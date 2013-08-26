@@ -36,16 +36,16 @@
 Notes:
 
 --->
-<cfparam name="rc.loyaltyProgramRedemption" type="any">
+<cfparam name="rc.loyaltyRedemption" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
 	<div class="span6">
-		<h5>#$.slatwall.rbKey('entity.loyaltyProgramRedemption.skus')#</h5>
-		<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramRedemption#" property="skus" edit="#rc.edit#" displayType="plain" />
+		<h5>#$.slatwall.rbKey('entity.loyaltyRedemption.products')#</h5>
+		<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="products" edit="#rc.edit#" displaytype="plain" />
 	</div>
 	<div class="span6">
-		<h5>#$.slatwall.rbKey('entity.loyaltyProgramRedemption.excludedskus')#</h5>
-		<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramRedemption#" property="excludedSkus" edit="#rc.edit#" displayType="plain" />
+		<h5>#$.slatwall.rbKey('entity.loyaltyRedemption.excludedproducts')#</h5>
+		<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="excludedProducts" edit="#rc.edit#" displaytype="plain" />	
 	</div>
 </cfoutput>

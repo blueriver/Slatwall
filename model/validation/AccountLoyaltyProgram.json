@@ -1,5 +1,0 @@
-{
-	"properties":{
-		"loyaltyProgram":							[{"contexts":"save","required":true,"unique":true}]
-	}
-}

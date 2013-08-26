@@ -36,10 +36,10 @@
 Notes:
 
 */
-component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProgramAccruement" table="SwLoyaltyProgramAccruement" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
+component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement" table="SwLoyaltyAccru" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
 	
 	// Persistent Properties
-	property name="loyaltyProgramAccruementID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="loyaltyAccruementID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="startDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
 	property name="endDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
 	property name="accruementType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
@@ -48,22 +48,22 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	property name="activeFlag" ormtype="boolean" default="1";
 	
 	// Related Object Properties (many-to-one)
-	property name="loyaltyProgram" cfc="LoyaltyProgram" fieldtype="many-to-one" fkcolumn="loyaltyProgramID";
+	property name="loyalty" cfc="Loyalty" fieldtype="many-to-one" fkcolumn="loyaltyID";
 	property name="expirationTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="expirationTermID";
 	
 	// Related Object Properties (one-to-many)
-	property name="accountLoyaltyProgramTransactions" singularname="accountLoyaltyProgramTransaction" cfc="AccountLoyaltyProgramTransaction" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramAccruementID" cascade="all-delete-orphan" inverse="true";
+	property name="accountLoyaltyTransactions" singularname="accountLoyaltyTransaction" cfc="AccountLoyaltyTransaction" type="array" fieldtype="one-to-many" fkcolumn="loyaltyAccruementID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
-	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementBrand" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="brandID";
-	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementSku" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="skuID";
-	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementProduct" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productID";
-	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementProductType" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productTypeID";
+	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SwLoyaltyAccruBrand" fkcolumn="loyaltyAccruementID" inversejoincolumn="brandID";
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SwLoyaltyAccruSku" fkcolumn="loyaltyAccruementID" inversejoincolumn="skuID";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyAccruProduct" fkcolumn="loyaltyAccruementID" inversejoincolumn="productID";
+	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyAccruProductType" fkcolumn="loyaltyAccruementID" inversejoincolumn="productTypeID";
 	
-	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExclBrand" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="brandID";
-	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExclSku" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="skuID";
-	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExclProduct" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productID";
-	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExclProductType" fkcolumn="loyaltyProgramAccruementID" inversejoincolumn="productTypeID";
+	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SwLoyaltyAccruExclBrand" fkcolumn="loyaltyAccruementID" inversejoincolumn="brandID";
+	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SwLoyaltyAccruExclSku" fkcolumn="loyaltyAccruementID" inversejoincolumn="skuID";
+	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyAccruExclProduct" fkcolumn="loyaltyAccruementID" inversejoincolumn="productID";
+	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyAccruExclProductType" fkcolumn="loyaltyAccruementID" inversejoincolumn="productTypeID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -78,24 +78,24 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 
 
 	public string function getSimpleRepresentation() {
-		return "#rbKey('entity.loyaltyProgramAccruement')#";
+		return getAccruementType();
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public array function getAccruementTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyProgramAccruement.accruementType.itemFulfilled'), value="itemFulfilled"},
-			{name=rbKey('entity.loyaltyProgramAccruement.accruementType.orderClosed'), value="orderClosed"},
-			{name=rbKey('entity.loyaltyProgramAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillmentMethodUsed"},
-			{name=rbKey('entity.loyaltyProgramAccruement.accruementType.enrollment'), value="enrollment"}
+			{name=rbKey('entity.loyaltyAccruement.accruementType.itemFulfilled'), value="itemFulfilled"},
+			{name=rbKey('entity.loyaltyAccruement.accruementType.orderClosed'), value="orderClosed"},
+			{name=rbKey('entity.loyaltyAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillmentMethodUsed"},
+			{name=rbKey('entity.loyaltyAccruement.accruementType.enrollment'), value="enrollment"}
 		];
 	}
 	
 	public array function getPointTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyProgramAccruement.pointType.fixed'), value="fixed"},
-			{name=rbKey('entity.loyaltyProgramAccruement.pointType.pointPerDollar'), value="pointPerDollar"}
+			{name=rbKey('entity.loyaltyAccruement.pointType.fixed'), value="fixed"},
+			{name=rbKey('entity.loyaltyAccruement.pointType.pointPerDollar'), value="pointPerDollar"}
 		];
 	}
 	
@@ -104,46 +104,46 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Account Loyalty Program Transaction (one-to-many)
-	public void function addAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {
-		arguments.accountLoyaltyProgramTransaction.setLoyaltyProgramAccruement( this );
+	public void function addAccountLoyaltyTransaction(required any accountLoyaltyTransaction) {
+		arguments.accountLoyaltyTransaction.setLoyaltyAccruement( this );
 	}
-	public void function removeAccountLoyaltyProgramTransaction(required any accountLoyaltyProgramTransaction) {
-		arguments.accountLoyaltyProgramTransaction.removeLoyaltyProgramAccruement( this );
+	public void function removeAccountLoyaltyTransaction(required any accountLoyaltyTransaction) {
+		arguments.accountLoyaltyTransaction.removeLoyaltyAccruement( this );
 	}
 	
 	
 	// loyalty Program (many-to-one)
-	public void function setLoyaltyProgram(required any loyaltyProgram) {
-		variables.loyaltyProgram = arguments.loyaltyProgram;
-		if(isNew() or !arguments.loyaltyProgram.hasLoyaltyProgramAccruement( this )) {
-			arrayAppend(arguments.loyaltyProgram.getLoyaltyProgramAccruements(), this);
+	public void function setLoyalty(required any loyalty) {
+		variables.loyalty = arguments.loyalty;
+		if(isNew() or !arguments.loyalty.hasLoyaltyAccruement( this )) {
+			arrayAppend(arguments.loyalty.getLoyaltyAccruements(), this);
 		}
 	}
-	public void function removeLoyaltyProgram(any loyaltyProgram) {
-		if(!structKeyExists(arguments, "loyaltyProgram")) {
-			arguments.loyaltyProgram = variables.loyaltyProgram;
+	public void function removeLoyalty(any loyalty) {
+		if(!structKeyExists(arguments, "loyalty")) {
+			arguments.loyalty = variables.loyalty;
 		}
-		var index = arrayFind(arguments.loyaltyProgram.getLoyaltyProgramAccruements(), this);
+		var index = arrayFind(arguments.loyalty.getLoyaltyAccruements(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.loyaltyProgram.getLoyaltyProgramAccruements(), index);
+			arrayDeleteAt(arguments.loyalty.getLoyaltyAccruements(), index);
 		}
-		structDelete(variables, "loyaltyProgram");
+		structDelete(variables, "loyalty");
 	}
 	
 	// Expiration Term (many-to-one)
 	public void function setExpirationTerm(required any expirationTerm) {
 		variables.expirationTerm = arguments.expirationTerm;
-		if(isNew() or !arguments.expirationTerm.hasLoyaltyProgramAccruementExpirationTerm( this )) {
-			arrayAppend(arguments.expirationTerm.getLoyaltyProgramAccruementExpirationTerms(), this);
+		if(isNew() or !arguments.expirationTerm.hasLoyaltyAccruementExpirationTerm( this )) {
+			arrayAppend(arguments.expirationTerm.getLoyaltyAccruementExpirationTerms(), this);
 		}
 	}
 	public void function removeExpirationTerm(any Expirationterm) {
 		if(!structKeyExists(arguments, "expirationTerm")) {
 			arguments.expirationTerm = variables.expirationTerm;
 		}
-		var index = arrayFind(arguments.expirationTerm.getLoyaltyProgramAccruementExpirationTerms(), this);
+		var index = arrayFind(arguments.expirationTerm.getLoyaltyAccruementExpirationTerms(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.expirationTerm.getLoyaltyProgramAccruementExpirationTerms(), index);
+			arrayDeleteAt(arguments.expirationTerm.getLoyaltyAccruementExpirationTerms(), index);
 		}
 		structDelete(variables, "expirationTerm");
 	}
@@ -153,8 +153,8 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.brand.isNew() or !hasBrand(arguments.brand)) {
 			arrayAppend(variables.brands, arguments.brand);
 		}
-		if(isNew() or !arguments.brand.hasLoyaltyProgramAccruement( this )) {
-			arrayAppend(arguments.brand.getLoyaltyProgramAccruements(), this);
+		if(isNew() or !arguments.brand.hasLoyaltyAccruement( this )) {
+			arrayAppend(arguments.brand.getLoyaltyAccruements(), this);
 		}
 	}
 	public void function removeBrand(required any brand) {
@@ -162,9 +162,9 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.brands, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.brand.getLoyaltyProgramAccruement(), this);
+		var thatIndex = arrayFind(arguments.brand.getLoyaltyAccruement(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.brand.getLoyaltyProgramAccruements(), thatIndex);
+			arrayDeleteAt(arguments.brand.getLoyaltyAccruements(), thatIndex);
 		}
 	}
 	
@@ -173,8 +173,8 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.sku.isNew() or !hasSku(arguments.sku)) {    
 			arrayAppend(variables.skus, arguments.sku);    
 		}
-		if(isNew() or !arguments.sku.hasLoyaltyProgramAccruement( this )) {
-			arrayAppend(arguments.sku.getLoyaltyProgramAccruements(), this);
+		if(isNew() or !arguments.sku.hasLoyaltyAccruement( this )) {
+			arrayAppend(arguments.sku.getLoyaltyAccruements(), this);
 		}   
 	}    
 	public void function removeSku(required any sku) {    
@@ -182,9 +182,9 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {    
 			arrayDeleteAt(variables.skus, thisIndex);    
 		}
-		var thatIndex = arrayFind(arguments.sku.getLoyaltyProgramAccruement(), this);
+		var thatIndex = arrayFind(arguments.sku.getLoyaltyAccruement(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.sku.getLoyaltyProgramAccruements(), thatIndex);
+			arrayDeleteAt(arguments.sku.getLoyaltyAccruements(), thatIndex);
 		}   
 	}
 
@@ -193,8 +193,8 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.product.isNew() or !hasProduct(arguments.product)) {
 			arrayAppend(variables.products, arguments.product);
 		}
-		if(isNew() or !arguments.product.hasLoyaltyProgramAccruement( this )) {
-			arrayAppend(arguments.product.getLoyaltyProgramAccruements(), this);
+		if(isNew() or !arguments.product.hasLoyaltyAccruement( this )) {
+			arrayAppend(arguments.product.getLoyaltyAccruements(), this);
 		} 
 	}
 	public void function removeProduct(required any product) {
@@ -202,9 +202,9 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.products, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.products.getLoyaltyProgramAccruement(), this);
+		var thatIndex = arrayFind(arguments.products.getLoyaltyAccruement(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.products.getLoyaltyProgramAccruements(), thatIndex);
+			arrayDeleteAt(arguments.products.getLoyaltyAccruements(), thatIndex);
 		} 
 	}
 	
@@ -213,8 +213,8 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.productType.isNew() or !hasProductType(arguments.productType)) {
 			arrayAppend(variables.productTypes, arguments.productType);
 		}
-		if(isNew() or !arguments.productType.hasLoyaltyProgramAccruement( this )) {
-			arrayAppend(arguments.productType.getLoyaltyProgramAccruements(), this);
+		if(isNew() or !arguments.productType.hasLoyaltyAccruement( this )) {
+			arrayAppend(arguments.productType.getLoyaltyAccruements(), this);
 		} 
 	}
 	public void function removeProductType(required any productType) {
@@ -222,9 +222,9 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.productTypes, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.productType.getLoyaltyProgramAccruement(), this);
+		var thatIndex = arrayFind(arguments.productType.getLoyaltyAccruement(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.productType.getLoyaltyProgramAccruements(), thatIndex);
+			arrayDeleteAt(arguments.productType.getLoyaltyAccruements(), thatIndex);
 		}
 	}
 	
@@ -233,8 +233,8 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.brand.isNew() or !hasExcludedBrand(arguments.brand)) {    
 			arrayAppend(variables.excludedBrands, arguments.brand);    
 		}
-		if(isNew() or !arguments.brand.hasLoyaltyProgramAccruementExclusion( this )) {    
-			arrayAppend(arguments.brand.getLoyaltyProgramAccruementExclusions(), this);    
+		if(isNew() or !arguments.brand.hasLoyaltyAccruementExclusion( this )) {    
+			arrayAppend(arguments.brand.getLoyaltyAccruementExclusions(), this);    
 		}  
 	}    
 	public void function removeExcludedBrand(required any brand) {    
@@ -242,9 +242,9 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {    
 			arrayDeleteAt(variables.excludedBrands, thisIndex);    
 		}
-		var thatIndex = arrayFind(arguments.brand.getLoyaltyProgramAccruementExclusion(), this);    
+		var thatIndex = arrayFind(arguments.brand.getLoyaltyAccruementExclusion(), this);    
 		if(thatIndex > 0) {    
-			arrayDeleteAt(arguments.brand.getLoyaltyProgramAccruementExclusions(), thatIndex);    
+			arrayDeleteAt(arguments.brand.getLoyaltyAccruementExclusions(), thatIndex);    
 		}    
 	}
 	
@@ -253,8 +253,8 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.sku.isNew() or !hasExcludedSku(arguments.sku)) {
 			arrayAppend(variables.excludedSkus, arguments.sku);
 		}
-		if(isNew() or !arguments.sku.hasLoyaltyProgramAccruementExclusion( this )) {    
-			arrayAppend(arguments.sku.getLoyaltyProgramAccruementExclusions(), this);    
+		if(isNew() or !arguments.sku.hasLoyaltyAccruementExclusion( this )) {    
+			arrayAppend(arguments.sku.getLoyaltyAccruementExclusions(), this);    
 		}
 	}
 	public void function removeExcludedSku(required any sku) {
@@ -262,9 +262,9 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedSkus, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.sku.getLoyaltyProgramAccruementExclusion(), this);    
+		var thatIndex = arrayFind(arguments.sku.getLoyaltyAccruementExclusion(), this);    
 		if(thatIndex > 0) {    
-			arrayDeleteAt(arguments.sku.getLoyaltyProgramAccruementExclusions(), thatIndex);    
+			arrayDeleteAt(arguments.sku.getLoyaltyAccruementExclusions(), thatIndex);    
 		}  
 	}
 	
@@ -273,8 +273,8 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.product.isNew() or !hasExcludedProduct(arguments.product)) {
 			arrayAppend(variables.excludedProducts, arguments.product);
 		}
-		if(isNew() or !arguments.product.hasLoyaltyProgramAccruementExclusion( this )) {    
-			arrayAppend(arguments.product.getLoyaltyProgramAccruementExclusions(), this);    
+		if(isNew() or !arguments.product.hasLoyaltyAccruementExclusion( this )) {    
+			arrayAppend(arguments.product.getLoyaltyAccruementExclusions(), this);    
 		}
 	}
 	public void function removeExcludedProduct(required any product) {
@@ -282,9 +282,9 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedProducts, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.product.getLoyaltyProgramAccruementExclusion(), this);    
+		var thatIndex = arrayFind(arguments.product.getLoyaltyAccruementExclusion(), this);    
 		if(thatIndex > 0) {    
-			arrayDeleteAt(arguments.product.getLoyaltyProgramAccruementExclusions(), thatIndex);    
+			arrayDeleteAt(arguments.product.getLoyaltyAccruementExclusions(), thatIndex);    
 		}
 	}
 
@@ -293,8 +293,8 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(arguments.productType.isNew() or !hasExcludedProductType(arguments.productType)) {
 			arrayAppend(variables.excludedProductTypes, arguments.productType);
 		}
-		if(isNew() or !arguments.productType.hasLoyaltyProgramAccruementExclusion( this )) {    
-			arrayAppend(arguments.productType.getLoyaltyProgramAccruementExclusions(), this);    
+		if(isNew() or !arguments.productType.hasLoyaltyAccruementExclusion( this )) {    
+			arrayAppend(arguments.productType.getLoyaltyAccruementExclusions(), this);    
 		}
 	}
 	public void function removeExcludedProductType(required any productType) {
@@ -302,9 +302,9 @@ component displayname="LoyaltyProgramAccruement" entityname="SlatwallLoyaltyProg
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedProductTypes, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.productType.getLoyaltyProgramAccruementExclusion(), this);    
+		var thatIndex = arrayFind(arguments.productType.getLoyaltyAccruementExclusion(), this);    
 		if(thatIndex > 0) {    
-			arrayDeleteAt(arguments.productType.getLoyaltyProgramAccruementExclusions(), thatIndex);    
+			arrayDeleteAt(arguments.productType.getLoyaltyAccruementExclusions(), thatIndex);    
 		}
 	}
 	

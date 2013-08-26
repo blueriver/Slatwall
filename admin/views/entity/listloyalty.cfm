@@ -36,16 +36,21 @@
 Notes:
 
 --->
-<cfparam name="rc.loyaltyProgramAccruement" type="any">
-<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.loyaltySmartList" type="any" />
 
 <cfoutput>
-	<div class="span6">
-		<h5>#$.slatwall.rbKey('entity.loyaltyProgramAccruement.skus')#</h5>
-		<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="skus" edit="#rc.edit#" displayType="plain" />
-	</div>
-	<div class="span6">
-		<h5>#$.slatwall.rbKey('entity.loyaltyProgramAccruement.excludedskus')#</h5>
-		<cf_HibachiPropertyDisplay object="#rc.loyaltyProgramAccruement#" property="excludedSkus" edit="#rc.edit#" displayType="plain" />
-	</div>
+	
+<cf_HibachiEntityActionBar type="listing" object="#rc.loyaltySmartList#" />
+
+<cfset rc.loyaltySmartList.addOrder("loyaltyName|ASC") />
+
+<cf_HibachiListingDisplay smartList="#rc.loyaltySmartList#"
+						   recorddetailaction="admin:entity.detailloyalty"
+						   recordEditAction="admin:entity.editloyalty">
+	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="loyaltyName" />
+	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+	<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+</cf_HibachiListingDisplay>
+
 </cfoutput>

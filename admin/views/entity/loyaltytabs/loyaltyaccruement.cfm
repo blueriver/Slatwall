@@ -36,21 +36,22 @@
 Notes:
 
 --->
-<cfparam name="rc.loyaltyProgramSmartList" type="any" />
+<cfparam name="rc.loyalty" type="any">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
+	<cf_HibachiListingDisplay smartList="#rc.loyalty.getloyaltyAccruementsSmartList()#"
+							   recordEditAction="admin:entity.editloyaltyAccruement"
+							   recorddetailaction="admin:entity.detailloyaltyAccruement">
+		<cf_HibachiListingColumn propertyIdentifier="startDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="endDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="expirationTerm.termName" />
+		<cf_HibachiListingColumn propertyIdentifier="accruementType" />
+		<cf_HibachiListingColumn propertyIdentifier="pointType" />
+		<cf_HibachiListingColumn propertyIdentifier="pointQuantity" />
+		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
+	</cf_HibachiListingDisplay>
 	
-<cf_HibachiEntityActionBar type="listing" object="#rc.loyaltyProgramSmartList#" />
-
-<cfset rc.loyaltyProgramSmartList.addOrder("loyaltyName|ASC") />
-
-<cf_HibachiListingDisplay smartList="#rc.loyaltyProgramSmartList#"
-						   recorddetailaction="admin:entity.detailloyaltyprogram"
-						   recordEditAction="admin:entity.editloyaltyprogram">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="loyaltyProgramName" />
-	<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
-	<cf_HibachiListingColumn propertyIdentifier="modifiedDateTime" />
-	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
-</cf_HibachiListingDisplay>
+	<cf_HibachiActionCaller action="admin:entity.createloyaltyaccruement" class="btn" icon="plus" queryString="loyaltyID=#rc.loyalty.getLoyaltyID()#&redirectAction=admin:entity.editloyaltyAccruement" modal="true"  />
 
 </cfoutput>

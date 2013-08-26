@@ -1,0 +1,5 @@
+{
+	"properties":{
+		"loyalty":							[{"contexts":"save","required":true,"unique":true}]
+	}
+}

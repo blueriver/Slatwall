@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) ten24, LLC
@@ -45,37 +45,17 @@
 
 Notes:
 
-*/
-component output="false" accessors="true" extends="HibachiProcess" {
-	
-	// Injected Entity
-	property name="accountLoyaltyProgram";
+--->
+<cfparam name="rc.accountLoyalty" type="any" />
 
-	// Data Properties
-	property name="pointsIn";
-	property name="accruementType" hb_formFieldType="select";
-	
-	// Option Properties
-	property name="accruementTypeOptions";
-	
-	public array function getAccruementTypeOptions() {
-		if(!structKeyExists(variables, "accruementTypeOptions")) {
-			
-			variables.accruementTypeOptions = [];
-			
-			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.itemFulfilled'), value="itemFulfilled"});
-			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.orderClosed'), value="orderClosed"});
-			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillementMethodeUsed"});
-			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.enrollment'), value="enrollment"});
-		}
-		return variables.accruementTypeOptions;
-	}
-	
-	public numeric function getpointsIn() {
-		if(!structKeyExists(variables, "pointsIn")) {
-			variables.pointsIn = 0;
-		}
-		return variables.pointsIn;
-	}
+<cfoutput>
+	<cf_HibachiListingDisplay smartList="#rc.accountLoyalty.getAccountLoyaltyTransactionsSmartList()#">
 		
-}
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="accruementType" />
+		<cf_HibachiListingColumn propertyIdentifier="pointsIn" />
+		
+	</cf_HibachiListingDisplay>
+	
+	<cf_HibachiProcessCaller action="admin:entity.preprocessaccountloyaltyprogram" entity="#rc.accountLoyalty#" processContext="createTransaction" class="btn" icon="plus" modal="true" />
+</cfoutput>

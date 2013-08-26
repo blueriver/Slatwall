@@ -82,8 +82,8 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionReward" type="array" fieldtype="many-to-many" linktable="SwPromoRewardExclSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="many-to-many" linktable="SwPromoQualSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SwPromoQualExclSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
-	property name="loyaltyProgramAccruements" singularname="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementSku" fkcolumn="skuID" inversejoincolumn="loyaltyProgramAccruementID" inverse="true";
-	property name="loyaltyProgramAccruementExclusions" singularname="loyaltyProgramAccruementExclusion" cfc="LoyaltyProgramAccruement" type="array" fieldtype="many-to-many" linktable="SwLoyaltyProgramAccruementExclSku" fkcolumn="skuID" inversejoincolumn="loyaltyProgramAccruementID" inverse="true";
+	property name="loyaltyAccruements" singularname="loyaltyAccruement" cfc="LoyaltyAccruement" fieldtype="many-to-many" linktable="SwLoyaltyAccruSku" fkcolumn="skuID" inversejoincolumn="loyaltyAccruementID" inverse="true";
+	property name="loyaltyAccruementExclusions" singularname="loyaltyAccruementExclusion" cfc="LoyaltyAccruement" type="array" fieldtype="many-to-many" linktable="SwLoyaltyAccruExclSku" fkcolumn="skuID" inversejoincolumn="loyaltyAccruementID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SwPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
 	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SwPhysicalSku" fkcolumn="skuID" inversejoincolumn="physicalID" inverse="true";
 	
@@ -762,19 +762,19 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	}
 	
 	// Loyalty Program Accruements (many-to-many - inverse)
-	public void function addLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
-		arguments.loyaltyProgramAccruement.addSku( this );
+	public void function addLoyaltyAccruement(required any loyaltyAccruement) {
+		arguments.loyaltyAccruement.addSku( this );
 	}
-	public void function removeloyaltyProgramAccruement(required any loyaltyProgramAccruement) {
-		arguments.loyaltyProgramAccruement.removeSku( this );
+	public void function removeloyaltyAccruement(required any loyaltyAccruement) {
+		arguments.loyaltyAccruement.removeSku( this );
 	}
 	
 	// Loyalty Program Accruements Exclusions (many-to-many - inverse)
-	public void function addLoyaltyProgramAccruementExclusion(required any loyaltyProgramAccruementExclusion) {
-		arguments.loyaltyProgramAccruementExclusion.addSku( this );
+	public void function addLoyaltyAccruementExclusion(required any loyaltyAccruementExclusion) {
+		arguments.loyaltyAccruementExclusion.addSku( this );
 	}
-	public void function removeloyaltyProgramAccruementExclusion(required any loyaltyProgramAccruementExclusion) {
-		arguments.loyaltyProgramAccruementExclusion.removeSku( this );
+	public void function removeloyaltyAccruementExclusion(required any loyaltyAccruementExclusion) {
+		arguments.loyaltyAccruementExclusion.removeSku( this );
 	}
 	
 	

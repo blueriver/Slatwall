@@ -36,17 +36,17 @@
 Notes:
 
 */
-component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table="SwLoyaltyProgram" persistent="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
+component displayname="Loyalty" entityname="SlatwallLoyalty" table="SwLoyalty" persistent="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
 	
 	// Persistent Properties
-	property name="loyaltyProgramID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="loyaltyProgramName" ormtype="string";
+	property name="loyaltyID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="loyaltyName" ormtype="string";
 	property name="activeFlag" ormtype="boolean" default="1";
 	
 	// Related Object Properties (one-to-many)
-	property name="loyaltyProgramAccruements" singularname="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
-	property name="loyaltyProgramRedemptions" singularname="loyaltyProgramRedemption" cfc="LoyaltyProgramRedemption" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramRedemptionID" cascade="all-delete-orphan" inverse="true";
-	property name="accountLoyaltyPrograms" singularname="accountLoyaltyProgram" cfc="AccountLoyaltyProgram" type="array" fieldtype="one-to-many" fkcolumn="loyaltyProgramID" inverse="true" cascade="all-delete-orphan";
+	property name="loyaltyAccruements" singularname="loyaltyAccruement" cfc="LoyaltyAccruement" type="array" fieldtype="one-to-many" fkcolumn="loyaltyID" inverse="true" cascade="all-delete-orphan";
+	property name="loyaltyRedemptions" singularname="loyaltyRedemption" cfc="LoyaltyRedemption" type="array" fieldtype="one-to-many" fkcolumn="loyaltyRedemptionID" cascade="all-delete-orphan" inverse="true";
+	property name="accountLoyalties" singularname="accountLoyalty" cfc="AccountLoyalty" type="array" fieldtype="one-to-many" fkcolumn="loyaltyID" inverse="true" cascade="all-delete-orphan";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -67,27 +67,27 @@ component displayname="LoyaltyProgram" entityname="SlatwallLoyaltyProgram" table
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Loyalty Program Accruements (one-to-many)
-	public void function addLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
-		arguments.loyaltyProgramAccruement.setLoyaltyProgram( this );
+	public void function addLoyaltyAccruement(required any loyaltyAccruement) {
+		arguments.loyaltyAccruement.setLoyalty( this );
 	}
-	public void function removeLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
-		arguments.loyaltyProgramAccruement.removeLoyaltyProgram( this );
+	public void function removeLoyaltyAccruement(required any loyaltyAccruement) {
+		arguments.loyaltyAccruement.removeLoyalty( this );
 	}
 	
 	// Loyalty Program Redemptions (one-to-many)    
-	public void function addLoyaltyProgramRedemption(required any loyaltyProgramRedemption) {    
-		arguments.loyaltyProgramRedemption.setLoyaltyProgram( this );    
+	public void function addLoyaltyRedemption(required any loyaltyRedemption) {    
+		arguments.loyaltyRedemption.setLoyalty( this );    
 	}    
-	public void function removeLoyaltyProgramRedemption(required any loyaltyProgramRedemption) {    
-		arguments.loyaltyProgramRedemption.removeLoyaltyProgram( this );    
+	public void function removeLoyaltyRedemption(required any loyaltyRedemption) {    
+		arguments.loyaltyRedemption.removeLoyalty( this );    
 	}
 	
 	// Account Loyalty Programs (one-to-many)
-	public void function addAccountLoyaltyProgram(required any accountLoyaltyProgram) {    
-		arguments.accountLoyaltyProgram.setLoyaltyProgram( this );    
+	public void function addAccountLoyalty(required any accountLoyalty) {    
+		arguments.accountLoyalty.setLoyalty( this );    
 	}    
-	public void function removeAccountLoyaltyProgram(required any accountLoyaltyProgram) {    
-		arguments.accountLoyaltyProgram.removeLoyaltyProgram( this );    
+	public void function removeAccountLoyalty(required any accountLoyalty) {    
+		arguments.accountLoyalty.removeLoyalty( this );    
 	}
 
 	

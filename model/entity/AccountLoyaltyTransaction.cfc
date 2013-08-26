@@ -36,10 +36,10 @@
 Notes:
 
 */
-component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAccountLoyaltyProgramTransaction" table="SwAccountLoyaltyProgramTransaction" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="account.accountLoyaltyProgramTransaction" {
+component displayname="AccountLoyaltyTransaction" entityname="SlatwallAccountLoyaltyTransaction" table="SwAccountLoyaltyTransaction" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="accountService" hb_permission="account.accountLoyaltyTransaction" {
 	
 	// Persistent Properties
-	property name="accountLoyaltyProgramTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="accountLoyaltyTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="accruementType" ormType="string";
 	property name="redemptionType" ormType="string";
 	property name="pointsIn" ormType="integer";
@@ -47,9 +47,9 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAcc
 	property name="expirationDateTime" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
-	property name="accountLoyaltyProgram" cfc="AccountLoyaltyProgram" fieldtype="many-to-one" fkcolumn="accountLoyaltyProgramID";
-	property name="loyaltyProgramAccruement" cfc="LoyaltyProgramAccruement" fieldtype="many-to-one" fkcolumn="loyaltyProgramAccruementID";
-	property name="loyaltyProgramRedemption" cfc="LoyaltyProgramRedemption" fieldtype="many-to-one" fkcolumn="loyaltyProgramRedemptionID";
+	property name="accountLoyalty" cfc="AccountLoyalty" fieldtype="many-to-one" fkcolumn="accountLoyaltyID";
+	property name="loyaltyAccruement" cfc="LoyaltyAccruement" fieldtype="many-to-one" fkcolumn="loyaltyAccruementID";
+	property name="loyaltyRedemption" cfc="LoyaltyRedemption" fieldtype="many-to-one" fkcolumn="loyaltyRedemptionID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
@@ -70,18 +70,18 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAcc
 	
 	public array function getAccruementTypeOptions() {
 		return [
-			{name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.itemFulfilled'), value="itemFulfilled"},
-			{name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.orderClosed'), value="orderClosed"},
-			{name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillmentMethodUsed"},
-			{name=rbKey('entity.accountLoyaltyProgramAccruement.accruementType.enrollment'), value="enrollment"}
+			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.itemFulfilled'), value="itemFulfilled"},
+			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.orderClosed'), value="orderClosed"},
+			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillmentMethodUsed"},
+			{name=rbKey('entity.accountLoyaltyAccruement.accruementType.enrollment'), value="enrollment"}
 		];
 	}
 	
 	public array function getRedemptionTypeOptions() {
 		return [
-			{name=rbKey('entity.accountLoyaltyProgramAccruement.redemptionType.productPurchase'), value="productPurchase"},
-			{name=rbKey('entity.accountLoyaltyProgramAccruement.redemptionType.cashCouponCreation'), value="cashCouponCreation"},
-			{name=rbKey('entity.accountLoyaltyProgramAccruement.redemptionType.priceGroupAssignment'), value="priceGroupAssignment"}
+			{name=rbKey('entity.accountLoyaltyAccruement.redemptionType.productPurchase'), value="productPurchase"},
+			{name=rbKey('entity.accountLoyaltyAccruement.redemptionType.cashCouponCreation'), value="cashCouponCreation"},
+			{name=rbKey('entity.accountLoyaltyAccruement.redemptionType.priceGroupAssignment'), value="priceGroupAssignment"}
 		];
 	}
 	
@@ -90,73 +90,73 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAcc
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Account Loyalty Program (many-to-one)
-	public void function setAccountLoyaltyProgram(required any accountLoyaltyProgram) {
-		variables.accountLoyaltyProgram = arguments.accountLoyaltyProgram;
-		if(isNew() or !arguments.accountLoyaltyProgram.hasAccountLoyaltyProgramTransaction( this )) {
-			arrayAppend(arguments.accountLoyaltyProgram.getAccountLoyaltyProgramTransactions(), this);
+	public void function setAccountLoyalty(required any accountLoyalty) {
+		variables.accountLoyalty = arguments.accountLoyalty;
+		if(isNew() or !arguments.accountLoyalty.hasAccountLoyaltyTransaction( this )) {
+			arrayAppend(arguments.accountLoyalty.getAccountLoyaltyTransactions(), this);
 		}
 	}
-	public void function removeAccountLoyaltyProgram(any accountLoyaltyProgram) {
-	   if(!structKeyExists(arguments, "accountLoyaltyProgram")) {
-	   		arguments.accountLoyaltyProgram = variables.accountLoyaltyProgram;
+	public void function removeAccountLoyalty(any accountLoyalty) {
+	   if(!structKeyExists(arguments, "accountLoyalty")) {
+	   		arguments.accountLoyalty = variables.accountLoyalty;
 	   }
-       var index = arrayFind(arguments.accountLoyaltyProgram.getAccountLoyaltyProgramTransactions(),this);
+       var index = arrayFind(arguments.accountLoyalty.getAccountLoyaltyTransactions(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.accountLoyaltyProgram.getAccountLoyaltyProgramTransactions(), index);
+           arrayDeleteAt(arguments.accountLoyalty.getAccountLoyaltyTransactions(), index);
        }
-       structDelete(variables,"accountLoyaltyProgram");
+       structDelete(variables,"accountLoyalty");
     }
     
     // Loyalty Program Accruement (many-to-one)
-	public void function setLoyaltyProgramAccruement(required any loyaltyProgramAccruement) {
-		variables.loyaltyProgramAccruement = arguments.loyaltyProgramAccruement;
-		if(isNew() or !arguments.loyaltyProgramAccruement.hasAccountLoyaltyProgramTransaction( this )) {
-			arrayAppend(arguments.loyaltyProgramAccruement.getAccountLoyaltyProgramTransactions(), this);
+	public void function setLoyaltyAccruement(required any loyaltyAccruement) {
+		variables.loyaltyAccruement = arguments.loyaltyAccruement;
+		if(isNew() or !arguments.loyaltyAccruement.hasAccountLoyaltyTransaction( this )) {
+			arrayAppend(arguments.loyaltyAccruement.getAccountLoyaltyTransactions(), this);
 		}
 	}
-	public void function removeLoyaltyProgramAccruement(any loyaltyProgramAccruement) {
-	   if(!structKeyExists(arguments, "loyaltyProgramAccruement")) {
-	   		arguments.loyaltyProgramAccruement = variables.loyaltyProgramAccruement;
+	public void function removeLoyaltyAccruement(any loyaltyAccruement) {
+	   if(!structKeyExists(arguments, "loyaltyAccruement")) {
+	   		arguments.loyaltyAccruement = variables.loyaltyAccruement;
 	   }
-       var index = arrayFind(arguments.loyaltyProgramAccruement.getAccountLoyaltyProgramTransactions(),this);
+       var index = arrayFind(arguments.loyaltyAccruement.getAccountLoyaltyTransactions(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.loyaltyProgramAccruement.getAccountLoyaltyProgramTransactions(), index);
+           arrayDeleteAt(arguments.loyaltyAccruement.getAccountLoyaltyTransactions(), index);
        }
-       structDelete(variables,"loyaltyProgramAccruement");
+       structDelete(variables,"loyaltyAccruement");
     }
     
  	// Loyalty Program Redemption (many-to-one) 
- 	public void function setLoyaltyProgramRedemption(required any loyaltyProgramRedemption) { 
- 		variables.loyaltyProgramRedemption = arguments.loyaltyProgramRedemption; 
- 		if(isNew() or !arguments.loyaltyProgramRedemption.hasAccountLoyaltyProgramTransaction( this )) { 
- 			arrayAppend(arguments.loyaltyProgramRedemption.getAccountLoyaltyProgramTransactions(), this); 
+ 	public void function setLoyaltyRedemption(required any loyaltyRedemption) { 
+ 		variables.loyaltyRedemption = arguments.loyaltyRedemption; 
+ 		if(isNew() or !arguments.loyaltyRedemption.hasAccountLoyaltyTransaction( this )) { 
+ 			arrayAppend(arguments.loyaltyRedemption.getAccountLoyaltyTransactions(), this); 
  		} 
  	} 
- 	public void function removeLoyaltyProgramRedemption(any loyaltyProgramRedemption) { 
- 		if(!structKeyExists(arguments, "loyaltyProgramRedemption")) { 
- 			arguments.loyaltyProgramRedemption = variables.loyaltyProgramRedemption; 
+ 	public void function removeLoyaltyRedemption(any loyaltyRedemption) { 
+ 		if(!structKeyExists(arguments, "loyaltyRedemption")) { 
+ 			arguments.loyaltyRedemption = variables.loyaltyRedemption; 
  		} 
- 		var index = arrayFind(arguments.loyaltyProgramRedemption.getAccountLoyaltyProgramTransactions(), this); 
+ 		var index = arrayFind(arguments.loyaltyRedemption.getAccountLoyaltyTransactions(), this); 
  		if(index > 0) { 
- 			arrayDeleteAt(arguments.loyaltyProgramRedemption.getAccountLoyaltyProgramTransactions(), index); 
+ 			arrayDeleteAt(arguments.loyaltyRedemption.getAccountLoyaltyTransactions(), index); 
  		} 
- 		structDelete(variables, "loyaltyProgramRedemption"); 
+ 		structDelete(variables, "loyaltyRedemption"); 
  	}   
     
     // Order (many-to-one)
 	public void function setOrder(required any order) {
 		variables.order = arguments.order;
-		if(isNew() or !arguments.order.hasAccountLoyaltyProgramTransaction( this )) {
-			arrayAppend(arguments.order.getAccountLoyaltyProgramTransactions(), this);
+		if(isNew() or !arguments.order.hasAccountLoyaltyTransaction( this )) {
+			arrayAppend(arguments.order.getAccountLoyaltyTransactions(), this);
 		}
 	}
 	public void function removeOrder(any order) {
 		if(!structKeyExists(arguments, "order")) {
 			arguments.order = variables.order;
 		}
-		var index = arrayFind(arguments.order.getAccountLoyaltyProgramTransactions(), this);
+		var index = arrayFind(arguments.order.getAccountLoyaltyTransactions(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.order.getAccountLoyaltyProgramTransactions(), index);
+			arrayDeleteAt(arguments.order.getAccountLoyaltyTransactions(), index);
 		}
 		structDelete(variables, "order");
 	}
@@ -164,17 +164,17 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAcc
 	// Order Item (many-to-one)
 	public void function setOrderItem(required any orderItem) {
 		variables.orderItem = arguments.orderItem;
-		if(isNew() or !arguments.orderItem.hasAccountLoyaltyProgramTransaction( this )) {
-			arrayAppend(arguments.orderItem.getAccountLoyaltyProgramTransactions(), this);
+		if(isNew() or !arguments.orderItem.hasAccountLoyaltyTransaction( this )) {
+			arrayAppend(arguments.orderItem.getAccountLoyaltyTransactions(), this);
 		}
 	}
 	public void function removeOrderItem(any orderItem) {
 		if(!structKeyExists(arguments, "orderItem")) {
 			arguments.orderItem = variables.orderItem;
 		}
-		var index = arrayFind(arguments.orderItem.getAccountLoyaltyProgramTransactions(), this);
+		var index = arrayFind(arguments.orderItem.getAccountLoyaltyTransactions(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.orderItem.getAccountLoyaltyProgramTransactions(), index);
+			arrayDeleteAt(arguments.orderItem.getAccountLoyaltyTransactions(), index);
 		}
 		structDelete(variables, "orderItem");
 	}
@@ -182,17 +182,17 @@ component displayname="AccountLoyaltyProgramTransaction" entityname="SlatwallAcc
 	// Order Fulfillment (many-to-one)
 	public void function setOrderFulfillment(required any orderFulfillment) {
 		variables.orderFulfillment = arguments.orderFulfillment;
-		if(isNew() or !arguments.orderFulfillment.hasAccountLoyaltyProgramTransaction( this )) {
-			arrayAppend(arguments.orderFulfillment.getAccountLoyaltyProgramTransactions(), this);
+		if(isNew() or !arguments.orderFulfillment.hasAccountLoyaltyTransaction( this )) {
+			arrayAppend(arguments.orderFulfillment.getAccountLoyaltyTransactions(), this);
 		}
 	}
 	public void function removeOrderFulfillment(any order) {
 		if(!structKeyExists(arguments, "orderFulfillment")) {
 			arguments.orderFulfillment = variables.orderFulfillment;
 		}
-		var index = arrayFind(arguments.orderFulfillment.getAccountLoyaltyProgramTransactions(), this);
+		var index = arrayFind(arguments.orderFulfillment.getAccountLoyaltyTransactions(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.orderFulfillment.getAccountLoyaltyProgramTransactions(), index);
+			arrayDeleteAt(arguments.orderFulfillment.getAccountLoyaltyTransactions(), index);
 		}
 		structDelete(variables, "orderFulfillment");
 	}
