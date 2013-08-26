@@ -93,7 +93,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		var forceSale = false;
 		if( arguments.requestBean.getTransactionType() eq "chargePreAuthorization" ) {
 			var query = new Query();
-			query.setSQL("SELECT paymentTransactionID FROM SwPaymentTransaction WHERE orderPaymentID = '#arguments.requestBean.getOrderPaymentID()#' AND transactionType = 'chargePreAuthorization' AND authorizationCode IN (SELECT authorizationCode FROM SwPaymentTransaction WHERE providerTransactionID='#requestBean.getProviderTransactionID()#')"); 
+			query.setSQL("SELECT paymentTransactionID FROM SwPaymentTransaction WHERE orderPaymentID = '#arguments.requestBean.getOrderPaymentID()#' AND transactionType = 'chargePreAuthorization' AND authorizationCode IN (SELECT authorizationCode FROM SwPaymentTransaction WHERE providerTransactionID='#requestBean.getPreAuthorizationProviderTransactionID()#')"); 
 			var qresults = query.Execute().getResult();
 			
 			if(qresults.recordCount) {
@@ -142,7 +142,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			arrayAppend(paymentData,"ORIGID=#requestBean.getProviderToken()#");
 			
 		}
-		
+
 		// Always add a CVV2 in case one was passed in
 		arrayAppend(paymentData,"CVV2[#len(requestBean.getSecurityCode())#]=#requestBean.getSecurityCode()#");
 		

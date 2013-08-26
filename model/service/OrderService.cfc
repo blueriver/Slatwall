@@ -282,7 +282,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					orderFulfillment.setCurrencyCode( arguments.order.getCurrencyCode() );
 					orderFulfillment.setOrder( arguments.order );
 					
-					// Populate the shipping address info
+					// Setup 'Shipping' Values
 					if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "shipping") {
 						
 						// Check for an accountAddress
@@ -318,6 +318,30 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 								}
 							}
 						}
+						
+					// Set 'Pickup' Values
+					} else if (orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "pickup") {
+						
+						// Check for a pickupLocationID
+						if(!isNull(arguments.processObject.getPickupLocationID()) && len(arguments.processObject.getPickupLocationID())) {
+							
+							// Find the pickup location
+							var pickupLocation = getLocationService().getLocation(arguments.processObject.getPickupLocationID());
+							
+							// if found set in the orderFulfillment
+							if(!isNull(pickupLocation)) {
+								orderFulfillment.setPickupLocation(pickupLocation);
+							}
+						}
+						
+					// Set 'Email' Value
+					} else if (orderFulfillment.getFulfillmentMethod().getFulfillmentMethodType() eq "email") {
+						
+						// Check for an email address
+						if(!isNull(arguments.processObject.getEmailAddress()) && len(arguments.processObject.getEmailAddress())) {
+							orderFulfillment.setEmailAddress( arguments.processObject.getEmailAddress() );
+						}
+						
 					}
 					
 					orderFulfillment = this.saveOrderFulfillment( orderFulfillment );
@@ -1226,7 +1250,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			if(arguments.processObject.getTransactionType() eq "chargePreAuthorization" && arrayLen(uncapturedAuthorizations)) {
 				transactionData.preAuthorizationCode = uncapturedAuthorizations[1].authorizationCode;
-				preAuthorizationProviderTransactionID = uncapturedAuthorizations[1].providerTransactionID;
+				transactionData.preAuthorizationProviderTransactionID = uncapturedAuthorizations[1].providerTransactionID;
 			}
 			
 			// Run the transaction
