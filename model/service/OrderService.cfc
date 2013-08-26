@@ -1419,7 +1419,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// In case we are trying to re-submit an orderPayment that was previously marked as invalid, we set it back to active
 			arguments.orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );
-			
+				
 			// Setup the transaction data
 			var transactionData = {
 				amount = arguments.orderPayment.getAmount(),
@@ -1430,6 +1430,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.orderPayment.clearProcessObject( 'createTransaction' );
 			
 			arguments.orderPayment = this.processOrderPayment(arguments.orderPayment, transactionData, 'createTransaction');
+			
 		}
 		
 		return arguments.orderPayment;

@@ -52,7 +52,7 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	// Process Info
 	property name="transactionID" type="string" ;
 	property name="transactionType" type="string" ;
-	property name="transactionAmount" type="float";
+	property name="transactionAmount" type="numeric";
 	property name="transactionCurrencyCode" type="string";
 	property name="isDuplicateFlag" type="boolean";
 	
