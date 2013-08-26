@@ -6,6 +6,9 @@
 	    "fulfillmentTypePickup":{
 	        "fulfillmentMethodType":	{"eq":"pickup"}
 	    },
+	    "fulfillmentTypeEmail":{
+	        "fulfillmentMethodType":	{"eq":"email"}
+	    },
 	    "fulfillmentTypeShippingNoAccountAddress":{
 	        "fulfillmentMethodType":	{"eq":"shipping"},
 	        "accountAddress":			{"null":true}
@@ -16,6 +19,7 @@
 		"fulfillmentCharge":		[{"contexts":"save","dataType":"numeric","minValue":0}],
 		"orderFulfillmentItems":	[{"contexts":"placeOrder,fulfillItems","minCollection":1}],
 		"quantityUndelivered":		[{"contexts":"fulfillItems","minValue":0}],
+		"emailAddress":				[{"contexts":"placeOrder","conditions":"fulfillmentTypeEmail","required":true}],
 		"pickupLocation":			[{"contexts":"placeOrder","conditions":"fulfillmentTypePickup","required":true}],
 		"shippingAddress":			[{"contexts":"placeOrder","conditions":"fulfillmentTypeShipping","required":true}],
 		"shippingMethod":			[
