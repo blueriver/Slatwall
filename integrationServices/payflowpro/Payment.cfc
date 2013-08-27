@@ -138,7 +138,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			arrayAppend(paymentData,"ORIGID=#requestBean.getPreAuthorizationProviderTransactionID()#");
 		
 		// If there was no creditCardNumber passed, then use the providerToken
-		} else if(!len(requestBean.getCreditCardNumber()) && !isNull(requestBean.getCreditCardNumber()) && len(requestBean.getCreditCardNumber())) {
+		} else if(!len(requestBean.getCreditCardNumber()) && !isNull(requestBean.getProviderToken()) && len(requestBean.getProviderToken())) {
 			arrayAppend(paymentData,"ORIGID=#requestBean.getProviderToken()#");
 			
 		}
