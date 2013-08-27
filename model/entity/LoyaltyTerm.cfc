@@ -36,17 +36,24 @@
 Notes:
 
 */
-component displayname="Loyalty" entityname="SlatwallLoyalty" table="SwLoyalty" persistent="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
+component displayname="Loyalty Term" entityname="SlatwallLoyaltyTerm" table="SwLoyaltyTerm" persistent="true" accessors="true" extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" {
 	
 	// Persistent Properties
-	property name="loyaltyID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="loyaltyName" ormtype="string";
-	property name="activeFlag" ormtype="boolean" default="1";
-	
+	property name="loyaltyTermID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="loyaltyTermName" ormtype="string";
+	property name="loyaltyTermStartDateTime" ormtype="timestamp" hb_nullRBKey="define.forever";
+
+	// Calculated Properties
+
+	// Related Object Properties (many-to-one)
+	property name="loyalty" cfc="Loyalty" fieldtype="many-to-one" fkcolumn="loyaltyID";
+	property name="term" cfc="Term" fieldtype="many-to-one" fkcolumn="termID";
+		
 	// Related Object Properties (one-to-many)
-	property name="loyaltyAccruements" singularname="loyaltyAccruement" cfc="LoyaltyAccruement" type="array" fieldtype="one-to-many" fkcolumn="loyaltyID" cascade="all-delete-orphan" inverse="true";
-	property name="loyaltyRedemptions" singularname="loyaltyRedemption" cfc="LoyaltyRedemption" type="array" fieldtype="one-to-many" fkcolumn="loyaltyID" cascade="all-delete-orphan" inverse="true";
-	property name="accountLoyalties" singularname="accountLoyalty" cfc="AccountLoyalty" type="array" fieldtype="one-to-many" fkcolumn="loyaltyID" cascade="all-delete-orphan" inverse="true";
+	
+	// Related Object Properties (many-to-many - owner)
+
+	// Related Object Properties (many-to-many - inverse)
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -59,6 +66,8 @@ component displayname="Loyalty" entityname="SlatwallLoyalty" table="SwLoyalty" p
 	
 	// Non-Persistent Properties
 
+
+
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -66,30 +75,23 @@ component displayname="Loyalty" entityname="SlatwallLoyalty" table="SwLoyalty" p
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Loyalty Program Accruements (one-to-many)
-	public void function addLoyaltyAccruement(required any loyaltyAccruement) {
-		arguments.loyaltyAccruement.setLoyalty( this );
-	}
-	public void function removeLoyaltyAccruement(required any loyaltyAccruement) {
-		arguments.loyaltyAccruement.removeLoyalty( this );
-	}
-	
-	// Loyalty Program Redemptions (one-to-many)    
-	public void function addLoyaltyRedemption(required any loyaltyRedemption) {    
-		arguments.loyaltyRedemption.setLoyalty( this );    
+	// Loyalty Program (many-to-one)    
+	public void function setLoyalty(required any loyalty) {    
+		variables.loyalty = arguments.loyalty;    
+		if(isNew() or !arguments.loyalty.hasLoyaltyTerm( this )) {    
+			arrayAppend(arguments.loyalty.getLoyaltyTerms(), this);    
+		}    
 	}    
-	public void function removeLoyaltyRedemption(required any loyaltyRedemption) {    
-		arguments.loyaltyRedemption.removeLoyalty( this );    
+	public void function removeLoyalty(any loyalty) {    
+		if(!structKeyExists(arguments, "loyalty")) {    
+			arguments.loyalty = variables.loyalty;    
+		}    
+		var index = arrayFind(arguments.loyalty.getLoyaltyTerms(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.loyalty.getLoyaltyTerms(), index);    
+		}    
+		structDelete(variables, "loyalty");    
 	}
-	
-	// Account Loyalty Programs (one-to-many)
-	public void function addAccountLoyalty(required any accountLoyalty) {    
-		arguments.accountLoyalty.setLoyalty( this );    
-	}    
-	public void function removeAccountLoyalty(required any accountLoyalty) {    
-		arguments.accountLoyalty.removeLoyalty( this );    
-	}
-
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

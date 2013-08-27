@@ -40,12 +40,13 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 	
 	// Persistent Properties
 	property name="loyaltyAccruementID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="startDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
-	property name="endDateTime" ormtype="timestamp" hb_formatType="dateTime" hb_nullRBKey="define.forever";
+	property name="startDateTime" ormtype="timestamp" hb_nullRBKey="define.forever";
+	property name="endDateTime" ormtype="timestamp" hb_nullRBKey="define.forever";
 	property name="accruementType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="pointType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="pointQuantity" ormType="integer";
 	property name="activeFlag" ormtype="boolean" default="1";
+	property name="currencyCode" ormtype="string" length="3";
 	
 	// Related Object Properties (many-to-one)
 	property name="loyalty" cfc="Loyalty" fieldtype="many-to-one" fkcolumn="loyaltyID";
@@ -128,24 +129,6 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 			arrayDeleteAt(arguments.loyalty.getLoyaltyAccruements(), index);
 		}
 		structDelete(variables, "loyalty");
-	}
-	
-	// Expiration Term (many-to-one)
-	public void function setExpirationTerm(required any expirationTerm) {
-		variables.expirationTerm = arguments.expirationTerm;
-		if(isNew() or !arguments.expirationTerm.hasLoyaltyAccruementExpirationTerm( this )) {
-			arrayAppend(arguments.expirationTerm.getLoyaltyAccruementExpirationTerms(), this);
-		}
-	}
-	public void function removeExpirationTerm(any Expirationterm) {
-		if(!structKeyExists(arguments, "expirationTerm")) {
-			arguments.expirationTerm = variables.expirationTerm;
-		}
-		var index = arrayFind(arguments.expirationTerm.getLoyaltyAccruementExpirationTerms(), this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.expirationTerm.getLoyaltyAccruementExpirationTerms(), index);
-		}
-		structDelete(variables, "expirationTerm");
 	}
 	
 	// Brands (many-to-many - owner)

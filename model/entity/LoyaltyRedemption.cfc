@@ -36,23 +36,25 @@
 Notes:
 
 */
-component displayname="LoyaltyRedemption" entityname="SlatwallLoyaltyRedemption" table="SwLoyaltyRedemption" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
+component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption" table="SwLoyaltyRedemption" persistent="true"  extends="HibachiEntity" cacheuse="transactional" hb_serviceName="loyaltyService" hb_permission="this" {
 	
 	// Persistent Properties
 	property name="loyaltyRedemptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="RedemptionPointType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
-	property name="RedemptionType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
+	property name="redemptionPointType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
+	property name="redemptionType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="autoRedemptionType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="amountType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
-	property name="amount" ormType="integer";
+	property name="amount" ormType="big_decimal";
 	property name="activeFlag" ormtype="boolean" default="1";
-	property name="globalFlag" ormtype="boolean" default="1";
 	property name="nextRedemptionDateTime" ormtype="timestamp";
+	property name="currencyCode" ormtype="string" length="3";
+	property name="minimumPointQuantity" ormType="integer";
 	
 	// Related Object Properties (many-to-one)
 	property name="loyalty" cfc="Loyalty" fieldtype="many-to-one" fkcolumn="loyaltyID";
-	property name="balanceTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="balanceTermID";
+	property name="loyaltyTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="loyaltyTermID";
 	property name="autoRedemptionTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="autoRedemptionTermID";
+	property name="priceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="priceGroupID";
 	
 	// Related Object Properties (one-to-many)
 	property name="accountLoyaltyTransactions" singularname="accountLoyaltyTransaction" cfc="AccountLoyaltyTransaction" type="array" fieldtype="one-to-many" fkcolumn="loyaltyRedemptionID" cascade="all-delete-orphan" inverse="true";
@@ -66,7 +68,7 @@ component displayname="LoyaltyRedemption" entityname="SlatwallLoyaltyRedemption"
 	property name="excludedBrands" singularname="excludedBrand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionExclBrand" fkcolumn="loyaltyRedemptionID" inversejoincolumn="brandID";
 	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionExclSku" fkcolumn="loyaltyRedemptionID" inversejoincolumn="skuID";
 	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionExclProduct" fkcolumn="loyaltyRedemptionID" inversejoincolumn="productID";
-	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionExclProductType" fkcolumn="loyaltyRedemptionID" inversejoincolumn="productTypeID";
+	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SwLoyaltyRedempExclProductType" fkcolumn="loyaltyRedemptionID" inversejoincolumn="productTypeID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -88,24 +90,25 @@ component displayname="LoyaltyRedemption" entityname="SlatwallLoyaltyRedemption"
 	
 	public array function getRedemptionPointTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.lifeTimePoints'), value="lifeTimePoints"},
-			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.pointBalance'), value="pointBalance"},
-			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.termBalance'), value="termBalance"}
+			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.lifeTimeBalance'), value="lifeTimeBalance"},
+			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.loyaltyTermBalance'), value="loyaltyTermBalance"},
+			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.usageBalance'), value="usageBalance"}
 		];
 	}
 	
 	public array function getRedemptionTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyRedemption.redemptionType.productPurchase'), value="productPurchase"},
-			{name=rbKey('entity.loyaltyRedemption.redemptionType.cashCouponCreation'), value="cashCouponCreation"},
+			{name=rbKey('entity.loyaltyRedemption.redemptionType.pointPurchase'), value="pointPurchase"},
+			{name=rbKey('entity.loyaltyRedemption.redemptionType.voucherCreation'), value="voucherCreation"},
 			{name=rbKey('entity.loyaltyRedemption.redemptionType.priceGroupAssignment'), value="priceGroupAssignment"}
 		];
 	}
 	
 	public array function getAutoRedemptionTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.accountPlacesOrder'), value="accountPlacesOrder"},
-			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.term'), value="term"}
+			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.orderClosed'), value="orderClosed"},
+			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.loyaltyTermEnd'), value="loyaltyTermEnd"},
+			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.none'), value="none"}
 		];
 	}
 	
@@ -147,41 +150,23 @@ component displayname="LoyaltyRedemption" entityname="SlatwallLoyaltyRedemption"
 		structDelete(variables, "loyalty");
 	}
 	
-	// Balance Term (many-to-one)
-	public void function setBalanceTerm(required any balanceTerm) {
-		variables.balanceTerm = arguments.balanceTerm;
-		if(isNew() or !arguments.balanceTerm.hasLoyaltyBalanceTerm( this )) {
-			arrayAppend(arguments.balanceTerm.getLoyaltyBalanceTerms(), this);
-		}
+	// Price Group (many-to-one)
+	public void function setPriceGroup(required any priceGroup) {    
+		variables.priceGroup = arguments.priceGroup;    
+		if(isNew() or !arguments.priceGroup.hasLoyaltyRedemption( this )) {    
+			arrayAppend(arguments.priceGroup.getLoyaltyRedemptions(), this);    
+		}    
+	}    
+	public void function removePriceGroup(any priceGroup) {    
+		if(!structKeyExists(arguments, "priceGroup")) {    
+			arguments.priceGroup = variables.priceGroup;    
+		}    
+		var index = arrayFind(arguments.priceGroup.getLoyaltyRedemptions(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.priceGroup.getLoyaltyRedemptions(), index);    
+		}    
+		structDelete(variables, "priceGroup");    
 	}
-	public void function removeBalanceTerm(any balanceTerm) {
-		if(!structKeyExists(arguments, "balanceTerm")) {
-			arguments.balanceTerm = variables.balanceTerm;
-		}
-		var index = arrayFind(arguments.balanceTerm.getLoyaltyBalanceTerms(), this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.balanceTerm.getLoyaltyBalanceTerms(), index);
-		}
-		structDelete(variables, "balanceTerm");
-	}	
-
-	// Auto Redemption Term (many-to-one)         
- 	public void function setAutoRedemptionTerm(required any autoRedemptionTerm) {         
- 		variables.autoRedemptionTerm = arguments.autoRedemptionTerm;         
- 		if(isNew() or !arguments.autoRedemptionTerm.hasLoyaltyAutoRedemptionTerm( this )) {         
- 			arrayAppend(arguments.autoRedemptionTerm.getLoyaltyAutoRedemptionTerms(), this);         
- 		}         
- 	}         
- 	public void function removeAutoRedemptionTerm(any autoRedemptionTerm) {         
- 		if(!structKeyExists(arguments, "autoRedemptionTerm")) {         
- 			arguments.autoRedemptionTerm = variables.autoRedemptionTerm;         
- 		}         
- 		var index = arrayFind(arguments.autoRedemptionTerm.getLoyaltyAutoRedemptionTerms(), this);         
- 		if(index > 0) {         
- 			arrayDeleteAt(arguments.autoRedemptionTerm.getLoyaltyAutoRedemptionTerms(), index);         
- 		}         
- 		structDelete(variables, "autoRedemptionTerm");         
- 	}
 
 	// Brands (many-to-many - owner)
 	public void function addBrand(required any brand) {
