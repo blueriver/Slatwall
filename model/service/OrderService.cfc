@@ -950,6 +950,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// check for orderStatus 
 		// TODO [paul]: If the order wasn't closed before... but now, same thing... loop over the loyaltys that the account on the order has, and call the processLoyalty with context of 'orderClosed'
+		
 		// If the order status is not 'closed'
 		if( !( listFindNoCase("ostClosed", arguments.order.getOrderStatusType().getSystemCode()) && listFindNoCase("ostClosed", originalOrderStatus) ) ) {
 			
@@ -959,7 +960,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					order = arguments.order
 				};
 				
-				// // Call the process method with 'orderClosed' as context
+				// Call the process method with 'orderClosed' as context
 				getAccountService().processAccountLoyalty(accountLoyalty, orderClosedData, 'orderClosed');
 			}
 		}
