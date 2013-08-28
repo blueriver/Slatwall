@@ -87,6 +87,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifier" type="array" fieldtype="many-to-many" linktable="SwPromoQualExclProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="loyaltyAccruements" singularname="loyaltyAccruement" cfc="LoyaltyAccruement" fieldtype="many-to-many" linktable="SwLoyaltyAccruProduct" fkcolumn="productID" inversejoincolumn="loyaltyAccruementID" inverse="true";
 	property name="loyaltyAccruementExclusions" singularname="loyaltyAccruementExclusion" cfc="LoyaltyAccruement" type="array" fieldtype="many-to-many" linktable="SwLoyaltyAccruExclProduct" fkcolumn="productID" inversejoincolumn="loyaltyAccruementID" inverse="true";
+	property name="loyaltyRedemptions" singularname="loyaltyRedemption" cfc="LoyaltyRedemption" type="array" fieldtype="many-to-many" linktable="SwLoyaltyRedemptionProduct" fkcolumn="productID" inversejoincolumn="loyaltyRedemptionID" inverse="true";
+	property name="loyaltyRedemptionExclusions" singularname="loyaltyRedemptionExclusion" cfc="LoyaltyRedemption" type="array" fieldtype="many-to-many" linktable="SwLoyaltyRedempExclProduct" fkcolumn="productID" inversejoincolumn="loyaltyRedemptionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SwPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
 	property name="vendors" singularname="vendor" cfc="Vendor" type="array" fieldtype="many-to-many" linktable="SwVendorProduct" fkcolumn="productID" inversejoincolumn="vendorID" inverse="true";
 	property name="physicals" singularname="physical" cfc="Physical" type="array" fieldtype="many-to-many" linktable="SwPhysicalProduct" fkcolumn="productID" inversejoincolumn="physicalID" inverse="true";
@@ -813,6 +815,23 @@ component displayname="Product" entityname="SlatwallProduct" table="SwProduct" p
 	public void function removeloyaltyAccruementExclusion(required any loyaltyAccruementExclusion) {
 		arguments.loyaltyAccruementExclusion.removeProduct( this );
 	}
+	
+	// Loyalty Redemptions (many-to-many - inverse)
+	public void function addLoyaltyRedemption(required any loyaltyRedemption) {
+		arguments.loyaltyRedemption.addProduct( this );
+	}
+	public void function removeLoyaltyRedemption(required any loyaltyRedemption) {
+		arguments.loyaltyRedemption.removeProduct( this );
+	}
+	
+	// Loyalty Redemption Exclusions (many-to-many - inverse)
+	public void function addLoyaltyRedemptionExclusion(required any loyaltyRedemptionExclusion) {
+		arguments.loyaltyRedemptionExclusion.addProduct( this );
+	}
+	public void function removeLoyaltyRedemptionExclusion(required any loyaltyRedemptionExclusion) {
+		arguments.loyaltyRedemptionExclusion.removeProduct( this );
+	}
+	
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
