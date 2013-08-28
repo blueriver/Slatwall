@@ -585,7 +585,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		for(var loyaltyAccruement in arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements()) {	
 			
 			// If loyaltyAccruement is of type 'orderItemReceived'
-			if (loyaltyAccruement.getAccruementType() eq 'orderItemReceived') {
+			if (loyaltyAccruement.getAccruementType() eq 'itemFulfilled') {
 				
 				// Loop over the items in the stockReceiver
 				for(var orderItemReceived in arguments.data.stockReceiver.getStockReceiverItems()) {
@@ -594,7 +594,7 @@ component extends="HibachiService" accessors="true" output="false" {
 					var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
 					
 					// Setup the transaction
-					accountLoyaltyTransaction.setAccruementType( "orderItemReceived" );
+					accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
 					accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
 					accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
 					accountLoyaltyTransaction.setOrder( orderItemReceived.getOrderItem().getOrder() );
