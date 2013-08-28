@@ -50,8 +50,8 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.account.getAccountLoyaltiesSmartList()#"
-							  recorddetailAction="admin:entity.detailaccountloyaltyprogram"
-							  recordEditAction="admin:entity.editaccountloyaltyprogram"
+							  recorddetailAction="admin:entity.detailaccountloyalty"
+							  recordEditAction="admin:entity.editaccountloyalty"
 							  recordEditQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
 							  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
 							  edit="#rc.edit#">

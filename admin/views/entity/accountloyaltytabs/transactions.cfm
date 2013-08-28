@@ -54,8 +54,8 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
 		<cf_HibachiListingColumn propertyIdentifier="accruementType" />
 		<cf_HibachiListingColumn propertyIdentifier="pointsIn" />
-		
+		<cf_HibachiListingColumn propertyIdentifier="pointsOut" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiProcessCaller action="admin:entity.preprocessaccountloyaltyprogram" entity="#rc.accountLoyalty#" processContext="createTransaction" class="btn" icon="plus" modal="true" />
+	<cf_HibachiProcessCaller action="admin:entity.preprocessaccountloyalty" entity="#rc.accountLoyalty#" processContext="createTransaction" class="btn" icon="plus" modal="true" />
 </cfoutput>
