@@ -1247,6 +1247,14 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		getStockService().saveStockReceiver( stockReceiver );
 		
+		for(var accountLoyalty in arguments.orderReturn.getOrder().getAccount().getAccountLoyalties()) {
+			var orderItemReceivedData = {
+				stockReceiver = stockReceiver
+			};
+			// Call the process method with 'orderItemReceived' as context
+			getAccountService().processAccountLoyalty(accountLoyalty, orderItemReceivedData, 'orderItemReceived'); 
+		}
+
 		return arguments.orderReturn;
 	}
 	

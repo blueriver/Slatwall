@@ -578,6 +578,42 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.accountLoyalty;	
 	}
 	
+	
+	public any function processAccountLoyalty_orderItemReceived(required any accountLoyalty, required struct data) {
+		
+		// Loop over the account loyalty Accruements
+		for(var loyaltyAccruement in arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements()) {	
+			
+			// If loyaltyAccruement is of type 'orderItemReceived'
+			if (loyaltyAccruement.getAccruementType() eq 'orderItemReceived') {
+				
+				// Loop over the items in the stockReceiver
+				for(var orderItemReceived in arguments.data.stockReceiver.getStockReceiverItems()) {
+					
+					// Create a new accountLoyalty transaction	
+					var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
+					
+					// Setup the transaction
+					accountLoyaltyTransaction.setAccruementType( "orderItemReceived" );
+					accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
+					accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
+					accountLoyaltyTransaction.setOrder( orderItemReceived.getOrderItem().getOrder() );
+					accountLoyaltyTransaction.setOrderItem( orderItemReceived.getOrderItem() );
+					
+					// If pointType is 'fixed' set points
+					if ( loyaltyAccruement.getPointType() eq 'fixed' ){
+						accountLoyaltyTransaction.setPointsOut( loyaltyAccruement.getPointQuantity() );
+					} // If pointType is 'pointPerDollar' set point times the qty times the item price
+					else if ( loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
+						accountLoyaltyTransaction.setPointsOut( loyaltyAccruement.getPointQuantity() * (orderItemReceived.getQuantity() * orderItemReceived.getOrderItem().getPrice()) );
+					}
+				}
+			}
+		}
+		
+		return arguments.accountLoyalty;	
+	}
+	
 	public any function processAccountLoyalty_createTransaction(required any accountLoyalty, required any processObject) {
 		
 		// Create a new transaction
