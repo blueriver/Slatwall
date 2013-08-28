@@ -1042,23 +1042,10 @@
 			  	SwContent on tcontentcategoryassign.contentID = SwContent.cmsContentID
 			  INNER JOIN
 			  	SwCategory on tcontentcategoryassign.categoryID = SwCategory.cmsCategoryID
+			  LEFT JOIN
+			  	SwContentCategory on SwContentCategory.contentID = SwContent.contentID AND SwContentCategory.categoryID = SwCategory.categoryID
 			WHERE
-				tcontentcategoryassign.siteID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#muraSiteID#" />
-			  AND
-			  	NOT EXISTS(
-				  	SELECT
-				  		SwContentCategory.contentID
-				  	FROM
-				  		SwContentCategory
-				  	  INNER JOIN
-				  	  	SwContent on SwContentCategory.contentID = SwContent.contentID
-				  	  INNER JOIN
-				  	  	SwCategory on SwContentCategory.categoryID = SwCategory.categoryID
-				  	WHERE
-				  		SwContent.cmsContentID = tcontentcategoryassign.contentID
-				  	  AND
-				  	  	SwCategory.cmsCategoryID = tcontentcategoryassign.categoryID
-			  	)
+				SwContentCategory.contentID is null AND SwContentCategory.categoryID is null
 		</cfquery>
 		
 		<!--- Loop over missing assignments --->
