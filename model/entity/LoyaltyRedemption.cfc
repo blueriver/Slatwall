@@ -46,7 +46,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 	property name="amountType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="amount" ormType="big_decimal";
 	property name="activeFlag" ormtype="boolean" default="1";
-	property name="nextRedemptionDateTime" ormtype="timestamp";
+	property name="nextRedemptionDateTime" ormtype="timestamp" hb_nullRBKey="define.forever";
 	property name="currencyCode" ormtype="string" length="3";
 	property name="minimumPointQuantity" ormType="integer";
 	

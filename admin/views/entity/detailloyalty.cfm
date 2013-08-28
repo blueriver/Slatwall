@@ -43,8 +43,8 @@ Notes:
 	<cf_HibachiEntityDetailForm object="#rc.loyalty#" edit="#rc.edit#" saveActionQueryString="loyaltyID=#rc.loyalty.getLoyaltyID()#">
 		
 		<cf_HibachiEntityActionBar type="detail" object="#rc.loyalty#" edit="#rc.edit#">
-			<cf_HibachiActionCaller action="admin:entity.createloyaltyaccruement" queryString="redirectAction=admin:entity.detailloyaltyprogram&loyaltyID=#rc.loyalty.getLoyaltyID()#"type="list" modal="true" />
-			<cf_HibachiActionCaller action="admin:entity.createloyaltyredemption" queryString="redirectAction=admin:entity.detailloyaltyprogram&loyaltyID=#rc.loyalty.getLoyaltyID()#"type="list" modal="true" />		
+			<cf_HibachiActionCaller action="admin:entity.createloyaltyaccruement" queryString="redirectAction=admin:entity.detailloyalty&loyaltyID=#rc.loyalty.getLoyaltyID()#"type="list" modal="true" />
+			<cf_HibachiActionCaller action="admin:entity.createloyaltyredemption" queryString="redirectAction=admin:entity.detailloyalty&loyaltyID=#rc.loyalty.getLoyaltyID()#"type="list" modal="true" />		
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>

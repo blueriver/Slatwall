@@ -44,7 +44,7 @@ Notes:
 							   recordEditAction="admin:entity.editloyaltyRedemption"
 							   recorddetailaction="admin:entity.detailloyaltyRedemption">
 		<cf_HibachiListingColumn propertyIdentifier="nextRedemptionDateTime" tdclass="primary" />
-		<cf_HibachiListingColumn propertyIdentifier="loyaltyTerm" />
+		<cf_HibachiListingColumn propertyIdentifier="loyaltyTerm.termName" />
 		<cf_HibachiListingColumn propertyIdentifier="redemptionPointType" />
 		<cf_HibachiListingColumn propertyIdentifier="autoredemptionType" />
 		<cf_HibachiListingColumn propertyIdentifier="redemptionType" />
@@ -53,6 +53,6 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createloyaltyredemption" class="btn" icon="plus" queryString="loyaltyID=#rc.loyalty.getLoyaltyID()#" modal="true"  />
+	<cf_HibachiActionCaller action="admin:entity.createloyaltyredemption" class="btn" icon="plus" queryString="loyaltyID=#rc.loyalty.getLoyaltyID()#&redirectAction=admin:entity.editloyaltyRedemption" modal="true"  />
 
 </cfoutput>

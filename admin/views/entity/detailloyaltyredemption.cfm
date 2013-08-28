@@ -45,9 +45,9 @@ Notes:
 								saveActionQueryString="loyaltyID=#rc.loyalty.getLoyaltyID()#">
 								
 		<cf_HibachiEntityActionBar type="detail" object="#rc.loyaltyRedemption#" edit="#rc.edit#"
-								   backAction="admin:entity.detailloyaltyprogram"
+								   backAction="admin:entity.detailloyalty"
 								   backQueryString="loyaltyID=#rc.loyalty.getLoyaltyID()#"
-								   cancelAction="admin:entity.detailloyaltyprogram"
+								   cancelAction="admin:entity.detailloyalty"
 								   cancelQueryString="loyaltyID=#rc.loyalty.getLoyaltyID()#" 
 							  	   deleteQueryString="redirectAction=admin:entity.detailloyalty&loyaltyID=#rc.loyalty.getLoyaltyID()#" />
 		
