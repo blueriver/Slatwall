@@ -83,7 +83,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 
 
 	public string function getSimpleRepresentation() {
-		return "#rbKey('entity.loyaltyRedemption')#";
+		return getLoyalty().getLoyaltyName() & " - " & getRedemptionType();
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
