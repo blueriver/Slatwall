@@ -1,0 +1,6 @@
+{
+	"properties":{
+		"amount":							[{"contexts":"save","required":true,"dataType":"numeric"}],
+		"nextRedemptionDateTime":			[{"contexts":"save","dataType":"date"}]
+	}
+}
