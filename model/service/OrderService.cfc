@@ -948,9 +948,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 		}
 		
-		// check for orderStatus 
-		// TODO [paul]: If the order wasn't closed before... but now, same thing... loop over the loyaltys that the account on the order has, and call the processLoyalty with context of 'orderClosed'
-		
 		// If the order status is not 'closed'
 		if( !( listFindNoCase("ostClosed", arguments.order.getOrderStatusType().getSystemCode()) && listFindNoCase("ostClosed", originalOrderStatus) ) ) {
 			
@@ -1079,10 +1076,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		} else {
 			arguments.processObject.addError('capturableAmount', rbKey('validate.processOrderDelivery_create.captureAmount'));
 		}
-		
-		
-		// TODO [paul]: wrap this in an .hasErrors() to make sure the orderDelivery doesn't have errors
-		// TODO [paul]: Loop over the accounts loyalty programs and call processLoyalty
+
 		
 		// Make sure the orderDelivery doesn't have errors
 		if (!arguments.orderDelivery.hasErrors()) {

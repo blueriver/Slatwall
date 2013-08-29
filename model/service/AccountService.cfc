@@ -441,9 +441,6 @@ component extends="HibachiService" accessors="true" output="false" {
 						|| (!isNull(orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand()) && loyaltyAccruement.hasBrand(orderDeliveryItem.getOrderItem().getSku().getProduct().getBrand())) 
 						){
 						 
-						// TODO [paul]:Neet to add a check for excludes
-						// TODO [paul]:THIS WILL NOT WORK -> loyaltyAccruement.hasProductType(orderDeliveryItem.getOrderItem().getSku().getProduct().getProductType())
-						
 						// Create a new transaction
 						var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
 						
@@ -481,11 +478,8 @@ component extends="HibachiService" accessors="true" output="false" {
 			
 			// If loyaltyAccruement eq 'orderClosed' as the type
 			if (loyaltyAccruement.getAccruementType() eq 'orderClosed') {
-				
-				// TODO [paul]: Remove all of the below... there is no product checking for the accruement type of 'orderClosed'
-				// TODO [paul]: keep in mind there is not going to be an orderDelivery in arguments.data, there will be an 'order'.
-				// Fixed amount or pointPerDollar based upon orderTotal order.getTotal()
-				
+
+				// If order satus is closed
 				if ( listFindNoCase("ostClosed",arguments.data.order.getorderStatusType().getSystemCode()) ){
 					
 					// Create a new transaction
@@ -518,14 +512,11 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public any function processAccountLoyalty_fulfillmentMethodUsed(required any accountLoyalty, required struct data) {
 		
-		// Loop over arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements() as 'loyaltyAccruement'
+		// Loop over loyalty Accruements
 		for(var loyaltyAccruement in arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements()) {	
 			
 			// If loyaltyAccruement eq 'fulfillmentMetodUsed' as the type
 			if (loyaltyAccruement.getAccruementType() eq 'fulfillmentMethodUsed') {
-
-				// TODO [paul]: Same here, you don't need to check on the delivery items.  You just need to know if all the orderItems have a status of 'fulfilled'
-				// If all the items are fulfilled then set accruement points
 					
 				// Create and setup a new transaction 
 				var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
@@ -676,13 +667,13 @@ component extends="HibachiService" accessors="true" output="false" {
 		var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
 		
 		accountLoyaltyTransaction.setAccountLoyalty( arguments.accountLoyalty );
-		accountLoyaltyTransaction.setaccruementType( processObject.getManualAdjustmentType() );
+		accountLoyaltyTransaction.setAccruementType( processObject.getManualAdjustmentType() );
 		
 		if (processObject.getManualAdjustmentType() eq "manualIn"){
-			accountLoyaltyTransaction.setpointsIn( processObject.getPoints() );
+			accountLoyaltyTransaction.setPointsIn( processObject.getPoints() );
 		}
 		else {
-			accountLoyaltyTransaction.setpointsOut( processObject.getPoints() );
+			accountLoyaltyTransaction.setPointsOut( processObject.getPoints() );
 		}
 
 		return arguments.accountLoyalty;	
