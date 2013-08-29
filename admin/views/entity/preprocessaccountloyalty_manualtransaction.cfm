@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) ten24, LLC
@@ -45,45 +45,22 @@
 
 Notes:
 
-*/
-component output="false" accessors="true" extends="HibachiProcess" {
-	
-	// Injected Entity
-	property name="accountLoyalty";
+--->
+<cfparam name="rc.accountloyalty" type="any" />
+<cfparam name="rc.processObject" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
-	// Data Properties
-	property name="pointsIn";
-	property name="pointsOut";
-	property name="accruementType" hb_formFieldType="select";
+<cf_HibachiEntityProcessForm entity="#rc.accountloyalty#" edit="#rc.edit#">
 	
-	// Option Properties
-	property name="accruementTypeOptions";
+	<cf_HibachiEntityActionBar type="preprocess" object="#rc.accountloyalty#">
+	</cf_HibachiEntityActionBar>
 	
-	public array function getAccruementTypeOptions() {
-		if(!structKeyExists(variables, "accruementTypeOptions")) {
-			
-			variables.accruementTypeOptions = [];
-			
-			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyAccruement.accruementType.itemFulfilled'), value="itemFulfilled"});
-			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyAccruement.accruementType.orderClosed'), value="orderClosed"});
-			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyAccruement.accruementType.fulfillmentMethodUsed'), value="fulfillementMethodeUsed"});
-			arrayAppend(variables.accruementTypeOptions, {name=rbKey('entity.accountLoyaltyAccruement.accruementType.enrollment'), value="enrollment"});
-		}
-		return variables.accruementTypeOptions;
-	}
+	<cf_HibachiPropertyRow>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="manualAdjustmentType" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="points" edit="#rc.edit#">
+		</cf_HibachiPropertyList>
+	</cf_HibachiPropertyRow>
 	
-	public numeric function getpointsIn() {
-		if(!structKeyExists(variables, "pointsIn")) {
-			variables.pointsIn = 0;
-		}
-		return variables.pointsIn;
-	}
-	
-	public numeric function getpointsOut() {
-		if(!structKeyExists(variables, "pointsOut")) {
-			variables.pointsOut = 0;
-		}
-		return variables.pointsOut;
-	}
-		
-}
+</cf_HibachiEntityProcessForm>
+

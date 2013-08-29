@@ -57,5 +57,5 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="pointsOut" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiProcessCaller action="admin:entity.preprocessaccountloyalty" entity="#rc.accountLoyalty#" processContext="createTransaction" class="btn" icon="plus" modal="true" />
+	<cf_HibachiProcessCaller action="admin:entity.preprocessaccountloyalty" entity="#rc.accountLoyalty#" processContext="manualTransaction" class="btn" icon="plus" modal="true" />
 </cfoutput>

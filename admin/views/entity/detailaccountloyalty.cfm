@@ -57,7 +57,10 @@ Notes:
 								   backQueryString="accountID=#rc.account.getAccountID()#"
 								   cancelAction="admin:entity.detailaccount"
 								   cancelQueryString="accountID=#rc.account.getAccountID()#" 
-								   deleteQueryString="redirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" />
+								   deleteQueryString="redirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#">
+								      
+			<cf_HibachiProcessCaller action="admin:entity.preprocessaccountloyalty" entity="#rc.accountLoyalty#" processContext="manualTransaction" type="list" modal="true" />		
+		</cf_HibachiEntityActionBar>
 		
 		<!--- Hidden field to attach this to the account --->
 		<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />

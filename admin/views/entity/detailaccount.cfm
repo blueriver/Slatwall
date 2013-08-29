@@ -63,6 +63,7 @@ Notes:
 			<cf_HibachiActionCaller action="admin:entity.createaccountemailaddress" queryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount" type="list" modal=true />
 			<cf_HibachiActionCaller action="admin:entity.createaccountphonenumber" queryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount" type="list" modal=true />
 			<cf_HibachiActionCaller action="admin:entity.createaccountpaymentmethod" queryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount" type="list" modal=true />
+			<cf_HibachiActionCaller action="admin:entity.createaccountloyalty" queryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount" type="list" modal=true />
 			<cf_HibachiActionCaller action="admin:entity.createcomment" querystring="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount" modal="true" type="list" />
 		</cf_HibachiEntityActionBar>
 		

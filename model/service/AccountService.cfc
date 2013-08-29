@@ -373,7 +373,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.account;
 	}
 	
-	// Account Loyalty Program
+	// Account Loyalty
 	public any function processAccountLoyalty_itemFulfilled(required any accountLoyalty, required struct data) {
 		
 		// Loop over arguments.accountLoyalty.getLoyaltyAccruements() as 'loyaltyAccruement'
@@ -670,15 +670,20 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.accountLoyalty;	
 	}
 	
-	public any function processAccountLoyalty_createTransaction(required any accountLoyalty, required any processObject) {
+	public any function processAccountLoyalty_manualTransaction(required any accountLoyalty, required any processObject) {
 		
 		// Create a new transaction
 		var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
 		
 		accountLoyaltyTransaction.setAccountLoyalty( arguments.accountLoyalty );
-		accountLoyaltyTransaction.setaccruementType( processObject.getAccruementType() );
-		accountLoyaltyTransaction.setpointsIn( processObject.getPointsIn() );
-		accountLoyaltyTransaction.setpointsIn( processObject.getPointsOut() );
+		accountLoyaltyTransaction.setaccruementType( processObject.getManualAdjustmentType() );
+		
+		if (processObject.getManualAdjustmentType() eq "manualIn"){
+			accountLoyaltyTransaction.setpointsIn( processObject.getPoints() );
+		}
+		else {
+			accountLoyaltyTransaction.setpointsOut( processObject.getPoints() );
+		}
 
 		return arguments.accountLoyalty;	
 	}

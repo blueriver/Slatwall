@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) ten24, LLC
@@ -45,23 +45,35 @@
 
 Notes:
 
---->
-<cfparam name="rc.accountloyalty" type="any" />
-<cfparam name="rc.processObject" type="any" />
-<cfparam name="rc.edit" type="boolean" />
+*/
+component output="false" accessors="true" extends="HibachiProcess" {
+	
+	// Injected Entity
+	property name="accountLoyalty";
 
-<cf_HibachiEntityProcessForm entity="#rc.accountloyalty#" edit="#rc.edit#">
+	// Data Properties
+	property name="points";
+	property name="manualAdjustmentType" hb_formFieldType="select";
 	
-	<cf_HibachiEntityActionBar type="preprocess" object="#rc.accountloyalty#">
-	</cf_HibachiEntityActionBar>
+	// Option Properties
+	property name="manualAdjustmentTypeOptions";
 	
-	<cf_HibachiPropertyRow>
-		<cf_HibachiPropertyList>
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accruementType" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="pointsIn" edit="#rc.edit#">
-			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="pointsOut" edit="#rc.edit#">
-		</cf_HibachiPropertyList>
-	</cf_HibachiPropertyRow>
+	public array function getManualAdjustmentTypeOptions() {
+		if(!structKeyExists(variables, "manualAdjustmentTypeOptions")) {
+			
+			variables.manualAdjustmentTypeOptions = [];
+			
+			arrayAppend(variables.manualAdjustmentTypeOptions, {name=rbKey('entity.accountLoyalty.manualAdjustmentType.manualIn'), value="manualIn"});
+			arrayAppend(variables.manualAdjustmentTypeOptions, {name=rbKey('entity.accountLoyalty.manualAdjustmentType.manualOut'), value="manualOut"});
+		}
+		return variables.manualAdjustmentTypeOptions;
+	}
 	
-</cf_HibachiEntityProcessForm>
-
+	public numeric function getPoints() {
+		if(!structKeyExists(variables, "points")) {
+			variables.points = 0;
+		}
+		return variables.points;
+	}
+		
+}
