@@ -59,6 +59,7 @@ Notes:
 		<cf_HibachiPropertyList>
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="accruementType" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="pointsIn" edit="#rc.edit#">
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="pointsOut" edit="#rc.edit#">
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 	

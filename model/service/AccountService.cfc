@@ -578,34 +578,90 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.accountLoyalty;	
 	}
 	
-	
 	public any function processAccountLoyalty_orderItemReceived(required any accountLoyalty, required struct data) {
 		
 		// Loop over the account loyalty Accruements
 		for(var loyaltyAccruement in arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements()) {	
 			
-			// If loyaltyAccruement is of type 'orderItemReceived'
+			// If loyaltyAccruement is of type 'itemFulfilled'
 			if (loyaltyAccruement.getAccruementType() eq 'itemFulfilled') {
 				
 				// Loop over the items in the stockReceiver
 				for(var orderItemReceived in arguments.data.stockReceiver.getStockReceiverItems()) {
 					
-					// Create a new accountLoyalty transaction	
-					var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
+					// START: Check Exclusions
+					var itemExcluded = false;
 					
-					// Setup the transaction
-					accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
-					accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
-					accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
-					accountLoyaltyTransaction.setOrder( orderItemReceived.getOrderItem().getOrder() );
-					accountLoyaltyTransaction.setOrderItem( orderItemReceived.getOrderItem() );
+					// Check all of the exclusions for an excluded product type
+					if(arrayLen(loyaltyAccruement.getExcludedProductTypes())) {
+						var excludedProductTypeIDList = "";
+						for(var i=1; i<=arrayLen(loyaltyAccruement.getExcludedProductTypes()); i++) {
+							excludedProductTypeIDList = listAppend(excludedProductTypeIDList, loyaltyAccruement.getExcludedProductTypes()[i].getProductTypeID());
+						}
 					
-					// If pointType is 'fixed' set points
-					if ( loyaltyAccruement.getPointType() eq 'fixed' ){
-						accountLoyaltyTransaction.setPointsOut( loyaltyAccruement.getPointQuantity() );
-					} // If pointType is 'pointPerDollar' set point times the qty times the item price
-					else if ( loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
-						accountLoyaltyTransaction.setPointsOut( loyaltyAccruement.getPointQuantity() * (orderItemReceived.getQuantity() * orderItemReceived.getOrderItem().getPrice()) );
+						for(var ptid=1; ptid<=listLen(orderItemReceived.getOrderItem().getSku().getProduct().getProductType().getProductTypeIDPath()); ptid++) {
+							if(listFindNoCase(excludedProductTypeIDList, listGetAt(orderItemReceived.getOrderItem().getSku().getProduct().getProductType().getProductTypeIDPath(), ptid))) {
+								itemExcluded = true;
+								break;
+							}	
+						}
+					}
+					
+					// If anything is excluded then we return false
+					if(	itemExcluded
+						||
+						loyaltyAccruement.hasExcludedProduct( orderItemReceived.getOrderItem().getSku().getProduct() )
+						||
+						loyaltyAccruement.hasExcludedSku( orderItemReceived.getOrderItem().getSku() )
+						||
+						( arrayLen( loyaltyAccruement.getExcludedBrands() ) && ( isNull( orderItemReceived.getOrderItem().getSku().getProduct().getBrand() ) || loyaltyAccruement.hasExcludedBrand( orderItemReceived.getOrderItem().getSku().getProduct().getBrand() ) ) )
+						) {
+						itemExcluded = true;
+					}
+					
+					
+					// START: Check Inclusions
+					var itemIncluded = false;
+					
+					if(arrayLen(loyaltyAccruement.getProductTypes())) {
+						var includedPropertyTypeIDList = "";
+						
+						for(var i=1; i<=arrayLen(loyaltyAccruement.getProductTypes()); i++) {
+							includedPropertyTypeIDList = listAppend(includedPropertyTypeIDList, loyaltyAccruement.getProductTypes()[i].getProductTypeID());
+						}
+						
+						for(var ptid=1; ptid<=listLen(orderDeliveryItem.getOrderItem().getSku().getProduct().getProductType().getProductTypeIDPath()); ptid++) {
+							if(listFindNoCase(includedPropertyTypeIDList, listGetAt(orderItemReceived.getOrderItem().getSku().getProduct().getProductType().getProductTypeIDPath(), ptid))) {
+								itemIncluded = true;
+								break;
+							}	
+						}
+					}
+						
+					// Verify that this orderItemReceived product is in the products, or skus for the accruement
+					if ( itemIncluded 
+						|| loyaltyAccruement.hasProduct(orderItemReceived.getOrderItem().getSku().getProduct()) 
+						|| loyaltyAccruement.hasSku(orderItemReceived.getOrderItem().getSku()) 
+						|| (!isNull(orderItemReceived.getOrderItem().getSku().getProduct().getBrand()) && loyaltyAccruement.hasBrand(orderItemReceived.getOrderItem().getSku().getProduct().getBrand())) 
+						){
+					
+						// Create a new accountLoyalty transaction	
+						var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
+						
+						// Setup the transaction
+						accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
+						accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
+						accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
+						accountLoyaltyTransaction.setOrder( orderItemReceived.getOrderItem().getOrder() );
+						accountLoyaltyTransaction.setOrderItem( orderItemReceived.getOrderItem() );
+						
+						// If pointType is 'fixed' set points
+						if ( loyaltyAccruement.getPointType() eq 'fixed' ){
+							accountLoyaltyTransaction.setPointsOut( loyaltyAccruement.getPointQuantity() );
+						} // If pointType is 'pointPerDollar' set point times the qty times the item price
+						else if ( loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
+							accountLoyaltyTransaction.setPointsOut( loyaltyAccruement.getPointQuantity() * (orderItemReceived.getQuantity() * orderItemReceived.getOrderItem().getPrice()) );
+						}
 					}
 				}
 			}
@@ -622,6 +678,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		accountLoyaltyTransaction.setAccountLoyalty( arguments.accountLoyalty );
 		accountLoyaltyTransaction.setaccruementType( processObject.getAccruementType() );
 		accountLoyaltyTransaction.setpointsIn( processObject.getPointsIn() );
+		accountLoyaltyTransaction.setpointsIn( processObject.getPointsOut() );
 
 		return arguments.accountLoyalty;	
 	}

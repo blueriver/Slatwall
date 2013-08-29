@@ -50,8 +50,8 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.accountLoyalty.getAccountLoyaltyTransactionsSmartList()#">
-		
-		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />
+		<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" />
+		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />		
 		<cf_HibachiListingColumn propertyIdentifier="accruementType" />
 		<cf_HibachiListingColumn propertyIdentifier="pointsIn" />
 		<cf_HibachiListingColumn propertyIdentifier="pointsOut" />

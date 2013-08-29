@@ -53,6 +53,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Data Properties
 	property name="pointsIn";
+	property name="pointsOut";
 	property name="accruementType" hb_formFieldType="select";
 	
 	// Option Properties
@@ -76,6 +77,13 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			variables.pointsIn = 0;
 		}
 		return variables.pointsIn;
+	}
+	
+	public numeric function getpointsOut() {
+		if(!structKeyExists(variables, "pointsOut")) {
+			variables.pointsOut = 0;
+		}
+		return variables.pointsOut;
 	}
 		
 }
