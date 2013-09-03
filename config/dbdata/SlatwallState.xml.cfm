@@ -6,6 +6,7 @@
 		<column name="countryCode" fieldtype="id" />
 	</Columns>
 	<Records>
+		<!-- United States -->
 		<Record stateCode="AK" stateName="Alaska" countryCode="US" />
 		<Record stateCode="AL" stateName="Alabama" countryCode="US" />
 		<Record stateCode="AR" stateName="Arkansas" countryCode="US" />
@@ -60,6 +61,8 @@
 		<Record stateCode="AA" stateName="AA (Armed Forces Americas)" countryCode="US" />
 		<Record stateCode="AE" stateName="AE (Armed Forces Europe)" countryCode="US" />
 		<Record stateCode="AP" stateName="AP (Armed Forces Pacific)" countryCode="US" />
+		
+		<!-- Canada -->
 		<Record stateCode="AB" stateName="Alberta" countryCode="CA" />
 		<Record stateCode="BC" stateName="British Columbia" countryCode="CA" />
 		<Record stateCode="MB" stateName="Manitoba" countryCode="CA" />
@@ -73,5 +76,46 @@
 		<Record stateCode="QC" stateName="Quebec" countryCode="CA" />
 		<Record stateCode="SK" stateName="Saskatchewan" countryCode="CA" />
 		<Record stateCode="YT" stateName="Yukon" countryCode="CA" />
+		
+		<!-- Germany -->
+		<Record stateCode="BW" stateName="Baden-W&uuml;rttemberg" ISOCode="DE-BW" countryCode="DE" />
+		<Record stateCode="BY" stateName="Bayern" ISOCode="DE-BY" countryCode="DE" />
+		<Record stateCode="BE" stateName="Berlin" ISOCode="DE-BE" countryCode="DE" />
+		<Record stateCode="BB" stateName="Brandenburg" ISOCode="DE-BB" countryCode="DE" />
+		<Record stateCode="HB" stateName="Bremen" ISOCode="DE-HB" countryCode="DE" />
+		<Record stateCode="HH" stateName="Hamburg" ISOCode="DE-HH" countryCode="DE" />
+		<Record stateCode="HE" stateName="Hessen" ISOCode="DE-HE" countryCode="DE" />
+		<Record stateCode="MV" stateName="Mecklenburg-Vorpommern" ISOCode="DE-MV" countryCode="DE" />
+		<Record stateCode="NI" stateName="Niedersachsen" ISOCode="DE-NI" countryCode="DE" />
+		<Record stateCode="NW" stateName="Nordrhein-Westfalen" ISOCode="DE-NW" countryCode="DE" />
+		<Record stateCode="RP" stateName="Rheinland-Pfalz" ISOCode="DE-RP" countryCode="DE" />
+		<Record stateCode="SL" stateName="Saarland" ISOCode="DE-SL" countryCode="DE" />
+		<Record stateCode="SN" stateName="Sachsen" ISOCode="DE-SN" countryCode="DE" />
+		<Record stateCode="ST" stateName="Sachsen-Anhalt" ISOCode="DE-ST" countryCode="DE" />
+		<Record stateCode="SH" stateName="Schleswig-Holstein" ISOCode="DE-SH" countryCode="DE" />
+		<Record stateCode="TH" stateName="Th&uuml;ringen" ISOCode="DE-TH" countryCode="DE" />
+		
+		<!-- Sweden -->
+		<Record stateCode="SE-K" stateName="Blekinge l&auml;n" ISOCode="SE-K" countryCode="SE" />
+		<Record stateCode="SE-W" stateName="Dalarnas l&auml;n" ISOCode="SE-W" countryCode="SE" />
+		<Record stateCode="SE-I" stateName="Gotlands l&auml;n" ISOCode="SE-I" countryCode="SE" />
+		<Record stateCode="SE-X" stateName="G&auml;vleborgs l&auml;n" ISOCode="SE-X" countryCode="SE" />
+		<Record stateCode="SE-N" stateName="Hallands l&auml;n" ISOCode="SE-N" countryCode="SE" />
+		<Record stateCode="SE-Z" stateName="J&auml;mtlands l&auml;n" ISOCode="SE-Z" countryCode="SE" />
+		<Record stateCode="SE-F" stateName="J&ouml;nk&ouml;pings l&auml;n" ISOCode="SE-F" countryCode="SE" />
+		<Record stateCode="SE-H" stateName="Kalmar l&auml;n" ISOCode="SE-H" countryCode="SE" />
+		<Record stateCode="SE-G" stateName="Kronobergs l&auml;n" ISOCode="SE-G" countryCode="SE" />
+		<Record stateCode="SE-BD" stateName="Norrbottens l&auml;n" ISOCode="SE-BD" countryCode="SE" />
+		<Record stateCode="SE-M" stateName="Sk&aring;ne l&auml;n" ISOCode="SE-M" countryCode="SE" />
+		<Record stateCode="SE-AB" stateName="Stockholms l&auml;n" ISOCode="SE-AB" countryCode="SE" />
+		<Record stateCode="SE-D" stateName="S&ouml;dermanlands l&auml;n" ISOCode="SE-D" countryCode="SE" />
+		<Record stateCode="SE-C" stateName="Uppsala l&auml;n" ISOCode="SE-C" countryCode="SE" />
+		<Record stateCode="SE-S" stateName="V&auml;rmlands l&auml;n" ISOCode="SE-S" countryCode="SE" />
+		<Record stateCode="SE-AC" stateName="V&auml;sterbottens l&auml;n" ISOCode="SE-AC" countryCode="SE" />
+		<Record stateCode="SE-Y" stateName="V&auml;sternorrlands l&auml;n" ISOCode="SE-Y" countryCode="SE" />
+		<Record stateCode="SE-U" stateName="V&auml;stmanlands l&auml;n" ISOCode="SE-U" countryCode="SE" />
+		<Record stateCode="SE-O" stateName="V&auml;stra Götalands l&auml;n" ISOCode="SE-O" countryCode="SE" />
+		<Record stateCode="SE-T" stateName="&Ouml;rebro l&auml;n" ISOCode="SE-T" countryCode="SE" />
+		<Record stateCode="SE-E" stateName="&Ouml;sterg&ouml;tlands l&auml;n" ISOCode="SE-E" countryCode="SE" />
 	</Records>
 </Table>
