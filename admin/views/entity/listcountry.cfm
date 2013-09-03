@@ -51,5 +51,6 @@ Notes:
 <cf_HibachiEntityActionBar type="listing" object="#rc.countrySmartList#" />
 
 <cf_HibachiListingDisplay smartList="#rc.countrySmartList#" recordEditAction="admin:entity.editcountry">
-	<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="countryName" search="true" />
+	<cf_HibachiListingColumn propertyIdentifier="countryName" />
+	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
 </cf_HibachiListingDisplay>
