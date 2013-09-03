@@ -51,7 +51,7 @@ Notes:
 	<cffunction name="getRelatedCommentsForEntity" returntype="Array" access="public">
 		<cfargument name="primaryIDPropertyName" type="string" required="true" />
 		<cfargument name="primaryIDValue" type="string" required="true" />
-		<cfargument name="publicOnly" type="boolean" required="false" default="false" />
+		<cfargument name="publicFlag" type="any" required="false" default=""/>
 
 		<cftry>
 			<cfset var hql="SELECT NEW MAP(
@@ -66,8 +66,9 @@ Notes:
 			)
 			FROM
 				SlatwallCommentRelationship scr INNER JOIN scr.comment c WHERE scr.#left(arguments.primaryIDPropertyName,len(arguments.primaryIDPropertyName)-2)#.#arguments.primaryIDPropertyName# = ?">
-			<cfif arguments.publicOnly>
-				<cfset hql =hql & " and c.publicFlag=1">
+
+			<cfif isBoolean(arguments.publicFlag)>
+				<cfset hql =hql & " and c.publicFlag=" & IIF(arguments.publicFlag eq true,1,0)>
 			</cfif>
 
 			<cfset var results = ormExecuteQuery(hql, [arguments.primaryIDValue]) />
