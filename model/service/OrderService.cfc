@@ -654,7 +654,6 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var returnOrder = this.newOrder();
 		returnOrder.setAccount( arguments.order.getAccount() );
 		returnOrder.setOrderType( getSettingService().getTypeBySystemCode("otReturnOrder") );
-		returnOrder.setOrderStatusType( getSettingService().getTypeBySystemCode("ostNew") );
 		returnOrder.setCurrencyCode( arguments.order.getCurrencyCode() );
 		returnOrder.setReferencedOrder( arguments.order );
 		
@@ -692,16 +691,65 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					orderItem.setOrderReturn( orderReturn );
 					orderItem.setOrder( returnOrder );
 					
+					// Persist the new item
+					getHibachiDAO().save( orderItem );
+					
 				}
 				
 			}
 		}
 		
+		// Persit the new order
+		getHibachiDAO().save( returnOrder );
+		
 		// Recalculate the order amounts for tax and promotions
 		recalculateOrderAmounts( returnOrder );
 		
-		// Persit the new order
-		getHibachiDAO().save( returnOrder );
+		// Check to see if we are attaching an referenced orderPayment
+		if(len(arguments.processObject.getRefundOrderPaymentID())) {
+		
+			var originalOrderPayment = this.getOrderPayment( arguments.processObject.getRefundOrderPaymentID() );
+			
+			if(!isNull(originalOrderPayment)) {
+				var returnOrderPayment = this.newOrderPayment();
+				returnOrderPayment.copyFromOrderPayment( originalOrderPayment );
+				returnOrderPayment.setReferencedOrderPayment( originalOrderPayment );
+				returnOrderPayment.setOrder( returnOrder );
+				returnOrderPayment.setCurrencyCode( returnOrder.getCurrencyCode() );
+				returnOrderPayment.setOrderPaymentType( getSettingService().getType( '444df2f1cc40d0ea8a2de6f542ab4f1d' ) );
+				returnOrderPayment.setAmount( returnOrder.getTotal() * -1 );
+			}
+			
+		// Otherwise the order needs to have a new orderPayment created
+		} else {
+			
+			arguments.data.newOrderPayment.order.orderID = returnOrder.getOrderID();
+			arguments.data.newOrderPayment.amount = returnOrder.getTotal() * -1;
+			arguments.data.newOrderPayment.orderPaymentType.typeID = "444df2f1cc40d0ea8a2de6f542ab4f1d";
+			
+			returnOrder = this.processOrder(returnOrder, arguments.data, 'addOrderPayment');
+			
+		}
+		
+		// If the order doesn't have any errors, then we can flush the ormSession
+		if(!returnOrder.hasErrors()) {
+			getHibachiDAO().flushORMSession();
+			returnOrder = this.processOrder(returnOrder, {}, 'placeOrder');
+		}
+		
+		// If the process object was set to automatically receive these items, then we will do that
+		if(!returnOrder.hasErrors() && processObject.getReceiveItemsFlag()) {
+			var receiveData = {};
+			receiveData.locationID = orderReturn.getReturnLocation().getLocationID();
+			receiveData.orderReturnItems = [];
+			for(var returnItem in orderReturn.getOrderReturnItems()) {
+				var thisData = {};
+				thisData.orderReturnItem.orderItemID = returnItem.getOrderItemID();
+				thisData.quantity = returnItem.getQuantity();
+				arrayAppend(receiveData.orderReturnItems, thisData);
+			}
+			orderReturn = this.processOrderReturn(orderReturn, receiveData, 'receive');
+		}
 		
 		// Return the new order so that the redirect takes users to this new order
 		return returnOrder;
@@ -1190,6 +1238,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		getStockService().saveStockReceiver( stockReceiver );
 		
+		// Update the orderStatus
+		this.processOrder(arguments.orderReturn.getOrder(), {updateItems=true}, 'updateStatus');
+		
 		return arguments.orderReturn;
 	}
 	
@@ -1265,6 +1316,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// If this order payment has errors & has never had and amount Authorized, Received or Credited... then we can set it as invalid
 		if(arguments.orderPayment.hasErrors() && arguments.orderPayment.getAmountAuthorized() == 0 && arguments.orderPayment.getAmountReceived() == 0 && arguments.orderPayment.getAmountCredited() == 0 ) {
 			arguments.orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstInvalid') );
+		} else {
+			arguments.orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );
 		}
 		
 		// Attempt To Update The Order Status
