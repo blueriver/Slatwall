@@ -49,6 +49,14 @@ Notes:
 component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
 
 
+	public void function buildURL_works_with_no_prefix_before_qs() {
+		var smartList = request.slatwallScope.getSmartList("Product");
+		
+		var urlResponse = smartList.buildURL(queryAddition="p:current=3", currentURL="?p:current=2");
+		
+		assert(urlResponse eq '?p:current=3');
+	}
+
 	/*
 	public void function the_only_required_attribute_to_use_getEntitiesArray_is_entityName() {
 		var smartList = new Slatwall.model.utility.SmartList(entityName="SlatwallProduct");

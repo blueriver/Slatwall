@@ -826,14 +826,19 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 		}
 
 		// Setup the base of the new URL
-		var modifiedURL = listFirst(arguments.currentURL, "?") & "?";
+		if(findNoCase("?", arguments.currentURL) gt 1) {
+			var modifiedURL = listFirst(arguments.currentURL, "?") & "?";
+		} else {
+			var modifiedURL = "?";	
+		}
 		
 		// Turn the old query string into a struct
 		var oldQueryKeys = {};
 		
-		if(listLen(arguments.currentURL, "?") == 2) {
-			for(var i=1; i<=listLen(listLast(arguments.currentURL, "?"), "&"); i++) {
-				var keyValuePair = listGetAt(listLast(arguments.currentURL, "?"), i, "&");
+		if(findNoCase("?", arguments.currentURL)) {
+			var oldQueryString = right(arguments.currentURL, len(arguments.currentURL) - findNoCase("?", arguments.currentURL));
+			for(var i=1; i<=listLen(oldQueryString, "&"); i++) {
+				var keyValuePair = listGetAt(oldQueryString, i, "&");
 				oldQueryKeys[listFirst(keyValuePair,"=")] = listLast(keyValuePair,"=");
 			}
 		}
