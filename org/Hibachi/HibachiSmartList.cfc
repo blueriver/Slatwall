@@ -815,22 +815,13 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 	
 	public string function buildURL(required string queryAddition, boolean appendValues=true, boolean toggleKeys=true, string currentURL=variables.currentURL) {
 		// Generate full URL if one wasn't passed in
-		if(arguments.currentURL == "") {
-			//arguments.currentURL &= CGI.SCRIPT_NAME;
-			if(CGI.PATH_INFO != "" && CGI.PATH_INFO neq CGI.SCRIPT_NAME) {
-				arguments.currentURL &= CGI.PATH_INFO;	
-			}
+		if(!len(arguments.currentURL)) {
 			if(len(cgi.query_string)) {
 				arguments.currentURL &= "?" & CGI.QUERY_STRING;	
 			}
 		}
 
-		// Setup the base of the new URL
-		if(findNoCase("?", arguments.currentURL) gt 1) {
-			var modifiedURL = listFirst(arguments.currentURL, "?") & "?";
-		} else {
-			var modifiedURL = "?";	
-		}
+		var modifiedURL = "?";
 		
 		// Turn the old query string into a struct
 		var oldQueryKeys = {};
@@ -908,8 +899,10 @@ component accessors="true" persistent="false" output="false" extends="HibachiObj
 			modifiedURL &= "P#variables.dataKeyDelimiter#Show=#oldQueryKeys[ 'P#variables.dataKeyDelimiter#Show' ]#&";
 		}
 		
-		if(right(modifiedURL, 1) eq "&" || right(modifiedURL, 1) eq "?") {
+		if(right(modifiedURL, 1) eq "&") {
 			modifiedURL = left(modifiedURL, len(modifiedURL)-1);
+		} else if (right(modifiedURL, 1) eq "?") {
+			modifiedURL = "?c=1";
 		}
 		
 		// Always return lower case
