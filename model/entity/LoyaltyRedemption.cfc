@@ -89,11 +89,15 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public array function getRedemptionPointTypeOptions() {
-		return [
-			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.lifeTimeBalance'), value="lifeTimeBalance"},
-			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.loyaltyTermBalance'), value="loyaltyTermBalance"},
-			{name=rbKey('entity.loyaltyRedemption.redemptionPointType.usageBalance'), value="usageBalance"}
-		];
+		if(!structKeyExists(variables, "redemptionPointTypeOptions")) {
+			variables.redemptionPointTypeOptions = [];
+			var smartList = getService("loyaltyService").getLoyaltyTermSmartList();
+			smartList.addOrder("loyaltyTermName|ASC");
+			for(var loyaltyTerm in smartList.getRecords()) {
+				arrayAppend(variables.redemptionPointTypeOptions,{name=loyaltyTerm.getLoyaltyTermName(),value=loyaltyTerm.getLoyaltyTermID()});
+			}
+		}
+		return variables.redemptionPointTypeOptions;
 	}
 	
 	public array function getRedemptionTypeOptions() {
