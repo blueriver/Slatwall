@@ -43,7 +43,7 @@ Notes:
 	<cf_HibachiListingDisplay smartList="#rc.loyalty.getloyaltyRedemptionsSmartList()#"
 							   recordEditAction="admin:entity.editloyaltyRedemption"
 							   recorddetailaction="admin:entity.detailloyaltyRedemption">
-		<cf_HibachiListingColumn propertyIdentifier="nextRedemptionDateTime" tdclass="primary" />
+		<!---<cf_HibachiListingColumn propertyIdentifier="nextRedemptionDateTime" />--->
 		<cf_HibachiListingColumn propertyIdentifier="loyaltyTerm.termName" />
 		<cf_HibachiListingColumn propertyIdentifier="redemptionPointType" />
 		<cf_HibachiListingColumn propertyIdentifier="minimumPointQuantity" />

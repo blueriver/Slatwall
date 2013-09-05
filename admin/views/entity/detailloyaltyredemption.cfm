@@ -56,14 +56,13 @@ Notes:
 		<cf_HibachiPropertyRow>
 			<cf_HibachiPropertyList>
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="activeFlag" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="nextRedemptionDateTime" edit="#rc.edit#">
+				<!---<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="nextRedemptionDateTime" edit="#rc.edit#">--->
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="redemptionPointType" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="minimumPointQuantity" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="autoredemptionType" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="redemptionType" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="amountType" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="amount" edit="#rc.edit#">
-				
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="amount" edit="#rc.edit#">		
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
