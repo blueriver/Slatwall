@@ -476,14 +476,12 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			newOrderPayment.setTermPaymentAccount( arguments.order.getAccount() );
 		}
 		
-		// If the orderPayment had been around for a while, then we would need to 
-		
 		// Save the newOrderPayment
 		newOrderPayment = this.saveOrderPayment( newOrderPayment );
 		
 		// Attach 'createTransaction' errors to the order 
 		if(newOrderPayment.hasError('createTransaction')) {
-			arguments.order.addError('addOrderPayment', newOrderPayment.getError('createTransaction'));
+			arguments.order.addError('addOrderPayment', newOrderPayment.getError('createTransaction'), true);
 			
 		// Otherwise if no errors, and we are supposed to save as accountpayment, and an accountPaymentMethodID doesn't already exist then we can create one.
 		} else if (!newOrderPayment.hasErrors() && arguments.processObject.getSaveAccountPaymentMethodFlag() && isNull(newOrderPayment.getAccountPaymentMethod())) {
