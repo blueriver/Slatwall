@@ -271,7 +271,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			
 			for(var orderPayment in order.getOrderPayments()){
 				if(orderPayment.hasError('createTransaction')) {
-					orderPayment.addError('processing', orderPayment.getError('createTransaction'));
+					orderPayment.addError('processing', orderPayment.getError('createTransaction'), true);
 				}
 			}
 		}

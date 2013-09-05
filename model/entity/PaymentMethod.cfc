@@ -228,8 +228,6 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 	
 	// ============== START: Overridden Implicet Getters ===================
 	
-	
-	
 	// ==============  END: Overridden Implicet Getters ====================
 
 	// ================== START: Overridden Methods ========================
@@ -241,6 +239,17 @@ component entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persi
 	// ===================  END:  ORM Event Hooks  =========================
 	
 	// ================== START: Deprecated Methods ========================
+	
+	// The setting method is overridden so that any old frontend templates that are based on this will still work.
+	public any function setting( string settingName ) {
+		if(arguments.settingName eq "paymentMethodCheckoutTransactionType") {
+			if( !isNull(getPlaceOrderChargeTransactionType()) ){
+				return getPlaceOrderChargeTransactionType();
+			}
+			return 'none';
+		}
+		return super.setting(argumentcollection=arguments);
+	}
 	
 	public any function getIntegration() {
 		return getPaymentIntegration();
