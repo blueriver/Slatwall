@@ -507,6 +507,10 @@ component extends="HibachiService" accessors="true" output="false" {
 			}
 		}
 		
+		// TODO [paul]: Loop over all redemptions and find any that are auto-redemption based on the order being closed.  Then call processLoyaltyRedemption
+		// redemptionData = { account = accountLoyalty.getAccount() }
+		// loyaltyRedemption = getLoyaltyService().processLoyaltyRedeption( loyaltyRedemption, redemptionData, 'redeem')
+		
 		return arguments.accountLoyalty;	
 	}
 	

@@ -48,6 +48,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	// ===================== START: Process Methods ===========================
 	
+	// TODO [paul]: Add loyaltyRedemptionProcessing here... processLoyaltyRedeption_redeem() {}, your data will need to have the account in it
+	// Based on what is being redeemed we will either create a coupon, or assign to price group (for now).  Check minimumPointQuantity against the redeptionTermType
+	
 	// =====================  END: Process Methods ============================
 	
 	// ====================== START: Status Methods ===========================
