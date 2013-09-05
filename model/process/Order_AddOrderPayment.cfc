@@ -78,10 +78,12 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	public array function getAccountPaymentMethodIDOptions() {
 		if(!structKeyExists(variables, "accountPaymentMethodIDOptions")) {
 			variables.accountPaymentMethodIDOptions = [];
-			var pmArr = getOrder().getAccount().getAccountPaymentMethods();
-			for(var i=1; i<=arrayLen(pmArr); i++) {
-				if(!isNull(pmArr[i].getActiveFlag()) && pmArr[i].getActiveFlag()) {
-					arrayAppend(variables.accountPaymentMethodIDOptions, {name=pmArr[i].getSimpleRepresentation(), value=pmArr[i].getAccountPaymentMethodID()});	
+			if(!isNull(getOrder().getAccount())) {
+				var pmArr = getOrder().getAccount().getAccountPaymentMethods();
+				for(var i=1; i<=arrayLen(pmArr); i++) {
+					if(!isNull(pmArr[i].getActiveFlag()) && pmArr[i].getActiveFlag()) {
+						arrayAppend(variables.accountPaymentMethodIDOptions, {name=pmArr[i].getSimpleRepresentation(), value=pmArr[i].getAccountPaymentMethodID()});	
+					}
 				}
 			}
 			arrayAppend(variables.accountPaymentMethodIDOptions, {name=rbKey('define.new'), value=""});
