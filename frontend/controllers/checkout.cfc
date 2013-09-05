@@ -267,6 +267,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			// Redirect to order Confirmation
 			getFW().redirectExact(rc.$.createHREF(filename='order-confirmation'), false);
 			
+		} else {
+			
+			for(var orderPayment in order.getOrderPayments()){
+				if(orderPayment.hasError('createTransaction')) {
+					orderPayment.addError('processing', orderPayment.getError('createTransaction'));
+				}
+			}
 		}
 			
 		detail(rc);
