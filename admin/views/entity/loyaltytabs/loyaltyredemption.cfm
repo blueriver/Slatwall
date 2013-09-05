@@ -46,6 +46,7 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="nextRedemptionDateTime" tdclass="primary" />
 		<cf_HibachiListingColumn propertyIdentifier="loyaltyTerm.termName" />
 		<cf_HibachiListingColumn propertyIdentifier="redemptionPointType" />
+		<cf_HibachiListingColumn propertyIdentifier="minimumPointQuantity" />
 		<cf_HibachiListingColumn propertyIdentifier="autoredemptionType" />
 		<cf_HibachiListingColumn propertyIdentifier="redemptionType" />
 		<cf_HibachiListingColumn propertyIdentifier="amountType" />
