@@ -1320,8 +1320,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );
 		}
 		
-		// Attempt To Update The Order Status
-		this.processOrder(arguments.orderPayment.getOrder(), {}, 'updateStatus');
+		// Flush the statusType for the orderPayment
+		getHibachiDAO().flushORMSession();
+		
+		// If no errors, attempt To Update The Order Status
+		if(!arguments.orderPayment.hasErrors()) {
+			this.processOrder(arguments.orderPayment.getOrder(), {}, 'updateStatus');	
+		}
 		
 		return arguments.orderPayment;
 		
