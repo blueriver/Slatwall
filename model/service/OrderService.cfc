@@ -925,6 +925,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public any function processOrder_updateStatus(required any order, struct data) {
 		param name="arguments.data.updateItems" default="false";
+		
+		// Get the original order status code
 		var originalOrderStatus = arguments.order.getOrderStatusType().getSystemCode();
 		
 		// First we make sure that this order status is not 'closed', 'canceld', 'notPlaced' or 'onHold' because we cannot automatically update those statuses
@@ -948,8 +950,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 		}
 		
-		// If the order status is not 'closed'
-		if( !( listFindNoCase("ostClosed", arguments.order.getOrderStatusType().getSystemCode()) && listFindNoCase("ostClosed", originalOrderStatus) ) ) {
+		// If the original order status is not 'closed', and now the order is closed, then we can run the promotion logics
+		if( originalOrderStatus neq "ostClosed" and arguments.order.getOrderStatusType().getSystemCode() eq "ostClosed" ) {
 			
 			// Loop over the loyalties that the account on the order has and call the processAccountLoyalty with context of 'orderClosed'
 			for(var accountLoyalty in arguments.order.getAccount().getAccountLoyalties()) {
@@ -960,6 +962,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				// Call the process method with 'orderClosed' as context
 				getAccountService().processAccountLoyalty(accountLoyalty, orderClosedData, 'orderClosed');
 			}
+
 		}
 		return arguments.order;
 	}
