@@ -115,7 +115,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 	public array function getAmountTypeOptions() {
 		return [
 			{name=rbKey('entity.loyaltyRedemption.amountType.fixed'), value="fixed"},
-			{name=rbKey('entity.loyaltyRedemption.amountType.pointPerDollar'), value="pointPerDollar"}
+			{name=rbKey('entity.loyaltyRedemption.amountType.dollarPerPoint'), value="dollarPerPoint"}
 		];
 	}
 	
