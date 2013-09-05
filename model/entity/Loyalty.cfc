@@ -47,7 +47,8 @@ component displayname="Loyalty" entityname="SlatwallLoyalty" table="SwLoyalty" p
 	property name="loyaltyAccruements" singularname="loyaltyAccruement" cfc="LoyaltyAccruement" type="array" fieldtype="one-to-many" fkcolumn="loyaltyID" cascade="all-delete-orphan" inverse="true";
 	property name="loyaltyRedemptions" singularname="loyaltyRedemption" cfc="LoyaltyRedemption" type="array" fieldtype="one-to-many" fkcolumn="loyaltyID" cascade="all-delete-orphan" inverse="true";
 	property name="accountLoyalties" singularname="accountLoyalty" cfc="AccountLoyalty" type="array" fieldtype="one-to-many" fkcolumn="loyaltyID" cascade="all-delete-orphan" inverse="true";
-	
+	property name="loyaltyTerms" singularname="loyaltyTerm" cfc="LoyaltyTerm" type="array" fieldtype="one-to-many" fkcolumn="loyaltyID" cascade="all-delete-orphan" inverse="true";
+		
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
@@ -89,7 +90,14 @@ component displayname="Loyalty" entityname="SlatwallLoyalty" table="SwLoyalty" p
 	public void function removeAccountLoyalty(required any accountLoyalty) {    
 		arguments.accountLoyalty.removeLoyalty( this );    
 	}
-
+	
+	// Loyalty Terms (one-to-many)
+	public void function addLoyaltyTerm(required any loyaltyTerm) {    
+		arguments.loyaltyTerm.setLoyalty( this );    
+	}    
+	public void function removeLoyaltyTerm(required any loyaltyTerm) {    
+		arguments.loyaltyTerm.removeLoyalty( this );    
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
