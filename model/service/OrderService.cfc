@@ -1417,7 +1417,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 			
 			// Loop over any orderPayments that were just populated, and may have previously been marked as invalid.  This is specifically used for the legacy checkouts on repeated attempts
-			if(structKeyExists(arguments.order.getPopulatedSubProperties(),"orderPayments")) {
+			if(!isNull(arguments.order.getPopulatedSubProperties()) && structKeyExists(arguments.order.getPopulatedSubProperties(), "orderPayments")) {
 				for(var orderPayment in arguments.order.getPopulatedSubProperties().orderPayments) {
 					if(!orderPayment.hasErrors()) {
 						orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );
