@@ -99,9 +99,11 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	public array function getAccountAddressIDOptions() {
 		if(!structKeyExists(variables, "accountAddressIDOptions")) {
 			variables.accountAddressIDOptions = [];
-			var aaArr = getOrder().getAccount().getAccountAddresses();
-			for(var i=1; i<=arrayLen(aaArr); i++) {
-				arrayAppend(variables.accountAddressIDOptions, {name=aaArr[i].getSimpleRepresentation(), value=aaArr[i].getAccountAddressID()});
+			if(!isNull(getOrder().getAccount())) {
+				var aaArr = getOrder().getAccount().getAccountAddresses();
+				for(var i=1; i<=arrayLen(aaArr); i++) {
+					arrayAppend(variables.accountAddressIDOptions, {name=aaArr[i].getSimpleRepresentation(), value=aaArr[i].getAccountAddressID()});
+				}	
 			}
 			arrayAppend(variables.accountAddressIDOptions, {name=rbKey('define.new'), value=""});
 		}
