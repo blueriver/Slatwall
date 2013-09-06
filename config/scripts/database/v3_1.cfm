@@ -51,7 +51,7 @@ Notes:
 
 <!--- Move checkout setting --->
 <cftry>
-	<cfquery name="local.oldmuracheckoutsettings">
+	<cfquery name="local.oldmurasettings">
 		SELECT
 			settingValue,
 			paymentMethodID
@@ -61,24 +61,24 @@ Notes:
 			settingName = 'paymentMethodCheckoutTransactionType'
 	</cfquery>
 	
-	<cfloop query="local.oldmuracheckoutsettings">
-		<cfif len(local.oldmuracheckoutsettings.paymentMethodID)>
+	<cfloop query="local.oldmurasettings">
+		<cfif len(local.oldmurasettings.paymentMethodID)>
 			<cfquery name="local.updatepaymentmethod">
 				UPDATE
 					SwPaymentMethod
 				SET
-					placeOrderChargeTransactionType = '#local.oldmuracheckoutsettings.settingValue#'
+					placeOrderChargeTransactionType = '#local.oldmurasettings.settingValue#'
 				WHERE
 					placeOrderChargeTransactionType is null
 				  AND
-				  	paymentMethodID = '#local.oldmuracheckoutsettings.paymentMethodID#'
+				  	paymentMethodID = '#local.oldmurasettings.paymentMethodID#'
 			</cfquery>
 		<cfelse>
 			<cfquery name="local.updatepaymentmethod">
 				UPDATE
 					SwPaymentMethod
 				SET
-					placeOrderChargeTransactionType = '#local.oldmuracheckoutsettings.settingValue#'
+					placeOrderChargeTransactionType = '#local.oldmurasettings.settingValue#'
 				WHERE
 					placeOrderChargeTransactionType is null
 				  AND
@@ -92,7 +92,105 @@ Notes:
 	</cfquery>
 	
 	<cfcatch>
-		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Changeing the checkoutTransactionType setting">
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Changeing the paymentMethodCheckoutTransactionType setting">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+
+<!--- Move store CC w/Order setting --->
+<cftry>
+	<cfquery name="local.oldmurasettings">
+		SELECT
+			settingValue,
+			paymentMethodID
+		FROM
+			SwSetting
+		WHERE
+			settingName = 'paymentMethodStoreCreditCardNumberWithOrder'
+	</cfquery>
+	
+	<cfloop query="local.oldmurasettings">
+		<cfif len(local.oldmurasettings.paymentMethodID)>
+			<cfquery name="local.updatepaymentmethod">
+				UPDATE
+					SwPaymentMethod
+				SET
+					saveOrderPaymentEncryptFlag = '#local.oldmurasettings.settingValue#'
+				WHERE
+					saveOrderPaymentEncryptFlag is null
+				  AND
+				  	paymentMethodID = '#local.oldmurasettings.paymentMethodID#'
+			</cfquery>
+		<cfelse>
+			<cfquery name="local.updatepaymentmethod">
+				UPDATE
+					SwPaymentMethod
+				SET
+					saveOrderPaymentEncryptFlag = '#local.oldmurasettings.settingValue#'
+				WHERE
+					saveOrderPaymentEncryptFlag is null
+				  AND
+				  	paymentMethodType = 'creditCard'
+			</cfquery>
+		</cfif>
+	</cfloop>
+	
+	<cfquery name="local.removeoldmurasetting">
+		DELETE FROM SwSetting WHERE settingName = 'paymentMethodStoreCreditCardNumberWithOrder'	
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Changeing the paymentMethodStoreCreditCardNumberWithOrder setting">
+		<cfset local.scriptHasErrors = true />
+	</cfcatch>
+</cftry>
+
+
+<!--- Move store CC w/Order setting --->
+<cftry>
+	<cfquery name="local.oldmurasettings">
+		SELECT
+			settingValue,
+			paymentMethodID
+		FROM
+			SwSetting
+		WHERE
+			settingName = 'paymentMethodStoreCreditCardNumberWithAccount'
+	</cfquery>
+	
+	<cfloop query="local.oldmurasettings">
+		<cfif len(local.oldmurasettings.paymentMethodID)>
+			<cfquery name="local.updatepaymentmethod">
+				UPDATE
+					SwPaymentMethod
+				SET
+					saveAccountPaymentMethodEncryptFlag = '#local.oldmurasettings.settingValue#'
+				WHERE
+					saveAccountPaymentMethodEncryptFlag is null
+				  AND
+				  	paymentMethodID = '#local.oldmurasettings.paymentMethodID#'
+			</cfquery>
+		<cfelse>
+			<cfquery name="local.updatepaymentmethod">
+				UPDATE
+					SwPaymentMethod
+				SET
+					saveAccountPaymentMethodEncryptFlag = '#local.oldmurasettings.settingValue#'
+				WHERE
+					saveAccountPaymentMethodEncryptFlag is null
+				  AND
+				  	paymentMethodType = 'creditCard'
+			</cfquery>
+		</cfif>
+	</cfloop>
+	
+	<cfquery name="local.removeoldmurasetting">
+		DELETE FROM SwSetting WHERE settingName = 'paymentMethodStoreCreditCardNumberWithAccount'	
+	</cfquery>
+	
+	<cfcatch>
+		<cflog file="Slatwall" text="ERROR UPDATE SCRIPT - Changeing the paymentMethodStoreCreditCardNumberWithOrder setting">
 		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
