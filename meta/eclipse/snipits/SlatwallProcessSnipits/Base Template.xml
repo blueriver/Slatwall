@@ -1,4 +1,8 @@
-<!---
+<?xml version="1.0" encoding="utf-8"?>
+<snippet filetemplate="false" extension="">
+<name>Base Template</name>
+<help></help>
+<starttext><![CDATA[/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) ten24, LLC
@@ -45,34 +49,49 @@
 
 Notes:
 
---->
-<cfparam name="rc.order" type="any" />
-<cfparam name="rc.edit" type="boolean" />
+*/
+component output="false" accessors="true" extends="HibachiProcess" {
 
-<cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.order.getSaleItemSmartList()#"
-							  recordDetailAction="admin:entity.detailorderitem"
-							  recordEditAction="admin:entity.editorderitem">
-							    
-		<cf_HibachiListingColumn propertyIdentifier="sku.skuCode" />
-		<cf_HibachiListingColumn propertyIdentifier="sku.product.calculatedTitle" />
-		<cf_HibachiListingColumn propertyIdentifier="sku.skuDefinition" />
-		<cf_HibachiListingColumn propertyIdentifier="orderItemStatusType.type" />
-		<cf_HibachiListingColumn propertyIdentifier="quantity" />
-		<cf_HibachiListingColumn propertyIdentifier="price" />
-		<cf_HibachiListingColumn propertyIdentifier="discountAmount" />
-		<cf_HibachiListingColumn propertyIdentifier="extendedPriceAfterDiscount" />
-		<cf_HibachiListingColumn propertyIdentifier="quantityDelivered" />
-	</cf_HibachiListingDisplay>
+	// Injected Entity
+	property name="$${objectName}";
 	
-	<!--- If in edit and order is of correct status then we can add sale order items --->
-	<cfif rc.edit and listFindNoCase("ostNotPlaced,ostNew,ostProcessing,ostOnHold", rc.order.getOrderStatusType().getSystemCode())>
-		<cfset rc.addSkuAddStockType = "oitSale" />
-		
-		<cf_HibachiTabGroup tabLocation="top">
-			<cf_HibachiTab view="admin:entity/ordertabs/addsku" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.sku')#" />
-			<cf_HibachiTab view="admin:entity/ordertabs/addstock" text="#$.slatwall.rbKey('define.add')# #$.slatwall.rbKey('entity.stock')#" />
-		</cf_HibachiTabGroup>
-	</cfif>
+	// Lazy / Injected Objects
 	
-</cfoutput>
+	// New Properties
+
+	// Data Properties (ID's)
+	
+	// Data Properties (Inputs)
+	
+	// Data Properties (Related Entity Populate)
+	
+	// Data Properties (Object / Array Populate)
+	
+	// Option Properties
+	
+	// Helper Properties
+	
+	// ======================== START: Defaults ============================
+	
+	// ========================  END: Defaults =============================
+
+	// =================== START: Lazy Object Helpers ======================
+	
+	// ===================  END: Lazy Object Helpers =======================
+	
+	// ================== START: New Property Helpers ======================
+	
+	// ==================  END: New Property Helpers =======================
+	
+	// ====================== START: Data Options ==========================
+	
+	// ======================  END: Data Options ===========================
+	
+	// ===================== START: Helper Methods =========================
+	
+	// =====================  END: Helper Methods ==========================
+	
+	
+}]]></starttext>
+<endtext><![CDATA[]]></endtext>
+</snippet>
