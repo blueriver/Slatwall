@@ -473,7 +473,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public any function processAccountLoyalty_orderClosed(required any accountLoyalty, required struct data) {
 		
-		// Loop over arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements() as 'loyaltyAccruement'
+		// Loop over account loyalty accruements
 		for(var loyaltyAccruement in arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements()) {	
 			
 			// If loyaltyAccruement eq 'orderClosed' as the type
@@ -510,6 +510,23 @@ component extends="HibachiService" accessors="true" output="false" {
 		// TODO [paul]: Loop over all redemptions and find any that are auto-redemption based on the order being closed.  Then call processLoyaltyRedemption
 		// redemptionData = { account = accountLoyalty.getAccount() }
 		// loyaltyRedemption = getLoyaltyService().processLoyaltyRedeption( loyaltyRedemption, redemptionData, 'redeem')
+		
+		// Loop over account loyalty redemptions
+		for(var loyaltyRedemption in arguments.accountLoyalty.getLoyalty().getLoyaltyRedemptions()) {	
+			
+			// If loyalty auto redemption eq 'orderClosed' as the type
+			if (loyaltyRedemption.getAutoRedemptionType() eq 'orderClosed') {
+
+				// If order satus is closed
+				if ( listFindNoCase("ostClosed",arguments.data.order.getorderStatusType().getSystemCode()) ){
+					redemptionData = { 
+						account = arguments.accountLoyalty.getAccount() 
+					};
+				
+					getLoyaltyService().processLoyaltyRedemption( loyaltyRedemption, redemptionData, 'redeem');
+				}	
+			}
+		}
 		
 		return arguments.accountLoyalty;	
 	}

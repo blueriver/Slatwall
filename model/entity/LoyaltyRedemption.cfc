@@ -40,7 +40,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 	
 	// Persistent Properties
 	property name="loyaltyRedemptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="redemptionPointType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
+	property name="redemptionPointType" ormType="string" hb_formFieldType="select";
 	property name="redemptionType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="autoRedemptionType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
 	property name="amountType" ormType="string" hb_formatType="rbKey" hb_formFieldType="select";
@@ -52,8 +52,8 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 	
 	// Related Object Properties (many-to-one)
 	property name="loyalty" cfc="Loyalty" fieldtype="many-to-one" fkcolumn="loyaltyID";
-	property name="loyaltyTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="loyaltyTermID";
-	property name="autoRedemptionTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="autoRedemptionTermID";
+	property name="loyaltyTerm" cfc="LoyaltyTerm" fieldtype="many-to-one" fkcolumn="loyaltyTermID";
+	property name="autoRedemptionTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="autoRedemptionTermID" hb_optionsNullRBKey="define.never";
 	property name="priceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="priceGroupID";
 	
 	// Related Object Properties (one-to-many)
@@ -93,8 +93,9 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 			variables.redemptionPointTypeOptions = [];
 			var smartList = getService("loyaltyService").getLoyaltyTermSmartList();
 			smartList.addOrder("loyaltyTermName|ASC");
+			//variables.redemptionPointTypeOptions = [{name=rbKey('define.select'), value=''}];
 			for(var loyaltyTerm in smartList.getRecords()) {
-				arrayAppend(variables.redemptionPointTypeOptions,{name=loyaltyTerm.getLoyaltyTermName(),value=loyaltyTerm.getLoyaltyTermID()});
+				arrayAppend(variables.redemptionPointTypeOptions,{name=loyaltyTerm.getLoyaltyTermName(),value=loyaltyTerm.getLoyaltyTermName()});
 			}
 		}
 		return variables.redemptionPointTypeOptions;
@@ -127,7 +128,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// AccountLoyaltyTransaction (one-to-many)
+	// Account Loyalty Program Transaction (one-to-many)
 	public void function addAccountLoyaltyTransaction(required any accountLoyaltyTransaction) {
 		arguments.accountLoyaltyTransaction.setLoyaltyRedemption( this );
 	}
@@ -186,7 +187,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.brands, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.brand.getLoyaltyRedemption(), this);
+		var thatIndex = arrayFind(arguments.brand.getLoyaltyRedemptions(), this);
 		if(thatIndex > 0) {
 			arrayDeleteAt(arguments.brand.getLoyaltyRedemptions(), thatIndex);
 		}
@@ -206,7 +207,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 		if(thisIndex > 0) {    
 			arrayDeleteAt(variables.skus, thisIndex);    
 		}
-		var thatIndex = arrayFind(arguments.sku.getLoyaltyRedemption(), this);
+		var thatIndex = arrayFind(arguments.sku.getLoyaltyRedemptions(), this);
 		if(thatIndex > 0) {
 			arrayDeleteAt(arguments.sku.getLoyaltyRedemptions(), thatIndex);
 		}   
@@ -226,9 +227,9 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.products, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.products.getLoyaltyRedemption(), this);
+		var thatIndex = arrayFind(arguments.product.getLoyaltyRedemptions(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.products.getLoyaltyRedemptions(), thatIndex);
+			arrayDeleteAt(arguments.product.getLoyaltyRedemptions(), thatIndex);
 		} 
 	}
 	
@@ -246,7 +247,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.productTypes, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.productType.getLoyaltyRedemption(), this);
+		var thatIndex = arrayFind(arguments.productType.getLoyaltyRedemptions(), this);
 		if(thatIndex > 0) {
 			arrayDeleteAt(arguments.productType.getLoyaltyRedemptions(), thatIndex);
 		}
@@ -266,7 +267,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 		if(thisIndex > 0) {    
 			arrayDeleteAt(variables.excludedBrands, thisIndex);    
 		}
-		var thatIndex = arrayFind(arguments.brand.getLoyaltyRedemptionExclusion(), this);    
+		var thatIndex = arrayFind(arguments.brand.getLoyaltyRedemptionExclusions(), this);    
 		if(thatIndex > 0) {    
 			arrayDeleteAt(arguments.brand.getLoyaltyRedemptionExclusions(), thatIndex);    
 		}    
@@ -286,7 +287,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedSkus, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.sku.getLoyaltyRedemptionExclusion(), this);    
+		var thatIndex = arrayFind(arguments.sku.getLoyaltyRedemptionExclusions(), this);    
 		if(thatIndex > 0) {    
 			arrayDeleteAt(arguments.sku.getLoyaltyRedemptionExclusions(), thatIndex);    
 		}  
@@ -306,7 +307,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedProducts, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.product.getLoyaltyRedemptionExclusion(), this);    
+		var thatIndex = arrayFind(arguments.product.getLoyaltyRedemptionExclusions(), this);    
 		if(thatIndex > 0) {    
 			arrayDeleteAt(arguments.product.getLoyaltyRedemptionExclusions(), thatIndex);    
 		}
@@ -326,7 +327,7 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedProductTypes, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.productType.getLoyaltyRedemptionExclusion(), this);    
+		var thatIndex = arrayFind(arguments.productType.getLoyaltyRedemptionExclusions(), this);    
 		if(thatIndex > 0) {    
 			arrayDeleteAt(arguments.productType.getLoyaltyRedemptionExclusions(), thatIndex);    
 		}

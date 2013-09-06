@@ -58,7 +58,16 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
+	
+	public int function calculateLifetimeBalance() {
+		var lifeTimeBalance = 0;
+		
+		for(var i=1; i <= ArrayLen(getAccountLoyaltyTransactions()); i++) {
+			lifeTimeBalance = precisionEvaluate(lifeTimeBalance + (i.getPointsIn() - i.getPointsOut()));
+		}
+		
+		return lifeTimeBalance;
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

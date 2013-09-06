@@ -44,10 +44,10 @@ Notes:
 							   recordEditAction="admin:entity.editloyaltyRedemption"
 							   recorddetailaction="admin:entity.detailloyaltyRedemption">
 		<!---<cf_HibachiListingColumn propertyIdentifier="nextRedemptionDateTime" />--->
-		<cf_HibachiListingColumn propertyIdentifier="loyaltyTerm.termName" />
 		<cf_HibachiListingColumn propertyIdentifier="redemptionPointType" />
 		<cf_HibachiListingColumn propertyIdentifier="minimumPointQuantity" />
-		<cf_HibachiListingColumn propertyIdentifier="autoredemptionType" />
+		<cf_HibachiListingColumn propertyIdentifier="autoRedemptionTerm.termName" />
+		<cf_HibachiListingColumn propertyIdentifier="autoRedemptionType" />
 		<cf_HibachiListingColumn propertyIdentifier="redemptionType" />
 		<cf_HibachiListingColumn propertyIdentifier="amountType" />
 		<cf_HibachiListingColumn propertyIdentifier="amount" />

@@ -145,7 +145,7 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.brands, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.brand.getLoyaltyAccruement(), this);
+		var thatIndex = arrayFind(arguments.brand.getLoyaltyAccruements(), this);
 		if(thatIndex > 0) {
 			arrayDeleteAt(arguments.brand.getLoyaltyAccruements(), thatIndex);
 		}
@@ -165,7 +165,7 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 		if(thisIndex > 0) {    
 			arrayDeleteAt(variables.skus, thisIndex);    
 		}
-		var thatIndex = arrayFind(arguments.sku.getLoyaltyAccruement(), this);
+		var thatIndex = arrayFind(arguments.sku.getLoyaltyAccruements(), this);
 		if(thatIndex > 0) {
 			arrayDeleteAt(arguments.sku.getLoyaltyAccruements(), thatIndex);
 		}   
@@ -185,9 +185,9 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.products, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.products.getLoyaltyAccruement(), this);
+		var thatIndex = arrayFind(arguments.product.getLoyaltyAccruements(), this);
 		if(thatIndex > 0) {
-			arrayDeleteAt(arguments.products.getLoyaltyAccruements(), thatIndex);
+			arrayDeleteAt(arguments.product.getLoyaltyAccruements(), thatIndex);
 		} 
 	}
 	
@@ -205,7 +205,7 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.productTypes, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.productType.getLoyaltyAccruement(), this);
+		var thatIndex = arrayFind(arguments.productType.getLoyaltyAccruements(), this);
 		if(thatIndex > 0) {
 			arrayDeleteAt(arguments.productType.getLoyaltyAccruements(), thatIndex);
 		}
@@ -225,7 +225,7 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 		if(thisIndex > 0) {    
 			arrayDeleteAt(variables.excludedBrands, thisIndex);    
 		}
-		var thatIndex = arrayFind(arguments.brand.getLoyaltyAccruementExclusion(), this);    
+		var thatIndex = arrayFind(arguments.brand.getLoyaltyAccruementExclusions(), this);    
 		if(thatIndex > 0) {    
 			arrayDeleteAt(arguments.brand.getLoyaltyAccruementExclusions(), thatIndex);    
 		}    
@@ -245,7 +245,7 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedSkus, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.sku.getLoyaltyAccruementExclusion(), this);    
+		var thatIndex = arrayFind(arguments.sku.getLoyaltyAccruementExclusions(), this);    
 		if(thatIndex > 0) {    
 			arrayDeleteAt(arguments.sku.getLoyaltyAccruementExclusions(), thatIndex);    
 		}  
@@ -265,7 +265,7 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedProducts, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.product.getLoyaltyAccruementExclusion(), this);    
+		var thatIndex = arrayFind(arguments.product.getLoyaltyAccruementExclusions(), this);    
 		if(thatIndex > 0) {    
 			arrayDeleteAt(arguments.product.getLoyaltyAccruementExclusions(), thatIndex);    
 		}
@@ -285,7 +285,7 @@ component displayname="LoyaltyAccruement" entityname="SlatwallLoyaltyAccruement"
 		if(thisIndex > 0) {
 			arrayDeleteAt(variables.excludedProductTypes, thisIndex);
 		}
-		var thatIndex = arrayFind(arguments.productType.getLoyaltyAccruementExclusion(), this);    
+		var thatIndex = arrayFind(arguments.productType.getLoyaltyAccruementExclusions(), this);    
 		if(thatIndex > 0) {    
 			arrayDeleteAt(arguments.productType.getLoyaltyAccruementExclusions(), thatIndex);    
 		}
