@@ -117,6 +117,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	property name="paymentAmountTotal" persistent="false" hb_formatType="currency";
 	property name="paymentAmountReceivedTotal" persistent="false" hb_formatType="currency";
 	property name="paymentAmountCreditedTotal" persistent="false" hb_formatType="currency";
+	property name="paymentAmountDue" persistent="false" hb_formatType="currency";
 	property name="paymentMethodOptionsSmartList" persistent="false";
 	property name="promotionCodeList" persistent="false";
 	property name="quantityDelivered" persistent="false";
@@ -461,15 +462,19 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		
 		for(var orderPayment in getOrderPayments()) {
 			if(orderPayment.getStatusCode() eq "opstActive" && !orderPayment.hasErrors()) {
-				if(orderPayment.getOrderPaymentType().getSystemCode() == "optCharge") {
-					totalPayments = precisionEvaluate(totalPayments + orderPayment.getAmount());
+				if(orderPayment.getOrderPaymentType().getSystemCode() eq 'optCharge') {
+					totalPayments = precisionEvaluate(totalPayments + orderPayment.getAmount());	
 				} else {
-					totalPayments = precisionEvaluate(totalPayments - orderPayment.getAmount());	
-				}	
+					totalPayments = precisionEvaluate(totalPayments - orderPayment.getAmount());
+				}
 			}
 		}
 		
 		return totalPayments;
+	}
+	
+	public numeric function getPaymentAmountDue(){
+		return precisionEvaluate(getTotal() - getPaymentAmountReceivedTotal() + getPaymentAmountCreditedTotal());
 	}
 	
 	public numeric function getPaymentAmountAuthorizedTotal() {

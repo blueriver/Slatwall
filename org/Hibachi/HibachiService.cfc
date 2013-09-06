@@ -277,7 +277,7 @@
 				return onMissingProcessMethod( missingMethodName, missingMethodArguments );
 			}
 
-			return super.onMissingMethod(argumentsCollection=arguments);
+			throw('You have called a method #arguments.missingMethodName#() which does not exists in the #getClassName()# entity.');
 		}
 		
 	
@@ -575,8 +575,8 @@
 		 * ...in which XXX is an ORM entity name.
 		 */
 		private function onMissingExportMethod( required string missingMethodName, required struct missingMethodArguments ){
-			var entityName = getProperlyCasedFullEntityName(missingMethodName.substring( 6 ));
-			var exportQry = getHibachiDAO().getExportQuery(entityName = entityName);
+			var entityMeta = getMetaData(getEntityObject( missingMethodName.substring( 6 ) ));
+			var exportQry = getHibachiDAO().getExportQuery(tableName = entityMeta.table);
 			
 			export(data=exportQry);
 		}
@@ -654,6 +654,10 @@
 			}
 			
 			return variables.entitiesMetaData;
+		}
+		
+		public any function getEntityMetaData( required string entityName ) {
+			return getEntitiesMetaData()[ getProperlyCasedShortEntityName( arguments.entityName ) ];
 		}
 		
 		// @hint returns the entity meta data object that is used by a lot of the helper methods below
@@ -774,7 +778,9 @@
 			return getHibachiDAO().getTableTopSortOrder(argumentcollection=arguments);
 		}
 	
-		public any function updateRecordSortOrder(required string recordIDColumn, required string recordID, required string tableName, required numeric newSortOrder) {
+		public any function updateRecordSortOrder(required string recordIDColumn, required string recordID, required string entityName, required numeric newSortOrder) {
+			var entityMetaData = getEntityMetaData( arguments.entityName );
+			arguments.tableName = entityMetaData.table;
 			getHibachiDAO().updateRecordSortOrder(argumentcollection=arguments);
 		}
 		

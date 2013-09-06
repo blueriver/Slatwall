@@ -9,17 +9,17 @@
 	<Records>
 		<Record updateScriptID="d7f98d33950797c468bd52f28968b1f1" scriptPath="database/indexes.cfm" loadOrder="1" maxExecutionCount="NULL" />
 		<Record updateScriptID="d7f98d36fffa2a2af72f94aaaa3bca52" scriptPath="database/activeFlags.cfm" loadOrder="2" maxExecutionCount="NULL" />
-		<Record updateScriptID="d7f98d35f8b584a031146b3e236e01d5" scriptPath="database/v2_0.cfm" loadOrder="5" maxExecutionCount="1" />
 		<Record updateScriptID="d7f98d37bfadcdf6de92d6de3ea5da55" scriptPath="database/v2_2.cfm" loadOrder="6" maxExecutionCount="1" />
 		<Record updateScriptID="d7f98d38dd25d3a8dd622a0230120dff" scriptPath="database/v2_3.cfm" loadOrder="7" maxExecutionCount="1" />
 		<Record updateScriptID="d7f98d39e4a5ed87a57612843f8c2d5b" scriptPath="database/v3_0.cfm" loadOrder="8" maxExecutionCount="1" />
+		<Record updateScriptID="d7f98d3bb59b0169d2a47677981db86d" scriptPath="database/v3_1.cfm" loadOrder="9" maxExecutionCount="1" />
 	</Records>
 </Table>
 
 <!--
 
 
-d7f98d3bb59b0169d2a47677981db86d
+
 d7f98d3cf759c885cee8b6e4da106224
 d7f98d3daebc6b5c370189009a89434b
 d7f98d3eedf8a3204d161224221ec8ca
