@@ -46,13 +46,20 @@
 Notes:
 
 --->
-<cfparam name="rc.countrySmartList" type="any" />
+<cfparam name="rc.country" type="any" />
 
-<cf_HibachiEntityActionBar type="listing" object="#rc.countrySmartList#" />
+<cfoutput>
+	<cf_HibachiListingDisplay smartList="#rc.country.getStatesSmartList()#"
+							  recordEditAction="admin:entity.editstate"
+							  recordEditQueryString="countryCode=#rc.country.getCountryCode()#"
+							  recordEditModal="true"
+							  recordDeleteAction="admin:entity.deletestate"
+							  recordDeleteQueryString="redirectAction=admin:entity.detailcountry&countryCode=#rc.country.getCountryCode()###tabstates">
 
-<cf_HibachiListingDisplay smartList="#rc.countrySmartList#"
-						  recordDetailAction="admin:entity.detailcountry"
-						  recordEditAction="admin:entity.editcountry">
-	<cf_HibachiListingColumn propertyIdentifier="countryName" />
-	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
-</cf_HibachiListingDisplay>
+		<cf_HibachiListingColumn propertyIdentifier="stateCode" />
+		<cf_HibachiListingColumn propertyIdentifier="stateName" />
+	</cf_HibachiListingDisplay>
+	
+	<cf_HibachiActionCaller action="admin:entity.createstate" class="btn" icon="plus" querystring="countryCode=#rc.country.getCountryCode()#" modal=true />
+</cfoutput>
+

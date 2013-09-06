@@ -46,13 +46,34 @@
 Notes:
 
 --->
-<cfparam name="rc.countrySmartList" type="any" />
+<cfparam name="rc.state" type="any">
+<cfparam name="rc.country" type="any" default="#rc.state.getCountry()#">
+<cfparam name="rc.edit" type="boolean">
 
-<cf_HibachiEntityActionBar type="listing" object="#rc.countrySmartList#" />
+<cfoutput>
+	<cf_HibachiEntityDetailForm object="#rc.state#" edit="#rc.edit#"
+								saveActionQueryString="countryCode=#rc.country.getCountryCode()#&sRedirectAction=admin:entity.detailCountry"
+								saveActionHash="tabstates">
+								
+		<cf_HibachiEntityActionBar type="detail" object="#rc.state#" edit="#rc.edit#" 
+									backAction="admin:entity.detailCountry" 
+								    backQueryString="countryCode=#rc.country.getCountryCode()#"
+								    deleteQueryString="redirectAction=admin:entity.detailCountry&countryCode=#rc.country.getCountryCode()#"
+									cancelAction="admin:entity.detailState"
+									cancelQueryString="stateCode=#rc.state.getStateCode()#&countryCode=#rc.country.getCountryCode()#">
+									
+		</cf_HibachiEntityActionBar>
+		
+		
+		<input type="hidden" name="countryCode" value="#rc.country.getCountryCode()#" />
+		
+		<cf_HibachiPropertyRow>
+			<cf_HibachiPropertyList>
+				<cf_HibachiPropertyDisplay object="#rc.state#" property="stateCode" edit="#rc.state.getNewFlag()#" />
+				<cf_HibachiPropertyDisplay object="#rc.state#" property="stateName" edit="#rc.edit#" />
+			</cf_HibachiPropertyList>
+		</cf_HibachiPropertyRow>
+		
+	</cf_HibachiEntityDetailForm>
+</cfoutput>
 
-<cf_HibachiListingDisplay smartList="#rc.countrySmartList#"
-						  recordDetailAction="admin:entity.detailcountry"
-						  recordEditAction="admin:entity.editcountry">
-	<cf_HibachiListingColumn propertyIdentifier="countryName" />
-	<cf_HibachiListingColumn propertyIdentifier="activeFlag" />
-</cf_HibachiListingDisplay>
