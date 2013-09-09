@@ -54,10 +54,10 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	property name="transactionType" type="string" ;
 	property name="transactionAmount" type="numeric";
 	property name="transactionCurrencyCode" type="string";
-	property name="isDuplicateFlag" type="boolean";
+	property name="transactionCurrencyISONumber" type="string";
 	
 	// Credit Card Info
-	property name="nameOnCreditCard" ormType="string";
+	property name="nameOnCreditCard" type="string";
 	property name="creditCardNumber" type="string"; 
 	property name="creditCardType" type="string"; 
 	property name="expirationMonth" type="numeric";   
@@ -107,6 +107,7 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	
 	// Deprecated
 	property name="transactionCurrency" ormtype="string";
+	property name="isDuplicateFlag" type="boolean";
 	
 	/*
 	Process Types
@@ -351,6 +352,7 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		// Populate relavent Misc Info
 		setAccountPaymentMethodID( arguments.accountPaymentMethod.getAccountPaymentMethodID() );
 		setAccountID( arguments.accountPaymentMethod.getAccount().getAccountID() );
+		setTransactionCurrencyISONumber(getService("currencyService").getCurrency(getTransactionCurrency(),true).getCurrencyISONumber());
 	}
 	
 	// Deprecated
