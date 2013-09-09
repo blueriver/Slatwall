@@ -62,6 +62,7 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="autoRedemptionType" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="autoRedemptionTerm" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="redemptionType" edit="#rc.edit#">
+				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="priceGroup" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="amountType" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="amount" edit="#rc.edit#">		
 			</cf_HibachiPropertyList>

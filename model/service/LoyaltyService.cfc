@@ -37,6 +37,8 @@ Notes:
 
 */
 component extends="HibachiService" persistent="false" accessors="true" output="false" {
+
+	property name="accountService" type="any";
 	
 	// ===================== START: Logical Methods ===========================
 	
@@ -55,11 +57,20 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		var lifeTimeBalance = arguments.data.getAccountLoyalty().calculateLifetimeBalance();
 		
 		// If loyalty redemption type eq 'priceGroupAssignment'
-		if (loyaltyRedemption.getRedemptionType() eq 'priceGroupAssignment') {
+		if (arguments.loyaltyRedemption.getRedemptionType() eq 'priceGroupAssignment') {
 			
-			if (lifeTimeBalance gt loyaltyRedemption.getMinimumPointQuantity()) {
+			if (lifeTimeBalance gt arguments.loyaltyRedemption.getMinimumPointQuantity()) {
 				
+				// Create a new transaction
+				var accountLoyaltyTransaction = getAccountService().newAccountLoyaltyTransaction();
 				
+				// Setup the transaction
+				accountLoyaltyTransaction.setRedemptionType( "priceGroupAssignment" );
+				accountLoyaltyTransaction.setAccountLoyalty( arguments.data.getAccountLoyalty() );
+				accountLoyaltyTransaction.setLoyaltyRedemption( arguments.loyaltyRedemption );	
+				
+				// Apply the qualifying price group on the account
+				arguments.data.addPriceGroup( arguments.loyaltyRedemption.getPriceGroup() );		
 			}
 			
 		}
