@@ -84,12 +84,17 @@ component entityname="SlatwallTerm" table="SwTerm" persistent="true" accessors="
 	
 	// Non-Persistent Properties
 
-	public any function getEndDate(any startDate = now()) {
+	public any function getEndDate(any startDate = now(), boolean multipleIterationsForFutureDateFlag=false) {
 		var endDate = arguments.startDate;
 		endDate = dateAdd('yyyy',val(getTermYears()),endDate);
 		endDate = dateAdd('m',val(getTermMonths()),endDate);
 		endDate = dateAdd('d',val(getTermDays()),endDate);
 		endDate = dateAdd('h',val(getTermHours()),endDate);
+		
+		if(arguments.multipleIterationsForFutureDateFlag && endDate < now()) {
+			return getEndDate(endDate, true);
+		}
+		
 		return endDate;
 	}
 
