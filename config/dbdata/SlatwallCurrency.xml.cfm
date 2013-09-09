@@ -63,7 +63,7 @@
 		<Record currencyCode="FKP" currencyISONumber="238" activeFlag="0" currencyName="FKP - Falkland Islands (Malvinas) Pound" currencySymbol="&#163;" />
 		<Record currencyCode="GBP" currencyISONumber="826" activeFlag="0" currencyName="GBP - United Kingdom Pound" currencySymbol="&#163;" />
 		<Record currencyCode="GEL" currencyISONumber="981" activeFlag="0" currencyName="GEL - Georgia Lari" currencySymbol="&#164;" />
-		<Record currencyCode="GGP" currencyISONumber="" activeFlag="0" currencyName="GGP - Guernsey Pound" currencySymbol="&#163;" />
+		<Record currencyCode="GGP" currencyISONumber="NULL" activeFlag="0" currencyName="GGP - Guernsey Pound" currencySymbol="&#163;" />
 		<Record currencyCode="GHS" currencyISONumber="936" activeFlag="0" currencyName="GHS - Ghana Cedi" currencySymbol="&#162;" />
 		<Record currencyCode="GIP" currencyISONumber="292" activeFlag="0" currencyName="GIP - Gibraltar Pound" currencySymbol="&#163;" />
 		<Record currencyCode="GMD" currencyISONumber="270" activeFlag="0" currencyName="GMD - Gambia Dalasi" currencySymbol="&#164;" />
@@ -77,12 +77,12 @@
 		<Record currencyCode="HUF" currencyISONumber="348" activeFlag="0" currencyName="HUF - Hungary Forint" currencySymbol="Hf" />
 		<Record currencyCode="IDR" currencyISONumber="360" activeFlag="0" currencyName="IDR - Indonesia Rupiah" currencySymbol="Rp" />
 		<Record currencyCode="ILS" currencyISONumber="376" activeFlag="0" currencyName="ILS - Israel Shekel" currencySymbol="&#8362;" />
-		<Record currencyCode="IMP" currencyISONumber="" activeFlag="0" currencyName="IMP - Isle of Man Pound" currencySymbol="&#163;" />
+		<Record currencyCode="IMP" currencyISONumber="NULL" activeFlag="0" currencyName="IMP - Isle of Man Pound" currencySymbol="&#163;" />
 		<Record currencyCode="INR" currencyISONumber="356" activeFlag="0" currencyName="INR - India Rupee" currencySymbol="&#164;" />
 		<Record currencyCode="IQD" currencyISONumber="368" activeFlag="0" currencyName="IQD - Iraq Dinar" currencySymbol="&#164;" />
 		<Record currencyCode="IRR" currencyISONumber="364" activeFlag="0" currencyName="IRR - Iran Rial" currencySymbol="&#65020;" />
 		<Record currencyCode="ISK" currencyISONumber="352" activeFlag="0" currencyName="ISK - Iceland Krona" currencySymbol="kr" />
-		<Record currencyCode="JEP" currencyISONumber="" activeFlag="0" currencyName="JEP - Jersey Pound" currencySymbol="&#163;" />
+		<Record currencyCode="JEP" currencyISONumber="NULL" activeFlag="0" currencyName="JEP - Jersey Pound" currencySymbol="&#163;" />
 		<Record currencyCode="JMD" currencyISONumber="388" activeFlag="0" currencyName="JMD - Jamaica Dollar" currencySymbol="J$" />
 		<Record currencyCode="JOD" currencyISONumber="400" activeFlag="0" currencyName="JOD - Jordan Dinar" currencySymbol="&#164;" />
 		<Record currencyCode="JPY" currencyISONumber="392" activeFlag="0" currencyName="JPY - Japan Yen" currencySymbol="&#165;" />
@@ -145,10 +145,10 @@
 		<Record currencyCode="SHP" currencyISONumber="654" activeFlag="0" currencyName="SHP - Saint Helena Pound" currencySymbol="&#163;" />
 		<Record currencyCode="SLL" currencyISONumber="694" activeFlag="0" currencyName="SLL - Sierra Leone Leone" currencySymbol="&#164;" />
 		<Record currencyCode="SOS" currencyISONumber="706" activeFlag="0" currencyName="SOS - Somalia Shilling" currencySymbol="S" />
-		<Record currencyCode="SPL" currencyISONumber="" activeFlag="0" currencyName="SPL - Seborga Luigino" currencySymbol="&#164;" />
+		<Record currencyCode="SPL" currencyISONumber="NULL" activeFlag="0" currencyName="SPL - Seborga Luigino" currencySymbol="&#164;" />
 		<Record currencyCode="SRD" currencyISONumber="968" activeFlag="0" currencyName="SRD - Suriname Dollar" currencySymbol="$" />
 		<Record currencyCode="STD" currencyISONumber="678" activeFlag="0" currencyName="STD - Sao Tome and Principe Dobra" currencySymbol="&#164;" />
-		<Record currencyCode="SVC" currencyISONumber="" activeFlag="0" currencyName="SVC - El Salvador Colon" currencySymbol="$" />
+		<Record currencyCode="SVC" currencyISONumber="NULL" activeFlag="0" currencyName="SVC - El Salvador Colon" currencySymbol="$" />
 		<Record currencyCode="SYP" currencyISONumber="760" activeFlag="0" currencyName="SYP - Syria Pound" currencySymbol="&#163;" />
 		<Record currencyCode="SZL" currencyISONumber="748" activeFlag="0" currencyName="SZL - Swaziland Lilangeni" currencySymbol="&#164;" />
 		<Record currencyCode="THB" currencyISONumber="764" activeFlag="0" currencyName="THB - Thailand Baht" currencySymbol="&#164;" />
@@ -158,7 +158,7 @@
 		<Record currencyCode="TOP" currencyISONumber="776" activeFlag="0" currencyName="TOP - Tonga Pa'anga" currencySymbol="&#164;" />
 		<Record currencyCode="TRY" currencyISONumber="949" activeFlag="0" currencyName="TRY - Turkey Lira" currencySymbol="&#164;" />
 		<Record currencyCode="TTD" currencyISONumber="780" activeFlag="0" currencyName="TTD - Trinidad and Tobago Dollar" currencySymbol="TT$" />
-		<Record currencyCode="TVD" currencyISONumber="" activeFlag="0" currencyName="TVD - Tuvalu Dollar" currencySymbol="$" />
+		<Record currencyCode="TVD" currencyISONumber="NULL" activeFlag="0" currencyName="TVD - Tuvalu Dollar" currencySymbol="$" />
 		<Record currencyCode="TWD" currencyISONumber="901" activeFlag="0" currencyName="TWD - Taiwan New Dollar" currencySymbol="NT$" />
 		<Record currencyCode="TZS" currencyISONumber="834" activeFlag="0" currencyName="TZS - Tanzania Shilling" currencySymbol="&#164;" />
 		<Record currencyCode="UAH" currencyISONumber="980" activeFlag="0" currencyName="UAH - Ukraine Hryvna" currencySymbol="&#8372;" />
@@ -177,7 +177,7 @@
 		<Record currencyCode="XPF" currencyISONumber="953" activeFlag="0" currencyName="XPF - Comptoirs Francais du Pacifique (CFP) Franc" currencySymbol="&#164;" />
 		<Record currencyCode="YER" currencyISONumber="886" activeFlag="0" currencyName="YER - Yemen Rial" currencySymbol="&#65020;" />
 		<Record currencyCode="ZAR" currencyISONumber="710" activeFlag="0" currencyName="ZAR - South Africa Rand" currencySymbol="R" />
-		<Record currencyCode="ZMK" currencyISONumber="" activeFlag="0" currencyName="ZMK - Zambia Kwacha" currencySymbol="&#164;" />
+		<Record currencyCode="ZMK" currencyISONumber="NULL" activeFlag="0" currencyName="ZMK - Zambia Kwacha" currencySymbol="&#164;" />
 		<Record currencyCode="ZWD" currencyISONumber="967" activeFlag="0" currencyName="ZWD - Zimbabwe Dollar" currencySymbol="Z$" />
 	</Records>
 </Table>

@@ -43,7 +43,7 @@ Notes:
 		<OrbitalConnectionUsername>#setting('username')#</OrbitalConnectionUsername>
 		<OrbitalConnectionPassword>#setting('password')#</OrbitalConnectionPassword>
 		<CustomerBin>#setting('bin')#</CustomerBin>
-		<CustomerMerchantID>#getMerchantIDByCurrencyCode( arguments.requestBean.getCurrencyCode() )#</CustomerMerchantID>
+		<CustomerMerchantID>#getMerchantIDByCurrencyCode( arguments.requestBean.getTransactionCurrencyCode() )#</CustomerMerchantID>
 		<CustomerName>#arguments.requestBean.getNameOnCreditCard()#</CustomerName>
 		<CustomerRefNum>#arguments.requestBean.getAccountID()#</CustomerRefNum>
 		<CustomerAddress1>#arguments.requestBean.getBillingStreetAddress()#</CustomerAddress1>
