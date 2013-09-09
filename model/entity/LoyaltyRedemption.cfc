@@ -91,9 +91,10 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 	public array function getRedemptionPointTypeOptions() {
 		if(!structKeyExists(variables, "redemptionPointTypeOptions")) {
 			variables.redemptionPointTypeOptions = [];
+			
 			var smartList = getService("loyaltyService").getLoyaltyTermSmartList();
 			smartList.addOrder("loyaltyTermName|ASC");
-			//variables.redemptionPointTypeOptions = [{name=rbKey('define.select'), value=''}];
+			
 			for(var loyaltyTerm in smartList.getRecords()) {
 				arrayAppend(variables.redemptionPointTypeOptions,{name=loyaltyTerm.getLoyaltyTermName(),value=loyaltyTerm.getLoyaltyTermName()});
 			}
@@ -352,6 +353,32 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert() {
+		
+		if ( getAutoRedemptionType() eq "loyaltyTermEnd" ) {
+			
+			if( !isNull(getLoyaltyTerm()) && !isNull(getLoyaltyTerm().getLoyaltyTermNextEndDateTime())) {
+				setNextRedemptionDateTime( getLoyaltyTerm().getLoyaltyTermNextEndDateTime() );
+			}
+		}
+		
+		super.preInsert();
+    }
+    
+    
+    public void function preUpdate() {
+		
+		if ( getAutoRedemptionType() eq "loyaltyTermEnd" ) {
+			
+			if( !isNull(getLoyaltyTerm()) && !isNull(getLoyaltyTerm().getLoyaltyTermNextEndDateTime())) {
+				setNextRedemptionDateTime( getLoyaltyTerm().getLoyaltyTermNextEndDateTime() );
+			}
+		}
+		
+		super.preUpdate();
+    }
+    
 	
 	// ===================  END:  ORM Event Hooks  =========================
 	

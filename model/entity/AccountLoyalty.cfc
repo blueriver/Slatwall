@@ -64,18 +64,20 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public int function getLifetimeBalance() {
-		var lifeTimeBalance = 0;
-		
-		// Loop over all the loyalty transactions of the account
-		for( var loyaltyTransaction in getAccountLoyaltyTransactions() ) {
+
+		if( !structKeyExists(variables, "lifetimeBalance") ) {
+			variables.lifetimeBalance = 0;
 			
-			// check expiration date and exclude expired points
-			if ( !isNull( loyaltyTransaction.getExpirationDate() ) && loyaltyTransaction.getExpirationDate() lt now() ) {
-				lifeTimeBalance = precisionEvaluate(lifeTimeBalance + (loyaltyTransaction.getPointsIn() - loyaltyTransaction.getPointsOut()));	
-			}	
+			// Loop over all the loyalty transactions of the account
+			for( var loyaltyTransaction in getAccountLoyaltyTransactions() ) {
+				
+				// check expiration date and exclude expired points
+				if ( !isNull( loyaltyTransaction.getExpirationDate() ) && loyaltyTransaction.getExpirationDate() lt now() ) {
+					variables.lifetimeBalance = precisionEvaluate(variables.lifetimeBalance + (loyaltyTransaction.getPointsIn() - loyaltyTransaction.getPointsOut()));	
+				}	
+			}
 		}
-		
-		return lifeTimeBalance;
+		return variables.lifetimeBalance;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

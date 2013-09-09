@@ -65,11 +65,15 @@ component displayname="Loyalty Term" entityname="SlatwallLoyaltyTerm" table="SwL
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-
+	property name="nextLoyaltyTermEndDateTime" persistent="false";
 
 
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getLoyaltyTermNextEndDateTime() {
+		return getTerm().getEndDate(now(),true);
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
