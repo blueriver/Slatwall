@@ -54,7 +54,7 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	property name="transactionType" type="string" ;
 	property name="transactionAmount" type="numeric";
 	property name="transactionCurrencyCode" type="string";
-	property name="isDuplicateFlag" type="boolean";
+	property name="transactionCurrencyISONumber" type="string";
 	
 	// Credit Card Info
 	property name="nameOnCreditCard" type="string";
@@ -104,12 +104,10 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 	// Only Used for 'chargePreAuthorization'
 	property name="preAuthorizationCode" type="string";
 	property name="preAuthorizationProviderTransactionID" type="string";
-
-	// TODO [greg]: Talk to sumit
-	property name="transactionCurrencyISONumber" type="string";
 	
 	// Deprecated
 	property name="transactionCurrency" ormtype="string";
+	property name="isDuplicateFlag" type="boolean";
 	
 	/*
 	Process Types
@@ -205,9 +203,6 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		setAccountPaymentID( arguments.accountPayment.getAccountPaymentID() );
 		setAccountID( arguments.accountPayment.getAccount().getAccountID() );
 		
-		// TODO [greg]: Talk to sumit
-		setTransactionCurrencyISONumber(getService("currencyService").getCurrency(getTransactionCurrency(),true).getCurrencyISONumber());
-
 	}
 	
 	public void function populatePaymentInfoWithOrderPayment(required any orderPayment) {
@@ -295,8 +290,6 @@ component accessors="true" output="false" extends="Slatwall.model.transient.Requ
 		setOrderID(arguments.orderPayment.getOrder().getOrderID());
 		setAccountID(arguments.orderPayment.getOrder().getAccount().getAccountID());
 		
-		// TODO [greg]: Talk to sumit
-		setTransactionCurrencyISONumber(getService("currencyService").getCurrency(getTransactionCurrency(),true).getCurrencyISONumber());
 	}
 	
 	public void function populatePaymentInfoWithAccountPaymentMethod(required any accountPaymentMethod) {
