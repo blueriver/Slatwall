@@ -221,4 +221,18 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		
 		return response;
 	}
+	
+	public string function getMerchantIDByCurrencyCode( required string currencyCode ) {
+		if(len(setting('merchantIDByCurrencyCodeList'))) {
+			var arr = listToArray(setting('merchantIDByCurrencyCodeList'));
+			for(var pair in arr) {
+				if(listLen(pair, "=") == 2 && listFirst(pair, "=") == arguments.currencyCode) {
+					return listLast(pair, "=");
+				}
+			}
+			
+		}
+		
+		return setting('merchantID');
+	}
 }

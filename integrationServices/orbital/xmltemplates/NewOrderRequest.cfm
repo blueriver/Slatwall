@@ -45,7 +45,7 @@ Notes:
 		<IndustryType>#setting('industryType')#</IndustryType>
 		<MessageType>#variables.transactionCodes[arguments.requestBean.getTransactionType()]#</MessageType>
 		<BIN>#setting('bin')#</BIN>
-		<MerchantID>#setting('merchantID')#</MerchantID>
+		<MerchantID>#getMerchantIDByCurrencyCode( arguments.requestBean.getCurrencyCode() )#</MerchantID>
 		<TerminalID>#setting('terminalID')#</TerminalID>
 		<CardBrand></CardBrand>
 		<AccountNum>#arguments.requestBean.getCreditCardNumber()#</AccountNum>

@@ -55,9 +55,18 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 			username = {fieldType="text"},
 			password = {fieldType="password", encryptValue=true},
 			merchantID = {fieldType="text"},
-			BIN = {fieldType="text"},
+			merchantIDByCurrencyCodeList = {fieldType="text"},
+			BIN = {fieldtype="select", defaultValue="000001", valueOptions=[
+				{name="000001 (Salem Platform)",value="000001"},
+				{name="000002 (PNS Platform)",value="000001"}
+			]},
 			terminalID = {fieldType="text"},
-			industryType = {fieldType="text"},
+			industryType = {fieldType="select", defaultValue="EC", valueOptions=[
+				{name="eCommerce (EC)",value="EC"},
+				{name="MOTO (MO)",value="MO"},
+				{name="Recurring (RC)",value="RC"},
+				{name="IVR (IV)",value="IV"}
+			]},
 			liveModeFlag = {fieldType="yesno", defaultValue="0"}
 		};
 		
