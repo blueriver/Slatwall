@@ -48,8 +48,46 @@ Notes:
 --->
 <cfcomponent extends="HibachiDAO">
 	
-	<cffunction name="eval" >
-		<cfargument name="recordIDCol" >
+	<cffunction name="getShortReferenceID" >
+		<cfargument name="referenceObjectID" type="string" required="true" />
+		<cfargument name="referenceObject" type="string" required="true" />
+		<cfargument name="createNewFlag" type="string" required="true" />
+		
+		<cfset var rs = "" />
+		<cfset var rsResult = "" />
+		
+		<cflock timeout="10" name="#arguments.referenceObject##arguments.referenceObjectID##arguments.createNewFlag#">
+			<cfquery name="rs">
+				SELECT
+					shortReferenceID
+				FROM
+					SwShortReference
+				WHERE
+					referenceObjectID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObjectID#" />
+				  AND
+					referenceObject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObject#" />
+			</cfquery>
+			
+			<!--- If the ID Was found --->
+			<cfif rs.recordCount>
+				<cfreturn rs.shortReferenceID />
+				
+			<!--- If no record found but create new is set to yes --->
+			<cfelseif arguments.createNewFlag>
+				<cfquery name="rs" result="rsResult">
+					INSERT INTO SwShortReference ('referenceObjectID', 'referenceObject') VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObjectID#" />, <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObject#" />)
+				</cfquery>
+				
+				<cfif getApplicationValue("databaseType") eq "MySQL">
+					<cfreturn rsResult.GENERATED_KEY />
+				<cfelse>
+					<cfreturn rsResult.IDENTITYCOL />
+				</cfif>
+				
+			</cfif>
+		</cflock>
+		
+		<cfreturn "" />
 	</cffunction>
 	
 	<cffunction name="recordUpdate" returntype="void">
