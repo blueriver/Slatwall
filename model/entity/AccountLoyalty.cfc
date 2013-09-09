@@ -66,9 +66,13 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	public int function getLifetimeBalance() {
 		var lifeTimeBalance = 0;
 		
-		// check expiration date and exclude expired points
+		// Loop over all the loyalty transactions of the account
 		for( var loyaltyTransaction in getAccountLoyaltyTransactions() ) {
-			lifeTimeBalance = precisionEvaluate(lifeTimeBalance + (loyaltyTransaction.getPointsIn() - loyaltyTransaction.getPointsOut()));
+			
+			// check expiration date and exclude expired points
+			if ( !isNull( loyaltyTransaction.getExpirationDate() ) && loyaltyTransaction.getExpirationDate() lt now() ) {
+				lifeTimeBalance = precisionEvaluate(lifeTimeBalance + (loyaltyTransaction.getPointsIn() - loyaltyTransaction.getPointsOut()));	
+			}	
 		}
 		
 		return lifeTimeBalance;
