@@ -50,18 +50,33 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Injected Entity
 	property name="order";
+	
+	// Lazy / Injected Objects
 
-	// Data Properties
-	property name="accountPaymentMethodID" hb_rbKey="entity.accountPaymentMethod" hb_formFieldType="select";
+	// New Properties
 	property name="newOrderPayment" cfc="OrderPayment" fieldType="many-to-one" persistent="false" fkcolumn="orderPaymentID";
+	
+	// Data Properties (ID's)
+	property name="accountPaymentMethodID" hb_rbKey="entity.accountPaymentMethod" hb_formFieldType="select";
 	property name="accountAddressID" hb_rbKey="entity.accountAddress" hb_formFieldType="select";
+	
+	// Data Properties (Inputs)
 	property name="saveAccountPaymentMethodFlag" hb_formFieldType="yesno";
 	property name="saveAccountPaymentMethodName" hb_rbKey="entity.accountPaymentMethod.accountPaymentMethodName";
 	
-	// Cached Properties
+	// Data Properties (Related Entity Populate)
+	
+	// Data Properties (Object / Array Populate)
+	
+	// Option Properties
 	property name="accountPaymentMethodIDOptions";
 	property name="paymentMethodIDOptions";
 	property name="accountAddressIDOptions";
+	
+	// Helper Properties
+	
+	
+	// ======================== START: Defaults ============================
 	
 	public any function setupDefaults() {
 		variables.accountAddressID = getAccountAddressIDOptions()[1]['value'];
@@ -74,6 +89,25 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		}
 		return variables.accountPaymentMethodID;
 	}
+	
+	public string function getAccountAddressID() {
+		if(!structKeyExists(variables, "accountAddressID")) {
+			variables.accountAddressID = "";
+		}
+		return variables.accountAddressID;
+	}
+	
+	public boolean function getSaveAccountPaymentMethodFlag() {
+		if(!structKeyExists(variables, "saveAccountPaymentMethodFlag")) {
+			variables.saveAccountPaymentMethodFlag = 0;
+		}
+		return variables.saveAccountPaymentMethodFlag;
+	}
+	
+	
+	// ========================  END: Defaults =============================
+	
+	// ====================== START: Data Options ==========================
 	
 	public array function getAccountPaymentMethodIDOptions() {
 		if(!structKeyExists(variables, "accountPaymentMethodIDOptions")) {
@@ -91,13 +125,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		return variables.accountPaymentMethodIDOptions;
 	}
 	
-	public string function getAccountAddressID() {
-		if(!structKeyExists(variables, "accountAddressID")) {
-			variables.accountAddressID = "";
-		}
-		return variables.accountAddressID;
-	}
-	
 	public array function getAccountAddressIDOptions() {
 		if(!structKeyExists(variables, "accountAddressIDOptions")) {
 			variables.accountAddressIDOptions = [];
@@ -110,20 +137,6 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			arrayAppend(variables.accountAddressIDOptions, {name=rbKey('define.new'), value=""});
 		}
 		return variables.accountAddressIDOptions;
-	}
-	
-	public any function getNewOrderPayment() {
-		if(!structKeyExists(variables, "newOrderPayment")) {
-			variables.newOrderPayment = getService("orderService").newOrderPayment();
-		}
-		return variables.newOrderPayment;
-	}
-	
-	public boolean function getSaveAccountPaymentMethodFlag() {
-		if(!structKeyExists(variables, "saveAccountPaymentMethodFlag")) {
-			variables.saveAccountPaymentMethodFlag = 0;
-		}
-		return variables.saveAccountPaymentMethodFlag;
 	}
 	
 	public array function getPaymentMethodIDOptions() {
@@ -141,5 +154,24 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		}
 		return variables.paymentMethodIDOptions;
 	}
+	
+	// ======================  END: Data Options ===========================
+	
+	// ================== START: New Property Helpers ======================
+	
+	public any function getNewOrderPayment() {
+		if(!structKeyExists(variables, "newOrderPayment")) {
+			variables.newOrderPayment = getService("orderService").newOrderPayment();
+		}
+		return variables.newOrderPayment;
+	}
+	
+	// ==================  END: New Property Helpers =======================
+	
+	// ===================== START: Helper Methods =========================
+	
+	// =====================  END: Helper Methods ==========================
+	
+	
 	
 }

@@ -481,7 +481,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		
 		// Attach 'createTransaction' errors to the order 
 		if(newOrderPayment.hasError('createTransaction')) {
-			arguments.order.addError('addOrderPayment', newOrderPayment.getError('createTransaction'));
+			arguments.order.addError('addOrderPayment', newOrderPayment.getError('createTransaction'), true);
 			
 		// Otherwise if no errors, and we are supposed to save as accountpayment, and an accountPaymentMethodID doesn't already exist then we can create one.
 		} else if (!newOrderPayment.hasErrors() && arguments.processObject.getSaveAccountPaymentMethodFlag() && isNull(newOrderPayment.getAccountPaymentMethod())) {
@@ -1383,8 +1383,13 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			arguments.orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );
 		}
 		
-		// Attempt To Update The Order Status
-		this.processOrder(arguments.orderPayment.getOrder(), {}, 'updateStatus');
+		// Flush the statusType for the orderPayment
+		getHibachiDAO().flushORMSession();
+		
+		// If no errors, attempt To Update The Order Status
+		if(!arguments.orderPayment.hasErrors()) {
+			this.processOrder(arguments.orderPayment.getOrder(), {}, 'updateStatus');	
+		}
 		
 		return arguments.orderPayment;
 		
@@ -1474,6 +1479,15 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				
 			}
 			
+			// Loop over any orderPayments that were just populated, and may have previously been marked as invalid.  This is specifically used for the legacy checkouts on repeated attempts
+			if(!isNull(arguments.order.getPopulatedSubProperties()) && structKeyExists(arguments.order.getPopulatedSubProperties(), "orderPayments")) {
+				for(var orderPayment in arguments.order.getPopulatedSubProperties().orderPayments) {
+					if(!orderPayment.hasErrors()) {
+						orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );
+					}
+				}
+			}
+			
 			// Recalculate the order amounts for tax and promotions
 			recalculateOrderAmounts(arguments.order);
 			
@@ -1532,18 +1546,17 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	
 	public any function saveOrderPayment(required any orderPayment, struct data={}, string context="save") {
 		
-		// Find out if this is the first time the payment is being saved
-		var wasNew = arguments.orderPayment.getNewFlag();
-		
 		// Call the generic save method to populate and validate
 		arguments.orderPayment = save(arguments.orderPayment, arguments.data, arguments.context);
 		
-		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
-		if((arguments.orderPayment.getStatusCode() == 'opstInvalid' || wasNew) && !arguments.orderPayment.hasErrors() && isNull(arguments.orderPayment.getAccountPaymentMethod()) && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
-			
-			// In case we are trying to re-submit an orderPayment that was previously marked as invalid, we set it back to active
+		// If the orderPayment doesn't have any errors, then we can update the status to active.  If later a transaction runs, then this payment may get flagged back in inactive in the same request
+		if(!arguments.orderPayment.hasErrors()) {
 			arguments.orderPayment.setOrderPaymentStatusType( getSettingService().getTypeBySystemCode('opstActive') );
-				
+		}
+		
+		// If the order payment does not have errors, then we can check the payment method for a saveTransaction
+		if(!arguments.orderPayment.getSucessfulPaymentTransactionExistsFlag() && !arguments.orderPayment.hasErrors() && isNull(arguments.orderPayment.getAccountPaymentMethod()) && !isNull(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && len(arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType()) && arguments.orderPayment.getPaymentMethod().getSaveOrderPaymentTransactionType() neq "none") {
+			
 			// Setup the transaction data
 			var transactionData = {
 				amount = arguments.orderPayment.getAmount(),
