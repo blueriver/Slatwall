@@ -72,7 +72,7 @@ component displayname="Loyalty Term" entityname="SlatwallLoyaltyTerm" table="SwL
 	// ============ START: Non-Persistent Property Methods =================
 	
 	public any function getLoyaltyTermNextEndDateTime() {
-		return getTerm().getEndDate(now(),true);
+		return getTerm().getEndDate(now(), true);
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
