@@ -68,8 +68,8 @@ Notes:
 		<AVSphoneNum>#arguments.requestBean.getAccountPrimaryPhoneNumber()#</AVSphoneNum>
 		<AVSname>#arguments.requestBean.getNameOnCreditCard()#</AVSname>
 		<AVScountryCode>#arguments.requestBean.getBillingCountryCode()#</AVScountryCode>
-		<CustomerRefNum>#arguments.requestBean.getAccountID()#</CustomerRefNum>
-		<OrderID>#arguments.requestBean.getOrderID()#</OrderID>
+		<CustomerRefNum>#arguments.requestBean.getAccount().getShortReferenceID( true )#</CustomerRefNum>
+		<OrderID>#arguments.requestBean.getOrder().getShortReferenceID( true )#</OrderID>
 		<Amount>#arguments.requestBean.getTransactionAmount()*100#</Amount>
 		<cfif arguments.requestBean.getTransactionType() EQ "credit">
 			<TxRefNum>#arguments.requestBean.getProviderTransactionID()#</TxRefNum>
