@@ -39,7 +39,7 @@ Notes:
 component entityname="SlatwallShortReference" table="SwShortReference" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="hibachiService" {
 	
 	// Persistent Properties
-	property name="shortReferenceID" fieldtype="id" generator="native" unsavedvalue="0";
+	property name="shortReferenceID" ormtype="integer" fieldtype="id" unsavedvalue="0";
 	property name="referenceObjectID" ormtype="string" unique="true" index="EI_REFERENCEOBJECTID";
 	property name="referenceObject" ormtype="string" index="EI_REFERENCEOBJECT";
 
