@@ -1,7 +1,6 @@
 {
 	"properties":{
 		"amount":							[{"contexts":"save","required":true,"dataType":"numeric"}],
-		"minimumPointQuantity":				[{"contexts":"save","dataType":"numeric"}],
-		"nextRedemptionDateTime":			[{"contexts":"save","dataType":"date"}]
+		"minimumPointQuantity":				[{"contexts":"save","dataType":"numeric"}]
 	}
 }

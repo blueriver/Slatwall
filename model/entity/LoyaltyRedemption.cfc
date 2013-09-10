@@ -112,8 +112,8 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 	
 	public array function getAutoRedemptionTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.orderClosed'), value="orderClosed"},
 			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.loyaltyTermEnd'), value="loyaltyTermEnd"},
+			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.orderClosed'), value="orderClosed"},
 			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.none'), value="none"}
 		];
 	}

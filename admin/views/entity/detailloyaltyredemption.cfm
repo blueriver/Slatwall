@@ -61,9 +61,13 @@ Notes:
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="autoRedemptionType" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="redemptionType" edit="#rc.edit#">
 				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="priceGroup" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="loyaltyTerm" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="amountType" edit="#rc.edit#">
-				<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="amount" edit="#rc.edit#">		
+				<cf_HibachiDisplayToggle selector="select[name=autoRedemptionType]" showValues="loyaltyTermEnd" loadVisable="#rc.loyaltyRedemption.getNewFlag() or rc.loyaltyRedemption.getValueByPropertyIdentifier('autoRedemptionType') eq 'loyaltyTermEnd'#">
+					<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="loyaltyTerm" edit="#rc.edit#">
+				</cf_HibachiDisplayToggle>
+				<cf_HibachiDisplayToggle selector="select[name=redemptionType]" showValues="pointPurchase" loadVisable="#rc.loyaltyRedemption.getNewFlag() or rc.loyaltyRedemption.getValueByPropertyIdentifier('redemptionType') eq 'pointPurchase'#">
+					<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="amountType" edit="#rc.edit#">
+					<cf_HibachiPropertyDisplay object="#rc.loyaltyRedemption#" property="amount" edit="#rc.edit#">	
+				</cf_HibachiDisplayToggle>
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
