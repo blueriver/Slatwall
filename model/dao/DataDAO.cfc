@@ -51,7 +51,7 @@ Notes:
 	<cffunction name="getShortReferenceID" >
 		<cfargument name="referenceObjectID" type="string" required="true" />
 		<cfargument name="referenceObject" type="string" required="true" />
-		<cfargument name="createNewFlag" type="string" required="true" />
+		<cfargument name="createNewFlag" type="boolean" default="false" />
 		
 		<cfset var rs = "" />
 		<cfset var rsResult = "" />
@@ -75,7 +75,7 @@ Notes:
 			<!--- If no record found but create new is set to yes --->
 			<cfelseif arguments.createNewFlag>
 				<cfquery name="rs" result="rsResult">
-					INSERT INTO SwShortReference ('referenceObjectID', 'referenceObject') VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObjectID#" />, <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObject#" />)
+					INSERT INTO SwShortReference (referenceObjectID, referenceObject) VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObjectID#" />, <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObject#" />)
 				</cfquery>
 				
 				<cfif getApplicationValue("databaseType") eq "MySQL">
