@@ -56,7 +56,7 @@ Notes:
 	<cfset local.infoColumns = "" />
 	<cfset local.infoIndexes = "" />
 	
-	<cfdbinfo datasource="#getApplicationValue("datasource")#" username="#getApplicationValue("datasourceUsername")#" password="#getApplicationValue("datasourcePassword")#" type="tables" name="infoTables" />
+	<cfdbinfo datasource="#getApplicationValue("datasource")#" username="#getApplicationValue("datasourceUsername")#" password="#getApplicationValue("datasourcePassword")#" type="tables" name="infoTables" pattern="Sw%" />
 	<cfloop query="infoTables">
 		<cfdbinfo datasource="#getApplicationValue("datasource")#" username="#getApplicationValue("datasourceUsername")#" password="#getApplicationValue("datasourcePassword")#" type="Columns" table="#infoTables.table_name#" name="infoColumns" />
 		<cfdbinfo datasource="#getApplicationValue("datasource")#" username="#getApplicationValue("datasourceUsername")#" password="#getApplicationValue("datasourcePassword")#" type="Index" table="#infoTables.table_name#" name="infoIndexes" />
