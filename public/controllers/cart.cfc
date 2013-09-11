@@ -106,7 +106,6 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		// Setup the frontend defaults
 		param name="rc.preProcessDisplayedFlag" default="true";
 		param name="rc.saveShippingAccountAddressFlag" default="false";
-		param name="rc.fulfillmentMethodID" default="";
 		
 		var cart = getOrderService().processOrder( rc.$.slatwall.cart(), arguments.rc, 'addOrderItem');
 		
