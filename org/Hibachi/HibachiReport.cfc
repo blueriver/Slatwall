@@ -80,7 +80,7 @@
 					TO_CHAR( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']#, 'YYYY' ) as reportDateTimeYear,
 					TO_CHAR( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']#, 'MM' ) as reportDateTimeMonth,
 					TO_CHAR( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']#, 'WW' ) as reportDateTimeWeek,
-					TO_CHAR( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']#, 'DAY' ) as reportDateTimeDay,
+					TO_CHAR( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']#, 'DD' ) as reportDateTimeDay,
 					TO_CHAR( #getReportDateTimeDefinition(getReportDateTime())['dataColumn']#, 'HH24' ) as reportDateTimeHour
 				<cfelse>
 					#getReportDateTimeDefinition(getReportDateTime())['dataColumn']# as reportDateTime,
