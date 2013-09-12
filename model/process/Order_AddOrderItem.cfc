@@ -107,9 +107,18 @@ component output="false" accessors="true" extends="HibachiProcess" {
 	
 	// ======================== START: Defaults ============================
 	
-	public any function setupDefaults() {
-		variables.orderFulfillmentID = getOrderFulfillmentIDOptions()[1]['value'];
-		variables.orderReturnID = getOrderReturnIDOptions()[1]['value'];
+	public any function getOrderFulfillmentID() {
+		if(structKeyExists(variables, "orderFulfillmentID")) {
+			return variables.orderFulfillmentID;
+		}
+		return getOrderFulfillmentIDOptions()[1]['value'];
+	}
+	
+	public any function getOrderReturnID() {
+		if(structKeyExists(variables, "orderReturnID")) {
+			return variables.orderReturnID;
+		}
+		return getOrderReturnIDOptions()[1]['value'];
 	}
 	
 	public any function getOrderItemTypeSystemCode() {
