@@ -1575,6 +1575,11 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// Check delete validation
 		if(arguments.order.isDeletable()) {
 			
+			// If the order is the order in this session, then set this sessions order to null
+			if(arguments.order.getOrderID() eq getHibachiScope().getSession().getOrder().getOrderID()) {
+				getHibachiScope().getSession().setOrder( javaCast("null", "") );
+			}
+			
 			getOrderDAO().removeOrderFromAllSessions( orderID=arguments.order.getOrderID() );
 			
 			return delete( arguments.order );
