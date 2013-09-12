@@ -250,7 +250,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			var orderFulfillment = processObject.getOrderFulfillment();
 			
 			// Next if orderFulfillment is still null, then we can check the order to see if there is already an orderFulfillment
-			if(isNull(orderFulfillment) && ( !isNull(processObject.getOrderFulfillmentID()) || processObject.getOrderFulfillmentID() != 'new' ) && arrayLen(arguments.order.getOrderFulfillments())) {
+			if(isNull(orderFulfillment) && ( isNull(processObject.getOrderFulfillmentID()) || processObject.getOrderFulfillmentID() != 'new' ) && arrayLen(arguments.order.getOrderFulfillments())) {
 				for(var f=1; f<=arrayLen(arguments.order.getOrderFulfillments()); f++) {
 					if(listFindNoCase(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods'), arguments.order.getOrderFulfillments()[f].getFulfillmentMethod().getFulfillmentMethodID()) ) {
 						var orderFulfillment = arguments.order.getOrderFulfillments()[f];
