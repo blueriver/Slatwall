@@ -444,6 +444,13 @@ component extends="HibachiService" accessors="true" output="false" {
 						// Create a new transaction
 						var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
 						
+						var transactionData = {
+							accruementType = "itemFulfilled"
+						};
+						
+						// TODO [paul]: Make others look like this 'ish
+						accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, {},'create');
+						
 						// Setup the transaction
 						accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
 						accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
@@ -698,6 +705,14 @@ component extends="HibachiService" accessors="true" output="false" {
 		}
 
 		return arguments.accountLoyalty;	
+	}
+	
+	// Account Loyalty Transaction
+	public any function processAccountLayaltyTransaction_create(required any accountLoyaltyTransaction, required strut data) {
+		// TODO [paul]: set this up as the place where all point transactions are created
+		
+		// TODO [paul]: remove logic for 'orderClosed' redemption, and add logic here for 'pointsAdjusted' redemption
+		return arguments.accountLoyaltyTransaction;
 	}
 	
 	// Account Payment
