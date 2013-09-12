@@ -56,7 +56,7 @@ Notes:
 		<cfset var rs = "" />
 		<cfset var rsResult = "" />
 		
-		<cflock timeout="10" name="#arguments.referenceObject##arguments.referenceObjectID##arguments.createNewFlag#">
+		<cflock timeout="30" name="#arguments.referenceObject##arguments.referenceObjectID##arguments.createNewFlag#">
 			<cfquery name="rs">
 				SELECT
 					shortReferenceID
@@ -74,16 +74,27 @@ Notes:
 				
 			<!--- If no record found but create new is set to yes --->
 			<cfelseif arguments.createNewFlag>
-				<cfquery name="rs" result="rsResult">
-					INSERT INTO SwShortReference (referenceObjectID, referenceObject) VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObjectID#" />, <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObject#" />)
-				</cfquery>
 				
-				<cfif getApplicationValue("databaseType") eq "MySQL">
-					<cfreturn rsResult.GENERATED_KEY />
-				<cfelse>
-					<cfreturn rsResult.IDENTITYCOL />
-				</cfif>
+				<cfset var newShortReferenceID = 1 />
 				
+				<!--- Lock this again so that only 1 can be created at a time --->
+				<cflock timeout="30" name="SlatwallShortReferenceAdd">
+					
+					<cfquery name="rs">
+						SELECT MAX(shortReferenceID) as shortReferenceID FROM SwShortReference
+					</cfquery>
+					
+					<cfif rs.shortReferenceID neq "" and isNumeric(rs.shortReferenceID)>
+						<cfset newShortReferenceID = rs.shortReferenceID + 1 />
+					</cfif>
+					
+					<cfquery name="rs" result="rsResult">
+						INSERT INTO SwShortReference (shortReferenceID, referenceObjectID, referenceObject) VALUES (<cfqueryparam cfsqltype="cf_sql_integer" value="#newShortReferenceID#" />, <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObjectID#" />, <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.referenceObject#" />)
+					</cfquery>
+					
+				</cflock>
+				
+				<cfreturn newShortReferenceID />
 			</cfif>
 		</cflock>
 		
