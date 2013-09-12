@@ -444,6 +444,13 @@ component extends="HibachiService" accessors="true" output="false" {
 						// Create a new transaction
 						var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
 						
+						var transactionData = {
+							accruementType = "itemFulfilled"
+						};
+						
+						// TODO [paul]: Make others look like this 'ish
+						accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, {},'create');
+						
 						// Setup the transaction
 						accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
 						accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
@@ -507,26 +514,7 @@ component extends="HibachiService" accessors="true" output="false" {
 			}
 		}
 		
-		// TODO [paul]: Loop over all redemptions and find any that are auto-redemption based on the order being closed.  Then call processLoyaltyRedemption
-		// redemptionData = { account = accountLoyalty.getAccount() }
-		// loyaltyRedemption = getLoyaltyService().processLoyaltyRedeption( loyaltyRedemption, redemptionData, 'redeem')
 		
-		// Loop over account loyalty redemptions
-		for(var loyaltyRedemption in arguments.accountLoyalty.getLoyalty().getLoyaltyRedemptions()) {	
-			
-			// If loyalty auto redemption eq 'orderClosed' as the type
-			if (loyaltyRedemption.getAutoRedemptionType() eq 'orderClosed') {
-
-				// If order satus is closed
-				if ( listFindNoCase("ostClosed",arguments.data.order.getorderStatusType().getSystemCode()) ){
-					redemptionData = { 
-						account = arguments.accountLoyalty.getAccount() 
-					};
-				
-					getLoyaltyService().processLoyaltyRedemption( loyaltyRedemption, redemptionData, 'redeem');
-				}	
-			}
-		}
 		
 		return arguments.accountLoyalty;	
 	}
@@ -698,6 +686,45 @@ component extends="HibachiService" accessors="true" output="false" {
 		}
 
 		return arguments.accountLoyalty;	
+	}
+	
+	// Account Loyalty Transaction
+	public any function processAccountLayaltyTransaction_create(required any accountLoyaltyTransaction, required strut data) {
+		// TODO [paul]: set this up as the place where all point transactions are created
+		
+		
+		
+		
+		// TODO [paul]: remove logic for 'orderClosed' redemption, and add logic here for 'pointsAdjusted' redemption
+		// Basically, loop over the redemptions for this loyaltyProgram that have redeptionType of 'pointsAdjusted', and call getLoyaltyService().processLoyaltyRedeption_redeem()
+		
+		
+		
+		// TODO [paul]: Loop over all redemptions and find any that are auto-redemption based on the order being closed.  Then call processLoyaltyRedemption
+		// redemptionData = { account = accountLoyalty.getAccount() }
+		// loyaltyRedemption = getLoyaltyService().processLoyaltyRedeption( loyaltyRedemption, redemptionData, 'redeem')
+		
+		
+		
+		// Loop over account loyalty redemptions
+		for(var loyaltyRedemption in arguments.accountLoyalty.getLoyalty().getLoyaltyRedemptions()) {	
+			
+			// If loyalty auto redemption eq 'orderClosed' as the type
+			if (loyaltyRedemption.getAutoRedemptionType() eq 'orderClosed') {
+
+				// If order satus is closed
+				if ( listFindNoCase("ostClosed",arguments.data.order.getorderStatusType().getSystemCode()) ){
+					redemptionData = { 
+						account = arguments.accountLoyalty.getAccount() 
+					};
+				
+					getLoyaltyService().processLoyaltyRedemption( loyaltyRedemption, redemptionData, 'redeem');
+				}	
+			}
+		}
+		
+		
+		return arguments.accountLoyaltyTransaction;
 	}
 	
 	// Account Payment
