@@ -367,7 +367,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 					}
 				}	
 			}
-			arrayAppend(variables.orderFulfillmentIDOptions, {name=getHibachiScope().rbKey('define.new'), value=""});
+			arrayAppend(variables.orderFulfillmentIDOptions, {name=getHibachiScope().rbKey('define.new'), value="new"});
 		}
 		return variables.orderFulfillmentIDOptions;
 	}
@@ -379,7 +379,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			for(var i=1; i<=arrayLen(arr); i++) {
 				arrayAppend(variables.orderReturnIDOptions, {name=arr[i].getSimpleRepresentation(), value=arr[i].getOrderReturnID()});	
 			}
-			arrayAppend(variables.orderReturnIDOptions, {name=getHibachiScope().rbKey('define.new'), value=""});
+			arrayAppend(variables.orderReturnIDOptions, {name=getHibachiScope().rbKey('define.new'), value="new"});
 		}
 		return variables.orderReturnIDOptions;
 	}

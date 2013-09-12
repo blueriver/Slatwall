@@ -250,7 +250,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			var orderFulfillment = processObject.getOrderFulfillment();
 			
 			// Next if orderFulfillment is still null, then we can check the order to see if there is already an orderFulfillment
-			if(isNull(orderFulfillment) && arrayLen(arguments.order.getOrderFulfillments())) {
+			if(isNull(orderFulfillment) && ( !isNull(processObject.getOrderFulfillmentID()) || processObject.getOrderFulfillmentID() != 'new' ) && arrayLen(arguments.order.getOrderFulfillments())) {
 				for(var f=1; f<=arrayLen(arguments.order.getOrderFulfillments()); f++) {
 					if(listFindNoCase(arguments.processObject.getSku().setting('skuEligibleFulfillmentMethods'), arguments.order.getOrderFulfillments()[f].getFulfillmentMethod().getFulfillmentMethodID()) ) {
 						var orderFulfillment = arguments.order.getOrderFulfillments()[f];
@@ -380,9 +380,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		} else if (arguments.processObject.getOrderItemTypeSystemCode() eq "oitReturn") {
 			
 			// First see if we can use an existing order return
-			if(!isNull(arguments.processObject.getOrderReturnID()) && len(arguments.processObject.getOrderReturnID())) {
-				var orderReturn = this.getOrderReturn( processObject.getOrderReturnID() );	
-			}
+			var orderReturn = processObject.getOrderReturnID();	
 			
 			// Next if we can't use an existing one, then we need to create a new one
 			if(isNull(orderReturn) || orderReturn.getOrder().getOrderID() neq arguments.order.getOrderID()) {
