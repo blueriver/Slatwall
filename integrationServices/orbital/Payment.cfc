@@ -195,11 +195,15 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		}
 		
 		if( structKeyExists(responseData,"TxRefNum") ) {
-			response.setTransactionID( responseData.TxRefNum.xmlText );
+			response.setProviderTransactionID( responseData.TxRefNum.xmlText );
 		}
 		
 		if( structKeyExists(responseData,"AuthCode") ) {
 			response.setAuthorizationCode( responseData.AuthCode );
+		}
+		
+		if(requestBean.getTransactionType() == "generateToken") {
+			response.setProviderToken( arguments.requestBean.getPayment().getShortReferenceID( true ) );
 		}
 		
 		// TODO: Add more codes here
