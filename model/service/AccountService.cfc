@@ -738,6 +738,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		if (processObject.getManualAdjustmentType() eq "manualIn"){
 			accountLoyaltyTransaction.setPointsIn( processObject.getPoints() );
+			if (!isNull(processObject.getExpirationDateTime())) { accountLoyaltyTransaction.setExpirationDateTime( processObject.getExpirationDateTime() ); }
 		}
 		else {
 			accountLoyaltyTransaction.setPointsOut( processObject.getPoints() );

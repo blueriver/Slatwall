@@ -54,11 +54,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// Based on what is being redeemed we will either create a coupon, or assign to price group (for now).  Check minimumPointQuantity against the redeptionTermType
 	
 	public any function processLoyaltyRedemption_redeem(required any loyaltyRedemption, required struct data) {
-		var lifeTimeBalance = 0;
-
-		if ( !isnull(arguments.loyaltyRedemption.getLoyalty().getLoyaltyID()) && (arguments.loyaltyRedemption.getLoyalty().getLoyaltyID() eq arguments.data.accountLoyalty.getLoyaltyID()) ) {
-			lifeTimeBalance = arguments.data.accountLoyalty.getLifetimeBalance();
-		}	
+		var lifeTimeBalance = arguments.data.accountLoyalty.getLifetimeBalance();
 
 		// If loyalty redemption type eq 'priceGroupAssignment'
 		if (arguments.loyaltyRedemption.getRedemptionType() eq 'priceGroupAssignment') {

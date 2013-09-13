@@ -59,6 +59,9 @@ Notes:
 		<cf_HibachiPropertyList>
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="manualAdjustmentType" edit="#rc.edit#">
 			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="points" edit="#rc.edit#">
+			<cf_HibachiDisplayToggle selector="select[name=manualAdjustmentType]" showValues="manualIn" loadVisable="#rc.processObject.getValueByPropertyIdentifier('manualAdjustmentType') eq 'manualIn'#">
+				<cf_HibachiPropertyDisplay object="#rc.processObject#" property="expirationDatetime" edit="#rc.edit#">
+			</cf_HibachiDisplayToggle>
 		</cf_HibachiPropertyList>
 	</cf_HibachiPropertyRow>
 	

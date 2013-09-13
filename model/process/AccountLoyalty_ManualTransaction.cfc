@@ -53,6 +53,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Data Properties
 	property name="points";
+	property name="expirationDatetime";
 	property name="manualAdjustmentType" hb_formFieldType="select";
 	
 	// Option Properties
@@ -63,8 +64,9 @@ component output="false" accessors="true" extends="HibachiProcess" {
 			
 			variables.manualAdjustmentTypeOptions = [];
 			
-			arrayAppend(variables.manualAdjustmentTypeOptions, {name=rbKey('entity.accountLoyalty.manualAdjustmentType.manualIn'), value="manualIn"});
 			arrayAppend(variables.manualAdjustmentTypeOptions, {name=rbKey('entity.accountLoyalty.manualAdjustmentType.manualOut'), value="manualOut"});
+			arrayAppend(variables.manualAdjustmentTypeOptions, {name=rbKey('entity.accountLoyalty.manualAdjustmentType.manualIn'), value="manualIn"});
+			
 		}
 		return variables.manualAdjustmentTypeOptions;
 	}
