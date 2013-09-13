@@ -50,7 +50,9 @@ Notes:
 			{alias='revenue', calculation='(SUM(salePreDiscount) - SUM(itemDiscount)) + (SUM(returnPreDiscount) - SUM(itemDiscount))', formatType="currency"},
 			{alias='salePreDiscount', function='sum', formatType="currency"},
 			{alias='returnPreDiscount', function='sum', formatType="currency"},
+			{alias='quantity', function='sum', title=rbKey('entity.orderItem.quantity')},
 			{alias='itemDiscount', function='sum', formatType="currency"},
+			{alias='itemTax', function='sum', formatType="currency"},
 			{alias='saleAfterDiscount', calculation='SUM(salePreDiscount) - SUM(itemDiscount)', formatType="currency"},
 			{alias='returnAfterDiscount', calculation='SUM(returnPreDiscount) - SUM(itemDiscount)', formatType="currency"}
 		] />
@@ -64,7 +66,10 @@ Notes:
 			{alias='brandName', title=rbKey('entity.brand.brandName')},
 			{alias='city', title=rbKey('entity.address.city')},
 			{alias='stateCode', title=rbKey('entity.address.stateCode')},
-			{alias='countryCode', title=rbKey('entity.address.countryCode')}
+			{alias='countryCode', title=rbKey('entity.address.countryCode')},
+			{alias='currencyCode', title=rbKey('entity.currency.currencyCode')},
+			{alias='orderNumber', title=rbKey('entity.order.orderNumber')},
+			{alias='price', formatType="currency", title=rbKey('entity.orderItem.price')}
 		] />
 	</cffunction>
 	
@@ -81,6 +86,8 @@ Notes:
 					SwBrand.brandID,
 					SwBrand.brandName,
 					SwOrder.orderID,
+					SwOrder.orderNumber,
+					SwOrder.currencyCode,
 					SwAddress.countryCode,
 					SwAddress.stateCode,
 					SwAddress.city,
@@ -99,6 +106,7 @@ Notes:
     						0
 					END as returnPreDiscount,
 					( SELECT COALESCE(SUM(swpa.discountAmount), 0) FROM SwPromotionApplied swpa WHERE swpa.orderItemID = SwOrderItem.orderItemID ) as itemDiscount,
+					( SELECT COALESCE(SUM(swta.taxAmount), 0) FROM SwTaxApplied swta WHERE swta.orderItemID = SwOrderItem.orderItemID ) as itemTax,
 					#getReportDateTimeSelect()#
 				FROM
 					SwOrderItem
