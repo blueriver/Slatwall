@@ -88,9 +88,6 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 				include "xmltemplates/ProfileAddRequest.cfm"; 
 			}
 		}
-		
-		writeDump(requestXML);
-		abort;
 
 		// Get the response from Orbital
 		try {
@@ -198,7 +195,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			}
 				
 			if( structKeyExists(responseData,"AuthCode") ) {
-				response.setAuthorizationCode( responseData.AuthCode );
+				response.setAuthorizationCode( responseData.AuthCode.xmlText );
 			}
 			
 		}
