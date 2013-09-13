@@ -53,7 +53,7 @@ component output="false" accessors="true" extends="HibachiProcess" {
 
 	// Data Properties
 	property name="points";
-	property name="expirationDatetime";
+	property name="expirationDatetime" hb_formatType="date";
 	property name="manualAdjustmentType" hb_formFieldType="select";
 	
 	// Option Properties
