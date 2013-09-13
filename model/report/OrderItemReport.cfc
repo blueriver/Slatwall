@@ -64,12 +64,13 @@ Notes:
 			{alias='skuCode', title=rbKey('entity.sku.skuCode')},
 			{alias='productTypeName', filterAlias='productTypeID', filterDimension='productName', title=rbKey('entity.productType.productTypeName')},
 			{alias='brandName', title=rbKey('entity.brand.brandName')},
-			{alias='city', title=rbKey('entity.address.city')},
-			{alias='stateCode', title=rbKey('entity.address.stateCode')},
-			{alias='countryCode', title=rbKey('entity.address.countryCode')},
 			{alias='currencyCode', title=rbKey('entity.currency.currencyCode')},
+			{alias='price', formatType="currency", title=rbKey('entity.orderItem.price')},
+			{alias='type', title=rbKey('entity.orderItem.orderItemType')},
 			{alias='orderNumber', title=rbKey('entity.order.orderNumber')},
-			{alias='price', formatType="currency", title=rbKey('entity.orderItem.price')}
+			{alias='countryCode', title=rbKey('entity.address.countryCode')},
+			{alias='stateCode', title=rbKey('entity.address.stateCode')},
+			{alias='city', title=rbKey('entity.address.city')}
 		] />
 	</cffunction>
 	
@@ -88,6 +89,7 @@ Notes:
 					SwOrder.orderID,
 					SwOrder.orderNumber,
 					SwOrder.currencyCode,
+					SwType.type,
 					SwAddress.countryCode,
 					SwAddress.stateCode,
 					SwAddress.city,
@@ -110,6 +112,8 @@ Notes:
 					#getReportDateTimeSelect()#
 				FROM
 					SwOrderItem
+				  INNER JOIN
+				  	SwType on SwOrderItem.orderItemTypeID = SwType.typeID
 				  INNER JOIN
 				  	SwOrderFulfillment on SwOrderItem.orderFulfillmentID = SwOrderFulfillment.orderFulfillmentID
 				  INNER JOIN
