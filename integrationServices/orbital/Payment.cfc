@@ -89,6 +89,8 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			}
 		}
 		
+		writeDump(requestXML);
+		abort;
 
 		// Get the response from Orbital
 		try {
@@ -191,19 +193,18 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 				response.setAmountCharged(  requestBean.getTransactionAmount()  );
 			} else if(requestBean.getTransactionType() == "credit") {
 				response.setAmountCredited(  requestBean.getTransactionAmount()  );
+			} else if(requestBean.getTransactionType() == "generateToken") {
+				response.setProviderToken( responseData.CustomerRefNum.xmlText );
 			}
+				
+			if( structKeyExists(responseData,"AuthCode") ) {
+				response.setAuthorizationCode( responseData.AuthCode );
+			}
+			
 		}
 		
 		if( structKeyExists(responseData,"TxRefNum") ) {
 			response.setProviderTransactionID( responseData.TxRefNum.xmlText );
-		}
-		
-		if( structKeyExists(responseData,"AuthCode") ) {
-			response.setAuthorizationCode( responseData.AuthCode );
-		}
-		
-		if(requestBean.getTransactionType() == "generateToken") {
-			response.setProviderToken( arguments.requestBean.getPayment().getShortReferenceID( true ) );
 		}
 		
 		// TODO: Add more codes here
