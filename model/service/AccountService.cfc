@@ -56,6 +56,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	property name="priceGroupService" type="any";
 	property name="settingService" type="any";
 	property name="siteService" type="any";
+	property name="loyaltyService" type="any";
 	property name="validationService" type="any";
 	
 	
@@ -444,14 +445,22 @@ component extends="HibachiService" accessors="true" output="false" {
 						// Create a new transaction
 						var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
 						
+						// Setup the transaction data
 						var transactionData = {
-							accruementType = "itemFulfilled"
+							accruementType = "itemFulfilled",
+							accountLoyalty = accountLoyalty,
+							loyaltyAccruement = loyaltyAccruement,
+							orderDeliveryItem = orderDeliveryItem,
+							order = orderDeliveryItem.getOrderItem().getOrder(),
+							orderItem = orderDeliveryItem.getOrderItem(),
+							pointAdjustmentType = "pointsIn"
 						};
 						
 						// TODO [paul]: Make others look like this 'ish
-						accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, {},'create');
+						// Process the transaction
+						accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, transactionData,'create');
 						
-						// Setup the transaction
+						/*// Setup the transaction
 						accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
 						accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
 						accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
@@ -469,7 +478,7 @@ component extends="HibachiService" accessors="true" output="false" {
 						} // If pointType is 'pointPerDollar' set point times the qty times the item price
 						else if ( loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
 							accountLoyaltyTransaction.setPointsIn( loyaltyAccruement.getPointQuantity() * (orderDeliveryItem.getQuantity() * orderDeliveryItem.getOrderItem().getPrice()) );
-						}
+						}*/
 					}
 				}
 			}
@@ -492,7 +501,19 @@ component extends="HibachiService" accessors="true" output="false" {
 					// Create a new transaction
 					var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
 					
-					// Setup the transaction
+					// Setup the transaction data
+					var transactionData = {
+						accruementType = "orderClosed",
+						accountLoyalty = accountLoyalty,
+						loyaltyAccruement = loyaltyAccruement,
+						order = arguments.data.order,
+						pointAdjustmentType = "pointsIn"
+					};
+					
+					// Process the transaction
+					accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, transactionData,'create');
+					
+					/*// Setup the transaction
 					accountLoyaltyTransaction.setAccruementType( "orderClosed" );
 					accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
 					accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
@@ -509,7 +530,7 @@ component extends="HibachiService" accessors="true" output="false" {
 					} // If pointType is 'pointPerDollar' set point times the order total
 					else if ( loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
 						accountLoyaltyTransaction.setPointsIn( loyaltyAccruement.getPointQuantity() * arguments.data.order.getTotal() );
-					}	
+					}*/	
 				}	
 			}
 		}
@@ -530,7 +551,19 @@ component extends="HibachiService" accessors="true" output="false" {
 				// Create and setup a new transaction 
 				var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
 				
-				accountLoyaltyTransaction.setAccruementType( "fulfillmentMethodUsed" );
+				// Setup the transaction data
+				var transactionData = {
+					accruementType = "fulfillmentMethodUsed",
+					accountLoyalty = accountLoyalty,
+					loyaltyAccruement = loyaltyAccruement,
+					orderFulfillment = arguments.data.orderFulfillment,
+					pointAdjustmentType = "pointsIn"
+				};
+				
+				// Process the transaction
+				accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, transactionData,'create');
+				
+				/*accountLoyaltyTransaction.setAccruementType( "fulfillmentMethodUsed" );
 				accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
 				accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
 				accountLoyaltyTransaction.setOrderFulfillment( arguments.data.orderFulfillment );
@@ -546,7 +579,7 @@ component extends="HibachiService" accessors="true" output="false" {
 				} // If pointType is 'pointPerDollar' set point times the fulfillmentcharge
 				else if ( loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
 					accountLoyaltyTransaction.setPointsIn( loyaltyAccruement.getPointQuantity() * arguments.data.orderFulfillment.getFulFillmentCharge() );
-				}
+				}*/
 			}
 		}
 		
@@ -563,7 +596,18 @@ component extends="HibachiService" accessors="true" output="false" {
 				
 				var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
 				
-				accountLoyaltyTransaction.setAccruementType( "enrollment" );
+				// Setup the transaction data
+				var transactionData = {
+					accruementType = "enrollment",
+					accountLoyalty = accountLoyalty,
+					loyaltyAccruement = loyaltyAccruement,
+					pointAdjustmentType = "pointsIn"
+				};
+				
+				// Process the transaction
+				accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, transactionData,'create');
+				
+				/*accountLoyaltyTransaction.setAccruementType( "enrollment" );
 				accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
 				accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
 				accountLoyaltyTransaction.setPointsIn( loyaltyAccruement.getPointQuantity() );
@@ -571,7 +615,7 @@ component extends="HibachiService" accessors="true" output="false" {
 				// Set up loyalty program expiration date / time based upon the expiration term
 				if( !isNull(loyaltyAccruement.getExpirationTerm()) ){
 				    accountLoyaltyTransaction.setExpirationDateTime( loyaltyAccruement.getExpirationTerm().getEndDate() );
-				}
+				}*/
 			}
 		}
 		
@@ -648,7 +692,21 @@ component extends="HibachiService" accessors="true" output="false" {
 						// Create a new accountLoyalty transaction	
 						var accountLoyaltyTransaction = this.newAccountLoyaltyTransaction();
 						
-						// Setup the transaction
+						// Setup the transaction data
+						var transactionData = {
+							accruementType = "itemFulfilled",
+							accountLoyalty = accountLoyalty,
+							loyaltyAccruement = loyaltyAccruement,
+							orderItemReceived = orderItemReceived,
+							order = orderItemReceived.getOrderItem().getOrder(),
+							orderItem = orderItemReceived.getOrderItem(),
+							pointAdjustmentType = "pointsOut"
+						};
+						
+						// Process the transaction
+						accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, transactionData,'create');
+						
+						/*// Setup the transaction
 						accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
 						accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
 						accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
@@ -661,7 +719,7 @@ component extends="HibachiService" accessors="true" output="false" {
 						} // If pointType is 'pointPerDollar' set point times the qty times the item price
 						else if ( loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
 							accountLoyaltyTransaction.setPointsOut( loyaltyAccruement.getPointQuantity() * (orderItemReceived.getQuantity() * orderItemReceived.getOrderItem().getPrice()) );
-						}
+						}*/
 					}
 				}
 			}
@@ -689,10 +747,59 @@ component extends="HibachiService" accessors="true" output="false" {
 	}
 	
 	// Account Loyalty Transaction
-	public any function processAccountLayaltyTransaction_create(required any accountLoyaltyTransaction, required strut data) {
+	public any function processAccountLoyaltyTransaction_create(required any accountLoyaltyTransaction, required struct data) {
 		// TODO [paul]: set this up as the place where all point transactions are created
 		
+		// Setup the transaction
+		arguments.accountLoyaltyTransaction.setAccruementType( arguments.data.accruementType );
+		arguments.accountLoyaltyTransaction.setAccountLoyalty( arguments.data.accountLoyalty );
+		arguments.accountLoyaltyTransaction.setLoyaltyAccruement( arguments.data.loyaltyAccruement );
 		
+		if(structKeyExists(arguments.data, "order")) {
+			arguments.accountLoyaltyTransaction.setOrder( arguments.data.order );
+		}
+		
+		if(structKeyExists(arguments.data, "orderItem")) {
+			arguments.accountLoyaltyTransaction.setOrderItem( arguments.data.orderItem );
+		}
+		
+		if(structKeyExists(arguments.data, "orderFulfillment")) {
+			arguments.accountLoyaltyTransaction.setOrderFulfillment( arguments.data.orderFulfillment );
+		}
+		
+		// Set up loyalty program expiration date / time based upon the expiration term
+		if( !isNull(arguments.data.loyaltyAccruement.getExpirationTerm()) ){
+		    arguments.accountLoyaltyTransaction.setExpirationDateTime( arguments.data.loyaltyAccruement.getExpirationTerm().getEndDate() );
+		}
+		
+		
+		if ( arguments.data.pointAdjustmentType eq "pointsIn" ) {
+			
+			if ( arguments.data.loyaltyAccruement.getPointType() eq 'fixed' ){
+				arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() );
+			} 
+			else if ( arguments.data.loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
+				
+				if (arguments.data.accruementType eq 'itemFulfilled') {
+					arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * (arguments.data.orderDeliveryItem.getQuantity() * arguments.data.orderDeliveryItem.getOrderItem().getPrice()) );
+				}
+				else if (arguments.data.accruementType eq 'orderClosed') {
+					arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * arguments.data.order.getTotal() );
+				}
+				else if (arguments.data.accruementType eq 'fulfillmentMethodUsed') {
+					arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * arguments.data.orderFulfillment.getFulFillmentCharge() );
+				}	
+			}
+			
+		}
+		else {			
+			if ( arguments.data.loyaltyAccruement.getPointType() eq 'fixed' ){
+				arguments.accountLoyaltyTransaction.setPointsOut( arguments.data.loyaltyAccruement.getPointQuantity() );
+			} 
+			else if ( arguments.data.loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
+				arguments.accountLoyaltyTransaction.setPointsOut( arguments.data.loyaltyAccruement.getPointQuantity() * (arguments.data.orderItemReceived.getQuantity() * arguments.data.orderItemReceived.getOrderItem().getPrice()) );
+			}
+		}
 		
 		
 		// TODO [paul]: remove logic for 'orderClosed' redemption, and add logic here for 'pointsAdjusted' redemption
@@ -707,19 +814,17 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		
 		// Loop over account loyalty redemptions
-		for(var loyaltyRedemption in arguments.accountLoyalty.getLoyalty().getLoyaltyRedemptions()) {	
+		for(var loyaltyRedemption in arguments.data.accountLoyalty.getLoyalty().getLoyaltyRedemptions()) {	
 			
-			// If loyalty auto redemption eq 'orderClosed' as the type
-			if (loyaltyRedemption.getAutoRedemptionType() eq 'orderClosed') {
+			// If loyalty auto redemption eq 'pointsAdjusted' as the type
+			if (loyaltyRedemption.getAutoRedemptionType() eq 'pointsAdjusted') {
 
-				// If order satus is closed
-				if ( listFindNoCase("ostClosed",arguments.data.order.getorderStatusType().getSystemCode()) ){
-					redemptionData = { 
-						account = arguments.accountLoyalty.getAccount() 
-					};
-				
-					getLoyaltyService().processLoyaltyRedemption( loyaltyRedemption, redemptionData, 'redeem');
-				}	
+				redemptionData = { 
+					account = arguments.data.accountLoyalty.getAccount(), 
+					accountLoyalty = arguments.data.accountLoyalty
+				};
+			
+				loyaltyRedemption = getLoyaltyService().processLoyaltyRedemption( loyaltyRedemption, redemptionData, 'redeem' );	
 			}
 		}
 		

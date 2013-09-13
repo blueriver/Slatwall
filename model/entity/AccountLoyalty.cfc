@@ -63,7 +63,7 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public int function getLifetimeBalance() {
+	public any function getLifetimeBalance() {
 
 		if( !structKeyExists(variables, "lifetimeBalance") ) {
 			variables.lifetimeBalance = 0;
@@ -72,7 +72,7 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 			for( var loyaltyTransaction in getAccountLoyaltyTransactions() ) {
 				
 				// check expiration date and exclude expired points
-				if ( !isNull( loyaltyTransaction.getExpirationDate() ) && loyaltyTransaction.getExpirationDate() lt now() ) {
+				if ( !isNull( loyaltyTransaction.getExpirationDateTime() ) && loyaltyTransaction.getExpirationDateTime() lt now() ) {
 					variables.lifetimeBalance = precisionEvaluate(variables.lifetimeBalance + (loyaltyTransaction.getPointsIn() - loyaltyTransaction.getPointsOut()));	
 				}	
 			}

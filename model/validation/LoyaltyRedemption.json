@@ -1,6 +1,6 @@
 {
 	"properties":{
-		"amount":							[{"contexts":"save","required":true,"dataType":"numeric"}],
+		"amount":							[{"contexts":"save","dataType":"numeric"}],
 		"minimumPointQuantity":				[{"contexts":"save","dataType":"numeric"}]
 	}
 }

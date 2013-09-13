@@ -53,24 +53,28 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	// TODO [paul]: Add loyaltyRedemptionProcessing here... processLoyaltyRedeption_redeem() {}, your data will need to have the account in it
 	// Based on what is being redeemed we will either create a coupon, or assign to price group (for now).  Check minimumPointQuantity against the redeptionTermType
 	
-	public any function processLoyaltyRedeption_redeem(required any loyaltyRedemption, required struct data) {
-		var lifeTimeBalance = arguments.data.getAccountLoyalty().getLifetimeBalance();
-		
+	public any function processLoyaltyRedemption_redeem(required any loyaltyRedemption, required struct data) {
+		var lifeTimeBalance = 0;
+
+		if ( !isnull(arguments.loyaltyRedemption.getLoyalty().getLoyaltyID()) && (arguments.loyaltyRedemption.getLoyalty().getLoyaltyID() eq arguments.data.accountLoyalty.getLoyaltyID()) ) {
+			lifeTimeBalance = arguments.data.accountLoyalty.getLifetimeBalance();
+		}	
+
 		// If loyalty redemption type eq 'priceGroupAssignment'
 		if (arguments.loyaltyRedemption.getRedemptionType() eq 'priceGroupAssignment') {
 			
-			if (lifeTimeBalance gt arguments.loyaltyRedemption.getMinimumPointQuantity()) {
+			if ( !isnull(lifeTimeBalance) && (lifeTimeBalance gt arguments.loyaltyRedemption.getMinimumPointQuantity()) ) {
 				
 				// Create a new transaction
 				var accountLoyaltyTransaction = getAccountService().newAccountLoyaltyTransaction();
 				
 				// Setup the transaction
 				accountLoyaltyTransaction.setRedemptionType( "priceGroupAssignment" );
-				accountLoyaltyTransaction.setAccountLoyalty( arguments.data.getAccountLoyalty() );
+				accountLoyaltyTransaction.setAccountLoyalty( arguments.data.accountLoyalty );
 				accountLoyaltyTransaction.setLoyaltyRedemption( arguments.loyaltyRedemption );	
 				
 				// Apply the qualifying price group on the account
-				arguments.data.addPriceGroup( arguments.loyaltyRedemption.getPriceGroup() );		
+				arguments.data.account.addPriceGroup( arguments.loyaltyRedemption.getPriceGroup() );		
 			}
 			
 		}
