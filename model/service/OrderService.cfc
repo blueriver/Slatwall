@@ -500,7 +500,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			newAccountPaymentMethod.copyFromOrderPayment( newOrderPayment );
 			
 			// Save it
-			newAccountPaymentMethod = getAccountService().saveAccountPaymentMethod( newAccountPaymentMethod );
+			newAccountPaymentMethod = getAccountService().saveAccountPaymentMethod( newAccountPaymentMethod, {runSaveAccountPaymentMethodTransactionFlag=false} );
 			
 		}
 		
