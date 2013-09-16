@@ -53,6 +53,7 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="order.orderNumber" />
 		<cf_HibachiListingColumn propertyIdentifier="createdDateTime" />		
 		<cf_HibachiListingColumn propertyIdentifier="accruementType" />
+		<cf_HibachiListingColumn propertyIdentifier="redemptionType" />
 		<cf_HibachiListingColumn propertyIdentifier="pointsIn" />
 		<cf_HibachiListingColumn propertyIdentifier="pointsOut" />
 	</cf_HibachiListingDisplay>

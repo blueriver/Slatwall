@@ -59,7 +59,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// If loyalty redemption type eq 'priceGroupAssignment'
 		if (arguments.loyaltyRedemption.getRedemptionType() eq 'priceGroupAssignment') {
 			
-			if ( !isnull(lifeTimeBalance) && (lifeTimeBalance gt arguments.loyaltyRedemption.getMinimumPointQuantity()) ) {
+			if ( !isnull(lifeTimeBalance) && (lifeTimeBalance gt arguments.loyaltyRedemption.getMinimumPointQuantity()) && !arguments.data.account.hasPriceGroup( arguments.loyaltyRedemption.getPriceGroup() )) {
 				
 				// Create a new transaction
 				var accountLoyaltyTransaction = getAccountService().newAccountLoyaltyTransaction();
