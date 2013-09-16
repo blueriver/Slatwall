@@ -46,16 +46,20 @@ Notes:
 	
 	<cffunction name="getMetricDefinitions">
 		<cfreturn [
-			{alias='amountAuthorized', function='sum', formatType="currency", title=rbKey('entity.paymentTransaction.amountAuthorized')},
 			{alias='amountReceived', function='sum', formatType="currency", title=rbKey('entity.paymentTransaction.amountReceived')},
-			{alias='amountCredited', function='sum', formatType="currency", title=rbKey('entity.paymentTransaction.amountCredited')}
+			{alias='amountCredited', function='sum', formatType="currency", title=rbKey('entity.paymentTransaction.amountCredited')},
+			{alias='amountAuthorized', function='sum', formatType="currency", title=rbKey('entity.paymentTransaction.amountAuthorized')}
 		] />
 	</cffunction>
 	
 	<cffunction name="getDimensionDefinitions">
 		<cfreturn [
+			{alias='createdDateTime', title=rbKey('entity.paymentTransaction.createdDateTime')},
 			{alias='paymentTransactionID', title=rbKey('entity.paymentTransaction.paymentTransactionID')},
-			{alias='authorizationCodeUsed', title=rbKey('entity.paymentTransaction.authorizationCodeUsed')}
+			{alias='authorizationCode', title=rbKey('entity.paymentTransaction.authorizationCode')},
+			{alias='authorizationCodeUsed', title=rbKey('entity.paymentTransaction.authorizationCodeUsed')},
+			{alias='transactionSuccessFlag', title=rbKey('entity.paymentTransaction.transactionSuccessFlag')},
+			{alias='transactionType', title=rbKey('entity.paymentTransaction.transactionType')}
 		] />
 	</cffunction>
 	
@@ -69,6 +73,8 @@ Notes:
 					SwPaymentTransaction.amountAuthorized,
 					SwPaymentTransaction.amountReceived,
 					SwPaymentTransaction.amountCredited,
+					SwPaymentTransaction.createdDateTime,
+					SwPaymentTransaction.transactionSuccessFlag,
 					#getReportDateTimeSelect()#
 				FROM
 					SwPaymentTransaction
