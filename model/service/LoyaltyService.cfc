@@ -59,6 +59,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		// If loyalty redemption type eq 'priceGroupAssignment'
 		if (arguments.loyaltyRedemption.getRedemptionType() eq 'priceGroupAssignment') {
 			
+			// If life time balance is gt minimum point quantity on the loyalty redemption and the price group is not already assigned to the account, assign it
 			if ( !isnull(lifeTimeBalance) && (lifeTimeBalance gt arguments.loyaltyRedemption.getMinimumPointQuantity()) && !arguments.data.account.hasPriceGroup( arguments.loyaltyRedemption.getPriceGroup() )) {
 				
 				// Create a new transaction
