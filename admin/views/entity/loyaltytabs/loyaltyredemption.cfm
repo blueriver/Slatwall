@@ -49,6 +49,7 @@ Notes:
 		<cf_HibachiListingColumn propertyIdentifier="redemptionType" />
 		<cf_HibachiListingColumn propertyIdentifier="priceGroup.priceGroupName" />
 		<cf_HibachiListingColumn propertyIdentifier="loyaltyTerm.loyaltyTermName" />
+		<!--- Add this back when this feature is available in the future--->
 		<!---<cf_HibachiListingColumn propertyIdentifier="amountType" />
 		<cf_HibachiListingColumn propertyIdentifier="amount" />--->
 		<cf_HibachiListingColumn propertyIdentifier="activeFlag" />

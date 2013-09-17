@@ -455,30 +455,10 @@ component extends="HibachiService" accessors="true" output="false" {
 							orderItem = orderDeliveryItem.getOrderItem(),
 							pointAdjustmentType = "pointsIn"
 						};
-						
-						// TODO [paul]: Make others look like this 'ish
+
 						// Process the transaction
 						accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, transactionData,'create');
 						
-						/*// Setup the transaction
-						accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
-						accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
-						accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
-						accountLoyaltyTransaction.setOrder( orderDeliveryItem.getOrderItem().getOrder() );
-						accountLoyaltyTransaction.setOrderItem( orderDeliveryItem.getOrderItem() );
-						
-						// Set up loyalty program expiration date / time based upon the expiration term
-						if( !isNull(loyaltyAccruement.getExpirationTerm()) ){
-						    accountLoyaltyTransaction.setExpirationDateTime( loyaltyAccruement.getExpirationTerm().getEndDate() );
-						}
-						
-						// If pointType is 'fixed' set points
-						if ( loyaltyAccruement.getPointType() eq 'fixed' ){
-							accountLoyaltyTransaction.setPointsIn( loyaltyAccruement.getPointQuantity() );
-						} // If pointType is 'pointPerDollar' set point times the qty times the item price
-						else if ( loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
-							accountLoyaltyTransaction.setPointsIn( loyaltyAccruement.getPointQuantity() * (orderDeliveryItem.getQuantity() * orderDeliveryItem.getOrderItem().getPrice()) );
-						}*/
 					}
 				}
 			}
@@ -513,24 +493,6 @@ component extends="HibachiService" accessors="true" output="false" {
 					// Process the transaction
 					accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, transactionData,'create');
 					
-					/*// Setup the transaction
-					accountLoyaltyTransaction.setAccruementType( "orderClosed" );
-					accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
-					accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
-					accountLoyaltyTransaction.setOrder( arguments.data.order );
-					
-					// Set up loyalty program expiration date / time based upon the expiration term
-					if( !isNull(loyaltyAccruement.getExpirationTerm()) ){
-					    accountLoyaltyTransaction.setExpirationDateTime( loyaltyAccruement.getExpirationTerm().getEndDate() );
-					}
-				
-					// If pointType is 'fixed' set pointsIn
-					if ( loyaltyAccruement.getPointType() eq 'fixed' ){
-						accountLoyaltyTransaction.setPointsIn( loyaltyAccruement.getPointQuantity() );
-					} // If pointType is 'pointPerDollar' set point times the order total
-					else if ( loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
-						accountLoyaltyTransaction.setPointsIn( loyaltyAccruement.getPointQuantity() * arguments.data.order.getTotal() );
-					}*/	
 				}	
 			}
 		}
@@ -563,23 +525,6 @@ component extends="HibachiService" accessors="true" output="false" {
 				// Process the transaction
 				accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, transactionData,'create');
 				
-				/*accountLoyaltyTransaction.setAccruementType( "fulfillmentMethodUsed" );
-				accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
-				accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
-				accountLoyaltyTransaction.setOrderFulfillment( arguments.data.orderFulfillment );
-				
-				// Set up loyalty program expiration date / time based upon the expiration term
-				if( !isNull(loyaltyAccruement.getExpirationTerm()) ){
-				    accountLoyaltyTransaction.setExpirationDateTime( loyaltyAccruement.getExpirationTerm().getEndDate() );
-				}
-				
-				// If pointType is 'fixed' set pointsIn
-				if ( loyaltyAccruement.getPointType() eq 'fixed' ){
-					accountLoyaltyTransaction.setPointsIn( loyaltyAccruement.getPointQuantity() );
-				} // If pointType is 'pointPerDollar' set point times the fulfillmentcharge
-				else if ( loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
-					accountLoyaltyTransaction.setPointsIn( loyaltyAccruement.getPointQuantity() * arguments.data.orderFulfillment.getFulFillmentCharge() );
-				}*/
 			}
 		}
 		
@@ -607,15 +552,6 @@ component extends="HibachiService" accessors="true" output="false" {
 				// Process the transaction
 				accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, transactionData,'create');
 				
-				/*accountLoyaltyTransaction.setAccruementType( "enrollment" );
-				accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
-				accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
-				accountLoyaltyTransaction.setPointsIn( loyaltyAccruement.getPointQuantity() );
-				
-				// Set up loyalty program expiration date / time based upon the expiration term
-				if( !isNull(loyaltyAccruement.getExpirationTerm()) ){
-				    accountLoyaltyTransaction.setExpirationDateTime( loyaltyAccruement.getExpirationTerm().getEndDate() );
-				}*/
 			}
 		}
 		
@@ -706,20 +642,6 @@ component extends="HibachiService" accessors="true" output="false" {
 						// Process the transaction
 						accountLoyaltyTransaction = this.processAccountLoyaltyTransaction(accountLoyaltyTransaction, transactionData,'create');
 						
-						/*// Setup the transaction
-						accountLoyaltyTransaction.setAccruementType( "itemFulfilled" );
-						accountLoyaltyTransaction.setAccountLoyalty( accountLoyalty );
-						accountLoyaltyTransaction.setLoyaltyAccruement( loyaltyAccruement );
-						accountLoyaltyTransaction.setOrder( orderItemReceived.getOrderItem().getOrder() );
-						accountLoyaltyTransaction.setOrderItem( orderItemReceived.getOrderItem() );
-						
-						// If pointType is 'fixed' set points
-						if ( loyaltyAccruement.getPointType() eq 'fixed' ){
-							accountLoyaltyTransaction.setPointsOut( loyaltyAccruement.getPointQuantity() );
-						} // If pointType is 'pointPerDollar' set point times the qty times the item price
-						else if ( loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
-							accountLoyaltyTransaction.setPointsOut( loyaltyAccruement.getPointQuantity() * (orderItemReceived.getQuantity() * orderItemReceived.getOrderItem().getPrice()) );
-						}*/
 					}
 				}
 			}
@@ -749,7 +671,6 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	// Account Loyalty Transaction
 	public any function processAccountLoyaltyTransaction_create(required any accountLoyaltyTransaction, required struct data) {
-		// TODO [paul]: set this up as the place where all point transactions are created
 		
 		// Process only the 'active' loyalty programs
 		if ( arguments.data.accountLoyalty.getLoyalty().getActiveFlag() ) {
@@ -805,16 +726,7 @@ component extends="HibachiService" accessors="true" output="false" {
 					arguments.accountLoyaltyTransaction.setPointsOut( arguments.data.loyaltyAccruement.getPointQuantity() * (arguments.data.orderItemReceived.getQuantity() * arguments.data.orderItemReceived.getOrderItem().getPrice()) );
 				}
 			}
-			
-			// TODO [paul]: remove logic for 'orderClosed' redemption, and add logic here for 'pointsAdjusted' redemption
-			// Basically, loop over the redemptions for this loyaltyProgram that have redeptionType of 'pointsAdjusted', and call getLoyaltyService().processLoyaltyRedeption_redeem()
-			
-			
-			// TODO [paul]: Loop over all redemptions and find any that are auto-redemption based on the order being closed.  Then call processLoyaltyRedemption
-			// redemptionData = { account = accountLoyalty.getAccount() }
-			// loyaltyRedemption = getLoyaltyService().processLoyaltyRedeption( loyaltyRedemption, redemptionData, 'redeem')
-			
-		
+				
 			// Loop over account loyalty redemptions
 			for(var loyaltyRedemption in arguments.data.accountLoyalty.getLoyalty().getLoyaltyRedemptions()) {	
 				
