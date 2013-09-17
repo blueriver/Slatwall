@@ -661,8 +661,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		if (processObject.getManualAdjustmentType() eq "manualIn"){
 			accountLoyaltyTransaction.setPointsIn( processObject.getPoints() );
 			if (!isNull(processObject.getExpirationDateTime())) { accountLoyaltyTransaction.setExpirationDateTime( processObject.getExpirationDateTime() ); }
-		}
-		else {
+		} else {
 			accountLoyaltyTransaction.setPointsOut( processObject.getPoints() );
 		}
 
@@ -708,17 +707,14 @@ component extends="HibachiService" accessors="true" output="false" {
 					
 					if (arguments.data.accruementType eq 'itemFulfilled') {
 						arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * (arguments.data.orderDeliveryItem.getQuantity() * arguments.data.orderDeliveryItem.getOrderItem().getPrice()) );
-					}
-					else if (arguments.data.accruementType eq 'orderClosed') {
+					} else if (arguments.data.accruementType eq 'orderClosed') {
 						arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * arguments.data.order.getTotal() );
-					}
-					else if (arguments.data.accruementType eq 'fulfillmentMethodUsed') {
+					} else if (arguments.data.accruementType eq 'fulfillmentMethodUsed') {
 						arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * arguments.data.orderFulfillment.getFulFillmentCharge() );
 					}	
 				}
 				
-			}
-			else {			
+			} else {			
 				if ( arguments.data.loyaltyAccruement.getPointType() eq 'fixed' ){
 					arguments.accountLoyaltyTransaction.setPointsOut( arguments.data.loyaltyAccruement.getPointQuantity() );
 				} 
