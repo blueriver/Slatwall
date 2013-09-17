@@ -12,7 +12,6 @@ function gigyaOnLogin( eventObj ) {
 	if(eventObj.user.isSiteUID) {
 
 		// Authenticate the user
-		//console.log( 1 );
 	
 	} else {
 
