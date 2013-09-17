@@ -86,6 +86,21 @@ Notes:
 		
 		<cfreturn adminLoginHTML />
 	</cffunction>
+	
+	<cffunction name="linkAccountToGigya">
+		<cfargument name="account" type="any" required="true" />
+		<cfargument name="data" type="struct" required="true" />
+		
+		<cfset var gigyaNotifyResponse = "" />
+		
+		<cfhttp method="post" url="https://socialize.gigya.com/socialize.notifyRegistration" name="gigyaNotifyResponse">
+			<cfhttpparam type="formfield" name="UID" value="#arguments.data.UID#" />
+			<cfhttpparam type="formfield" name="siteUID" value="#arguments.account.getAccountID()#" />
+		</cfhttp>
+		
+		<cfdump var="#gigyaNotifyResponse#" />
+		<cfabort />
+	</cffunction>
 
 	<!---
 	<cffunction name="init" access="public" returntype="Gigya" output="false">

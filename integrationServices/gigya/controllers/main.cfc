@@ -48,13 +48,50 @@ Notes:
 */
 component extends="Slatwall.org.Hibachi.HibachiController" output="false" accessors="true"  {
 
-	this.publicMethods="adminuserattach,attachuser";
+	property name="accountService" type="any";
+	property name="integrationService" type="any";
+
+	this.publicMethods="";
+	this.publicMethods = listAppend(this.publicMethods, "attachExistingUserAdminForm");
+	this.publicMethods = listAppend(this.publicMethods, "attachExistingUser");
+	this.publicMethods = listAppend(this.publicMethods, "attachNewUser");
+	
 	this.secureMethods="default";
 	
 	public void function default() {
+		// Do Nothing
 	}
 	
-	public void function attachuser(required struct rc) {
+	public void function attachExistingUserAdminForm() {
+		// Do Nothing
+	}
+	
+	public void function attachExistingUser(required struct rc) {
+		
+		// First we try to login the user based on the UN/PW they added
+		getAccountService().processAccount(arguments.rc.$.slatwall.getAccount(), rc, "login");
+		
+		// If the user is logged in, then we can 
+		if(arguments.rc.$.slatwall.getLoggedInFlag()) {
+			
+			var gigyaIntegration = getIntegrationService().getIntegrationByIntegrationPackage('gigya');
+			
+			gigyaIntegration.getIntegrationCFC( 'authentication' ).linkAccountToGigya(account=arguments.rc.$.slatwall.getAccount(), data=arguments.rc);
+			
+			if(structKeyExists(rc, "sRedirectURL")) {
+				getFW().redirectExact(rc.sRedirectURL);
+			} else {
+				getFW().redirect(action="admin:main.default", queryString="s=1");	
+			}
+			
+		}
+		
+		getFW().setView( "gigya:main.adminuserattach" );
+	}
+	
+	public void function attachNewUser(required struct rc) {
+		
+		// TODO: Add logic here to create a new user, and then link to gigya account
 		
 	}
 	

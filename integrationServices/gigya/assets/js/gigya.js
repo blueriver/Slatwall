@@ -3,9 +3,6 @@
 		onLogin:gigyaOnLogin
 	   }
 	);
-	
-	console.log(  );
-	
 })(jQuery)
 
 function gigyaOnLogin( eventObj ) {
@@ -21,7 +18,7 @@ function gigyaOnLogin( eventObj ) {
 
 		// Redirect to the attach user page
 		var redirectURL = $.slatwall.getConfig()['baseURL'];
-		redirectURL += '/?slatAction=gigya:main.adminuserattach&UID=';
+		redirectURL += '/?slatAction=gigya:main.attachExistingUserAdminForm&UID=';
 		redirectURL += encodeURIComponent(eventObj.UID);
 		redirectURL += '&UIDSig=';
 		redirectURL += encodeURIComponent(eventObj.UIDSig);
