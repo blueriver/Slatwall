@@ -53,7 +53,6 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 	// Related Object Properties (many-to-one)
 	property name="loyalty" cfc="Loyalty" fieldtype="many-to-one" fkcolumn="loyaltyID";
 	property name="loyaltyTerm" cfc="LoyaltyTerm" fieldtype="many-to-one" fkcolumn="loyaltyTermID";
-	//property name="autoRedemptionTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="autoRedemptionTermID" hb_optionsNullRBKey="define.never";
 	property name="priceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="priceGroupID";
 	
 	// Related Object Properties (one-to-many)

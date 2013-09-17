@@ -72,13 +72,14 @@ Notes:
 			</cf_HibachiPropertyList>
 		</cf_HibachiPropertyRow>
 		
-		
-		<cf_HibachiTabGroup object="#rc.loyaltyRedemption#">
-			<cf_HibachiTab view="admin:entity/loyaltyRedemptiontabs/producttypes" />
-			<cf_HibachiTab view="admin:entity/loyaltyRedemptiontabs/products" />
-			<cf_HibachiTab view="admin:entity/loyaltyRedemptiontabs/skus" />
-			<cf_HibachiTab view="admin:entity/loyaltyRedemptiontabs/brands" />
-		</cf_HibachiTabGroup>
+		<cfif not rc.loyaltyRedemption.getRedemptionType() eq "priceGroupAssignment">
+			<cf_HibachiTabGroup object="#rc.loyaltyRedemption#">
+				<cf_HibachiTab view="admin:entity/loyaltyRedemptiontabs/producttypes" />
+				<cf_HibachiTab view="admin:entity/loyaltyRedemptiontabs/products" />
+				<cf_HibachiTab view="admin:entity/loyaltyRedemptiontabs/skus" />
+				<cf_HibachiTab view="admin:entity/loyaltyRedemptiontabs/brands" />
+			</cf_HibachiTabGroup>
+		</cfif>
 
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
