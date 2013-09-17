@@ -54,29 +54,40 @@ Notes:
 	</cffunction>
 	
 	<cffunction name="getAdminLoginHTML" access="public" returntype="string">
+		<cfset var adminLoginHTML = "" />
+		<cfset var initializationStruct = {} />
 		
-		<!---
-			<script type="text/javascript">
-			var login_params=
-			{
-				showTermsLink: 'false'
-				,height: 100
-				,width: 330
-				,containerID: 'componentDiv'
-				,buttonsStyle: 'fullLogo'
-				,autoDetectUserProviders: ''
-				,facepilePosition: 'none'
-			}
-			</script>
-			<div id="componentDiv"></div>
-			<script type="text/javascript">
-			   gigya.socialize.showLoginUI(login_params);
-			</script>
+		<cfset initializationStruct[ "siteName" ] = setting('siteName') />
+		<cfset initializationStruct[ "enabledProviders" ] = setting('enabledProviders') />
 		
-	--->
+		<cfsavecontent variable="adminLoginHTML">
+			<cfoutput>
+				<script type="text/javascript" src="http://cdn.gigya.com/js/socialize.js?apiKey=#setting('apiKey')#">
+					#serializeJSON(initializationStruct)#
+				</script>
+				<script type="text/javascript" src="#getApplicationValue('baseURL')#/integrationServices/gigya/assets/js/gigya.js"></script>
+				<script type="text/javascript">
+					var login_params= {
+						showTermsLink: 'false'
+						,height: 100
+						,width: 330
+						,containerID: 'gigyaLogin'
+						,buttonsStyle: 'fullLogo'
+						,autoDetectUserProviders: ''
+						,facepilePosition: 'none'
+					}
+				</script>
+				<div id="gigyaLogin"></div>
+				<script type="text/javascript">
+				   gigya.socialize.showLoginUI( login_params );
+				</script>
+			</cfoutput>
+		</cfsavecontent>
+		
+		<cfreturn adminLoginHTML />
 	</cffunction>
 
-	
+	<!---
 	<cffunction name="init" access="public" returntype="Gigya" output="false">
 		<cfargument name="secret" type="string" default="Kz0XznsVOeNRSTwL4WpbJlDR8yDQrxfPb3e/8JzH+xI=" required="false">
 		
@@ -224,7 +235,7 @@ Notes:
 
 		<cfreturn stResult/>
 	</cffunction>
-
+	--->
 
 </cfcomponent>
 

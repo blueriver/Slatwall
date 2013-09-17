@@ -48,10 +48,14 @@ Notes:
 */
 component extends="Slatwall.org.Hibachi.HibachiController" output="false" accessors="true"  {
 
-	this.publicMethods="";
+	this.publicMethods="adminuserattach,attachuser";
 	this.secureMethods="default";
 	
 	public void function default() {
+	}
+	
+	public void function attachuser(required struct rc) {
+		
 	}
 	
 }
