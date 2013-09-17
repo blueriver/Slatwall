@@ -95,6 +95,9 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 			var smartList = getService("loyaltyService").getLoyaltyTermSmartList();
 			smartList.addOrder("loyaltyTermName|ASC");
 			
+			arrayAppend(variables.redemptionPointTypeOptions,{name=rbKey('entity.loyaltyRedemption.redemptionPointType.lifetime'),value="lifetime"});
+			arrayAppend(variables.redemptionPointTypeOptions,{name=rbKey('entity.loyaltyRedemption.redemptionPointType.current'),value="current"});
+			
 			for(var loyaltyTerm in smartList.getRecords()) {
 				arrayAppend(variables.redemptionPointTypeOptions,{name=loyaltyTerm.getLoyaltyTermName(),value=loyaltyTerm.getLoyaltyTermName()});
 			}
@@ -104,17 +107,17 @@ component displayname="Loyalty Redemption" entityname="SlatwallLoyaltyRedemption
 	
 	public array function getRedemptionTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyRedemption.redemptionType.pointPurchase'), value="pointPurchase"},
-			{name=rbKey('entity.loyaltyRedemption.redemptionType.voucherCreation'), value="voucherCreation"},
+			//{name=rbKey('entity.loyaltyRedemption.redemptionType.pointPurchase'), value="pointPurchase"},
+			//{name=rbKey('entity.loyaltyRedemption.redemptionType.voucherCreation'), value="voucherCreation"},
 			{name=rbKey('entity.loyaltyRedemption.redemptionType.priceGroupAssignment'), value="priceGroupAssignment"}
 		];
 	}
 	
 	public array function getAutoRedemptionTypeOptions() {
 		return [
-			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.loyaltyTermEnd'), value="loyaltyTermEnd"},
-			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.pointsAdjusted'), value="pointsAdjusted"},
-			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.none'), value="none"}
+			//{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.loyaltyTermEnd'), value="loyaltyTermEnd"},
+			{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.pointsAdjusted'), value="pointsAdjusted"}
+			//{name=rbKey('entity.loyaltyRedemption.autoRedemptionType.none'), value="none"}
 		];
 	}
 	

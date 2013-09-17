@@ -72,7 +72,7 @@ Notes:
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.accountLoyalty#">
-			<cf_HibachiTab view="admin:entity/accountloyaltytabs/transactions" />
+			<cf_HibachiTab view="admin:entity/accountloyaltytabs/accountloyaltytransactions" />
 		</cf_HibachiTabGroup>
 			
 	</cf_HibachiEntityDetailForm>
