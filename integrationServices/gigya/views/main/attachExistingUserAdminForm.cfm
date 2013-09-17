@@ -9,7 +9,7 @@
 		<p>Because you have never used this social media profile before with your account, you will need to connect it with your existing slatwall account.</p>
 		<cfset authorizeProcessObject = $.slatwall.getAccount().getProcessObject("login") />
 		<form action="?s=1" class="form-horizontal" method="post">
-			<input type="hidden" name="slatAction" value="gigya:main.attachuser" />
+			<input type="hidden" name="slatAction" value="gigya:main.attachExistingUser" />
 			<input type="hidden" name="UID" value="#rc.UID#" />
 			<input type="hidden" name="UIDSig" value="#rc.UIDSig#" />
 			<input type="hidden" name="UIDSignature" value="#rc.UIDSignature#" />
