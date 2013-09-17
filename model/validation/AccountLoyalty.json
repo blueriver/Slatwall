@@ -1,5 +1,6 @@
 {
 	"properties":{
-		"loyalty":							[{"contexts":"save","required":true,"unique":true}]
+		"accountLoyaltyID":		[{"contexts":"delete","maxLength":0}],
+		"loyalty":				[{"contexts":"save","required":true,"unique":true}]
 	}
 }
