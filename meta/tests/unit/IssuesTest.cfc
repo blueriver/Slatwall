@@ -205,37 +205,6 @@ component extends="SlatwallUnitTestBase" {
 		request.slatwallScope.saveEntity( product );
 	}
 	
-	public void function issue_1863() {
-		
-		var loyaltyRedemption = request.slatwallScope.newEntity("loyaltyRedemption");
-		
-		var loyaltyRedemption = entityNew("SlatwallLoyaltyRedemption");
-		
-		loyaltyRedemptionData = {
-			redemptionPointType = "test",
-			redemptionType = "priceGroupAssignment",
-			autoRedemptionType = "loyaltyTermEnd",
-			loyaltyTerm = {
-				loyaltyTermID = "4028288540ee64270140f05518f30003"
-			},
-			activeFlag = true
-		};
-		
-		loyaltyRedemption.populate( loyaltyRedemptionData );
-		
-		if ( loyaltyRedemption.getAutoRedemptionType() eq "loyaltyTermEnd" ) {
-			
-			if( !isNull(loyaltyRedemption.getLoyaltyTerm()) && !isNull(loyaltyRedemption.getLoyaltyTerm().getLoyaltyTermNextEndDateTime())) {
-				loyaltyRedemption.setNextRedemptionDateTime( loyaltyRedemption.getLoyaltyTerm().getLoyaltyTermNextEndDateTime() );
-			}
-		}
-		
-		//assert(!isNull(loyaltyRedemption.getNextRedemptionDateTime()));
-		
-		writeDump(var=#loyaltyRedemption# top=1);
-		
-		writeDump(var=#loyaltyRedemption.getLoyaltyTerm().getLoyaltyTermNextEndDateTime()#);
-	}
 }
 
 
