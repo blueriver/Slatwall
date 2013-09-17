@@ -1147,7 +1147,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			for(var orderfulfillmentItem in orderFulfillment.getOrderFulfillmentItems()) {
 				
-				if(!listFindNoCase("oistFulfilled",orderfulfillmentItem.getOrderItemStatusType().getSystemCode())){
+				if(!listFindNoCase("oistFulfilled",orderFulfillmentItem.getOrderItemStatusType().getSystemCode())){
 					allOrderItemsFulfilled = false;
 					break;
 				}

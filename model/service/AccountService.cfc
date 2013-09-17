@@ -448,7 +448,7 @@ component extends="HibachiService" accessors="true" output="false" {
 						// Setup the transaction data
 						var transactionData = {
 							accruementType = "itemFulfilled",
-							accountLoyalty = accountLoyalty,
+							accountLoyalty = arguments.accountLoyalty,
 							loyaltyAccruement = loyaltyAccruement,
 							orderDeliveryItem = orderDeliveryItem,
 							order = orderDeliveryItem.getOrderItem().getOrder(),
@@ -504,7 +504,7 @@ component extends="HibachiService" accessors="true" output="false" {
 					// Setup the transaction data
 					var transactionData = {
 						accruementType = "orderClosed",
-						accountLoyalty = accountLoyalty,
+						accountLoyalty = arguments.accountLoyalty,
 						loyaltyAccruement = loyaltyAccruement,
 						order = arguments.data.order,
 						pointAdjustmentType = "pointsIn"
@@ -554,7 +554,7 @@ component extends="HibachiService" accessors="true" output="false" {
 				// Setup the transaction data
 				var transactionData = {
 					accruementType = "fulfillmentMethodUsed",
-					accountLoyalty = accountLoyalty,
+					accountLoyalty = arguments.accountLoyalty,
 					loyaltyAccruement = loyaltyAccruement,
 					orderFulfillment = arguments.data.orderFulfillment,
 					pointAdjustmentType = "pointsIn"
@@ -599,7 +599,7 @@ component extends="HibachiService" accessors="true" output="false" {
 				// Setup the transaction data
 				var transactionData = {
 					accruementType = "enrollment",
-					accountLoyalty = accountLoyalty,
+					accountLoyalty = arguments.accountLoyalty,
 					loyaltyAccruement = loyaltyAccruement,
 					pointAdjustmentType = "pointsIn"
 				};
@@ -695,7 +695,7 @@ component extends="HibachiService" accessors="true" output="false" {
 						// Setup the transaction data
 						var transactionData = {
 							accruementType = "itemFulfilled",
-							accountLoyalty = accountLoyalty,
+							accountLoyalty = arguments.accountLoyalty,
 							loyaltyAccruement = loyaltyAccruement,
 							orderItemReceived = orderItemReceived,
 							order = orderItemReceived.getOrderItem().getOrder(),
@@ -751,85 +751,86 @@ component extends="HibachiService" accessors="true" output="false" {
 	public any function processAccountLoyaltyTransaction_create(required any accountLoyaltyTransaction, required struct data) {
 		// TODO [paul]: set this up as the place where all point transactions are created
 		
-		// Setup the transaction
-		arguments.accountLoyaltyTransaction.setAccruementType( arguments.data.accruementType );
-		arguments.accountLoyaltyTransaction.setAccountLoyalty( arguments.data.accountLoyalty );
-		arguments.accountLoyaltyTransaction.setLoyaltyAccruement( arguments.data.loyaltyAccruement );
-		
-		if(structKeyExists(arguments.data, "order")) {
-			arguments.accountLoyaltyTransaction.setOrder( arguments.data.order );
-		}
-		
-		if(structKeyExists(arguments.data, "orderItem")) {
-			arguments.accountLoyaltyTransaction.setOrderItem( arguments.data.orderItem );
-		}
-		
-		if(structKeyExists(arguments.data, "orderFulfillment")) {
-			arguments.accountLoyaltyTransaction.setOrderFulfillment( arguments.data.orderFulfillment );
-		}
-		
-		// Set up loyalty program expiration date / time based upon the expiration term
-		if( !isNull(arguments.data.loyaltyAccruement.getExpirationTerm()) ){
-		    arguments.accountLoyaltyTransaction.setExpirationDateTime( arguments.data.loyaltyAccruement.getExpirationTerm().getEndDate() );
-		}
-		
-		
-		if ( arguments.data.pointAdjustmentType eq "pointsIn" ) {
+		// Process only the 'active' loyalty programs
+		if ( arguments.data.accountLoyalty.getLoyalty().getActiveFlag() ) {
 			
-			if ( arguments.data.loyaltyAccruement.getPointType() eq 'fixed' ){
-				arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() );
-			} 
-			else if ( arguments.data.loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
+			// Setup the transaction
+			arguments.accountLoyaltyTransaction.setAccruementType( arguments.data.accruementType );
+			arguments.accountLoyaltyTransaction.setAccountLoyalty( arguments.data.accountLoyalty );
+			arguments.accountLoyaltyTransaction.setLoyaltyAccruement( arguments.data.loyaltyAccruement );
+			
+			// Set the order, orderItem and orderFulfillment if they exist 
+			if(structKeyExists(arguments.data, "order")) {
+				arguments.accountLoyaltyTransaction.setOrder( arguments.data.order );
+			}
+			
+			if(structKeyExists(arguments.data, "orderItem")) {
+				arguments.accountLoyaltyTransaction.setOrderItem( arguments.data.orderItem );
+			}
+			
+			if(structKeyExists(arguments.data, "orderFulfillment")) {
+				arguments.accountLoyaltyTransaction.setOrderFulfillment( arguments.data.orderFulfillment );
+			}
+			
+			// Set up loyalty program expiration date / time based upon the expiration term
+			if( !isNull(arguments.data.loyaltyAccruement.getExpirationTerm()) ){
+			    arguments.accountLoyaltyTransaction.setExpirationDateTime( arguments.data.loyaltyAccruement.getExpirationTerm().getEndDate() );
+			}
+			
+			
+			if ( arguments.data.pointAdjustmentType eq "pointsIn" ) {
 				
-				if (arguments.data.accruementType eq 'itemFulfilled') {
-					arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * (arguments.data.orderDeliveryItem.getQuantity() * arguments.data.orderDeliveryItem.getOrderItem().getPrice()) );
+				if ( arguments.data.loyaltyAccruement.getPointType() eq 'fixed' ){
+					arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() );
+				} 
+				else if ( arguments.data.loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
+					
+					if (arguments.data.accruementType eq 'itemFulfilled') {
+						arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * (arguments.data.orderDeliveryItem.getQuantity() * arguments.data.orderDeliveryItem.getOrderItem().getPrice()) );
+					}
+					else if (arguments.data.accruementType eq 'orderClosed') {
+						arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * arguments.data.order.getTotal() );
+					}
+					else if (arguments.data.accruementType eq 'fulfillmentMethodUsed') {
+						arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * arguments.data.orderFulfillment.getFulFillmentCharge() );
+					}	
 				}
-				else if (arguments.data.accruementType eq 'orderClosed') {
-					arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * arguments.data.order.getTotal() );
+				
+			}
+			else {			
+				if ( arguments.data.loyaltyAccruement.getPointType() eq 'fixed' ){
+					arguments.accountLoyaltyTransaction.setPointsOut( arguments.data.loyaltyAccruement.getPointQuantity() );
+				} 
+				else if ( arguments.data.loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
+					arguments.accountLoyaltyTransaction.setPointsOut( arguments.data.loyaltyAccruement.getPointQuantity() * (arguments.data.orderItemReceived.getQuantity() * arguments.data.orderItemReceived.getOrderItem().getPrice()) );
 				}
-				else if (arguments.data.accruementType eq 'fulfillmentMethodUsed') {
-					arguments.accountLoyaltyTransaction.setPointsIn( arguments.data.loyaltyAccruement.getPointQuantity() * arguments.data.orderFulfillment.getFulFillmentCharge() );
-				}	
 			}
 			
-		}
-		else {			
-			if ( arguments.data.loyaltyAccruement.getPointType() eq 'fixed' ){
-				arguments.accountLoyaltyTransaction.setPointsOut( arguments.data.loyaltyAccruement.getPointQuantity() );
-			} 
-			else if ( arguments.data.loyaltyAccruement.getPointType() eq 'pointPerDollar' ) {
-				arguments.accountLoyaltyTransaction.setPointsOut( arguments.data.loyaltyAccruement.getPointQuantity() * (arguments.data.orderItemReceived.getQuantity() * arguments.data.orderItemReceived.getOrderItem().getPrice()) );
-			}
-		}
-		
-		
-		// TODO [paul]: remove logic for 'orderClosed' redemption, and add logic here for 'pointsAdjusted' redemption
-		// Basically, loop over the redemptions for this loyaltyProgram that have redeptionType of 'pointsAdjusted', and call getLoyaltyService().processLoyaltyRedeption_redeem()
-		
-		
-		
-		// TODO [paul]: Loop over all redemptions and find any that are auto-redemption based on the order being closed.  Then call processLoyaltyRedemption
-		// redemptionData = { account = accountLoyalty.getAccount() }
-		// loyaltyRedemption = getLoyaltyService().processLoyaltyRedeption( loyaltyRedemption, redemptionData, 'redeem')
-		
-		
-		
-		// Loop over account loyalty redemptions
-		for(var loyaltyRedemption in arguments.data.accountLoyalty.getLoyalty().getLoyaltyRedemptions()) {	
+			// TODO [paul]: remove logic for 'orderClosed' redemption, and add logic here for 'pointsAdjusted' redemption
+			// Basically, loop over the redemptions for this loyaltyProgram that have redeptionType of 'pointsAdjusted', and call getLoyaltyService().processLoyaltyRedeption_redeem()
 			
-			// If loyalty auto redemption eq 'pointsAdjusted' as the type
-			if (loyaltyRedemption.getAutoRedemptionType() eq 'pointsAdjusted') {
-
-				redemptionData = { 
-					account = arguments.data.accountLoyalty.getAccount(), 
-					accountLoyalty = arguments.data.accountLoyalty
-				};
 			
-				loyaltyRedemption = getLoyaltyService().processLoyaltyRedemption( loyaltyRedemption, redemptionData, 'redeem' );	
+			// TODO [paul]: Loop over all redemptions and find any that are auto-redemption based on the order being closed.  Then call processLoyaltyRedemption
+			// redemptionData = { account = accountLoyalty.getAccount() }
+			// loyaltyRedemption = getLoyaltyService().processLoyaltyRedeption( loyaltyRedemption, redemptionData, 'redeem')
+			
+		
+			// Loop over account loyalty redemptions
+			for(var loyaltyRedemption in arguments.data.accountLoyalty.getLoyalty().getLoyaltyRedemptions()) {	
+				
+				// If loyalty auto redemption eq 'pointsAdjusted' as the type
+				if (loyaltyRedemption.getAutoRedemptionType() eq 'pointsAdjusted') {
+	
+					redemptionData = { 
+						account = arguments.data.accountLoyalty.getAccount(), 
+						accountLoyalty = arguments.data.accountLoyalty
+					};
+				
+					loyaltyRedemption = getLoyaltyService().processLoyaltyRedemption( loyaltyRedemption, redemptionData, 'redeem' );	
+				}
 			}
+		
 		}
-		
-		
 		return arguments.accountLoyaltyTransaction;
 	}
 	
