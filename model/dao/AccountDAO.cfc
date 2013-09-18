@@ -170,7 +170,7 @@ Notes:
 		</cfquery>
 	</cffunction>
 	
-	<cffunction name="generateAccountLoyaltyNumber" output="false">
+	<cffunction name="getNewAccountLoyaltyNumber" output="false">
 		<cfargument name="loyaltyID" type="string" required="true" />
 		
 		<cfset var accountLoyaltyNumber="1234" />

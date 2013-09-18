@@ -117,7 +117,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 	property name="slatwallAuthenticationExistsFlag" persistent="false";
 	property name="termAccountAvailableCredit" persistent="false" hb_formatType="currency";
 	property name="termAccountBalance" persistent="false" hb_formatType="currency";
-	property name="unenrolledAccountLoyaltyProgramOption" persistent="false";
+	property name="unenrolledAccountLoyaltyOptions" persistent="false";
 	
 	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
 		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
@@ -282,20 +282,20 @@ component displayname="Account" entityname="SlatwallAccount" table="SwAccount" p
 		return termAccountBalance;
 	}
 	
-	public any function getUnenrolledAccountLoyaltyProgramOptions() {
-		if(!structKeyExists(variables, "unenrolledAccountLoyaltyProgramOptions")) {
-			variables.unenrolledAccountLoyaltyProgramOptions = [];
+	public any function getUnenrolledAccountLoyaltyOptions() {
+		if(!structKeyExists(variables, "unenrolledAccountLoyaltyOptions")) {
+			variables.unenrolledAccountLoyaltyOptions = [];
 			
 			var smartList = getService("loyaltyService").getLoyaltySmartList();
 			smartList.addFilter('activeFlag', 1);
 			smartList.addWhereCondition(" NOT EXISTS( FROM SlatwallAccountLoyalty al WHERE al.loyalty.loyaltyID = aslatwallloyalty.loyaltyID)");
 			
 			for(var loyaltyPrograms in smartList.getRecords()) {
-				arrayAppend(variables.unenrolledAccountLoyaltyProgramOptions,{name=loyaltyPrograms.getLoyaltyName(),value=loyaltyPrograms.getLoyaltyID()});
+				arrayAppend(variables.unenrolledAccountLoyaltyOptions,{name=loyaltyPrograms.getLoyaltyName(),value=loyaltyPrograms.getLoyaltyID()});
 			}
 		}
 
-		return variables.unenrolledAccountLoyaltyProgramOptions;
+		return variables.unenrolledAccountLoyaltyOptions;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

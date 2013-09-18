@@ -49,17 +49,59 @@ Notes:
 component output="false" accessors="true" extends="HibachiProcess" {
 	
 	// Injected Entity
-	property name="account";
+	property name="account";	
+	
+	// Lazy / Injected Objects
+	property name="loyalty";
+	
+	// New Properties
 
-	// Data Properties
+	// Data Properties (ID's)
+	property name="loyaltyID" hb_formFieldType="select" hb_rbKey="entity.loyalty";
+	
+	// Data Properties (Inputs)
 	property name="accountLoyaltyNumber";
-	property name="loyalty" hb_formFieldType="select";
 	
-	// Cached Properties
-	property name="loyaltyOptions";
+	// Data Properties (Related Entity Populate)
 	
-	public array function getLoyaltyOptions() {
-		
-		return getAccount().getUnenrolledAccountLoyaltyProgramOptions();
-	}	
+	// Data Properties (Object / Array Populate)
+	
+	// Option Properties
+	property name="loyaltyIDOptions";
+	
+	// Helper Properties
+	
+	// ======================== START: Defaults ============================
+	
+	// ========================  END: Defaults =============================
+
+	// =================== START: Lazy Object Helpers ======================
+	
+	public any function getLoyalty() {
+		if( !structKeyExists(variables,"loyalty") ) {
+			variables.loyalty = getService("loyaltyService").getLoyalty( getLoyaltyID() );
+		}
+		return variables.loyalty;
+	}
+	
+	// ===================  END: Lazy Object Helpers =======================
+	
+	// ================== START: New Property Helpers ======================
+	
+	// ==================  END: New Property Helpers =======================
+	
+	// ====================== START: Data Options ==========================
+	
+	public array function getLoyaltyIDOptions() {
+		if( !structKeyExists(variables,"loyaltyIDOptions") ) {
+			variables.loyaltyIDOptions = getAccount().getUnenrolledAccountLoyaltyOptions();
+		}
+		return variables.loyaltyIDOptions;
+	}
+	
+	// ======================  END: Data Options ===========================
+	
+	// ===================== START: Helper Methods =========================
+	
+	// =====================  END: Helper Methods ==========================	
 }

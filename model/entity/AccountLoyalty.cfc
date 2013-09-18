@@ -43,7 +43,7 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 
 	// Related Object Properties (many-to-one)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="loyalty" cfc="loyalty" fieldtype="many-to-one" fkcolumn="loyaltyID";
+	property name="loyalty" cfc="Loyalty" fieldtype="many-to-one" fkcolumn="loyaltyID";
 	
 	// Related Object Properties (one-to-many)
 	property name="accountLoyaltyTransactions" singularname="accountLoyaltyTransaction" type="array" fieldtype="one-to-many" fkcolumn="accountLoyaltyID" cfc="AccountLoyaltyTransaction" cascade="all-delete-orphan" inverse="true";
@@ -173,15 +173,6 @@ component displayname="Account Loyalty Program" entityname="SlatwallAccountLoyal
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
-	
-	public void function preInsert() {
-		for(var accountLoyalty in getAccount().getAccountLoyalties()) {
-			getService("accountService").processAccountLoyalty(accountLoyalty, 'enrollment'); 
-		}
-		
-		super.preInsert();
-    }
-
 	
 	// ===================  END:  ORM Event Hooks  =========================
 	

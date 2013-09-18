@@ -101,8 +101,8 @@ component extends="HibachiService" accessors="true" output="false" {
 		return getAccountDAO().getAccountWithAuthenticationByEmailAddress( argumentcollection=arguments );
 	}
 	
-	public any function generateAccountLoyaltyNumberByLoyalty( required string loyalty ) {
-		return getAccountDAO().generateAccountLoyaltyNumber( arguments.loyalty );
+	public any function getNewAccountLoyaltyNumber( required string loyaltyID ) {
+		return getAccountDAO().getNewAccountLoyaltyNumber( argumentcollection=arguments );
 	}
 	
 	// =====================  END: DAO Passthrough ============================
@@ -382,16 +382,16 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		// Get the populated AccountLoyalty out of the processObject
 		var newAccountLoyalty = this.newAccountLoyalty();
-		
-		// Make sure that this new accountLoyalty gets attached to the account
-		if(isNull(newAccountLoyalty.getAccount())) {
-			newAccountLoyalty.setAccount( arguments.account );
-		}
-		
-		newAccountLoyalty.setAccountLoyaltyNumber( generateAccountLoyaltyNumberByLoyalty( processObject.getLoyalty() ));
-		
-		// Save the newAccountLoyalty
+
+		newAccountLoyalty.setAccount( arguments.account );
+		newAccountLoyalty.setLoyalty( arguments.processObject.getLoyalty() );
+		newAccountLoyalty.setAccountLoyaltyNumber( getNewAccountLoyaltyNumber( arguments.processObject.getLoyaltyID() ));
+
 		newAccountLoyalty = this.saveAccountLoyalty( newAccountLoyalty );
+		
+		if(!newAccountLoyalty.hasErrors()) {
+			newAccountLoyalty = this.processAccountLoyalty(newAccountLoyalty, {}, 'enrollment');
+		}
 		
 		return arguments.account;
 	}	
@@ -555,9 +555,10 @@ component extends="HibachiService" accessors="true" output="false" {
 	
 	public any function processAccountLoyalty_enrollment(required any accountLoyalty) {
 
+	
 		// Loop over arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements() as 'loyaltyAccruement'
-		for(var loyaltyAccruement in arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements()) {	
-			
+		for(var loyaltyAccruement in arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements()) {
+		
 			// If loyaltyAccruement eq 'enrollment' as the type
 			if (loyaltyAccruement.getAccruementType() eq 'enrollment') {
 				
