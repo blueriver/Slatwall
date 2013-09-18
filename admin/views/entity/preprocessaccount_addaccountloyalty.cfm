@@ -46,23 +46,21 @@
 Notes:
 
 --->
-<cfparam name="rc.account" type="any" />
-
-<cfoutput>
-	<cf_HibachiListingDisplay smartList="#rc.account.getAccountLoyaltiesSmartList()#"
-							  recorddetailAction="admin:entity.detailaccountloyalty"
-							  recordEditAction="admin:entity.editaccountloyalty"
-							  recordEditQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
-							  recordDeleteQueryString="accountID=#rc.account.getAccountID()#&sRedirectAction=admin:entity.detailAccount"
-							  edit="#rc.edit#">
-
-		<cf_HibachiListingColumn propertyIdentifier="loyalty.loyaltyName" />
-		<cf_HibachiListingColumn propertyIdentifier="loyalty.activeFlag" />
-
-	</cf_HibachiListingDisplay>
+<cfparam name="rc.account" type="any">
+<cfparam name="rc.processObject" type="any">
+<cfparam name="rc.edit" type="boolean">
 
 
-	<!---<cf_HibachiActionCaller action="admin:entity.createaccountloyalty" class="btn" icon="plus" queryString="sRedirectAction=admin:entity.detailaccount&accountID=#rc.account.getAccountID()#" modal="true"  />--->
-	<cf_HibachiProcessCaller action="admin:entity.preprocessaccount" entity="#rc.account#" processContext="addAccountLoyalty" class="btn" icon="plus" modal="true" />
+<cf_HibachiEntityProcessForm entity="#rc.account#" edit="#rc.edit#">
+	
+	<cf_HibachiEntityActionBar type="preprocess" object="#rc.account#">
+	</cf_HibachiEntityActionBar>
+	
+	<cf_HibachiPropertyRow>
+		<cf_HibachiPropertyList>
+			<cf_HibachiPropertyDisplay object="#rc.processObject#" property="loyalty" edit="#rc.edit#">
+		</cf_HibachiPropertyList>
+	</cf_HibachiPropertyRow>
+		
+</cf_HibachiEntityProcessForm>
 
-</cfoutput>

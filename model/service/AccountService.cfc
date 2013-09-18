@@ -101,6 +101,10 @@ component extends="HibachiService" accessors="true" output="false" {
 		return getAccountDAO().getAccountWithAuthenticationByEmailAddress( argumentcollection=arguments );
 	}
 	
+	public any function generateAccountLoyaltyNumberByLoyalty( required string loyalty ) {
+		return getAccountDAO().generateAccountLoyaltyNumber( arguments.loyalty );
+	}
+	
 	// =====================  END: DAO Passthrough ============================
 	
 	// ===================== START: Process Methods ===========================
@@ -373,6 +377,24 @@ component extends="HibachiService" accessors="true" output="false" {
 		
 		return arguments.account;
 	}
+
+	public any function processAccount_addAccountLoyalty(required any account, required any processObject) {
+		
+		// Get the populated AccountLoyalty out of the processObject
+		var newAccountLoyalty = this.newAccountLoyalty();
+		
+		// Make sure that this new accountLoyalty gets attached to the account
+		if(isNull(newAccountLoyalty.getAccount())) {
+			newAccountLoyalty.setAccount( arguments.account );
+		}
+		
+		newAccountLoyalty.setAccountLoyaltyNumber( generateAccountLoyaltyNumberByLoyalty( processObject.getLoyalty() ));
+		
+		// Save the newAccountLoyalty
+		newAccountLoyalty = this.saveAccountLoyalty( newAccountLoyalty );
+		
+		return arguments.account;
+	}	
 	
 	// Account Loyalty
 	public any function processAccountLoyalty_itemFulfilled(required any accountLoyalty, required struct data) {
@@ -532,7 +554,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	}
 	
 	public any function processAccountLoyalty_enrollment(required any accountLoyalty) {
-		
+
 		// Loop over arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements() as 'loyaltyAccruement'
 		for(var loyaltyAccruement in arguments.accountLoyalty.getLoyalty().getLoyaltyAccruements()) {	
 			
