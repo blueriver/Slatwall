@@ -59,6 +59,7 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	public struct function getSettings() {
 		return {
 			apiKey = {fieldType="text"},
+			secretKey = {fieldType="password", encryptValue="true"},
 			siteName = {fieldType="text"},
 			enabledProviders = {fieldType="text", defaultValue="facebook,twitter,googleplus,linkedin,yahoo,microsoft,aol,foursquare"}
 		};

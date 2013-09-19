@@ -93,7 +93,7 @@ Notes:
 		
 		<cfset var gigyaNotifyResponse = "" />
 		
-		<cfhttp method="post" url="https://socialize.gigya.com/socialize.notifyRegistration?apiKey=#setting('apiKey')#" result="gigyaNotifyResponse">
+		<cfhttp method="post" url="https://socialize.gigya.com/socialize.notifyRegistration?apiKey=#setting('apiKey')#&secret=#setting('secretKey')#" result="gigyaNotifyResponse">
 			<cfhttpparam type="formfield" name="UID" value="#arguments.data.UID#" />
 			<cfhttpparam type="formfield" name="siteUID" value="#arguments.account.getAccountID()#" />
 		</cfhttp>
