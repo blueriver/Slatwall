@@ -49,208 +49,153 @@ Notes:
 
 <cfcomponent accessors="true" output="false" implements="Slatwall.integrationServices.AuthenticationInterface" extends="Slatwall.integrationServices.BaseAuthentication">
 
+	<cfproperty name="signatureUtilities" type="any" />
+	
+	<!--- ============== START: Slatwall API Hooks ================= --->
 	<cffunction name="verifySessionLogin" access="public" returntype="boolean">
 		<cfreturn true />
 	</cffunction>
 	
 	<cffunction name="getAdminLoginHTML" access="public" returntype="string">
-		<cfset var adminLoginHTML = "" />
-		<cfset var initializationStruct = {} />
+		<cfreturn renderGigyaWidget({
+			loginFormID = 'adminLogin'
+		}) />
+	</cffunction>
+	
+	<cffunction name="renderGigyaWidget" access="public" returntype="string">
+		<cfargument name="config" default="#structNew()#" />
 		
-		<cfset initializationStruct[ "siteName" ] = setting('siteName') />
-		<cfset initializationStruct[ "enabledProviders" ] = setting('enabledProviders') />
+		<!--- setup the defaults --->
+		<cfparam name="arguments.config.showTermsLink" default="false" />
+		<cfparam name="arguments.config.height" default="100" />
+		<cfparam name="arguments.config.width" default="400" />
+		<cfparam name="arguments.config.containerID" default="#createUUID()#" />
+		<cfparam name="arguments.config.buttonsStyle" default="fullLogo" />
+		<cfparam name="arguments.config.autoDetectUserProviders" default="" />
+		<cfparam name="arguments.config.facepilePosition" default="none" />
 		
-		<cfsavecontent variable="adminLoginHTML">
+		<cfset var gigyaWidget = "" />
+		
+		<cfsavecontent variable="gigyaWidget">
 			<cfoutput>
-				<script type="text/javascript" src="http://cdn.gigya.com/js/socialize.js?apiKey=#setting('apiKey')#">
-					#serializeJSON(initializationStruct)#
-				</script>
-				<script type="text/javascript" src="#getApplicationValue('baseURL')#/integrationServices/gigya/assets/js/gigya.js"></script>
 				<script type="text/javascript">
-					var login_params= {
-						showTermsLink: 'false'
-						,height: 100
-						,width: 330
-						,containerID: 'gigyaLogin'
-						,buttonsStyle: 'fullLogo'
-						,autoDetectUserProviders: ''
-						,facepilePosition: 'none'
-					}
+					var login_params = #serializeJSON(arguments.config)#;
 				</script>
-				<div id="gigyaLogin"></div>
+				<div id="#arguments.config.containerID#"></div>
 				<script type="text/javascript">
 				   gigya.socialize.showLoginUI( login_params );
 				</script>
 			</cfoutput>
 		</cfsavecontent>
 		
-		<cfreturn adminLoginHTML />
+		<cfreturn gigyaWidget />
 	</cffunction>
 	
-	<cffunction name="linkAccountToGigya">
+	<!--- =============== END: Slatwall API Hooks ================== --->
+		
+	<!--- =============== START: GIGYA REST Calls =-================ --->
+		
+	<!--- socialize.notifyRegistration --->
+	<cffunction name="socializeNotifyRegistration">
 		<cfargument name="account" type="any" required="true" />
-		<cfargument name="data" type="struct" required="true" />
+		<cfargument name="uid" type="struct" required="true" />
 		
-		<cfset var gigyaNotifyResponse = "" />
+		<cfset var rawResponse = "" />
+		<cfset var xmlResponse = "" />
 		
-		<cfhttp method="post" url="https://socialize.gigya.com/socialize.notifyRegistration?apiKey=#setting('apiKey')#&secret=#setting('secretKey')#" result="gigyaNotifyResponse">
-			<cfhttpparam type="formfield" name="UID" value="#arguments.data.UID#" />
+		<cfhttp method="post" url="https://socialize.gigya.com/socialize.notifyRegistration" result="rawResponse">
+			<cfhttpparam type="formfield" name="apiKey" value="#setting('apiKey')#" />
+			<cfhttpparam type="formfield" name="secret" value="#setting('secretKey')#" />
+			<cfhttpparam type="formfield" name="UID" value="#arguments.UID#" />
 			<cfhttpparam type="formfield" name="siteUID" value="#arguments.account.getAccountID()#" />
 		</cfhttp>
 		
-		<cfdump var="#gigyaNotifyResponse#" />
-		<cfabort />
+		<cfset xmlResponse = xmlParse(rawResponse.fileContent) />
+		
+		<cfreturn xmlResponse />
 	</cffunction>
-
-	<!---
-	<cffunction name="init" access="public" returntype="Gigya" output="false">
-		<cfargument name="secret" type="string" default="Kz0XznsVOeNRSTwL4WpbJlDR8yDQrxfPb3e/8JzH+xI=" required="false">
+	
+	<!--- socialize.removeConnection --->
+	<cffunction name="socializeRemoveConnection">
+		<cfargument name="account" type="any" required="true" />
 		
-		<cfscript>
-			variables.secret = arguments.secret;
-		</cfscript>
+		<cfset var rawResponse = "" />
+		<cfset var xmlResponse = "" />
+		 
+		<cfhttp method="post" url="https://socialize.gigya.com/socialize.removeConnection" result="rawResponse">
+			<cfhttpparam type="formfield" name="apiKey" value="#setting('apiKey')#" />
+			<cfhttpparam type="formfield" name="secret" value="#setting('secretKey')#" />
+			<cfhttpparam type="formfield" name="UID" value="#account.getAccountID()#" />
+		</cfhttp>
 		
-		<cfreturn this/>
+		<cfset xmlResponse = xmlParse(rawResponse.fileContent) />
+		
+		<cfreturn xmlResponse />
 	</cffunction>
-
-	<cffunction name="getSignature" access="public" returntype="any" output="false" hint="Returns signature">
-		<cfargument name="UID" type="string" default="" required="true">
-		<cfargument name="giventimestamp" type="string" default="" required="false">
-		<cfargument name="regPath" type="boolean" default="false" required="false">
-		<cfargument name="offset" type="numeric" default="0" required="false">
+	
+	<!--- socialize.logout --->
+	<cffunction name="socializeLogout">
+		<cfargument name="account" type="any" required="true" />
 		
-		<cfset var stResult = {timeStamp='', sig=''} />
+		<cfset var rawResponse = "" />
+		<cfset var xmlResponse = "" />
 		
-		<cfif not len(arguments.giventimestamp)>
-			<cfset timeStamp = DateDiff("s", "January 1 1970 00:00", now()+arguments.offset)+18000><!--- GetTimeZoneInfo().utcTotalOffset --->
-		<cfelse>
-			<cfset timeStamp = arguments.giventimestamp>
-		</cfif>
-		<cfset baseString = timeStamp & "_" & arguments.UID>
-		<cfset binarySecret = ToBinary(variables.secret)>
+		<cfhttp method="post" url="https://socialize.gigya.com/socialize.logout" result="rawResponse">
+			<cfhttpparam type="formfield" name="apiKey" value="#setting('apiKey')#" />
+			<cfhttpparam type="formfield" name="secret" value="#setting('secretKey')#" />
+			<cfhttpparam type="formfield" name="UID" value="#account.getAccountID()#" />
+		</cfhttp>
 		
-
-		<cfscript>
-			if (arguments.regPath == true) {
-				sourcePaths = ["/netscape_data/CustomTags/com/gigya/signatureSrc"];
-			}
-			else {
-				sourcePaths = ["/netscape_data/CustomTags/com/gigya/signatureSrc"];
-			}
-
-			loader = createObject("component", "com.sciam.tags.javaloader.JavaLoader").init(sourceDirectories=sourcePaths);
-			oSig = loader.create("OAuthSignature").init();
-		</cfscript>
-		<cfset stResult.sig = oSig.GetOAuthSignatureBase64(binarySecret,baseString)>
-		<cfset stResult.timeStamp = timeStamp>
+		<cfset xmlResponse = xmlParse(rawResponse.fileContent) />
 		
-		<cfreturn stResult>
+		<cfreturn xmlResponse />
 	</cffunction>
+	
+	<!--- =============== END: GIGYA REST Calls =-================ --->
 		
-	<cffunction name="checkSignature" access="public" returntype="any" output="false" hint="Returns signature">
-		<cfargument name="UID" type="string" default="" required="true">
-		<cfargument name="timestamp" type="string" default="" required="true">
-		<cfargument name="sig" type="string" default="" required="true">
-		<cfargument name="regPath" type="boolean" default="false" required="false">
-
-
-		<cfset validTimeStamp = DateDiff("s", "January 1 1970 00:00", now())+18000><!--- GetTimeZoneInfo().utcTotalOffset --->
 		
-		<cfif not regPath AND Abs(validTimeStamp-arguments.timestamp) gt 180>
-			<cfreturn false>
-		</cfif>
+	<!--- ============== START: Processing Methods =============== --->
 		
-		<cfset checkSig = getSignature(arguments.UID, arguments.timestamp, arguments.regPath)>
-
-		<cfif checkSig.sig eq arguments.sig>
-			<cfreturn true>
-		</cfif>
+	<cffunction name="loginViaGigya">
+		<cfargument name="uid" type="string" required="true" />
+		<cfargument name="uidSignature" type="string" required="true" />
+		<cfargument name="signatureTimestamp" type="string" required="true" />
 		
-		<cfreturn false>
-	</cffunction>
-
-
-	<cffunction name="gLogin" access="remote" returntype="struct" returnformat="JSON">
-		<cfargument name="gUID" type="string" required="false" default="" />
-		<cfargument name="gigyaSig" required="true" type="string" displayname="signature" default="">
-		<cfargument name="gigyaTimestamp" required="true" type="string" displayname="timestamp" default="">
-
-		<cfset var stResult = {error=false, message='', username='', UID='', sig='', timestamp=''} />
-		<cfset arguments.gUID = trim(arguments.gUID)>
-
-		<cfset gigya = createObject("component","com.sciam.providers.gigya").init()/>
-		<cfset isValidSig = gigya.checkSignature(arguments.gUID, arguments.gigyaTimestamp, arguments.gigyaSig)>
-
-		<cfif isValidSig>
-			<cfif NOT len(arguments.gUID)>
-				<cfset stResult.error = true />
-				<cfset stResult.message = "Invalid login." />
-			<cfelse>
-				<cfparam name="Cookie.sSciAmUser" default=""/>
-		        <cfset Request.stSciAmUser = Application.objSciAmUsers.getCurrentStatus_Cookie(sCookieIN=Cookie.sSciAmUser, gUID=arguments.gUID)>
-
-				<cfif Request.stSciAmUser.auth>
-					<cfset stResult.UID = arguments.gUID>
-
-					<cfset sigResult = gigya.getSignature(stResult.UID)>
-					<cfset stResult.timestamp = sigResult.timeStamp>
-					<cfset stResult.sig = sigResult.sig>
-					<cfset stResult.message = "<p>Sign in for #request.stSciAmUser.username# was successful</p>">
-					<cfset stResult.username = Request.stSciAmUser.username>
-				<cfelse>
-					<cfset stResult.error = true />
-					<cfset stResult.message = "<p>Sign in failed. Invalid username or password</p>" />
-				</cfif>
+		<!--- Validate the signature --->
+		<cfif getSignatureUtilities().validateUserSignature( arguments.uid, arguments.signatureTimestamp, setting('secretKey'), arguments.uidSignature )>
+			
+			<!--- Get the account by the UID --->
+			<cfset var account = getService("accountService").getAccount( uid ) />
+			
+			<!--- Make sure the account was found --->
+			<cfif !isNull(account)>
+				
+				<!--- Loop over the account authentications --->
+				<cfloop array="#account.getAccountAuthentications()#" index="accountAuthentication">
+					
+					<!--- When the gigya authentication is found, login the account --->
+					<cfif accountAuthentication.getIntegration().getIntegrationPackage() eq 'gigya'>
+						<cfset getService("sessionService").loginAccount( account=account, accountAuthentication=accountAuthentication) />
+						<cfbreak />
+					</cfif>
+					
+				</cfloop>
+					
 			</cfif>
-		<cfelse>
-			<cfset stResult.error = true />
-			<cfset stResult.message = "Illegal access!" />
+			
 		</cfif>
-		<cfreturn stResult/>
+		
 	</cffunction>
-
-	<cffunction name="gLinkAccounts" access="remote" returntype="struct" returnformat="JSON">
-		<cfargument name="gUSERNAME" required="true" type="string" displayname="Username" default="#form.gusername#">
-		<cfargument name="gPASSWORD" required="true" type="string" displayname="Password" default="#form.gusername#">
-		<cfargument name="gigyaUID" required="true" type="string" displayname="gigya UID from request" default="#form.gigyaUID#">
-		<cfargument name="sig" required="true" type="string" displayname="signature" default="#form.gigyaSig#">
-		<cfargument name="timestamp" required="true" type="string" displayname="timestamp" default="#form.gigyaTimestamp#">
-
-		<cfset var stResult = {error=false, message='', username='', UID='', sig='', timestamp=''} />
-
-		<cfset gigya = createObject("component","com.sciam.providers.gigya").init()/>
-		<cfset isValidSig = gigya.checkSignature(arguments.gigyaUID, arguments.timestamp, arguments.sig)>
-
-		<cfif isValidSig>
-			<cfset oU = createObject("component","com.sciam.dao.sciam_user").init()/>
-	        <cfset isAuthenticated = oU.Authenticate(arguments.gUSERNAME, arguments.gPASSWORD)>
-
-			<cfif isAuthenticated.recordCount>
- 				<cfset stResult.UID = isAuthenticated.User_ID>
-
-				<cfset sigResult = gigya.getSignature(stResult.UID)>
-				<cfset stResult.timestamp = sigResult.timeStamp>
-				<cfset stResult.sig = sigResult.sig>
-
-				<cfset sigResult2 = gigya.getSignature(stResult.UID, "", false, .001)>
-				<cfset stResult.timestamp2 = sigResult2.timeStamp>
-				<cfset stResult.sig2 = sigResult2.sig>
-
-				<cfset stResult.message = "<p>Your accounts were successfully linked and you are now logged in.<br><a href='http://www.scientificamerican.com/page.cfm?section=my-account'>Review your profile</a></p>" />
-				<cfset authenticate = loginUser(arguments.gUSERNAME, arguments.gPASSWORD)>
-				<cfset stResult.username = Request.stSciAmUser.username>
-			<cfelse>
-				<cfset stResult.error = true />
-				<cfset stResult.message = "<p>Sign in failed. Invalid username or password</p>" />
-			</cfif>
-		<cfelse>
-			<cfset stResult.error = true />
-			<cfset stResult.message = "<p>Illegal access!</p>" />
+		
+	<!--- ============== START: Processing Methods =============== --->
+	
+	<cffunction name="getSignatureUtilities">
+		<cfif not structKeyExists(variables, "signatureUtilities")>
+			<cfset var JavaLoader = createObject("Component", "Slatwall.integrationServices.gigya.org.javaloader.JavaLoader").init([expandPath('/Slatwall/integrationServices/gigya/org/gigya/GSJavaSDK.jar')]) />
+			<cfset variables.signatureUtilities = JavaLoader.create("com.gigya.socialize.SigUtils").init() />
 		</cfif>
-
-		<cfreturn stResult/>
+		<cfreturn variables.signatureUtilities />
 	</cffunction>
-	--->
 
 </cfcomponent>
 

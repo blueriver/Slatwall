@@ -69,4 +69,24 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 		return ["Slatwall.integrationServices.gigya.model.handler.GigyaHandler"];
 	}
 	
+	public string function getJSObjectAdditions() {
+		var jsObjectAdditions = "";
+		
+		var initializationStruct = {};
+		
+		initializationStruct[ "siteName" ] = setting('siteName');
+		initializationStruct[ "enabledProviders" ] = setting('enabledProviders');
+		
+		savecontent variable="jsObjectAdditions" {
+			writeOutput('
+				<script type="text/javascript" src="http://cdn.gigya.com/js/socialize.js?apiKey=#setting('apiKey')#">
+					#serializeJSON(initializationStruct)#
+				</script>
+				<script type="text/javascript" src="#getApplicationValue('baseURL')#/integrationServices/gigya/assets/js/gigya.js"></script>
+			');
+		}
+		
+		return jsObjectAdditions;
+	}
+	
 }

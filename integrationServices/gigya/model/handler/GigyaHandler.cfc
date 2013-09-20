@@ -48,5 +48,58 @@
 --->
 <cfcomponent output="false" accessors="true">
 	
+	<cffunction name="onSessionLogout">
+		<!--- TODO: Tell Gigya that the user is logged out --->
+	</cffunction>
+	
+	<cffunction name="onSessionLogin">
+		<!--- TODO: Tell Gigya that the user is logged in --->
+	</cffunction>
+	
+	<cffunction name="beforeAccountAuthenticationDelete">
+		<!--- TODO: If the accountAuthentication is for gigya, then remove the account connection for gigya --->
+	</cffunction>
+	
+	<cffunction name="afterAccountProcess_CreateSuccess">
+		<!--- TODO: Tell gigya about the new user that just got registered --->
+	</cffunction>
+	
+	<!---
+		<cffunction name="linkGigyaAccount">
+		<cfargument name="account" type="any" required="true" />
+		<cfargument name="uid" type="struct" required="true" />
+		
+		<!--- Tell gigya about this user --->
+		<cfset var sr = socializeNotifyRegistration(account=arguments.account, uid=arguments.uid) />
+		
+		<!--- Create authentication for this user / gigiya --->
+		<cfset var newAccountAuthentication = getService("accountService").newAccountAuthentication() />
+		<cfset newAccountAuthentication.setIntegration( getService("integrationService").getIntegrationByIntegrationPackage('gigya') ) />
+		<cfset newAccountAuthentication.setAccount( arguments.account ) />
+		
+		<!--- Persist Authentication to the DB --->
+		<cfset getDAO("hibachiDAO").flushORMSession() />
+	</cffunction>
+	
+	<cffunction name="unlinkGigyaAccount">
+		<cfargument name="account" type="any" required="true" />
+		
+		<cfset var accountAuthentication = "" />
+		<cfset var deleteOK = true />
+		
+		<!--- Tell gigya about this user --->
+		<cfset var sr = socializeNotifyRegistration(account=arguments.account, uid=arguments.data.uid) />
+		
+		<!--- Loop over the authentications, and call delete on the authentication for gigya.  This will call the delete event, which will in turn call the socializeAPI --->
+		<cfloop array="#account.getAccountAuthentications()#" index="accountAuthentication">
+			<cfif accountAuthentication.getIntegration().getIntegrationPackage() eq 'gigya'>
+				<cfset deleteOK = getService("accountService").deleteAccountAuthentication( accountAuthentication ) />
+				<cfbreak />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn deleteOK />
+	</cffunction>
+	--->
 	
 </cfcomponent>
