@@ -49,7 +49,14 @@
 <cfcomponent output="false" accessors="true">
 	
 	<cffunction name="onSessionLogout">
-		<!--- TODO: Tell Gigya that the user is logged out --->
+		<cfargument name="slatwallScope" type="any" required="true" />
+		
+		<!--- Get the authentication CFC --->
+		<cfset var authenticationCFC = arguments.slatwallScope.getService("integrationService").getIntegrationByPackageName("gigya").getIntegrationCFC( 'authentication' ) />
+		
+		<!--- Tell gigya that the users has logged out --->
+		<cfset var gigyaResponse = authenticationCFC.socializeNotifyRegistration(account=arguments.account, uid=arguments.data.gigyaUID) />
+		
 	</cffunction>
 	
 	<cffunction name="afterAccountProcess_loginSuccess">
@@ -72,60 +79,55 @@
 					<!--- Tell gigya about this user --->
 					<cfset var gigyaResponse = authenticationCFC.socializeNotifyRegistration(account=arguments.account, uid=arguments.data.gigyaUID) />
 					
-					<!--- Create authentication for this user / gigiya --->
-					<cfset var newAccountAuthentication = arguments.slatwallScope.getService("accountService").newAccountAuthentication() />
-					<cfset newAccountAuthentication.setIntegration( arguments.slatwallScope.getService("integrationService").getIntegrationByIntegrationPackage('gigya') ) />
-					<cfset newAccountAuthentication.setAccount( arguments.account ) />
+					<!--- Create the accountAuthentication object --->
+					<cfset authenticationCFC.createGigyaAccountAuthentication( arguments.account ) />
 					
-					<!--- Persist Authentication to the DB --->
-					<cfset arguments.slatwallScope.getDAO("hibachiDAO").flushORMSession() />
 				</cfif>
 				
 			</cfif>
 			
 		</cfif>
+		
 	</cffunction>
 	
-	<cffunction name="beforeAccountAuthenticationDelete">
-		<!--- TODO: If the accountAuthentication is for gigya, then remove the account connection for gigya --->
-	</cffunction>
-	
-	<!---
-		<cffunction name="linkGigyaAccount">
+	<!--- beforeAccountDelete - This is used so that if an account gets deleted and it has a 'gigya' account authentication, we tell gigya to disconnect this user --->
+	<cffunction name="beforeAccountDelete">
+		<cfargument name="slatwallScope" type="any" required="true" />
 		<cfargument name="account" type="any" required="true" />
-		<cfargument name="uid" type="struct" required="true" />
-		
-		<!--- Tell gigya about this user --->
-		<cfset var sr = socializeNotifyRegistration(account=arguments.account, uid=arguments.uid) />
-		
-		<!--- Create authentication for this user / gigiya --->
-		<cfset var newAccountAuthentication = getService("accountService").newAccountAuthentication() />
-		<cfset newAccountAuthentication.setIntegration( getService("integrationService").getIntegrationByIntegrationPackage('gigya') ) />
-		<cfset newAccountAuthentication.setAccount( arguments.account ) />
-		
-		<!--- Persist Authentication to the DB --->
-		<cfset getDAO("hibachiDAO").flushORMSession() />
-	</cffunction>
-	
-	<cffunction name="unlinkGigyaAccount">
-		<cfargument name="account" type="any" required="true" />
-		
-		<cfset var accountAuthentication = "" />
-		<cfset var deleteOK = true />
-		
-		<!--- Tell gigya about this user --->
-		<cfset var sr = socializeNotifyRegistration(account=arguments.account, uid=arguments.data.uid) />
 		
 		<!--- Loop over the authentications, and call delete on the authentication for gigya.  This will call the delete event, which will in turn call the socializeAPI --->
-		<cfloop array="#account.getAccountAuthentications()#" index="accountAuthentication">
+		<cfloop array="#arguments.account.getAccountAuthentications()#" index="accountAuthentication">
+			
 			<cfif accountAuthentication.getIntegration().getIntegrationPackage() eq 'gigya'>
-				<cfset deleteOK = getService("accountService").deleteAccountAuthentication( accountAuthentication ) />
-				<cfbreak />
+			
+				<!--- Get the authentication CFC --->
+				<cfset var authenticationCFC = arguments.slatwallScope.getService("integrationService").getIntegrationByPackageName("gigya").getIntegrationCFC( 'authentication' ) />
+			
+				<!--- Tell gigya to remove this user --->
+				<cfset var gigyaResponse = authenticationCFC.socializeRemoveConnection(account=arguments.account) />
+
 			</cfif>
+			
 		</cfloop>
 		
-		<cfreturn deleteOK />
 	</cffunction>
-	--->
+	
+	<!--- beforeAccountAuthenticationDelete - This is used so that if a 'gigya' account authentication gets removed, then we tell gigya to disconnect this user --->
+	<cffunction name="beforeAccountAuthenticationDelete">
+		<cfargument name="slatwallScope" type="any" required="true" />
+		<cfargument name="accountAuthentication" type="any" required="true" />
+		
+		<!--- Check to see if this is a gigya authentication --->
+		<cfif !isNull(accountAuthentication.getIntegration()) && accountAuthentication.getIntegration().getPackageName() eq 'gigya'>
+			
+			<!--- Get the authentication CFC --->
+			<cfset var authenticationCFC = arguments.slatwallScope.getService("integrationService").getIntegrationByPackageName("gigya").getIntegrationCFC( 'authentication' ) />
+			
+			<!--- Tell gigya to remove this user --->
+			<cfset var gigyaResponse = authenticationCFC.socializeRemoveConnection(account=arguments.account) />
+
+		</cfif>
+		
+	</cffunction>
 	
 </cfcomponent>

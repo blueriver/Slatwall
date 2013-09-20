@@ -6,14 +6,40 @@
 })( jQuery )
 
 function gigyaAdminUnregisteredUser( eventObj ) {
-	jQuery('#' + eventObj.context.accountLoginFormID ).prepend( '<p class="alert alert-info">We were unable to location an account that matches your social login, please login with your standard Slatwal username & password and your <strong>' + eventObj.provider + '</strong> profile will get attached to your account.</p>' );
+	jQuery('#' + eventObj.context.accountLoginFormID ).prepend( '<p class="alert alert-info">We were unable to locate an account that matches your social login, please login with your standard Slatwal username & password and your <strong>' + eventObj.provider + '</strong> profile will get attached to your account for future logins.</p>' );
 }
-
 
 function gigyaOnLogin( eventObj ) {
 	
 	if( eventObj.user.isSiteUID ) {
 		
+		console.log( eventObj );
+		
+		var thisData = {
+			'slatAction': 			'gigya:main.loginGigyaUser',
+			'uid':					eventObj.UID,
+			'uidSignature':			eventObj.UIDSignature,
+			'signatureTimestamp':	eventObj.signatureTimestamp,
+		};
+		
+		jQuery.ajax({
+			url: $.slatwall.getConfig().baseURL + '/',
+			method: 'post',
+			data: thisData,
+			dataType: 'json',
+			beforeSend: function (xhr) { xhr.setRequestHeader('X-Hibachi-AJAX', true) },
+			error: function( error ) {
+				alert( 'An Unexpected Error Occured' );
+			},
+			success: function( result ) {
+				
+				if( 'context' in eventObj && 'accountLoginFormID' in eventObj.context ) {
+					var redirectURL = jQuery('#' + eventObj.context.accountLoginFormID ).find('input[name="sRedirectURL"]').val();
+					window.location.href = redirectURL;
+				}
+				
+			}
+		});
 		
 	} else {
 		

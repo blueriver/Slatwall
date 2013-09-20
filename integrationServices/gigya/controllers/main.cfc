@@ -52,14 +52,15 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	property name="integrationService" type="any";
 
 	this.publicMethods="";
-	this.publicMethods = listAppend(this.publicMethods, "attachExistingUserAdminForm");
-	this.publicMethods = listAppend(this.publicMethods, "attachExistingUser");
-	this.publicMethods = listAppend(this.publicMethods, "attachNewUser");
-	this.publicMethods = listAppend(this.publicMethods, "remove");
+	this.publicMethods = listAppend(this.publicMethods, "loginGigyaUser");
 	
 	this.secureMethods="";
 	this.secureMethods = listAppend(this.secureMethods, "default");
 	
+	// ======================== Admin Integration Methods
+	public void function default() {
+		// Do Nothing
+	}
 	
 	// ========================= Core Methods (used from public and admin)
 	public void function loginGigyaUser(required struct rc) {
@@ -68,18 +69,13 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 		param name="arguments.rc.signatureTimestamp" default="";
 		
 		var authenticationCFC = getIntegrationService().getIntegrationByIntegrationPackage('gigya').getIntegrationCFC( 'authentication' );
-			
+
 		authenticationCFC.loginGigyaUser(uid=arguments.rc.uid, uidSignature=arguments.rc.uidSignature, signatureTimestamp=arguments.rc.signatureTimestamp);
+		
+		arguments.rc.ajacResponse["success"] = true;
 	}
 	
-	// ======================== Admin Integration Methods
 	
-	public void function default() {
-		// Do Nothing
-	}
 	
-	public void function attachExistingUserAdminForm() {
-		// Do Nothing
-	}
 	
 }

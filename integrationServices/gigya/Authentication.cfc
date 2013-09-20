@@ -179,16 +179,7 @@ Notes:
 	
 	<!--- =============== END: GIGYA REST Calls =-================ --->
 		
-		
 	<!--- ============== START: Processing Methods =============== --->
-		
-	<cffunction name="getUserSignatureValidFlag">
-		<cfargument name="uid" type="string" required="true" />
-		<cfargument name="uidSignature" type="string" required="true" />
-		<cfargument name="signatureTimestamp" type="string" required="true" />
-		
-		<cfreturn getSignatureUtilities().validateUserSignature( arguments.uid, arguments.signatureTimestamp, setting('secretKey'), arguments.uidSignature ) />
-	</cffunction>
 		
 	<cffunction name="loginGigyaUser">
 		<cfargument name="uid" type="string" required="true" />
@@ -207,25 +198,57 @@ Notes:
 			<!--- Make sure the account was found --->
 			<cfif !isNull(account)>
 				
+				<cfset var accountAuthenticationFound = false />
+				
 				<!--- Loop over the account authentications --->
 				<cfloop array="#account.getAccountAuthentications()#" index="accountAuthentication">
 					
 					<!--- When the gigya authentication is found, login the account --->
-					<cfif accountAuthentication.getIntegration().getIntegrationPackage() eq 'gigya'>
-						<cfset getService("sessionService").loginAccount( account=account, accountAuthentication=accountAuthentication) />
+					<cfif !isNull(accountAuthentication) && accountAuthentication.getIntegration().getIntegrationPackage() eq 'gigya'>
+						<cfset getService("hibachiSessionService").loginAccount( account=account, accountAuthentication=accountAuthentication) />
+						<cfset accountAuthenticationFound = true />
+						
 						<cfbreak />
 					</cfif>
 					
 				</cfloop>
+				
+				<!--- If we didn't find an accountAuthentication then it may have been removed somehow so we just add one back --->
+				<cfif not accountAuthenticationFound>
+					<cfset var accountAuthentication = createGigyaAccountAuthentication(account) />
+					<cfset getService("hibachiSessionService").loginAccount( account=account, accountAuthentication=accountAuthentication) />
+				</cfif>
 					
 			</cfif>
 			
 		</cfif>
 		
 	</cffunction>
+	
+	<cffunction name="createGigyaAccountAuthentication">
+		<cfargument name="account" type="any" required="true" />
+		
+		<!--- Create authentication for this user / gigiya --->
+		<cfset var newAccountAuthentication = getService("accountService").newAccountAuthentication() />
+		<cfset newAccountAuthentication.setIntegration( getService("integrationService").getIntegrationByIntegrationPackage('gigya') ) />
+		<cfset newAccountAuthentication.setAccount( arguments.account ) />
+		
+		<!--- Persist Authentication to the DB --->
+		<cfset getDAO("hibachiDAO").flushORMSession() />
+		
+		<cfreturn newAccountAuthentication />
+	</cffunction>
 		
 	<!--- ============== START: Processing Methods =============== --->
 	
+	<cffunction name="getUserSignatureValidFlag">
+		<cfargument name="uid" type="string" required="true" />
+		<cfargument name="uidSignature" type="string" required="true" />
+		<cfargument name="signatureTimestamp" type="string" required="true" />
+		
+		<cfreturn getSignatureUtilities().validateUserSignature( arguments.uid, arguments.signatureTimestamp, setting('secretKey'), arguments.uidSignature ) />
+	</cffunction>
+		
 	<cffunction name="getSignatureUtilities">
 		<cfif not structKeyExists(variables, "signatureUtilities")>
 			<cfset var JavaLoader = createObject("Component", "Slatwall.integrationServices.gigya.org.javaloader.JavaLoader").init([expandPath('/Slatwall/integrationServices/gigya/org/gigya/GSJavaSDK.jar')]) />
