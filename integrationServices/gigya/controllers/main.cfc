@@ -60,48 +60,16 @@ component extends="Slatwall.org.Hibachi.HibachiController" output="false" access
 	this.secureMethods="";
 	this.secureMethods = listAppend(this.secureMethods, "default");
 	
-	/*
+	
 	// ========================= Core Methods (used from public and admin)
-	public void function attachExistingUser(required struct rc) {
-		
-		// First we try to login the user based on the UN/PW they added
-		var account = getAccountService().processAccount(arguments.rc.$.slatwall.getAccount(), rc, "login");
-		
-		// If the user is logged in, then we can 
-		if(arguments.rc.$.slatwall.getLoggedInFlag()) {
-			
-			var gigyaIntegration = getIntegrationService().getIntegrationByIntegrationPackage('gigya');
-			
-			gigyaIntegration.getIntegrationCFC( 'authentication' ).linkAccountToGigya(account=arguments.rc.$.slatwall.getAccount(), data=arguments.rc);
-			
-		}
-		
-	}
-	
-	public void function attachNewUser(required struct rc) {
-		
-		// Creates a new user account
-		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'create');
-		
-		if(!account.hasErrors()) {
-			var gigyaIntegration = getIntegrationService().getIntegrationByIntegrationPackage('gigya');
-			
-			gigyaIntegration.getIntegrationCFC( 'authentication' ).linkAccountToGigya(account=account, data=arguments.rc);
-				
-		}
-		
-	}
-	*/
-	
 	public void function loginGigyaUser(required struct rc) {
-		param name="rc.UID" default="";
-		param name="rc.UIDSignature" default="";
-		param name="rc.signatureTimestamp" default="";
+		param name="arguments.rc.UID" default="";
+		param name="arguments.rc.UIDSignature" default="";
+		param name="arguments.rc.signatureTimestamp" default="";
 		
-		var gigyaIntegration = getIntegrationService().getIntegrationByIntegrationPackage('gigya');
+		var authenticationCFC = getIntegrationService().getIntegrationByIntegrationPackage('gigya').getIntegrationCFC( 'authentication' );
 			
-		gigyaIntegration.getIntegrationCFC( 'authentication' ).loginGigyaUser(arguments.rc);
-		
+		authenticationCFC.loginGigyaUser(uid=arguments.rc.uid, uidSignature=arguments.rc.uidSignature, signatureTimestamp=arguments.rc.signatureTimestamp);
 	}
 	
 	// ======================== Admin Integration Methods

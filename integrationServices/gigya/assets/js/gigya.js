@@ -5,44 +5,35 @@
 	);
 })( jQuery )
 
+function gigyaAdminUnregisteredUser( eventObj ) {
+	jQuery('#' + eventObj.context.accountLoginFormID ).prepend( '<p class="alert alert-info">We were unable to location an account that matches your social login, please login with your standard Slatwal username & password and your <strong>' + eventObj.provider + '</strong> profile will get attached to your account.</p>' );
+}
+
+
 function gigyaOnLogin( eventObj ) {
 	
-	console.log( eventObj );
-	
-	/*
-	if(eventObj.user.isSiteUID) {
+	if( eventObj.user.isSiteUID ) {
 		
-		// Post to the gigya:main.loginGigyaUser
 		
-		// If the response is successful, look for a sRedirectURL
-		
-		// If the response is failure, look for a fRedirectURL
-		
-		// Redirect to the attach user page
-		var redirectURL = $.slatwall.getConfig()['baseURL'];
-		redirectURL += '/?slatAction=gigya:main.loginGigyaUser&UID=';
-		redirectURL += encodeURIComponent(eventObj.UID);
-		redirectURL += '&UIDSig=';
-		redirectURL += encodeURIComponent(eventObj.UIDSig);
-		redirectURL += '&UIDSignature=';
-		redirectURL += encodeURIComponent(eventObj.UIDSignature);
-		
-		window.location.href = redirectURL;
-	
 	} else {
-
-		// Redirect to the attach user / create user page
-		var redirectURL = $.slatwall.getConfig()['baseURL'];
-		redirectURL += '/?slatAction=gigya:main.attachExistingUserAdminForm&UID=';
-		redirectURL += encodeURIComponent(eventObj.UID);
-		redirectURL += '&UIDSig=';
-		redirectURL += encodeURIComponent(eventObj.UIDSig);
-		redirectURL += '&UIDSignature=';
-		redirectURL += encodeURIComponent(eventObj.UIDSignature);
 		
-		window.location.href = redirectURL;
+		// Create the gigya inputs to add to the form
+		var gigyaInputs = '<input type="hidden" name="gigyaUID" value="' + encodeURIComponent(eventObj.UID) + '" /><input type="hidden" name="gigyaUIDSignature" value="' + encodeURIComponent(eventObj.UIDSignature) + '" /><input type="hidden" name="gigyaSignatureTimestamp" value="' + encodeURIComponent(eventObj.signatureTimestamp) + '" />';
+		
+		// Add the gigya inputs to the login form if it exists
+		if( 'context' in eventObj && 'accountLoginFormID' in eventObj.context ) {
+			jQuery('#' + eventObj.context.accountLoginFormID).prepend( gigyaInputs );
+		}
+		
+		// Add the gigya input to the create form if it exists
+		if( 'context' in eventObj && 'accountCreateFormID' in eventObj.context ) {
+			jQuery('#' + eventObj.context.accountCreateFormID).prepend( gigyaInputs );
+		}
+		
+		if( 'context' in eventObj && 'unregisterdUserCallback' in eventObj.context ) {
+			window[ eventObj.context.unregisterdUserCallback ]( eventObj );
+		}
 		
 	}	
-	*/
 	
 }

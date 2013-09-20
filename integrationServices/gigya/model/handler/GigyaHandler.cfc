@@ -52,16 +52,42 @@
 		<!--- TODO: Tell Gigya that the user is logged out --->
 	</cffunction>
 	
-	<cffunction name="onSessionLogin">
-		<!--- TODO: Tell Gigya that the user is logged in --->
+	<cffunction name="afterAccountProcess_loginSuccess">
+		<cfargument name="slatwallScope" type="any" required="true" />
+		<cfargument name="account" type="any" required="true" />
+		<cfargument name="data" type="struct" required="true" />
+		
+		<!--- If this was logging in with gigya credentials --->
+		<cfif structKeyExists(arguments.data, "gigyaUID") && structKeyExists(arguments.data, "gigyaUIDSignature") && structKeyExists(arguments.data, "gigyaSignatureTimestamp")>
+			
+			<!--- Check to make sure that the UID and the accountID are different --->
+			<cfif arguments.account.getAccountID() neq arguments.data.gigyaUID>
+				
+				<!--- Get the authentication CFC --->
+				<cfset var authenticationCFC = arguments.slatwallScope.getService("integrationService").getIntegrationByPackageName("gigya").getIntegrationCFC( 'authentication' ) />
+				
+				<!--- Verify the signature --->
+				<cfif authenticationCFC.getUserSignatureValidFlag( uid=arguments.data.gigyaUID, uidSignature=arguments.data.gigyaUIDSignature, signatureTimestamp=arguments.data.gigyaSignatureTimestamp )>
+					
+					<!--- Tell gigya about this user --->
+					<cfset var gigyaResponse = authenticationCFC.socializeNotifyRegistration(account=arguments.account, uid=arguments.data.gigyaUID) />
+					
+					<!--- Create authentication for this user / gigiya --->
+					<cfset var newAccountAuthentication = arguments.slatwallScope.getService("accountService").newAccountAuthentication() />
+					<cfset newAccountAuthentication.setIntegration( arguments.slatwallScope.getService("integrationService").getIntegrationByIntegrationPackage('gigya') ) />
+					<cfset newAccountAuthentication.setAccount( arguments.account ) />
+					
+					<!--- Persist Authentication to the DB --->
+					<cfset arguments.slatwallScope.getDAO("hibachiDAO").flushORMSession() />
+				</cfif>
+				
+			</cfif>
+			
+		</cfif>
 	</cffunction>
 	
 	<cffunction name="beforeAccountAuthenticationDelete">
 		<!--- TODO: If the accountAuthentication is for gigya, then remove the account connection for gigya --->
-	</cffunction>
-	
-	<cffunction name="afterAccountProcess_CreateSuccess">
-		<!--- TODO: Tell gigya about the new user that just got registered --->
 	</cffunction>
 	
 	<!---

@@ -57,33 +57,59 @@ Notes:
 	</cffunction>
 	
 	<cffunction name="getAdminLoginHTML" access="public" returntype="string">
-		<cfreturn renderGigyaWidget({
-			loginFormID = 'adminLogin'
-		}) />
+		<cfreturn renderGigyaWidget('adminLoginForm', '', 'gigyaAdminUnregisteredUser') />
 	</cffunction>
 	
 	<cffunction name="renderGigyaWidget" access="public" returntype="string">
+		<cfargument name="accountLoginFormID" type="string" default="" />
+		<cfargument name="accountCreateFormID" type="string" default="" />
+		<cfargument name="unregisterdUserCallback" type="string" default="" />
 		<cfargument name="config" default="#structNew()#" />
-		
-		<!--- setup the defaults --->
-		<cfparam name="arguments.config.showTermsLink" default="false" />
-		<cfparam name="arguments.config.height" default="100" />
-		<cfparam name="arguments.config.width" default="400" />
-		<cfparam name="arguments.config.containerID" default="#createUUID()#" />
-		<cfparam name="arguments.config.buttonsStyle" default="fullLogo" />
-		<cfparam name="arguments.config.autoDetectUserProviders" default="" />
-		<cfparam name="arguments.config.facepilePosition" default="none" />
 		
 		<cfset var gigyaWidget = "" />
 		
+		<!--- setup the defaults --->
+		<cfif not structKeyExists(arguments.config, "showTermsLink")>
+			<cfset arguments.config["showTermsLink"] = false />
+		</cfif>
+		<cfif not structKeyExists(arguments.config, "height")>
+			<cfset arguments.config["height"] = 100 />
+		</cfif>
+		<cfif not structKeyExists(arguments.config, "width")>
+			<cfset arguments.config["width"] = 400 />
+		</cfif>
+		<cfif not structKeyExists(arguments.config, "containerID")>
+			<cfset arguments.config["containerID"] = createUUID() />
+		</cfif>
+		<cfif not structKeyExists(arguments.config, "buttonsStyle")>
+			<cfset arguments.config["buttonsStyle"] = "fullLogo" />
+		</cfif>
+		<cfif not structKeyExists(arguments.config, "autoDetectUserProviders")>
+			<cfset arguments.config["autoDetectUserProviders"] = "" />
+		</cfif>
+		<cfif not structKeyExists(arguments.config, "facepilePosition")>
+			<cfset arguments.config["facepilePosition"] = "" />
+		</cfif>
+		<cfif not structKeyExists(arguments.config, "context")>
+			<cfset arguments.config["context"] = {} />
+			<cfif len(arguments.accountLoginFormID)>
+				<cfset arguments.config["context"]['accountLoginFormID'] = arguments.accountLoginFormID />
+			</cfif>
+			<cfif len(arguments.accountCreateFormID)>
+				<cfset arguments.config["context"]['accountCreateFormID'] = arguments.accountCreateFormID />
+			</cfif>
+			<cfif len(arguments.unregisterdUserCallback)>
+				<cfset arguments.config["context"]['unregisterdUserCallback'] = arguments.unregisterdUserCallback />
+			</cfif>
+		</cfif>
+		
 		<cfsavecontent variable="gigyaWidget">
 			<cfoutput>
-				<script type="text/javascript">
-					var login_params = #serializeJSON(arguments.config)#;
-				</script>
 				<div id="#arguments.config.containerID#"></div>
 				<script type="text/javascript">
-				   gigya.socialize.showLoginUI( login_params );
+					(function($){
+						gigya.socialize.showLoginUI( #serializeJSON(arguments.config)# );
+					})(jQuery)
 				</script>
 			</cfoutput>
 		</cfsavecontent>
@@ -156,13 +182,24 @@ Notes:
 		
 	<!--- ============== START: Processing Methods =============== --->
 		
-	<cffunction name="loginViaGigya">
+	<cffunction name="getUserSignatureValidFlag">
+		<cfargument name="uid" type="string" required="true" />
+		<cfargument name="uidSignature" type="string" required="true" />
+		<cfargument name="signatureTimestamp" type="string" required="true" />
+		
+		<cfreturn getSignatureUtilities().validateUserSignature( arguments.uid, arguments.signatureTimestamp, setting('secretKey'), arguments.uidSignature ) />
+	</cffunction>
+		
+	<cffunction name="loginGigyaUser">
 		<cfargument name="uid" type="string" required="true" />
 		<cfargument name="uidSignature" type="string" required="true" />
 		<cfargument name="signatureTimestamp" type="string" required="true" />
 		
 		<!--- Validate the signature --->
-		<cfif getSignatureUtilities().validateUserSignature( arguments.uid, arguments.signatureTimestamp, setting('secretKey'), arguments.uidSignature )>
+		<cfif getUserSignatureValidFlag( arguments.uid, arguments.uidSignature, arguments.signatureTimestamp )>
+			
+			<!--- TODO: We need to check the UID to make sure it isn't a legacy UID that needs to be updated --->
+			
 			
 			<!--- Get the account by the UID --->
 			<cfset var account = getService("accountService").getAccount( uid ) />
