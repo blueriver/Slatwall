@@ -52,11 +52,11 @@
 		<cfargument name="slatwallScope" type="any" required="true" />
 		
 		<!--- Get the authentication CFC --->
-		<cfset var authenticationCFC = arguments.slatwallScope.getService("integrationService").getIntegrationByPackageName("gigya").getIntegrationCFC( 'authentication' ) />
+		<cfset var authenticationCFC = arguments.slatwallScope.getService("integrationService").getIntegrationByIntegrationPackage("gigya").getIntegrationCFC( 'authentication' ) />
 		
-		<!--- Tell gigya that the users has logged out --->
-		<cfset var gigyaResponse = authenticationCFC.socializeNotifyRegistration(account=arguments.account, uid=arguments.data.gigyaUID) />
-		
+		<!--- TODO: Tell gigya that the users has logged out --->
+		<!--- <cfset var gigyaResponse = authenticationCFC.socializeNotifyRegistration(account=arguments.account, uid=arguments.data.gigyaUID) />--->
+			
 	</cffunction>
 	
 	<cffunction name="afterAccountProcess_loginSuccess">
@@ -71,13 +71,30 @@
 			<cfif arguments.account.getAccountID() neq arguments.data.gigyaUID>
 				
 				<!--- Get the authentication CFC --->
-				<cfset var authenticationCFC = arguments.slatwallScope.getService("integrationService").getIntegrationByPackageName("gigya").getIntegrationCFC( 'authentication' ) />
+				<cfset var gigyaIntegration = arguments.slatwallScope.getService("integrationService").getIntegrationByIntegrationPackage("gigya") />
+				<cfset var authenticationCFC = gigyaIntegration.getIntegrationCFC( 'authentication' ) />
 				
 				<!--- Verify the signature --->
 				<cfif authenticationCFC.getUserSignatureValidFlag( uid=arguments.data.gigyaUID, uidSignature=arguments.data.gigyaUIDSignature, signatureTimestamp=arguments.data.gigyaSignatureTimestamp )>
 					
-					<!--- Tell gigya about this user --->
-					<cfset var gigyaResponse = authenticationCFC.socializeNotifyRegistration(account=arguments.account, uid=arguments.data.gigyaUID) />
+					<!--- Check for a legacy UID to match up --->
+					<cfset var oldID = "" />
+					<cfif len(gigyaIntegration.setting('legacyUIDPropertyIdentifier'))>
+						<cfset oldUID = arguments.account.getValueByPropertyIdentifier( gigyaIntegration.setting('legacyUIDPropertyIdentifier') ) />
+					</cfif>
+					
+					<!--- If there is a legacyUID, and it matches the gigya one then just update them --->
+					<cfif len(oldUID) and oldUID eq arguments.data.gigyaUID>
+						
+						<!--- Update gigya with the new UID --->
+						<cfset var gigyaResponse = authenticationCFC.socializeSetUID( oldUID=oldUID, newUID=arguments.account.getAccountID() ) />
+					
+					<cfelse>
+						
+						<!--- Tell gigya about this user --->
+						<cfset var gigyaResponse = authenticationCFC.socializeNotifyRegistration( account=arguments.account, uid=arguments.data.gigyaUID ) />
+						
+					</cfif>
 					
 					<!--- Create the accountAuthentication object --->
 					<cfset authenticationCFC.createGigyaAccountAuthentication( arguments.account ) />
@@ -93,18 +110,20 @@
 	<!--- beforeAccountDelete - This is used so that if an account gets deleted and it has a 'gigya' account authentication, we tell gigya to disconnect this user --->
 	<cffunction name="beforeAccountDelete">
 		<cfargument name="slatwallScope" type="any" required="true" />
-		<cfargument name="account" type="any" required="true" />
+		<cfargument name="entity" type="any" required="true" />
+		
+		<cfset var accountAuthentication = "" />
 		
 		<!--- Loop over the authentications, and call delete on the authentication for gigya.  This will call the delete event, which will in turn call the socializeAPI --->
-		<cfloop array="#arguments.account.getAccountAuthentications()#" index="accountAuthentication">
+		<cfloop array="#arguments.entity.getAccountAuthentications()#" index="accountAuthentication">
 			
-			<cfif accountAuthentication.getIntegration().getIntegrationPackage() eq 'gigya'>
+			<cfif !isNull(accountAuthentication.getIntegration()) and accountAuthentication.getIntegration().getIntegrationPackage() eq 'gigya'>
 			
 				<!--- Get the authentication CFC --->
-				<cfset var authenticationCFC = arguments.slatwallScope.getService("integrationService").getIntegrationByPackageName("gigya").getIntegrationCFC( 'authentication' ) />
+				<cfset var authenticationCFC = accountAuthentication.getIntegration().getIntegrationCFC( 'authentication' ) />
 			
 				<!--- Tell gigya to remove this user --->
-				<cfset var gigyaResponse = authenticationCFC.socializeRemoveConnection(account=arguments.account) />
+				<cfset var gigyaResponse = authenticationCFC.socializeRemoveConnection( account=arguments.account ) />
 
 			</cfif>
 			
@@ -115,16 +134,16 @@
 	<!--- beforeAccountAuthenticationDelete - This is used so that if a 'gigya' account authentication gets removed, then we tell gigya to disconnect this user --->
 	<cffunction name="beforeAccountAuthenticationDelete">
 		<cfargument name="slatwallScope" type="any" required="true" />
-		<cfargument name="accountAuthentication" type="any" required="true" />
+		<cfargument name="entity" type="any" required="true" />
 		
 		<!--- Check to see if this is a gigya authentication --->
-		<cfif !isNull(accountAuthentication.getIntegration()) && accountAuthentication.getIntegration().getPackageName() eq 'gigya'>
+		<cfif !isNull(entity.getIntegration()) && entity.getIntegration().getIntegrationPackage() eq 'gigya'>
 			
 			<!--- Get the authentication CFC --->
-			<cfset var authenticationCFC = arguments.slatwallScope.getService("integrationService").getIntegrationByPackageName("gigya").getIntegrationCFC( 'authentication' ) />
+			<cfset var authenticationCFC = arguments.slatwallScope.getService("integrationService").getIntegrationByIntegrationPackage("gigya").getIntegrationCFC( 'authentication' ) />
 			
 			<!--- Tell gigya to remove this user --->
-			<cfset var gigyaResponse = authenticationCFC.socializeRemoveConnection(account=arguments.account) />
+			<cfset var gigyaResponse = authenticationCFC.socializeRemoveConnection(account=entity.getAccount()) />
 
 		</cfif>
 		

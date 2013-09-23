@@ -141,6 +141,26 @@ Notes:
 		<cfreturn xmlResponse />
 	</cffunction>
 	
+	<!--- socialize.notifyRegistration --->
+	<cffunction name="socializeSetUID">
+		<cfargument name="oldUID" type="struct" required="true" />
+		<cfargument name="newUID" type="struct" required="true" />
+		
+		<cfset var rawResponse = "" />
+		<cfset var xmlResponse = "" />
+		
+		<cfhttp method="post" url="https://socialize.gigya.com/socialize.setUID" result="rawResponse">
+			<cfhttpparam type="formfield" name="apiKey" value="#setting('apiKey')#" />
+			<cfhttpparam type="formfield" name="secret" value="#setting('secretKey')#" />
+			<cfhttpparam type="formfield" name="UID" value="#arguments.oldUID#" />
+			<cfhttpparam type="formfield" name="siteUID" value="#arguments.newUID#" />
+		</cfhttp>
+		
+		<cfset xmlResponse = xmlParse(rawResponse.fileContent) />
+		
+		<cfreturn xmlResponse />
+	</cffunction>
+	
 	<!--- socialize.removeConnection --->
 	<cffunction name="socializeRemoveConnection">
 		<cfargument name="account" type="any" required="true" />
@@ -186,14 +206,50 @@ Notes:
 		<cfargument name="uidSignature" type="string" required="true" />
 		<cfargument name="signatureTimestamp" type="string" required="true" />
 		
+		<cfset var accountAuthentication = "" />
+		
 		<!--- Validate the signature --->
 		<cfif getUserSignatureValidFlag( arguments.uid, arguments.uidSignature, arguments.signatureTimestamp )>
 			
-			<!--- TODO: We need to check the UID to make sure it isn't a legacy UID that needs to be updated --->
-			
-			
 			<!--- Get the account by the UID --->
-			<cfset var account = getService("accountService").getAccount( uid ) />
+			<cfset var account = getService("accountService").getAccount( arguments.uid ) />
+			
+			<!--- If the account wasn't found, then check for a legacyUID propertyIdentifier --->
+			<cfif isNull(account) and len(setting('legacyUIDPropertyIdentifier'))>
+				
+				<!--- If the legacyUIDPropertyIdentifier is a custom attribute, then look up in attributes --->
+				<cfif getService("hibachiService").getEntityHasAttributeByEntityName("Account", setting('legacyUIDPropertyIdentifier'))>
+					
+					<cfset var rs = "" />
+					
+					<cfquery name="rs">
+						SELECT
+							SwAttributeValue.accountID
+						FROM
+							SwAttributeValue
+						  INNER JOIN
+						  	SwAttribute on SwAttributeValue.attributeID = SwAttribute.attributeID
+						WHERE
+							accountID is not null
+						  AND
+						  	SwAttribute.attributeCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#setting('legacyUIDPropertyIdentifier')#" />
+						  AND
+						  	SwAttributeValue.attributeValue = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.uid#" />
+					</cfquery>
+					
+					<cfif rs.recordCount>
+						<cfset account = getService("accountService").getAccount( rs.accountID ) />
+					</cfif>
+				<cfelse>
+					<cfset account = ormExecuteQuery(" FROM SlatwallAccount WHERE #setting('legacyUIDPropertyIdentifier')# = ?", [ arguments.uid ], true) />
+				</cfif>
+				
+				<!--- If the account was found, then the first thing we need to do is notify gigya of the new accountID --->
+				<cfif not isNull(account)>
+					<cfset socializeSetUID( oldUID=arguments.uid, newUID=account.getAccountID() ) />
+				</cfif>
+				
+			</cfif>
 			
 			<!--- Make sure the account was found --->
 			<cfif !isNull(account)>
@@ -204,9 +260,11 @@ Notes:
 				<cfloop array="#account.getAccountAuthentications()#" index="accountAuthentication">
 					
 					<!--- When the gigya authentication is found, login the account --->
-					<cfif !isNull(accountAuthentication) && accountAuthentication.getIntegration().getIntegrationPackage() eq 'gigya'>
-						<cfset getService("hibachiSessionService").loginAccount( account=account, accountAuthentication=accountAuthentication) />
+					<cfif !isNull(accountAuthentication.getIntegration()) && accountAuthentication.getIntegration().getIntegrationPackage() eq 'gigya'>
+						
 						<cfset accountAuthenticationFound = true />
+						
+						<cfset getService("hibachiSessionService").loginAccount( account=account, accountAuthentication=accountAuthentication) />
 						
 						<cfbreak />
 					</cfif>
@@ -215,8 +273,8 @@ Notes:
 				
 				<!--- If we didn't find an accountAuthentication then it may have been removed somehow so we just add one back --->
 				<cfif not accountAuthenticationFound>
-					<cfset var accountAuthentication = createGigyaAccountAuthentication(account) />
-					<cfset getService("hibachiSessionService").loginAccount( account=account, accountAuthentication=accountAuthentication) />
+					<cfset var accountAuthentication = createGigyaAccountAuthentication( account ) />
+					<cfset getService("hibachiSessionService").loginAccount( account=account, accountAuthentication=accountAuthentication ) />
 				</cfif>
 					
 			</cfif>

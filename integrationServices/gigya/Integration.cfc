@@ -61,7 +61,8 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 			apiKey = {fieldType="text"},
 			secretKey = {fieldType="password", encryptValue="true"},
 			siteName = {fieldType="text"},
-			enabledProviders = {fieldType="text", defaultValue="facebook,twitter,googleplus,linkedin,yahoo,microsoft,aol,foursquare"}
+			enabledProviders = {fieldType="text", defaultValue="facebook,twitter,googleplus,linkedin,yahoo,microsoft,aol,foursquare"},
+			legacyUIDPropertyIdentifier = {fieldType="text"}
 		};
 	}
 	

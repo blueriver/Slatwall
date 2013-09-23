@@ -13,8 +13,6 @@ function gigyaOnLogin( eventObj ) {
 	
 	if( eventObj.user.isSiteUID ) {
 		
-		console.log( eventObj );
-		
 		var thisData = {
 			'slatAction': 			'gigya:main.loginGigyaUser',
 			'uid':					eventObj.UID,
@@ -35,7 +33,11 @@ function gigyaOnLogin( eventObj ) {
 				
 				if( 'context' in eventObj && 'accountLoginFormID' in eventObj.context ) {
 					var redirectURL = jQuery('#' + eventObj.context.accountLoginFormID ).find('input[name="sRedirectURL"]').val();
-					window.location.href = redirectURL;
+					if(redirectURL != undefined) {
+						window.location.href = redirectURL;
+					} else {
+						window.location.reload();
+					}
 				}
 				
 			}
