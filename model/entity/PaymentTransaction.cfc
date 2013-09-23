@@ -93,7 +93,7 @@ component entityname="SlatwallPaymentTransaction" table="SwPaymentTransaction" p
 	
 	// Non-Persistent Properties
 
-	property name="avsDescription" ormtype="string";
+	property name="avsDescription" persistent="false";
 
 
 	public any function init() {
