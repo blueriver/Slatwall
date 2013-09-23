@@ -205,7 +205,7 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 				responseBean.addMessage(messageName="stripe.card", message="#responseData.result.card.id#");
 				responseBean.addMessage(messageName="stripe.last4", message="#responseData.result.card.last4#");
 				responseBean.addMessage(messageName="stripe.expiration", message="#responseData.result.card.exp_month#-#responseData.result.card.exp_year#");
-				responseBean.addMessage(messageName="stripe.fee", message="#responseData.result.fee/100#");
+				responseBean.addMessage(messageName="stripe.amount", message="#responseData.result.amount/100#");
 				if (!isNull(responseData.result.customer))
 				{
 					responseBean.addMessage(messageName="stripe.customer", message="#responseData.result.customer#");
@@ -245,7 +245,7 @@ component accessors="true" output="false" displayname="Stripe" implements="Slatw
 				responseBean.addMessage(messageName="stripe.card", message="#responseData.result.card.id#");
 				responseBean.addMessage(messageName="stripe.last4", message="#responseData.result.card.last4#");
 				responseBean.addMessage(messageName="stripe.expiration", message="#responseData.result.card.exp_month#-#responseData.result.card.exp_year#");
-				responseBean.addMessage(messageName="stripe.fee", message="#responseData.result.fee / 100#");
+				responseBean.addMessage(messageName="stripe.amount", message="#responseData.result.amount / 100#");
 				if (!isNull(responseData.result.customer))
 				{
 					responseBean.addMessage(messageName="stripe.customer", message="#responseData.result.customer#");
