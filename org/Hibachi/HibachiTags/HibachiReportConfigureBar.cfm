@@ -18,12 +18,21 @@
 							<span id="hibachi-report-metric-sort">
 								<cfloop from="1" to="#listLen(attributes.report.getMetrics())#" step="1" index="m">
 									<cfset metric = listGetAt(attributes.report.getMetrics(), m) />
-									<span class="label" style="background-color:#attributes.report.getMetricColorDetails()[m].color#" data-metric="#trim(metric)#">#attributes.report.getMetricTitle(metric)#<cfif listLen(attributes.report.getMetrics()) gt 1> (<a href="" class="hibachi-report-remove-metric" data-metric="#metric#">remove</a>)</cfif></span>
+									<span class="label" style="background-color: ##f5f5f5; border:1px solid ##cccccc; color:##333333; margin-bottom:5px; padding-left:10px; cursor:pointer;" data-metric="#trim(metric)#">
+										<span style="color:#attributes.report.getMetricColorDetails()[m].color#; font-size:26px; float:left; margin-right:2px;">&bull;</span>
+										<cfif attributes.report.getReportCompareFlag()>
+											<span style="color:#attributes.report.getMetricColorDetails()[m].compareColor#; font-size:26px; float:left; margin-right:2px;">&bull;</span>
+										</cfif>
+										<cfoutput>| #attributes.report.getMetricTitle(metric)#</cfoutput>
+										<cfif listLen(attributes.report.getMetrics()) gt 1>
+											<a href="" class="hibachi-report-remove-metric" style="color:##000000; margin:0px 5px 0px 10px;" data-metric="#metric#">x</a>
+										</cfif>
+									</span>
 								</cfloop>
 							</span>
-							<cfif arrayLen(attributes.report.getMetricDefinitions()) gt listLen(attributes.report.getMetrics())>
+							<cfif arrayLen(attributes.report.getMetricDefinitions()) gt listLen(attributes.report.getMetrics()) && listLen(attributes.report.getMetrics()) lt 8>
 								<span class="dropdown">
-									<span data-toggle="dropdown" class="dropdown-toggle label" style="cursor:pointer;"></a>+</span>
+									<span data-toggle="dropdown" class="dropdown-toggle label" style="background:none; border:1px solid ##cccccc; color:##333333; cursor:pointer;"></a>+</span>
 									<ul class="dropdown-menu">
 										<cfloop array="#attributes.report.getMetricDefinitions()#" index="metricDefinition">
 											<cfif not listFindNoCase(attributes.report.getMetrics(), metricDefinition.alias)><li><a href="" class="hibachi-report-add-metric" data-metric="#metricDefinition.alias#">#attributes.report.getMetricTitle(metricDefinition.alias)#</a></li></cfif>
@@ -39,12 +48,12 @@
 						<dd style="margin-left:100px;">
 							<span id="hibachi-report-dimension-sort">
 								<cfloop list="#attributes.report.getDimensions()#" index="dimension">
-									<span class="label" data-dimension="#trim(dimension)#">#attributes.report.getDimensionTitle(dimension)#<cfif listLen(attributes.report.getDimensions()) gt 1> (<a href="" class="hibachi-report-remove-dimension" data-dimension="#dimension#">remove</a>)</cfif></span>
+									<span class="label" style="background-color: ##f5f5f5; border:1px solid ##cccccc; color:##333333; margin-bottom:5px; padding-left:10px; cursor:pointer;" data-dimension="#trim(dimension)#">#attributes.report.getDimensionTitle(dimension)#<cfif listLen(attributes.report.getDimensions()) gt 1><a href="" class="hibachi-report-remove-dimension" style="color:##000000; margin:0px 5px 0px 10px;" data-dimension="#dimension#">x</a></cfif></span>
 								</cfloop>
 							</span>
 							<cfif arrayLen(attributes.report.getDimensionDefinitions()) gt listLen(attributes.report.getDimensions())>
 								<span class="dropdown">
-									<span data-toggle="dropdown" class="dropdown-toggle label" style="cursor:pointer;"></a>+</span>
+									<span data-toggle="dropdown" class="dropdown-toggle label" style="background:none; border:1px solid ##cccccc; color:##333333; cursor:pointer;"></a>+</span>
 									<ul class="dropdown-menu">
 										<cfloop array="#attributes.report.getDimensionDefinitions()#" index="dimensionDefinition">
 											<cfif not listFindNoCase(attributes.report.getDimensions(), dimensionDefinition.alias)><li><a href="" class="hibachi-report-add-dimension" data-dimension="#dimensionDefinition.alias#">#attributes.report.getDimensionTitle(dimensionDefinition.alias)#</a></li></cfif>
@@ -55,9 +64,11 @@
 						</dd>
 						
 						<!--- Action Buttons --->
-						<div class="btn-group">
-							<cf_HibachiActionCaller action="admin:report.export" name="slatAction" icon="share" type="button" submit="true" />
-						</div>
+						<dt style="width:100px;"><strong>#attributes.hibachiScope.rbKey('define.actions')#</strong></dt>
+						<dd style="margin-left:100px;">
+							<cf_HibachiActionCaller action="admin:entity.createreport" name="slatAction" icon="plus" class="btn-mini" type="button" submit="true" />
+							<cf_HibachiActionCaller action="admin:report.export" name="slatAction" icon="share" class="btn-mini" type="button" submit="true" />
+						</dd>
 					</dl>
 				</div>
 				<div class="span5">
