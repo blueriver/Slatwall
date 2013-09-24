@@ -4,10 +4,10 @@
 	<cfparam name="attributes.report" type="any" />
 	
 	<cfoutput>
-		<div class="row-fluid">
-			<form action="?s=1" method="post">
-				<input type="hidden" name="reportName" value="#attributes.report.getReportName()#" />
+		<form action="?s=1" method="post" style="margin:0px;">
+			<input type="hidden" name="reportName" value="#attributes.report.getClassName()#" />
 				 
+			<div class="row-fluid">
 				<div class="span7">
 					<dl class="dl-horizontal">
 						
@@ -56,8 +56,8 @@
 						
 						<!--- Action Buttons --->
 						<div class="btn-group">
-							<cf_HibachiActionCaller action="admin:report.exportReport" />
-						</div>	
+							<cf_HibachiActionCaller action="admin:report.export" name="slatAction" icon="share" type="button" submit="true" />
+						</div>
 					</dl>
 				</div>
 				<div class="span5">
@@ -89,9 +89,9 @@
 							<input type="text" name="reportCompareStartDateTime" class="datepicker hibachi-report-date" style="width:80px;" value="#attributes.report.getFormattedValue('reportCompareStartDateTime')#" /> - <input type="text" name="reportCompareEndDateTime" class="datepicker hibachi-report-date" style="width:80px;" value="#attributes.report.getFormattedValue('reportCompareEndDateTime')#" />
 						</div>
 					</div>
+					
 				</div>
-				
-			</form>
-		</div>
+			</div>
+		</form>
 	</cfoutput>
 </cfif>

@@ -846,4 +846,86 @@
 	</cffunction>
 	
 	<!--- ===============  END: CUSTOM TAG OUTPUT METHODS ==================== --->	
+	
+	<!--- =============== START: EXPORT SPREADSHEET FUNCTIONS ================ --->
+	
+	<cffunction name="getSpreadsheetHeaderRow">
+		<cfset var headers = "" />
+		<cfset var i = "" />
+		
+		<cfloop list="#getDimensions()#" index="i">
+			<cfset headers = listAppend(headers, getDimensionTitle(i)) />
+		</cfloop>
+		<cfloop list="#getMetrics()#" index="i">
+			<cfset headers = listAppend(headers, getMetricTitle(i)) />
+		</cfloop>
+		
+		<cfreturn headers />
+	</cffunction>
+
+	<cffunction name="getSpreadsheetTotals">
+		<cfset var totals = "" />
+		<cfset var i = "" />
+		
+		<cfset var totalsQuery = getTotalsQuery() />
+		
+		<cfloop list="#getDimensions()#" index="i">
+			<cfset totals = listAppend(totals, ' ') />
+		</cfloop>
+		<cfloop list="#getMetrics()#" index="i">
+			<cfset totals = listAppend(totals, totalsQuery[ i ][1] ) />
+		</cfloop>
+		
+		<cfreturn totals />
+	</cffunction>
+
+	<cffunction name="getSpreadsheetData">
+		<cfset var data = "" />
+		<cfset var i = "" />
+		<cfset var tableData = getTableDataQuery() />
+		
+		<cfquery name="data" dbtype="query">
+			SELECT
+				<cfloop from="1" to="#listLen(getDimensions())#" index="i">
+					<cfif i gt 1>,</cfif>#listGetAt(getDimensions(), i)#
+				</cfloop>
+				<cfloop from="1" to="#listLen(getMetrics())#" index="i">
+					,#listGetAt(getMetrics(), i)#
+				</cfloop>
+			FROM
+				tableData
+		</cfquery>
+		
+		<cfreturn data />
+	</cffunction>
+	
+	<cffunction name="exportSpreadsheet" access="public" output="false">
+		
+		<!--- Create the filename variables --->
+		<cfset var filename = "#getClassName()#_#getReportStartDateTime()#-#getReportEndDateTime()#_#createUUID()#.xls" />
+		<cfset var filepath = "#getHibachiTempDirectory()#" />
+		<cfset var fullFilename = filepath & filename />
+		
+		<!--- Create spreadsheet object --->
+		<cfset var spreadsheet = spreadsheetNew( filename ) />
+		
+		<!--- Add the column headers --->
+		<cfset spreadsheetAddRow(spreadsheet, getSpreadsheetHeaderRow()) />
+		<cfset spreadsheetFormatRow(spreadsheet, {bold=true}, 1) />
+		
+		<!--- Add the data --->
+		<cfset spreadsheetAddRows(spreadsheet, getSpreadsheetData()) />
+		
+		<!--- Add the totlas --->
+		<cfset spreadsheetAddRow(spreadsheet, getSpreadsheetTotals()) />
+		<cfset spreadsheetMergeCells(spreadsheet, spreadsheet.rowcount, spreadsheet.rowcount, 1, listLen(getDimensions())) />
+		<cfset spreadsheetSetCellValue(spreadsheet, rbKey('define.totals'), spreadsheet.rowcount, 1) />
+		<cfset spreadsheetFormatRow(spreadsheet, {bold=true}, spreadsheet.rowcount) />
+		
+		<cfspreadsheet action="write" filename="#fullFilename#" name="spreadsheet" >
+		<cfset getService("hibachiUtilityService").downloadFile( filename, fullFilename, "application/msexcel", true ) />
+	</cffunction>
+	
+	<!--- ===============  END: EXPORT SPREADSHEET FUNCTIONS  ================ --->
+	
 </cfcomponent>

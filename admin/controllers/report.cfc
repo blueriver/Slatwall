@@ -62,4 +62,12 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 	}
 	
+	public void function export(required struct rc) {
+		var report = getHibachiReportService().getReportCFC( arguments.rc.reportName, arguments.rc );
+		
+		report.exportSpreadsheet();
+		
+		getFW().redirect(action="admin:report.default", queryString="reportName=#report.getClassName()#");
+	}
+	
 }
