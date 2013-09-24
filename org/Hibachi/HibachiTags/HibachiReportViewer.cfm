@@ -20,6 +20,7 @@
 			
 			<script type="text/javascript">
 				jQuery(document).ready(function(){
+					addLoadingDiv( 'hibachi-report' );
 					updateReport();
 				});
 			</script>

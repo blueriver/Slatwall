@@ -196,6 +196,7 @@ function initUIElements( scopeSelector ) {
 	// Report Sortable
 	jQuery( scopeSelector ).find(jQuery('#hibachi-report-dimension-sort')).sortable({
 		stop: function( event, ui ) {
+			addLoadingDiv( 'hibachi-report' );
 			var newDimensionsValue = '';
 			jQuery.each(jQuery('#hibachi-report-dimension-sort').children(), function(i, v){
 				if(i > 0) {
@@ -210,6 +211,7 @@ function initUIElements( scopeSelector ) {
 	// Report Sortable
 	jQuery( scopeSelector ).find(jQuery('#hibachi-report-metric-sort')).sortable({
 		stop: function( event, ui ) {
+			addLoadingDiv( 'hibachi-report' );
 			var newMetricsValue = '';
 			jQuery.each(jQuery('#hibachi-report-metric-sort').children(), function(i, v){
 				if(i > 0) {

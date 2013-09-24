@@ -930,7 +930,7 @@
 	<cffunction name="exportSpreadsheet" access="public" output="false">
 		
 		<!--- Create the filename variables --->
-		<cfset var filename = "#getClassName()#_#getReportStartDateTime()#-#getReportEndDateTime()#_#createUUID()#.xls" />
+		<cfset var filename = "#getClassName()#_#getReportStartDateTime()#_#getReportEndDateTime()#_#createUUID()#.xls" />
 		<cfset var filepath = "#getHibachiTempDirectory()#" />
 		<cfset var fullFilename = filepath & filename />
 		
