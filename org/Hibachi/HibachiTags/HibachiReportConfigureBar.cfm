@@ -6,7 +6,12 @@
 	<cfoutput>
 		<form action="?s=1" method="post" style="margin:0px;">
 			<input type="hidden" name="reportName" value="#attributes.report.getClassName()#" />
-				 
+			<cfif not isNull(attributes.report.getReportEntity())>
+				<input type="hidden" name="reportID" value="#attributes.report.getReportEntity().getReportID()#" />
+			<cfelse>
+				<input type="hidden" name="reportID" value="" />
+			</cfif>
+
 			<div class="row-fluid">
 				<div class="span7">
 					<dl class="dl-horizontal">
@@ -66,8 +71,12 @@
 						<!--- Action Buttons --->
 						<dt style="width:100px;"><strong>#attributes.hibachiScope.rbKey('define.actions')#</strong></dt>
 						<dd style="margin-left:100px;">
-							<cf_HibachiActionCaller action="admin:entity.createreport" name="slatAction" icon="plus" class="btn-mini" type="button" submit="true" />
-							<cf_HibachiActionCaller action="admin:report.export" name="slatAction" icon="share" class="btn-mini" type="button" submit="true" />
+							<cf_HibachiActionCaller action="admin:report.export" name="slatAction" icon="share" type="button" class="btn-mini" submit="true" />
+							<cfif not isNull(attributes.report.getReportEntity())>
+								<cf_HibachiActionCaller action="admin:entity.editreport" queryString="reportID=#attributes.report.getReportEntity().getReportID()#&reportName=#attributes.report.getClassName()#&reportDateTime=#attributes.report.getReportDateTime()#&reportDateTimeGroupBy=#attributes.report.getReportDateTimeGroupBy()#&reportCompareFlag=#attributes.report.getReportCompareFlag()#&dimensions=#attributes.report.getDimensions()#&metrics=#attributes.report.getMetrics()#&redirectAction=admin:report.default" icon="pencil" class="btn btn-mini" modal=true />
+								<cf_HibachiActionCaller action="admin:entity.deletereport" queryString="reportID=#attributes.report.getReportEntity().getReportID()#&redirectAction=admin:report.default" icon="remove" class="btn btn-mini" />
+							</cfif>	
+							<cf_HibachiActionCaller action="admin:entity.createreport" queryString="reportName=#attributes.report.getClassName()#&reportDateTime=#attributes.report.getReportDateTime()#&reportDateTimeGroupBy=#attributes.report.getReportDateTimeGroupBy()#&reportCompareFlag=#attributes.report.getReportCompareFlag()#&dimensions=#attributes.report.getDimensions()#&metrics=#attributes.report.getMetrics()#&redirectAction=admin:report.default" icon="plus" class="btn btn-mini" modal=true />	
 						</dd>
 					</dl>
 				</div>

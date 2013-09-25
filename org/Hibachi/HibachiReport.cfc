@@ -2,6 +2,7 @@
 	
 	<!--- Title Information --->
 	<cfproperty name="reportTitle" />
+	<cfproperty name="reportEntity" />
 	
 	<!--- Date / Time Properties --->
 	<cfproperty name="reportStartDateTime" hb_formatType="date" />
@@ -9,7 +10,6 @@
 	<cfproperty name="reportCompareStartDateTime" hb_formatType="date" />
 	<cfproperty name="reportCompareEndDateTime" hb_formatType="date" />
 	<cfproperty name="reportDateTimeGroupBy" />
-	<cfproperty name="reportDateTimeDataColumn" />
 	<cfproperty name="reportCompareFlag" />
 	
 	<!--- Definition Properties --->
@@ -129,6 +129,10 @@
 	<!--- ================= START: TITLE HELPER METHODS ====================== --->
 		
 	<cffunction name="getReportTitle" access="public" output="false">
+		<cfif not isNull(getReportEntity())>
+			<cfreturn getReportEntity().getReportTitle() & " - " & rbKey('report.#getClassName()#') />
+		</cfif>
+		
 		<cfreturn rbKey('report.#getClassName()#') />
 	</cffunction>
 	
@@ -246,14 +250,14 @@
 	
 	<cffunction name="getReportCompareStartDateTime" access="public" output="false">
 		<cfif not structKeyExists(variables, "reportCompareStartDateTime")>
-			<cfset variables.reportCompareStartDateTime = dateFormat(getReportCompareEndDateTime() - 30, "yyyy-mm-dd") />
+			<cfset variables.reportCompareStartDateTime = dateFormat(getReportCompareEndDateTime() - dateDiff("d", getReportStartDateTime(), getReportEndDateTime()), "yyyy-mm-dd") />
 		</cfif>
 		<cfreturn dateFormat(variables.reportCompareStartDateTime,"yyyy-mm-dd") />
 	</cffunction>
 	
 	<cffunction name="getReportCompareEndDateTime" access="public" output="false">
 		<cfif not structKeyExists(variables, "reportCompareEndDateTime")>
-			<cfset variables.reportCompareEndDateTime = dateFormat(getReportStartDateTime()-1, "yyyy-mm-dd") />
+			<cfset variables.reportCompareEndDateTime = dateFormat(dateAdd("d", -1, getReportStartDateTime()), "yyyy-mm-dd") />
 		</cfif>
 		<cfreturn dateFormat(variables.reportCompareEndDateTime,"yyyy-mm-dd") />
 	</cffunction>
@@ -798,6 +802,8 @@
 						<cfif compareDataValue.recordCount>
 							<cfset querySetCell(allDimensions, "#metricDefinition.alias#Compare", compareDataValue.dataValue, allDimensions.currentRow) />
 						</cfif>
+						
+						
 					</cfloop>
 				</cfloop>
 				

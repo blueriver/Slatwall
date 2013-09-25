@@ -1365,6 +1365,7 @@ function updateReport() {
 	
 	var data = {
 		slatAction: 'admin:report.default',
+		reportID: jQuery('input[name="reportID"]').val(),
 		reportName: jQuery('#hibachi-report').data('reportname'),
 		reportStartDateTime: jQuery('input[name="reportStartDateTime"]').val(),
 		reportEndDateTime: jQuery('input[name="reportEndDateTime"]').val(),
