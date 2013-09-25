@@ -91,7 +91,11 @@ Notes:
 					SwOrder.orderID,
 					SwOrder.orderNumber,
 					SwOrder.currencyCode,
-					ort.type,
+					<cfif getApplicationValue('databaseType') eq "Oracle10g">
+						oit."type" as type,
+					<cfelse>
+						oit.type,
+					</cfif>
 					SwAddress.countryCode,
 					SwAddress.stateCode,
 					SwAddress.city,
@@ -126,7 +130,7 @@ Notes:
 				FROM
 					SwOrderItem
 				  INNER JOIN
-				  	SwType ort on SwOrderItem.orderItemTypeID = ort.typeID
+				  	SwType oit on SwOrderItem.orderItemTypeID = oit.typeID
 				  LEFT JOIN
 				  	SwOrderFulfillment on SwOrderItem.orderFulfillmentID = SwOrderFulfillment.orderFulfillmentID
 				  INNER JOIN
