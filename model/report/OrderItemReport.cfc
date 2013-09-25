@@ -50,7 +50,9 @@ Notes:
 			{alias='revenue', calculation='(SUM(salePreDiscount) - SUM(itemDiscount)) + (SUM(returnPreDiscount) - SUM(itemDiscount))', formatType="currency"},
 			{alias='salePreDiscount', function='sum', formatType="currency"},
 			{alias='returnPreDiscount', function='sum', formatType="currency"},
-			{alias='quantity', function='sum', title=rbKey('entity.orderItem.quantity')},
+			{alias='quantity', calculation='SUM(quantitySold) + SUM(quantityReturned)', title=rbKey('entity.orderItem.quantity')},
+			{alias='quantitySold', function='sum'},
+			{alias='quantityReturned', function='sum'},
 			{alias='itemDiscount', function='sum', formatType="currency"},
 			{alias='itemTax', function='sum', formatType="currency"},
 			{alias='saleAfterDiscount', calculation='SUM(salePreDiscount) - SUM(itemDiscount)', formatType="currency"},
@@ -93,8 +95,19 @@ Notes:
 					SwAddress.countryCode,
 					SwAddress.stateCode,
 					SwAddress.city,
-					SwOrderItem.quantity,
 					SwOrderItem.price,
+					CASE
+    					WHEN SwOrderItem.orderItemTypeID = '444df2e9a6622ad1614ea75cd5b982ce' THEN
+    						SwOrderItem.quantity
+						ELSE
+							0
+					END as quantitySold,
+					CASE
+    					WHEN SwOrderItem.orderItemTypeID = '444df2eac18fa589af0f054442e12733' THEN
+    						SwOrderItem.quantity * -1
+						ELSE
+							0
+					END as quantityReturned,
 					CASE
     					WHEN SwOrderItem.orderItemTypeID = '444df2e9a6622ad1614ea75cd5b982ce' THEN
     						(SwOrderItem.price * SwOrderItem.quantity)
