@@ -81,7 +81,9 @@ Notes:
 		
 		<cf_HibachiTabGroup object="#rc.image#">
 			<cf_HibachiTab view="admin:entity/imagetabs/image" />
-			<cf_HibachiTab view="admin:entity/imagetabs/options" />
+			<cfif not isNull(rc.image.getProduct())>
+				<cf_HibachiTab view="admin:entity/imagetabs/options" />
+			</cfif>
 		</cf_HibachiTabGroup>
 	</cf_HibachiEntityDetailForm>
 </cfoutput>
