@@ -84,6 +84,10 @@ Notes:
 			<cfif not isNull(rc.image.getProduct())>
 				<cf_HibachiTab view="admin:entity/imagetabs/options" />
 			</cfif>
+			<!--- Custom Attributes --->
+			<cfloop array="#rc.image.getAssignedAttributeSetSmartList().getRecords()#" index="attributeSet">
+				<cf_SlatwallAdminTabCustomAttributes object="#rc.image#" attributeSet="#attributeSet#" />
+			</cfloop>
 		</cf_HibachiTabGroup>
 	</cf_HibachiEntityDetailForm>
 </cfoutput>

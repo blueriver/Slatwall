@@ -65,6 +65,9 @@ component displayname="Image" entityname="SlatwallImage" table="SwImage" persist
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	property name="option" cfc="Option" fieldtype="many-to-one" fkcolumn="optionID";
 	
+	// Related Object Properties (one-to-many)
+	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" fieldtype="one-to-many" fkcolumn="imageID" inverse="true" cascade="all-delete-orphan";
+
 	// Audit properties
 	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="createdByAccount" hb_populateEnabled="false" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
@@ -190,6 +193,14 @@ component displayname="Image" entityname="SlatwallImage" table="SwImage" persist
 		structDelete(variables, "promotion");
 	}
 	
+	// Attribute Values (one-to-many)
+	public void function addAttributeValue(required any attributeValue) {
+		arguments.attributeValue.setImage( this );
+	}
+	public void function removeAttributeValue(required any attributeValue) {
+		arguments.attributeValue.removeImage( this );
+	}
+
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
