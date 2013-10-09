@@ -179,18 +179,7 @@ component extends="SlatwallUnitTestBase" {
 		assertFalse(accountHasErrors);
 		assert(account2HasErrors);
 	}
-	
-	public void function issue_1567() {
-		
-		var urlTitle = request.slatwallScope.getService("dataService").createUniqueURLTitle(titleString="Gift Card-$50", tableName="SwProduct");
-		
-		writedump(var="#urlTitle#");
-		
-		assert(urlTitle eq "gift-card-50");
 
-	}
-	
-	
 	public void function issue_1604() {
 		
 		var order = request.slatwallScope.getCart();

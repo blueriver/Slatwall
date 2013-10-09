@@ -55,8 +55,7 @@ component output="false" accessors="true" extends="HibachiService" {
 		var addon = 1;
 		
 		var urlTitle = reReplace(lcase(trim(arguments.titleString)), "[^a-z0-9 \-]", "", "all");
-		urlTitle = reReplace(lcase(trim(urlTitle)), "-", " ", "all");
-		urlTitle = reReplace(urlTitle, "[ ]+", "-", "all");
+		urlTitle = reReplace(urlTitle, "[-\s]+", "-", "all");
 		
 		var returnTitle = urlTitle;
 		
