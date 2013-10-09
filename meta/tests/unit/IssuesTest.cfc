@@ -182,11 +182,11 @@ component extends="SlatwallUnitTestBase" {
 	
 	public void function issue_1567() {
 		
-		var urlTitle = request.slatwallScope.getService("dataService").createUniqueURLTitle(titleString="Gift Card - $50", tableName="SwProduct");
+		var urlTitle = request.slatwallScope.getService("dataService").createUniqueURLTitle(titleString="Gift Card-$50", tableName="SwProduct");
 		
 		writedump(var="#urlTitle#");
 		
-		assert(urlTitle eq "gift-card-50-2");
+		assert(urlTitle eq "gift-card-50");
 
 	}
 	
