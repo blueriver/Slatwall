@@ -149,6 +149,20 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 	}
 	
+	// Account Email Address - Verify
+	public void function verifyAccountEmailAddress() {
+		param name="rc.accountEmailAddressID" default="";
+		
+		var accountEmailAddress = getAccountService().getAccountEmailAddress( rc.accountEmailAddressID );
+		
+		if(!isNull(accountEmailAddress)) {
+			accountEmailAddress = getAccountService().processAccountEmailAddress( accountEmailAddress, rc, 'verify' );
+			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountEmailAddress", accountEmailAddress.hasErrors() );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:account.deleteAccountEmailAddress", true );
+		}
+	}
+	
 	// Account Phone Number - Delete
 	public void function deleteAccountPhoneNumber() {
 		param name="rc.accountPhoneNumberID" default="";

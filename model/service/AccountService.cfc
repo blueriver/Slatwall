@@ -396,6 +396,39 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.account;
 	}	
 	
+	// Account Email Address
+	public any function processAccountEmailAddress_sendVerificationEmail(required any accountEmailAddress, required any processObject) {
+		
+		// Get the site (this will return as a new site if no siteID)
+		var site = getSiteService().getSite(arguments.processObject.getSiteID(), true);
+		
+		if(len(site.setting('siteVerifyAccountEmailAddressEmailTemplate'))) {
+			
+			var email = getEmailService().newEmail();
+			var emailData = {
+				accountEmailAddressID = arguments.accountEmailAddress.getAccountEmailAddressID(),
+				emailTemplateID = site.setting('siteVerifyAccountEmailAddressEmailTemplate')
+			};
+			
+			email = getEmailService().processEmail(email, emailData, 'createFromTemplate');
+			
+			email.setEmailTo( arguments.accountEmailAddress.getEmailAddress() );
+			
+			email = getEmailService().processEmail(email, {}, 'addToQueue');
+			
+		} else {
+			throw("No email template could be found.  Please update the site settings to define a 'Verify Account Email Address Email Template'.");
+		}
+		
+		return arguments.account;
+	}
+	
+	public any function processAccountEmailAddress_verify(required any accountEmailAddress) {
+		arguments.accountEmailAddress.setVerificationFlag( 1 );
+		
+		return arguments.accountEmailAddress;
+	}
+	
 	// Account Loyalty
 	public any function processAccountLoyalty_itemFulfilled(required any accountLoyalty, required struct data) {
 		
