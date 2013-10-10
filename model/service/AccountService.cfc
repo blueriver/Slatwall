@@ -196,7 +196,7 @@ component extends="HibachiService" accessors="true" output="false" {
 		return arguments.account;
 	}
 	
-	public any function processAccount_create(required any account, required any processObject) {
+	public any function processAccount_create(required any account, required any processObject, struct data={}) {
 		
 		// Populate the account with the correct values that have been previously validated
 		arguments.account.setFirstName( processObject.getFirstName() );
@@ -221,8 +221,11 @@ component extends="HibachiService" accessors="true" output="false" {
 			accountEmailAddress.setEmailAddress( processObject.getEmailAddress() );
 		}
 		
+		// Save & Populate the account so that custom attributes get set
+		arguments.account = this.saveAccount(arguments.account, arguments.data);
+		
 		// If the createAuthenticationFlag was set to true, the add the authentication
-		if(processObject.getCreateAuthenticationFlag()) {
+		if(!arguments.account.hasErrors() && processObject.getCreateAuthenticationFlag()) {
 			var accountAuthentication = this.newAccountAuthentication();
 			accountAuthentication.setAccount( arguments.account );
 		
@@ -232,9 +235,6 @@ component extends="HibachiService" accessors="true" output="false" {
 			// Set the password
 			accountAuthentication.setPassword( getHashedAndSaltedPassword(arguments.processObject.getPassword(), accountAuthentication.getAccountAuthenticationID()) );	
 		}
-		
-		// Call save on the account now that it is all setup
-		arguments.account = this.saveAccount(arguments.account);
 		
 		return arguments.account;
 	}
