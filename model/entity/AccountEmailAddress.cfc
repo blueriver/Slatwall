@@ -78,7 +78,6 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	// Non Persistent
 	property name="primaryEmailAddressNotInUseFlag" persistent="false";
 	property name="primaryFlag" persistent="false";
-	property name="verificationID" persistent="false";
 	
 	// Deprecated Properties
 	
@@ -159,9 +158,9 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 		return variables.verifiedFlag;
 	}
 	
-	public any function getVerificationCode() {
+	public string function getVerificationCode() {
 		if(!structKeyExists(variables, "verificationCode")) {
-			variables.verificationCode = getAccountEmailAddressID() && "~" && createHibachiUUID();
+			variables.verificationCode = createHibachiUUID();
 		}
 		return variables.verificationCode;
 	}

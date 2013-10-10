@@ -424,7 +424,7 @@ component extends="HibachiService" accessors="true" output="false" {
 	}
 	
 	public any function processAccountEmailAddress_verify(required any accountEmailAddress) {
-		arguments.accountEmailAddress.setVerificationFlag( 1 );
+		arguments.accountEmailAddress.setVerifiedFlag( 1 );
 		
 		return arguments.accountEmailAddress;
 	}
