@@ -123,6 +123,8 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 	
 	// Account - Create
 	public void function create( required struct rc ) {
+		param name="arguments.rc.createAuthenticationFlag" default="1";
+		
 		var account = getAccountService().processAccount( rc.$.slatwall.getAccount(), arguments.rc, 'create');
 		
 		arguments.rc.$.slatwall.addActionResult( "public:account.create", account.hasErrors() );
