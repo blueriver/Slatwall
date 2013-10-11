@@ -149,6 +149,34 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		}
 	}
 	
+	// Account Email Address - Send Verification Email
+	public void function sendAccountEmailAddressVerificationEmail() {
+		param name="rc.accountEmailAddressID" default="";
+		
+		var accountEmailAddress = getAccountService().getAccountEmailAddress( rc.accountEmailAddressID );
+		
+		if(!isNull(accountEmailAddress)) {
+			accountEmailAddress = getAccountService().processAccountEmailAddress( accountEmailAddress, rc, 'sendVerificationEmail' );
+			arguments.rc.$.slatwall.addActionResult( "public:account.sendAccountEmailAddressVerificationEmail", accountEmailAddress.hasErrors() );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:account.sendAccountEmailAddressVerificationEmail", true );
+		}
+	}
+	
+	// Account Email Address - Verify
+	public void function verifyAccountEmailAddress() {
+		param name="rc.accountEmailAddressID" default="";
+		
+		var accountEmailAddress = getAccountService().getAccountEmailAddress( rc.accountEmailAddressID );
+		
+		if(!isNull(accountEmailAddress)) {
+			accountEmailAddress = getAccountService().processAccountEmailAddress( accountEmailAddress, rc, 'verify' );
+			arguments.rc.$.slatwall.addActionResult( "public:account.verifyAccountEmailAddress", accountEmailAddress.hasErrors() );
+		} else {
+			arguments.rc.$.slatwall.addActionResult( "public:account.verifyAccountEmailAddress", true );
+		}
+	}
+	
 	// Account Phone Number - Delete
 	public void function deleteAccountPhoneNumber() {
 		param name="rc.accountPhoneNumberID" default="";
