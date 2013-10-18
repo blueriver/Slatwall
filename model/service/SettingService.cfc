@@ -752,9 +752,9 @@ globalEncryptionKeySize
 		<cfset var allSettings = getAllSettingsQuery() />
 		<cfset var rs = "" />
 		
-		<cfquery name="rs" dbType="query">
+		<cfquery name="rs" dbType="query" maxrows="1">
 			SELECT
-				count(*) as settingRecordCount
+				settingID
 			FROM
 				allSettings
 			WHERE
@@ -763,9 +763,9 @@ globalEncryptionKeySize
 			  	  AND
 			  	LOWER(allSettings.settingValue) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingValue)#">  
 			  </cfif>
-		</cfquery> 
+		</cfquery>
 		
-		<cfreturn val(rs.settingRecordCount) />
+		<cfreturn val(rs.recordCount) />
 	</cffunction>
 	
 	<cffunction name="getSettingRecordBySettingRelationships" output="false">
