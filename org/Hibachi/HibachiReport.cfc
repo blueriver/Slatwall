@@ -950,7 +950,7 @@
 		<cfset filename &= replace(getReportEndDateTime(), "-", "", "all") />
 		<cfset filename &= ".xls" />
 		<cfif structKeyExists(server, "railo")>
-			<cfset filename &= left(filename, 31) />
+			<cfset filename = right(filename, 31) />
 		</cfif>
 		
 		<cfset var filepath = "#getHibachiTempDirectory()#" />
