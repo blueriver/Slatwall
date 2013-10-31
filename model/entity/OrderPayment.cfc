@@ -590,7 +590,7 @@ component entityname="SlatwallOrderPayment" table="SwOrderPayment" persistent="t
 	
 	public any function afterPopulate() {
 		if(!isNull(getCreditCardNumber()) && len(getCreditCardNumber()) && getCreditCardType() != "Invalid" && !isNull(getPaymentMethod()) && !isNull(getPaymentMethod().getSaveOrderPaymentEncryptFlag()) && getPaymentMethod().getSaveOrderPaymentEncryptFlag()) {
-			setCreditCardNumberEncrypted(encryptValue(arguments.creditCardNumber));
+			setCreditCardNumberEncrypted(encryptValue(getCreditCardNumber()));
 		}
 	}
 	
