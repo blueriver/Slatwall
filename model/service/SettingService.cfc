@@ -291,22 +291,22 @@ globalEncryptionKeySize
 					return optionSL.getRecords();
 				case "brandDisplayTemplate":
 					if(structKeyExists(arguments, "settingObject")) {
-						return getContentService().getDisplayTemplateOptions( "brand", arguments.settingObject.getSite().getSiteID() );	
+						return getContentService().getDisplayTemplateOptions( "Brand", arguments.settingObject.getSite().getSiteID() );	
 					}
 					return getContentService().getDisplayTemplateOptions( "brand" );
 				case "productDisplayTemplate":
 					if(structKeyExists(arguments, "settingObject")) {
-						return getContentService().getDisplayTemplateOptions( "product", arguments.settingObject.getSite().getSiteID() );	
+						return getContentService().getDisplayTemplateOptions( "Product", arguments.settingObject.getSite().getSiteID() );	
 					}
 					return getContentService().getDisplayTemplateOptions( "product" );
 				case "productTypeDisplayTemplate":
 					if(structKeyExists(arguments, "settingObject")) {
-						return getContentService().getDisplayTemplateOptions( "productType", arguments.settingObject.getSite().getSiteID() );	
+						return getContentService().getDisplayTemplateOptions( "ProductType", arguments.settingObject.getSite().getSiteID() );	
 					}
 					return getContentService().getDisplayTemplateOptions( "productType" );
 				case "contentRestrictedContentDisplayTemplate":
 					if(structKeyExists(arguments, "settingObject")) {
-						return getContentService().getDisplayTemplateOptions( "barrierPage", arguments.settingObject.getSite().getSiteID() );	
+						return getContentService().getDisplayTemplateOptions( "BarrierPage", arguments.settingObject.getContent().getSite().getSiteID() );	
 					}
 					return getContentService().getDisplayTemplateOptions( "barrierPage" );
 				case "fulfillmentMethodAutoLocation" :
@@ -752,9 +752,9 @@ globalEncryptionKeySize
 		<cfset var allSettings = getAllSettingsQuery() />
 		<cfset var rs = "" />
 		
-		<cfquery name="rs" dbType="query">
+		<cfquery name="rs" dbType="query" maxrows="1">
 			SELECT
-				count(*) as settingRecordCount
+				settingID
 			FROM
 				allSettings
 			WHERE
@@ -763,9 +763,9 @@ globalEncryptionKeySize
 			  	  AND
 			  	LOWER(allSettings.settingValue) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingValue)#">  
 			  </cfif>
-		</cfquery> 
+		</cfquery>
 		
-		<cfreturn val(rs.settingRecordCount) />
+		<cfreturn val(rs.recordCount) />
 	</cffunction>
 	
 	<cffunction name="getSettingRecordBySettingRelationships" output="false">

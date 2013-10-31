@@ -65,16 +65,13 @@ Notes:
 			<CardSecVal>#arguments.requestBean.getSecurityCode()#</CardSecVal>
 		</cfif>
 		<AVSzip>#arguments.requestBean.getBillingPostalCode()#</AVSzip>
-		<AVSaddress1>#arguments.requestBean.getBillingStreetAddress()#</AVSaddress1>
-		<AVSaddress2>#arguments.requestBean.getBillingStreet2Address()#</AVSaddress2>
+		<AVSaddress1>#arguments.requestBean.getBillingStreetAddress()#<cfif !isNull(arguments.requestBean.getBillingStreet2Address())> #arguments.requestBean.getBillingStreet2Address()#</cfif></AVSaddress1>
 		<AVScity>#arguments.requestBean.getBillingCity()#</AVScity>
 		<AVSstate>#arguments.requestBean.getBillingStateCode()#</AVSstate>
 		<AVSphoneNum>#arguments.requestBean.getAccountPrimaryPhoneNumber()#</AVSphoneNum>
 		<AVSname>#arguments.requestBean.getNameOnCreditCard()#</AVSname>
 		<AVScountryCode>#arguments.requestBean.getBillingCountryCode()#</AVScountryCode>
-		<cfif !isNull(arguments.requestBean.getCreditCardNumber())>
-			<CustomerRefNum>#arguments.requestBean.getAccount().getShortReferenceID( true )#</CustomerRefNum>
-		<cfelse>
+		<cfif isNull(arguments.requestBean.getCreditCardNumber())>
 			<CustomerRefNum>#arguments.requestBean.getProviderToken()#</CustomerRefNum>
 		</cfif>
 		<OrderID>#arguments.requestBean.getOrder().getShortReferenceID( true )#</OrderID>

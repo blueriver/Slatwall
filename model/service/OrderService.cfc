@@ -592,6 +592,47 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
+	public any function processOrder_changeCurrencyCode( required any order, required any processObject) {
+		// Update the order
+		arguments.order.setCurrencyCode( arguments.processObject.getCurrencyCode() );
+		
+		// Update order promotions
+		for(var appliedPromotion in arguments.order.getAppliedPromotions()) {
+			appliedPromotion.setCurrencyCode( arguments.processObject.getCurrencyCode() );
+		}
+		
+		// Update the orderItems
+		for(var orderItem in arguments.order.getOrderItems()) {
+			
+			// Update the orderItem itself
+			orderItem.setCurrencyCode( arguments.processObject.getCurrencyCode() );
+			
+			// Update order item promotions
+			for(var appliedPromotion in orderItem.getAppliedPromotions()) {
+				appliedPromotion.setCurrencyCode( arguments.processObject.getCurrencyCode() );
+			}
+		}
+		
+		// Update the orderFulfillments
+		for(var orderFulfillment in arguments.order.getOrderFulfillments()) {
+			
+			// update the fulfillment itself
+			orderFulfillment.setCurrencyCode( arguments.processObject.getCurrencyCode() );
+			
+			// Update fulfillment promotions
+			for(var appliedPromotion in orderFulfillment.getAppliedPromotions()) {
+				appliedPromotion.setCurrencyCode( arguments.processObject.getCurrencyCode() );
+			}
+		}
+		
+		// Update the orderPayments
+		for(var orderPayment in arguments.order.getOrderPayments()) {
+			orderFulfillment.setCurrencyCode( arguments.processObject.getCurrencyCode() );
+		}
+		
+		return arguments.order;
+	}
+	
 	public any function processOrder_clear(required any order) {
 		
 		// Remove the cart from the session
@@ -863,6 +904,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					}
 					
 				}
+				
+			} else {
+				arguments.order.addError('duplicate', rbKey('validate.processOrder_PlaceOrder.duplicate'));
 			}
 			
 		}	// END OF LOCK
@@ -1014,6 +1058,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		return arguments.order;
 	}
 	
+	
 	// Process: Order Delivery
 	public any function processOrderDelivery_create(required any orderDelivery, required any processObject, struct data={}) {
 		
@@ -1094,7 +1139,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 					var orderDeliveryItem = this.newOrderDeliveryItem();
 					
 					// Populate with the data
-					orderDeliveryItem.populate( arguments.processObject.getOrderDeliveryItems()[i] );
+					orderDeliveryItem.setOrderItem( this.getOrderItem( arguments.processObject.getOrderDeliveryItems()[i].orderItem.orderItemID ) );
+					orderDeliveryItem.setQuantity( this.getOrderItem( arguments.processObject.getOrderDeliveryItems()[i].quantity ) );
 					orderDeliveryItem.setStock( getStockService().getStockBySkuAndLocation(sku=orderDeliveryItem.getOrderItem().getSku(), location=arguments.orderDelivery.getLocation()));
 					orderDeliveryItem.setOrderDelivery( arguments.orderDelivery );
 				}	

@@ -936,7 +936,23 @@
 	<cffunction name="exportSpreadsheet" access="public" output="false">
 		
 		<!--- Create the filename variables --->
-		<cfset var filename = "#getClassName()#_#getReportStartDateTime()#_#getReportEndDateTime()#_#createUUID()#.xls" />
+		<cfset var filename = "" />
+		<cfif not isNull(getReportEntity())>
+			<cfset filename = reReplace(lcase(trim(getReportEntity().getReportTitle())), "[^a-z0-9 \-]", "", "all") />
+			<cfset filename = reReplace(filename, "[-\s]+", "-", "all") />
+			<cfset filename &= "_" />
+		<cfelse>
+			<cfset filename = "#getClassName()#_" />
+		</cfif>
+		<cfset filename = replace(filename, "Report_", "_") />
+		<cfset filename &= replace(getReportStartDateTime(), "-", "", "all") />
+		<cfset filename &= "-" />
+		<cfset filename &= replace(getReportEndDateTime(), "-", "", "all") />
+		<cfset filename &= ".xls" />
+		<cfif structKeyExists(server, "railo")>
+			<cfset filename = right(filename, 31) />
+		</cfif>
+		
 		<cfset var filepath = "#getHibachiTempDirectory()#" />
 		<cfset var fullFilename = filepath & filename />
 		
@@ -949,9 +965,11 @@
 		<cftry>
 			<!--- Create spreadsheet object --->
 			<cfset var spreadsheet = spreadsheetNew( filename ) />
+			<cfset var spreadsheetrowcount = 0 />
 			
 			<!--- Add the column headers --->
 			<cfset spreadsheetAddRow(spreadsheet, getSpreadsheetHeaderRow()) />
+			<cfset spreadsheetrowcount &= 1 />
 			<cfset spreadsheetFormatRow(spreadsheet, {bold=true}, 1) />
 			
 			<!--- Add compare row --->
@@ -964,24 +982,30 @@
 				</cfloop>
 				
 				<cfset spreadsheetAddRow(spreadsheet, getSpreadsheetHeaderCompareRow()) />
+				<cfset spreadsheetrowcount &= 1 />
+				
 				<cfset spreadsheetFormatRow(spreadsheet, {fontsize=8}, spreadsheet.rowcount) />
-				<cfset spreadsheetMergeCells(spreadsheet, spreadsheet.rowcount, spreadsheet.rowcount, 1, listLen(getDimensions()) ) />	
+				<cfset spreadsheetMergeCells(spreadsheet, spreadsheetrowcount, spreadsheetrowcount, 1, listLen(getDimensions()) ) />	
 			</cfif>
 			
 			<!--- Add Header border --->
-			<cfset spreadsheetFormatCellRange (spreadsheet, {bottomborder='thin'}, spreadsheet.rowcount, 1, spreadsheet.rowcount, totalColumns) />
+			<cfset spreadsheetFormatCellRange (spreadsheet, {bottomborder='thin'}, spreadsheetrowcount, 1, spreadsheetrowcount, totalColumns) />
 			
 			<!--- Add the data --->
-			<cfset spreadsheetAddRows(spreadsheet, getSpreadsheetData()) />
+			<cfset var dataQuery = getSpreadsheetData() />
+			<cfset spreadsheetAddRows(spreadsheet, dataQuery) />
+			<cfset spreadsheetrowcount &= dataQuery.recordcount />
 			
 			<!--- Add the totals --->
 			<cfset spreadsheetAddRow(spreadsheet, getSpreadsheetTotals()) />
-			<cfset spreadsheetMergeCells(spreadsheet, spreadsheet.rowcount, spreadsheet.rowcount, 1, listLen(getDimensions())) />
-			<cfset spreadsheetSetCellValue(spreadsheet, rbKey('define.totals'), spreadsheet.rowcount, 1) />
-			<cfset spreadsheetFormatRow(spreadsheet, {bold=true}, spreadsheet.rowcount) />
+			<cfset spreadsheetrowcount &= 1 />
+			
+			<cfset spreadsheetMergeCells(spreadsheet, spreadsheetrowcount, spreadsheetrowcount, 1, listLen(getDimensions())) />
+			<cfset spreadsheetSetCellValue(spreadsheet, rbKey('define.totals'), spreadsheetrowcount, 1) />
+			<cfset spreadsheetFormatRow(spreadsheet, {bold=true}, spreadsheetrowcount) />
 			
 			<!--- Add Totals border --->
-			<cfset spreadsheetFormatCellRange (spreadsheet, {topborder='thin'}, spreadsheet.rowcount, 1, spreadsheet.rowcount, totalColumns) />
+			<cfset spreadsheetFormatCellRange (spreadsheet, {topborder='thin'}, spreadsheetrowcount, 1, spreadsheetrowcount, totalColumns) />
 			
 			<cfset spreadsheetWrite( spreadsheet, fullFilename ) />
 			<cfset getService("hibachiUtilityService").downloadFile( filename, fullFilename, "application/msexcel", true ) />

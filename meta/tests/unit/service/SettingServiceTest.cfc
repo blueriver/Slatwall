@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An Open Source eCommerce Platform
     Copyright (C) ten24, LLC
@@ -45,39 +45,20 @@
 
 Notes:
 
---->
-<cfcomponent extends="HibachiDAO">
+*/
+component extends="Slatwall.meta.tests.unit.SlatwallUnitTestBase" {
+
+	public void function setUp() {
+		super.setup();
+		
+		variables.service = request.slatwallScope.getService("settingService");
+	}
 	
-	<cffunction name="getContentByCMSContentIDAndCMSSiteID" access="public">
-		<cfargument name="cmsContentID" type="string" required="true">
-		<cfargument name="cmsSiteID" type="string" required="true">
-		
-		<cfset var contents = ormExecuteQuery(" FROM SlatwallContent c WHERE c.cmsContentID = ? AND c.site.cmsSiteID = ?", [ arguments.cmsContentID, arguments.cmsSiteID ] ) />
-		
-		<cfif arrayLen(contents)>
-			<cfreturn contents[1] />
-		</cfif>
-		
-		<cfreturn entityNew("SlatwallContent") />
-	</cffunction>
-	
-	<cffunction name="getCategoriesByCmsCategoryIDs" access="public">
-		<cfargument name="CmsCategoryIDs" type="string" />
-			
-		<cfset var hql = " FROM SlatwallCategory sc
-							WHERE sc.cmsCategoryID IN (:CmsCategoryIDs) " />
-			
-		<cfreturn ormExecuteQuery(hql, {CmsCategoryIDs=listToArray(arguments.CmsCategoryIDs)}) />
-	</cffunction>
-	
-	<cffunction name="getDisplayTemplates" access="public">
-		<cfargument name="templateType" type="string" />
-		<cfargument name="siteID" type="string" />
-		
-		<cfif structKeyExists(arguments, "siteID")>
-			<cfreturn ormExecuteQuery(" FROM SlatwallContent WHERE contentTemplateType.systemCode = ? AND site.siteID = ?", ["ctt#arguments.templateType#", arguments.siteID], false, {ignoreCase=true}) />
-		</cfif>
-		
-		<cfreturn ormExecuteQuery(" FROM SlatwallContent WHERE contentTemplateType.systemCode = ?", ["ctt#arguments.templateType#"], false, {ignoreCase=true}) />
-	</cffunction>
-</cfcomponent>
+	// getSettingRecordCount()
+	public void function getSettingRecordCount() {
+		var count = variables.service.getSettingRecordCount(settingName="contentRestrictAccessFlag", settingValue=1);
+		assert(isBoolean(count));
+	}
+}
+
+
