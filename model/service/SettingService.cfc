@@ -70,46 +70,46 @@ globalEncryptionKeySize
 	<cfproperty name="allSettingsQuery" type="query" />
 	<cfproperty name="settingDetailsCache" type="struct" />
 	
-	<!--- Used As Meta information --->
+	<!--- Used As Caching / Meta information --->
 	<cfproperty name="settingMetaData" type="struct" />
-	<cfproperty name="settingLookupOrder" type="struct" />
-	<cfproperty name="settingPrefixInOrder" type="array" />
 	
 	<cfscript>
-		variables.settingDetailsCache = {};
+		public array function getSettingPrefixInOrder() {
+			return [
+				"accountAuthentication",
+				"shippingMethodRate",
+				"fulfillmentMethod",
+				"subscriptionUsage",
+				"subscriptionTerm",
+				"shippingMethod",
+				"paymentMethod",
+				"productType",
+				"product",
+				"content",
+				"account",
+				"image",
+				"brand",
+				"email",
+				"stock",
+				"site",
+				"task",
+				"sku"
+			];
+		}
 		
-		variables.settingPrefixInOrder = [
-			"accountAuthentication",
-			"shippingMethodRate",
-			"fulfillmentMethod",
-			"subscriptionUsage",
-			"subscriptionTerm",
-			"shippingMethod",
-			"paymentMethod",
-			"productType",
-			"product",
-			"content",
-			"account",
-			"image",
-			"brand",
-			"email",
-			"stock",
-			"site",
-			"task",
-			"sku"
-		];
-		
-		variables.settingLookupOrder = {
-			stock = ["sku.skuID", "sku.product.productID", "sku.product.productType.productTypeIDPath&sku.product.brand.brandID", "sku.product.productType.productTypeIDPath"],
-			sku = ["product.productID", "product.productType.productTypeIDPath&product.brand.brandID", "product.productType.productTypeIDPath"],
-			product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
-			productType = ["productTypeIDPath"],
-			content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
-			email = ["emailTemplate.emailTemplateID"],
-			shippingMethodRate = ["shippingMethod.shippingMethodID"],
-			accountAuthentication = [ "integration.integrationID" ],
-			subscriptionUsage = [ "subscriptionTerm.subscriptionTermID" ]
-		};
+		public struct function getSettingLookupOrder() {
+			return {
+				stock = ["sku.skuID", "sku.product.productID", "sku.product.productType.productTypeIDPath&sku.product.brand.brandID", "sku.product.productType.productTypeIDPath"],
+				sku = ["product.productID", "product.productType.productTypeIDPath&product.brand.brandID", "product.productType.productTypeIDPath"],
+				product = ["productType.productTypeIDPath&brand.brandID", "productType.productTypeIDPath"],
+				productType = ["productTypeIDPath"],
+				content = ["cmsContentID", "contentIDPath", "cmsContentIDPath"],
+				email = ["emailTemplate.emailTemplateID"],
+				shippingMethodRate = ["shippingMethod.shippingMethodID"],
+				accountAuthentication = [ "integration.integrationID" ],
+				subscriptionUsage = [ "subscriptionTerm.subscriptionTermID" ]
+			};
+		}
 		
 		public any function getSettingMetaData(required string settingName) {
 			
@@ -269,13 +269,15 @@ globalEncryptionKeySize
 					
 				};
 				
+				var ismb = getIntegrationService().getAllSettings();
+				
+				structAppend(smd, ismb, false);
+				
 				variables.settingMetaData = smd;
 			}
 			
 			if(structKeyExists(variables.settingMetaData, arguments.settingName)) {
 				return variables.settingMetaData[ arguments.settingName ];	
-			} else if (structKeyExists(getIntegrationService().getAllSettings(), arguments.settingName)) {
-				return getIntegrationService().getAllSettings()[ arguments.settingName ];
 			}
 			
 			throw("You have asked for a setting '#arguments.settingName#' which has no meta information. Make sure that you either add this setting to the settingService or your integration.");
@@ -400,11 +402,13 @@ globalEncryptionKeySize
 					setting.setSettingValue( arguments.data.emailAddress );
 					this.saveSetting( setting );
 				}
+
+				getHibachiDAO().flushORMSession();
+
+				// Clear out the setting Cached
+				clearAllSettingsCache();
 				
 			}
-			
-			// Clear out the setting Cached
-			clearAllSettingsCache();
 				
 		}
 		
