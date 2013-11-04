@@ -67,13 +67,14 @@ globalEncryptionKeySize
 	<cfproperty name="taxService" type="any" />
 	
 	<!--- Used For Caching --->
-	<cfproperty name="allSettingsQuery" type="query" />
+	<cfproperty name="re" type="" />
 	<cfproperty name="settingDetailsCache" type="struct" />
-	
-	<!--- Used As Caching / Meta information --->
 	<cfproperty name="settingMetaData" type="struct" />
 	
 	<cfscript>
+		variables.cacheUpdate.settingMetaData = true;
+		variables.cacheUpdate.settingDetailsCache = true;
+		
 		public array function getSettingPrefixInOrder() {
 			return [
 				"accountAuthentication",
@@ -112,8 +113,7 @@ globalEncryptionKeySize
 		}
 		
 		public any function getSettingMetaData(required string settingName) {
-			
-			if(!structKeyExists(variables, 'settingMetaData')) {
+			if(variables.cacheUpdate.settingMetaData) {
 				var smd = {
 					
 					// Account
