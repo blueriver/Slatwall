@@ -734,8 +734,8 @@ component extends="HibachiService" output="false" accessors="true" {
 	
 	// ===================== START: DAO Passthrough ===========================
 	
-	public numeric function getSettingRecordExistsFlag(required string settingName, string settingValue) {
-		getSettingDAO().getSettingRecordExistsFlag( argumentcollection=arguments );
+	public boolean function getSettingRecordExistsFlag(required string settingName, string settingValue) {
+		return getSettingDAO().getSettingRecordExistsFlag( argumentcollection=arguments );
 	}
 	
 	public numeric function updateAllSettingValuesToRemoveSpecificID( required string primaryIDValue ) {

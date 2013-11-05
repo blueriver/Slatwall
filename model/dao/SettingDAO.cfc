@@ -50,7 +50,7 @@ Notes:
 	
 	<cfproperty name="hibachiCacheService" type="any" />
 	
-	<cffunction name="getSettingRecordExistsFlag" output="false">
+	<cffunction name="getSettingRecordExistsFlag" output="false" returntype="boolean">
 		<cfargument name="settingName" type="string" required="true" />
 		<cfargument name="settingValue" />
 		
@@ -69,7 +69,7 @@ Notes:
 			  </cfif>
 		</cfquery>
 		
-		<cfreturn val(rs.recordCount) />
+		<cfreturn rs.recordCount gt 0 />
 	</cffunction>
 	
 	<cffunction name="getSettingRecordBySettingRelationships" output="false">
