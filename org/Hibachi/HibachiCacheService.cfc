@@ -7,6 +7,11 @@ component accessors="true" output="false" extends="HibachiService" {
 		setCache( {} );
 		setInternalCacheFlag( true );
 		
+		var hibachiConfig = getApplicationValue('hibachiConfig');
+		if(structKeyExists(hibachiConfig, "useCachingEngineFlag") && hibachiConfig.useCachingEngineFlag) {
+			setInternalCacheFlag( false );
+		}
+		
 		return super.init();
 	}
 
