@@ -62,11 +62,11 @@ Notes:
 			FROM
 				SwSetting
 			WHERE
-				settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#">
-			  <cfif structKeyExists(arguments, "settingValue")>
-			  	  AND
-			  	settingValue = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingValue#">  
-			  </cfif>
+			  	LOWER(settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#lcase(arguments.settingName)#">
+		  		<cfif structKeyExists(arguments, "settingValue")>
+			  	  		AND
+			  		LOWER(settingValue) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#lcase(arguments.settingValue)#">  
+		  		</cfif>
 		</cfquery>
 		
 		<cfreturn rs.recordCount gt 0 />
@@ -87,7 +87,7 @@ Notes:
 			FROM
 				SwSetting
 			WHERE
-				settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#">
+				LOWER(settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(arguments.settingName)#">
 				<cfloop list="#potentialRelationships#" index="relationship">
 					<cfif structKeyExists(arguments.settingRelationships, relationship)>
 						AND #relationship# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingRelationships[ relationship ]#" > 
