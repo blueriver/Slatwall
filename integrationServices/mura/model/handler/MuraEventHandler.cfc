@@ -1395,7 +1395,7 @@
 				FROM
 					SwSetting
 				WHERE
-					settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="integrationMura#arguments.settingName#" />
+					LOWER(settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#lcase(arguments.settingName)#" />
 				  AND
 				  	contentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contentID#" />
 			</cfquery>
@@ -1429,7 +1429,7 @@
 			
 		<cfelse>
 			<cfquery name="rs" result="rsResult">
-				DELETE FROM SwSetting WHERE contentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contentID#" /> AND settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingName#" />
+				DELETE FROM SwSetting WHERE contentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contentID#" /> AND LOWER(settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#lcase(arguments.settingName)#" />
 			</cfquery>
 			<cfif rsResult.recordCount>
 				<cfset arguments.$.slatwall.getService('hibachiCacheService').resetCachedKeyByPrefix('setting_integrationMura#arguments.settingName#') />
@@ -1444,9 +1444,10 @@
 		
 		<cfset var rs = "" />
 		<cfset var rs2 = "" />
+		<cfset var fullSettingName = "integrationMura#arguments.settingName#" />
 		
 		<cfquery name="rs">
-			SELECT settingID, settingValue FROM SwSetting WHERE settingName = <cfqueryparam cfsqltype="cf_sql_varchar" value="integrationMura#arguments.settingName#" />
+			SELECT settingID, settingValue FROM SwSetting WHERE LOWER(settingName) = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCASE(fullSettingName)#" />
 		</cfquery>
 		
 		<cfif rs.recordCount and rs.settingValue neq arguments.settingValue>
@@ -1462,8 +1463,8 @@
 					settingValue
 				) VALUES (
 					<cfqueryparam cfsqltype="cf_sql_varchar" value="#$.slatwall.createHibachiUUID()#" />,
-					 <cfqueryparam cfsqltype="cf_sql_varchar" value="integrationMura#arguments.settingName#" />,
-					 <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingValue#" />
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#fullSettingName#" />,
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.settingValue#" />
 				) 
 			</cfquery>
 			<cfset arguments.$.slatwall.getService('hibachiCacheService').resetCachedKeyByPrefix('setting_integrationMura#arguments.settingName#') />
