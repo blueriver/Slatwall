@@ -75,10 +75,8 @@ Notes:
 		</cf_HibachiPropertyRow>
 		
 		<cf_HibachiTabGroup object="#rc.subscriptionUsage#">
-			<!---
 			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/usagebenifits">
 			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/renewalusagebenefits">
-			--->
 			<cf_HibachiTab property="subscriptionStatus">
 			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/orderitems">
 			<cf_HibachiTab view="admin:entity/subscriptionusagetabs/subscriptionusagesettings" />

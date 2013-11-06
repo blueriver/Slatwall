@@ -50,11 +50,10 @@ Notes:
 
 <cfoutput>
 	<cf_HibachiListingDisplay smartList="#rc.subscriptionUsage.getRenewalSubscriptionUsageBenefitsSmartList()#"
-			recordEditAction="admin:entity.editrenewalsubscriptionusagebenefits">
-			
-		<cf_HibachiListingColumn tdclass="primary" propertyIdentifier="subscriptionUsageBenefitID" />
-		
+							  recordEditAction="admin:entity.editSubscriptionUsageBenefit"
+							  recordDeleteAction="admin:entity.deleteSubscriptionUsageBenefit">
+		<cf_HibachiListingColumn propertyIdentifier="subscriptionBenefit.subscriptionBenefitName" />
 	</cf_HibachiListingDisplay>
 	
-	<cf_HibachiActionCaller action="admin:entity.createrenewalsubscriptionusagebenefits" class="btn" icon="plus" queryString="SubscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#" />
+	<cf_HibachiActionCaller action="admin:entity.createSubscriptionUsageBenefit" class="btn" icon="plus" queryString="subscriptionUsageID=#rc.subscriptionUsage.getSubscriptionUsageID()#" />
 </cfoutput>
