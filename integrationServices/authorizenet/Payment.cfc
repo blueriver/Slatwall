@@ -87,7 +87,7 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 		requestData["x_login"] = setting('loginID'); 
 		requestData["x_tran_key"] = setting('transKey'); 
 		requestData["x_test_request"] = setting('testModeFlag'); 
-		requestData["x_duplicate_window"] = "600";
+		requestData["x_duplicate_window"] = setting('duplicateWindow');
 		requestData["x_method"] = "CC";
 		requestData["x_type"] = variables.transactionCodes[requestBean.getTransactionType()];
 
