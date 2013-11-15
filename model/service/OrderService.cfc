@@ -151,9 +151,9 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 		}
 	}
 	
-	public any function duplicateOrderWithNewAccount(required any originalOrder, required any newAccount) {
-		
+	public any function duplicateOrder(required any order, boolean saveNewFlag=false) {
 		var newOrder = this.newOrder();
+		
 		newOrder.setCurrencyCode( arguments.originalOrder.getCurrencyCode() );
 		
 		// Copy Order Items
@@ -179,23 +179,60 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 				av.setAttributeValue(attributeValue.getAttributeValue());
 				av.setOrderItem(newOrderItem);
 			}
-
+			
+			var orderFulfillmentFound = false;
+			
 			// check if there is a fulfillment method of this type in the order
 			for(var fulfillment in newOrder.getOrderFulfillments()) {
 				if(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod().getFulfillmentMethodID() == fulfillment.getFulfillmentMethod().getFulfillmentMethodID()) {
 					var newOrderFulfillment = fulfillment;
+					orderFulfillmentFound = true;
 					break;
 				}
 			}
-			if(isNull(newOrderFulfillment)) {
+			if(!orderFulfillmentFound) {
 				var newOrderFulfillment = this.newOrderFulfillment();
 				newOrderFulfillment.setFulfillmentMethod( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod() );
 				newOrderFulfillment.setOrder( newOrder );
 				newOrderFulfillment.setCurrencyCode( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getCurrencyCode() );
+				if(!isNull(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getShippingMethod())) {
+					newOrderFulfillment.setShippingMethod( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getShippingMethod() );	
+				}
+				if(!isNull(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getShippingAddress())) {
+					newOrderFulfillment.setShippingAddress( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getShippingAddress() );
+				}
+				if(!isNull(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getAccountAddress())) {
+					newOrderFulfillment.setAccountAddress( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getAccountAddress() );
+				}
+				if(!isNull(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getEmailAddress())) {
+					newOrderFulfillment.setEmailAddress( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getEmailAddress() );
+				}
+				
 			}
 			newOrderItem.setOrder( newOrder );
 			newOrderItem.setOrderFulfillment( newOrderFulfillment );
 
+		}
+		
+		if(!isNull(arguments.originalOrder.getAccount())) {
+			newOrder.setAccount( arguments.originalOrder.getAccount() );
+		}
+		
+		if(arguments.saveNewFlag) {
+			this.saveOrder( newOrder );
+		}
+		
+		return newOrder;
+	}
+	
+	public any function duplicateOrderWithNewAccount(required any originalOrder, required any newAccount) {
+		var newOrder = duplicateOrder(arguments.originalOrder, true);
+		
+		// Clear out account specific stuff in fulfillments
+		for(var fulfillment in newOrder.getOrderFulfillments()) {
+			fulfillment.setShippingAddress( javaCast("null", "" ) );
+			fulfillment.setAccountAddress( javaCast("null", "" ) );
+			fulfillment.setEmailAddress( javaCast("null", "" ) );
 		}
 		
 		newOrder.setAccount( arguments.newAccount );
