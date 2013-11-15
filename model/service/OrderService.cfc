@@ -154,25 +154,25 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 	public any function duplicateOrder(required any order, boolean saveNewFlag=false) {
 		var newOrder = this.newOrder();
 		
-		newOrder.setCurrencyCode( arguments.originalOrder.getCurrencyCode() );
+		newOrder.setCurrencyCode( arguments.order.getCurrencyCode() );
 		
 		// Copy Order Items
-		for(var i=1; i<=arrayLen(arguments.originalOrder.getOrderItems()); i++) {
+		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
 			var newOrderItem = this.newOrderItem();
 			
-			newOrderItem.setPrice( arguments.originalOrder.getOrderItems()[i].getPrice() );
-			newOrderItem.setSkuPrice( arguments.originalOrder.getOrderItems()[i].getSkuPrice() );
-			newOrderItem.setCurrencyCode( arguments.originalOrder.getOrderItems()[i].getCurrencyCode() );
-			newOrderItem.setQuantity( arguments.originalOrder.getOrderItems()[i].getQuantity() );
-			newOrderItem.setOrderItemType( arguments.originalOrder.getOrderItems()[i].getOrderItemType() );
-			newOrderItem.setOrderItemStatusType( arguments.originalOrder.getOrderItems()[i].getOrderItemStatusType() );
-			newOrderItem.setSku( arguments.originalOrder.getOrderItems()[i].getSku() );
-			if(!isNull(arguments.originalOrder.getOrderItems()[i].getStock())) {
-				newOrderItem.setStock( arguments.originalOrder.getOrderItems()[i].getStock() );
+			newOrderItem.setPrice( arguments.order.getOrderItems()[i].getPrice() );
+			newOrderItem.setSkuPrice( arguments.order.getOrderItems()[i].getSkuPrice() );
+			newOrderItem.setCurrencyCode( arguments.order.getOrderItems()[i].getCurrencyCode() );
+			newOrderItem.setQuantity( arguments.order.getOrderItems()[i].getQuantity() );
+			newOrderItem.setOrderItemType( arguments.order.getOrderItems()[i].getOrderItemType() );
+			newOrderItem.setOrderItemStatusType( arguments.order.getOrderItems()[i].getOrderItemStatusType() );
+			newOrderItem.setSku( arguments.order.getOrderItems()[i].getSku() );
+			if(!isNull(arguments.order.getOrderItems()[i].getStock())) {
+				newOrderItem.setStock( arguments.order.getOrderItems()[i].getStock() );
 			}
 			
 			// copy order item customization
-			for(var attributeValue in arguments.originalOrder.getOrderItems()[i].getAttributeValues()) {
+			for(var attributeValue in arguments.order.getOrderItems()[i].getAttributeValues()) {
 				var av = this.newAttributeValue();
 				av.setAttributeValueType(attributeValue.getAttributeValueType());
 				av.setAttribute(attributeValue.getAttribute());
@@ -184,7 +184,7 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			
 			// check if there is a fulfillment method of this type in the order
 			for(var fulfillment in newOrder.getOrderFulfillments()) {
-				if(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod().getFulfillmentMethodID() == fulfillment.getFulfillmentMethod().getFulfillmentMethodID()) {
+				if(arguments.order.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod().getFulfillmentMethodID() == fulfillment.getFulfillmentMethod().getFulfillmentMethodID()) {
 					var newOrderFulfillment = fulfillment;
 					orderFulfillmentFound = true;
 					break;
@@ -192,20 +192,20 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 			}
 			if(!orderFulfillmentFound) {
 				var newOrderFulfillment = this.newOrderFulfillment();
-				newOrderFulfillment.setFulfillmentMethod( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod() );
+				newOrderFulfillment.setFulfillmentMethod( arguments.order.getOrderItems()[i].getOrderFulfillment().getFulfillmentMethod() );
 				newOrderFulfillment.setOrder( newOrder );
-				newOrderFulfillment.setCurrencyCode( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getCurrencyCode() );
-				if(!isNull(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getShippingMethod())) {
-					newOrderFulfillment.setShippingMethod( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getShippingMethod() );	
+				newOrderFulfillment.setCurrencyCode( arguments.order.getOrderItems()[i].getOrderFulfillment().getCurrencyCode() );
+				if(!isNull(arguments.order.getOrderItems()[i].getOrderFulfillment().getShippingMethod())) {
+					newOrderFulfillment.setShippingMethod( arguments.order.getOrderItems()[i].getOrderFulfillment().getShippingMethod() );	
 				}
-				if(!isNull(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getShippingAddress())) {
-					newOrderFulfillment.setShippingAddress( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getShippingAddress() );
+				if(!isNull(arguments.order.getOrderItems()[i].getOrderFulfillment().getShippingAddress())) {
+					newOrderFulfillment.setShippingAddress( arguments.order.getOrderItems()[i].getOrderFulfillment().getShippingAddress() );
 				}
-				if(!isNull(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getAccountAddress())) {
-					newOrderFulfillment.setAccountAddress( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getAccountAddress() );
+				if(!isNull(arguments.order.getOrderItems()[i].getOrderFulfillment().getAccountAddress())) {
+					newOrderFulfillment.setAccountAddress( arguments.order.getOrderItems()[i].getOrderFulfillment().getAccountAddress() );
 				}
-				if(!isNull(arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getEmailAddress())) {
-					newOrderFulfillment.setEmailAddress( arguments.originalOrder.getOrderItems()[i].getOrderFulfillment().getEmailAddress() );
+				if(!isNull(arguments.order.getOrderItems()[i].getOrderFulfillment().getEmailAddress())) {
+					newOrderFulfillment.setEmailAddress( arguments.order.getOrderItems()[i].getOrderFulfillment().getEmailAddress() );
 				}
 				
 			}
@@ -214,8 +214,8 @@ component extends="HibachiService" persistent="false" accessors="true" output="f
 
 		}
 		
-		if(!isNull(arguments.originalOrder.getAccount())) {
-			newOrder.setAccount( arguments.originalOrder.getAccount() );
+		if(!isNull(arguments.order.getAccount())) {
+			newOrder.setAccount( arguments.order.getAccount() );
 		}
 		
 		if(arguments.saveNewFlag) {
