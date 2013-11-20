@@ -56,6 +56,7 @@ Notes:
 			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.preProcessSubscriptionUsage" processContext="cancel" type="list" modal="true" />
 			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.processSubscriptionUsage" processContext="updateStatus" type="list" />
 			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.processSubscriptionUsage" processContext="sendRenewalReminder" type="list" />
+			<cf_HibachiProcessCaller entity="#rc.subscriptionUsage#" action="admin:entity.preprocesssubscriptionusage" processContext="addUsageBenefit" type="list" modal="true" />
 		</cf_HibachiEntityActionBar>
 		
 		<cf_HibachiPropertyRow>
