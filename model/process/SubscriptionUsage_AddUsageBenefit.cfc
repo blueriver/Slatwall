@@ -46,31 +46,68 @@
 Notes:
 
 */
-component output="false" accessors="true" {
+component output="false" accessors="true" extends="HibachiProcess" {
 
-	property name="fw" type="any";
+	// Injected Entity
+	property name="subscriptionUsage";
 	
-	property name="addressService" type="any";
-
-	public void function init( required any fw ) {
-		setFW( arguments.fw );
-	}
+	// Lazy / Injected Objects
 	
-	public void function before() {
-		getFW().setView("public:main.blank");
-	}
-
-	public void function country( required struct rc ) {
-		param name="rc.countryCode" type="string" default="";
-		
-		var country = getAddressService().getCountry(rc.countryCode);
-		
-		// Make sure that the stateCodeOptions are in the variables scope
-		country.getStateCodeOptions();
-		
-		if(!isNull(country)) {
-			rc.ajaxResponse["country"] = country;	
+	// New Properties
+	
+	// Data Properties (ID's)
+	property name="benefitTermType" hb_formFieldType="select";
+	property name="subscriptionBenefitID" hb_formFieldType="select" hb_rbKey="entity.subscriptionBenefit";
+	
+	// Data Properties (Inputs)
+	
+	// Data Properties (Related Entity Populate)
+	
+	// Data Properties (Object / Array Populate)
+	
+	// Option Properties
+	
+	// Helper Properties
+	
+	
+	// ======================== START: Defaults ============================
+	
+	// ========================  END: Defaults =============================
+	
+	// =================== START: Lazy Object Helpers ======================
+	
+	// ===================  END: Lazy Object Helpers =======================
+	
+	// ================== START: New Property Helpers ======================
+	
+	// ==================  END: New Property Helpers =======================
+	
+	// ====================== START: Data Options ==========================
+	
+	public array function getSubscriptionBenefitIDOptions() {
+		if(!structKeyExists(variables, "subscriptionBenefitIDOptions")) {
+			var s = getService("subscriptionService").getSubscriptionBenefitSmartList();
+			s.addSelect("subscriptionBenefitName", "name");
+			s.addSelect("subscriptionBenefitID", "value");
+			variables.subscriptionBenefitIDOptions = s.getRecords();
+			arrayPrepend(variables.subscriptionBenefitIDOptions, {name=getHibachiScope().rbKey('define.select'), value=""});
 		}
+		return variables.subscriptionBenefitIDOptions;
 	}
+	
+	public array function getBenefitTermTypeOptions() {
+		return [
+			{name=getHibachiScope().rbKey('define.both'), value='both'},
+			{name=getHibachiScope().rbKey('define.initial'), value='initial'},
+			{name=getHibachiScope().rbKey('define.renewal'), value='renewal'}
+		];
+	}
+	
+	// ======================  END: Data Options ===========================
+	
+	// ===================== START: Helper Methods =========================
+	
+	// =====================  END: Helper Methods ==========================
 	
 }
+

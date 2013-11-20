@@ -86,10 +86,10 @@
 					structDelete(url, "sRedirectURL");
 				}
 				if(structKeyExists(form, "redirectURL")) {
-					redirectFormDetails.redirectURL = url.sRedirectURL;
+					redirectFormDetails.redirectURL = form.redirectURL;
 					structDelete(form, "redirectURL");
 				} else if (structKeyExists(url, "redirectURL")) {
-					redirectURLDetails.redirectURL = url.sRedirectURL;
+					redirectURLDetails.redirectURL = url.redirectURL;
 					structDelete(url, "redirectURL");
 				}
 				
