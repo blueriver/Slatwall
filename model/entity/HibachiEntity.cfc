@@ -183,7 +183,7 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 			newAttributeValue.setAttributeValueType( lcase( replace(getEntityName(),'Slatwall','') ) );
 			var thisAttribute = getService("attributeService").getAttributeByAttributeCode( arguments.attribute );
 			if(isNull(thisAttribute) && len(arguments.attribute) eq 32) {
-				thisAttribute = getService("attributeService").getAttributeByAttributeCode( arguments.attribute );
+				thisAttribute = getService("attributeService").getAttributeByAttributeID( arguments.attribute );
 			}
 			if(!isNull(thisAttribute)) {
 				newAttributeValue.setAttribute( thisAttribute );
@@ -204,6 +204,23 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 		}
 
 		return "";
+	}
+	
+	public any function setAttributeValue(required string attribute, required any value){
+		
+		var attributeValueEntity = getAttributeValue( arguments.attribute, true);
+		attributeValueEntity.setAttributeValue( arguments.value );
+		attributeValueEntity.invokeMethod("set#attributeValueEntity.getAttributeValueType()#", {1=this});
+
+		// If this attribute value is new, then we can add it to the array
+		if(attributeValueEntity.isNew()) {
+			this.addAttributeValue( attributeValueEntity );
+		}
+
+		// Update the cache for this attribute value
+		getAttributeValuesByAttributeCodeStruct()[ attributeValueEntity.getAttribute().getAttributeCode() ] = attributeValueEntity;
+		getAttributeValuesByAttributeIDStruct()[ attributeValueEntity.getAttribute().getAttributeID() ] = attributeValueEntity;
+			
 	}
 
 	public any function getAssignedAttributeSetSmartList(){
