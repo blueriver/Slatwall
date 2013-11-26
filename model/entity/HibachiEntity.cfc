@@ -61,9 +61,6 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 		// Get the assigned attributes
 		var assignedAttributeSets = getAssignedAttributeSetSmartList().getRecords();
 
-		var attributeType = replace(getEntityName(),"Slatwall","");
-		attributeType = lcase(left(attributeType, 1)) & right(attributeType, len(attributeType)-1);
-
 		// Loop over attribute sets
 		for(var ats=1; ats<=arrayLen(assignedAttributeSets); ats++) {
 
@@ -72,22 +69,7 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 			for(var at=1; at<=arrayLen(attributes); at++) {
 
 				if(structKeyExists(arguments.data, attributes[at].getAttributeCode())) {
-
-					// Get the attribute value object, and update it
-					var av = getAttributeValue( attributes[at].getAttributeCode(), true);
-					av.setAttributeValue( data[ attributes[at].getAttributeCode() ]);
-					av.setAttribute( attributes[at] );
-					av.invokeMethod("set#attributeType#", {1=this});
-
-					// If this attribute value is new, then we can add it to the array
-					if(av.isNew()) {
-						this.addAttributeValue(av);
-					}
-
-					// Update the cache for this attribute value
-					getAttributeValuesByAttributeCodeStruct()[ attributes[at].getAttributeCode() ] = av;
-					getAttributeValuesByAttributeIDStruct()[ attributes[at].getAttributeID() ] = av;
-
+					setAttributeValue( attributes[at].getAttributeCode(), data[ attributes[at].getAttributeCode() ] );
 				}
 			}
 		}
@@ -95,25 +77,6 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 		// Return this object
 		return this;
 	}
-
-	/*
-
-	// @help overwrite parents _setProperty to enable formatType parsing
-	private void function _setProperty( required any name, any value, any formatType='' ){
-		
-		if( arguments.formatType EQ 'dateTime' ){
-			local.convertedJavaDateFormat = trim('#reReplace(reReplace(reReplace(setting("globalDateFormat"),"y\{1,4}","y"),"d\{1,2}","d"),"\m{1,2}","M")# #reReplace(reReplace(replace(setting("globalTimeFormat"),"tt","a"),"h\{2}","H"),"\m{1,2}","m")#');
-
-			try{
-				arguments.value = createObject('java','java.text.SimpleDateFormat').init(local.convertedJavaDateFormat).parse(arguments.value,createObject('java','java.text.ParsePosition').init(0));
-			}catch(any e){}
-		}
-		
-
-		super._setProperty(argumentCollection=arguments);
-	}
-	
-	*/
 
 	// @hint Returns an array of comments related to this entity
 	public array function getComments( boolean publicFlag ) {
@@ -296,4 +259,3 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 	}
 
 }
-
