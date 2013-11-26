@@ -5,7 +5,7 @@
     	}
 	},
 	"properties":{
-		"newOrderPayment.amount":	[{"required":true, "dataType":"numeric", "gt":0}]
+		"newOrderPayment.dynamicAmountFlag":	[{"conditions":"noPaymentAmountNeeded","eq":false}]
 	},
 	"populatedPropertyValidation":{
 		"newOrderPayment":		[{"validate":false}]
