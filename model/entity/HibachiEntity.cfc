@@ -58,20 +58,16 @@ component output="false" accessors="true" persistent="false" extends="Slatwall.o
 		// Call the super populate to do all the standard logic
 		super.populate(argumentcollection=arguments);
 
-		// Get the assigned attributes
-		var assignedAttributeSets = getAssignedAttributeSetSmartList().getRecords();
-
 		// Loop over attribute sets
-		for(var ats=1; ats<=arrayLen(assignedAttributeSets); ats++) {
-
-			var attributes = assignedAttributeSets[ats].getAttributes();
-
-			for(var at=1; at<=arrayLen(attributes); at++) {
-
-				if(structKeyExists(arguments.data, attributes[at].getAttributeCode())) {
-					setAttributeValue( attributes[at].getAttributeCode(), data[ attributes[at].getAttributeCode() ] );
+		for(var attributeSet in getAssignedAttributeSetSmartList().getRecords()) {
+			
+			// Loop over attributes
+			for(var attribute in attributeSet.getAttributes()) {
+				if(structKeyExists(arguments.data, attribute.getAttributeCode())) {
+					setAttributeValue( attribute.getAttributeCode(), nullReplace(data[ attribute.getAttributeCode() ], "") );
 				}
 			}
+			
 		}
 
 		// Return this object
