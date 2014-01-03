@@ -33,7 +33,10 @@ component output="false" accessors="true" extends="HibachiService"  {
 			
 			// Save session ID in the session Scope & cookie scope for next request
 			setSessionValue('sessionID', getHibachiScope().getSession().getSessionID());
-			getHibachiTagService().cfcookie(name="#getApplicationValue('applicationKey')#SessionID", value=getHibachiScope().getSession().getSessionID(), expires="never");
+			
+			if(!structKeyExists(cookie, "#getApplicationValue('applicationKey')#SessionID") || cookie[ "#getApplicationValue('applicationKey')#SessionID" ] != getHibachiScope().getSession().getSessionID()) {
+				getHibachiTagService().cfcookie(name="#getApplicationValue('applicationKey')#SessionID", value=getHibachiScope().getSession().getSessionID(), expires="never");
+			}
 		}
 		
 		// If the session has an account but no authentication, then remove the account
