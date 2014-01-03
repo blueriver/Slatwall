@@ -844,6 +844,12 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		if(isNew() or !arguments.promotionCode.hasOrder( this )) {
 			arrayAppend(arguments.promotionCode.getOrders(), this);
 		}
+		
+		// clear existing promotionCodeList
+		if (structKeyExists(variables, "promotionCodeList"))
+		{
+			structDelete(variables, "promotionCodeList");
+		}
 	}
 	public void function removePromotionCode(required any promotionCode) {
 		var thisIndex = arrayFind(variables.promotionCodes, arguments.promotionCode);
