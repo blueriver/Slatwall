@@ -568,13 +568,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 	}
 	
 	public string function getPromotionCodeList() {
-		if(!structKeyExists(variables, "promotionCodeList")) {
-			variables.promotionCodeList = "";
-			for(var i=1; i<=arrayLen(getPromotionCodes()); i++) {
-				variables.promotionCodeList = listAppend(variables.promotionCodeList, getPromotionCodes()[i].getPromotionCode());
-			}
+		var promotionCodeList = "";
+		
+		for(var promotionCodeEntity in getPromotionCodes()) {
+			promotionCodeList = listAppend(promotionCodeList, promotionCodeEntity.getPromotionCode());
 		}
-		return variables.promotionCodeList;
+		
+		return promotionCodeList;
 	}
 	
 	public numeric function getDeliveredItemsPaymentAmountUnreceived() {
@@ -843,12 +843,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SwOrder" persist
 		}
 		if(isNew() or !arguments.promotionCode.hasOrder( this )) {
 			arrayAppend(arguments.promotionCode.getOrders(), this);
-		}
-		
-		// clear existing promotionCodeList
-		if (structKeyExists(variables, "promotionCodeList"))
-		{
-			structDelete(variables, "promotionCodeList");
 		}
 	}
 	public void function removePromotionCode(required any promotionCode) {
