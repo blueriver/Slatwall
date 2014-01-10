@@ -73,6 +73,7 @@ component entityname="SlatwallOrderPayment" table="SwOrderPayment" persistent="t
 	property name="paymentMethod" hb_populateEnabled="public" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" fetch="join";
 	property name="referencedOrderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="referencedOrderPaymentID";
 	property name="termPaymentAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="termPaymentAccountID";
+	property name="paymentTerm" cfc="PaymentTerm" fieldtype="many-to-one" fkcolumn="paymentTermID";
 	
 	// Related Object Properties (one-to-many)			
 	property name="attributeValues" singularname="attributeValue" cfc="AttributeValue" type="array" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all-delete-orphan" inverse="true";
