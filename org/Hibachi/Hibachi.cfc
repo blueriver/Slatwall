@@ -346,7 +346,8 @@ component extends="FW1.framework" {
 					// Setup the custom bean factory
 					if(directoryExists("#getHibachiScope().getApplicationValue("applicationRootMappingPath")#/custom/model")) {
 						var customBF = new DI1.ioc("/#variables.framework.applicationKey#/custom/model", {
-							transients=["entity", "process", "transient", "report"]
+							transients=["process", "transient", "report"],
+							exclude=["entity"]
 						});
 						
 						customBF.setParent( coreBF );
