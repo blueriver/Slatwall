@@ -162,6 +162,11 @@ component output="false" accessors="true" extends="HibachiProcess" {
 		
 			var paymentTermSmartList = getService("PaymentService").getPaymentTermSmartList();
 			paymentTermSmartList.addFilter("activeFlag", 1);
+			
+			if(!isNull(getOrder().getAccount())) {
+				paymentTermSmartList.addInFilter("paymentTermID", getOrder().getAccount().setting('accountEligiblePaymentTerms'));
+			}
+			
 			var paymentTermsArray = paymentTermSmartList.getRecords();
 			for (var paymentTerm in paymentTermsArray) {
 				arrayAppend(variables.paymentTermIDOptions, {
