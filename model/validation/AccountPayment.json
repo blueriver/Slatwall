@@ -4,5 +4,5 @@
 		"paymentMethod":			[{"contexts":"save","required":true,"method":"confirmEligiblePaymentMethod"}],
 		"accountPaymentType":		[{"contexts":"save","required":true}],
 		"paymentTransactions":		[{"contexts":"delete","maxCollection":0}]
-	},
+	}
 }
