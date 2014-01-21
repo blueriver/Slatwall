@@ -158,7 +158,7 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 			var sl = getService("paymentService").getPaymentMethodSmartList();
 			
 			// Prevent 'termPayment' from displaying as account payment method option
-			sl.addInFilter('paymentMethodType', 'cash,check,creditCard,external,giftCard');
+			//sl.addInFilter('paymentMethodType', 'cash,check,creditCard,external,giftCard');
 			sl.addFilter('activeFlag', 1);
 			sl.addSelect('paymentMethodID', 'value');
 			sl.addSelect('paymentMethodName', 'name');
@@ -377,14 +377,6 @@ component displayname="Account Payment" entityname="SlatwallAccountPayment" tabl
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// =============== START: Custom Validation Methods ====================
-	
-	public boolean function confirmEligiblePaymentMethod() {
-		var returnValue = true;
-		if(!isNull(getPaymentMethod())) {
-			returnValue = getPaymentMethod().getPaymentMethodType() != "termPayment";
-		}
-		return returnValue;
-	}
 	
 	// ===============  END: Custom Validation Methods =====================
 	
